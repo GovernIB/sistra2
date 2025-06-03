@@ -45,6 +45,16 @@ public abstract class ConfiguracionCampo implements Serializable {
 	private TypeSiNo evaluar = TypeSiNo.NO;
 
 	/**
+	 * Indica si se fuerza a solo lectura (marcado con check solo lectura).
+	 */
+	private TypeSiNo forzarSoloLectura = TypeSiNo.NO;
+
+	/**
+	 * Indica si el campo es visible.
+	 */
+	private TypeSiNo oculto = TypeSiNo.NO;
+
+	/**
 	 * Método de acceso a tipo.
 	 *
 	 * @return tipo
@@ -180,5 +190,29 @@ public abstract class ConfiguracionCampo implements Serializable {
 	public final void setModificable(final TypeSiNo pModificable) {
 		modificable = pModificable;
 	}
+
+	/**
+	 * Obtiene forzarSoloLectura.
+	 * @return forzarSoloLectura
+	 */
+	public TypeSiNo getForzarSoloLectura() { return forzarSoloLectura; }
+
+	/**
+	 * Establece forzarSoloLectura.
+	 * @param forzarSoloLectura forzarSoloLectura
+	 */
+	public void setForzarSoloLectura(TypeSiNo forzarSoloLectura) { this.forzarSoloLectura = forzarSoloLectura;	}
+
+	/**
+	 * Obtiene visibe.
+	 * @return visibe
+	 */
+	public TypeSiNo getOculto() { return oculto; }
+
+	/**
+	 * Establece visibe.
+	 * @param visibe visibe
+	 */
+	public void setOculto(TypeSiNo visibe) {	this.oculto = visibe; }
 
 }

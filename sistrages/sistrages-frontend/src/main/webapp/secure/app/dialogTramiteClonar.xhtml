@@ -19,6 +19,9 @@
 <h:body>
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   </f:facet>
 
    <p:ajaxStatus id="startAjaxDialog" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"/>
@@ -142,7 +145,7 @@
 			<!-- Contenido dialogo -->
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30, w70 margin-left-10" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w30, w70 margin-left-10" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="areas" value="#{msg['dialogTramiteClonar.headerArea']}"  />
 				<p:selectOneMenu id="areas" styleClass="w90" value="#{dialogTramiteClonar.areaID}" height="150" appendTo="@this" >

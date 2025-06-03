@@ -231,7 +231,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 		if (modo != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		}
-		UtilJSF.openDialog(DialogFormateadorFormulario.class, modo, params, true, 640, 230);
+		UtilJSF.openDialog(DialogFormateadorFormulario.class, modo, params, true, 640, 260);
 	}
 
 	/**

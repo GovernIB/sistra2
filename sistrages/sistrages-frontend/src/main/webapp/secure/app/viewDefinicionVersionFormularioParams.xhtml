@@ -9,12 +9,17 @@
   <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioGestor" var="TypeFormularioGestor"/>
 
   <h:form id="formviewDefinicionVersionFormulario" styleClass="h100">
-
+	  <h:outputStylesheet>
+		  .ui-widget-content {
+			  border: none;
+			  background: none;
+		  }
+	  </h:outputStylesheet>
     <!-- Growl mensajes -->
     <p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 
-        <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
+        <h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionFormulario.identificador']}" />
             <p:inputText id="identificador" onblur="this.value = this.value.trim();" required="true" readonly="true" styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.identificador}" />
@@ -23,7 +28,7 @@
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
                <p:inputText id="descripcion" required="true" onblur="this.value = this.value.trim();" readonly="true" styleClass="w85" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
-               <p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.formularioTramiteSeleccionado.descripcion)}"	process="@this" update="growl" />
+               <p:commandButton icon="fa fa-globe" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.formularioTramiteSeleccionado.descripcion)}"	process="@this" update="growl" />
            </p:outputPanel>
 
            <p:outputLabel value="#{msg['viewDefinicionVersionFormulario.obligatoriedad']}" />
@@ -107,7 +112,7 @@
             			process="@this" update="growl">
                 		<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formviewDefinicionVersionFormulario" />
            			</p:commandButton>
-           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle"
 						actionListener="#{viewDefinicionVersionParams.ayudaFormulario()}"
 						process="@this" update="growl" iconPos="top"/>
         		</p:outputPanel>

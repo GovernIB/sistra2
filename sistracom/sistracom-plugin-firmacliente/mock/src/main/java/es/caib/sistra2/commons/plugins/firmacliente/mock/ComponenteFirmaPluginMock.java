@@ -76,6 +76,8 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 		fichero.setMimetypeFichero("application/octet-stream");
 		fichero.setNombreFichero("fichero.cades");
 		fichero.setFirmaTipo(TypeFirmaDigital.CADES_DETACHED);
+		fichero.setMetodoFirma("MOCK - Metodo MOCK");
+
 		return fichero;
 	}
 

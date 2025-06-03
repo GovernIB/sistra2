@@ -55,7 +55,7 @@
         <!-- Growl mensajes -->
         <p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-        <h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="w25 padding-left-18,w75" styleClass="w100" columns="2" cellpadding="5">
+        <h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="w25 padding-left-18,w75" styleClass="w100" columns="2" cellpadding="5">
 
           <p:outputLabel for="textoCabecera" value="#{msg['dialogPropiedadesFormulario.cabeceraFormulario']}" />
           <p:outputPanel>
@@ -63,7 +63,7 @@
             <p:outputLabel for="textoCabeceraHidden" value="#{msg['dialogPropiedadesFormulario.textoCabecera']}" styleClass="no-display"/>
             <p:inputText id="textoCabecera" onblur="this.value = this.value.trim();" value="#{dialogPropiedadesFormulario.literal}" readonly="true" required="true" size="88" styleClass="margin-right-10 #{not textoCabeceraComponent.valid ? 'ui-state-error' : ''}"/>
             <p:inputText id="textoCabeceraHidden" onblur="this.value = this.value.trim();" value="#{dialogPropiedadesFormulario.literal}" type="hidden" required="#{dialogPropiedadesFormulario.data.mostrarCabecera}" binding="#{textoCabeceraComponent}"/>
-			<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogPropiedadesFormulario.editarTextoCabecera}" process="@this" update="growlDialog" styleClass="va-top" disabled="#{!dialogPropiedadesFormulario.data.mostrarCabecera}" >
+			<p:commandButton id="btnNombre" icon="fa fa-globe" actionListener="#{dialogPropiedadesFormulario.editarTextoCabecera}" process="@this" update="growlDialog" styleClass="va-top" disabled="#{!dialogPropiedadesFormulario.data.mostrarCabecera}" >
                 <p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogo}" update="growlDialog textoCabecera textoCabeceraHidden" />
             </p:commandButton>
           </p:outputPanel>
@@ -96,7 +96,7 @@
              <p:outputPanel styleClass="barra-herramientas-vertical" style="margin-left:5px" id="botonesPagina">
                   <p:commandButton id="btnNuevaPagina" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPagina}" process="@this permitirGuardarSinFinalizar" update="growlDialog dataTablePaginas btnEditarPagina permitirGuardarSinFinalizar" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
                 <ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
-                <p:commandButton id="btnEditarPagina" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPagina}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
+                <p:commandButton id="btnEditarPagina" icon="fa fa-pencil" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPagina}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
                 <p:confirm  header="#{msg['warning.titulo']}"  disabled="#{dialogPropiedadesFormulario.editar}" message="#{msg['dialogPropiedadesFormulario.antesEditar']}" icon="fa fa-exclamation-triangle fa-3x confirmar_icono"/>
                   <p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPagina}" update="growlDialog dataTablePaginas btnEditarPagina"/>
                     </p:commandButton>
@@ -120,7 +120,7 @@
            <p:outputLabel value="#{msg['dialogPropiedadesFormulario.plantillaPDF']}"/>
           <h:panelGrid columns="2" columnClasses="w40,w60 va-top">
             <p:dataTable  id="dataTablePlantillas" var="td" value="#{dialogPropiedadesFormulario.data.plantillas}"
-                      rows="0" emptyMessage="#{msg['error.emptyRows']}" sortBy="#{dialogPropiedadesFormulario.getDescripcionFormateador(td.idFormateadorFormulario)}"
+                      rows="0" emptyMessage="#{msg['error.emptyRows']}"
                       scrollable="true" scrollHeight="98%"
                                   paginator="false" style="height:132px;width:620px"
                                   selectionMode="single" selection="#{dialogPropiedadesFormulario.plantillaSeleccionada}" rowKey="#{td.hashCode}">
@@ -131,16 +131,16 @@
               <p:ajax event="contextMenu" global="false" process="@this" update="@form:botonesPlantilla"/>
 
               <!-- Columnas -->
-              <p:column headerText="#{msg['dialogPropiedadesFormulario.formateador']}" styleClass="ui-panelgrid-cell w20" >
+              <p:column headerText="#{msg['dialogPropiedadesFormulario.formateador']}" styleClass="ui-panelgrid-cell w20" sortBy="#{dialogPropiedadesFormulario.getDescripcionFormateador(td.idFormateadorFormulario)}">
                     <h:outputText value="#{dialogPropiedadesFormulario.getDescripcionFormateador(td.idFormateadorFormulario)}" />
                 </p:column>
-              <p:column headerText="#{msg['dialogPropiedadesFormulario.identificador']}" styleClass="ui-panelgrid-cell w20" >
+              <p:column headerText="#{msg['dialogPropiedadesFormulario.identificador']}" styleClass="ui-panelgrid-cell w20" sortBy="#{td.identificador}">
                     <h:outputText value="#{td.identificador}" />
                 </p:column>
-                <p:column  headerText="#{msg['dialogPropiedadesFormulario.descripcion']}" styleClass="ui-panelgrid-cell w45">
+                <p:column  headerText="#{msg['dialogPropiedadesFormulario.descripcion']}" styleClass="ui-panelgrid-cell w45" sortBy="#{td.descripcion}">
                     <h:outputText value="#{td.descripcion}" />
                 </p:column>
-                 <p:column headerText="#{msg['dialogPropiedadesFormulario.porDefecto']}" styleClass="ui-panelgrid-cell w15 grid-center">
+                 <p:column headerText="#{msg['dialogPropiedadesFormulario.porDefecto']}" styleClass="ui-panelgrid-cell w15 grid-center" sortBy="#{td.porDefecto}">
                     <p:selectBooleanCheckbox value="#{td.porDefecto}" disabled="true"/>
                 </p:column>
 
@@ -152,7 +152,7 @@
                   </p:commandButton>
                 <ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
-                <p:commandButton id="btnEditarPlantilla" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPlantilla}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
+                <p:commandButton id="btnEditarPlantilla" icon="fa fa-pencil" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPlantilla}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
                       <p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPlantilla}" update="growlDialog"/>
                     </p:commandButton>
                     <ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
@@ -200,7 +200,7 @@
                 <p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPropiedadesFormulario.guardar}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"/>
             <p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPropiedadesFormulario.cancelar}" process="@this" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"/>
             <p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPropiedadesFormulario.cancelar}" process="@this"  rendered="#{dialogPropiedadesFormulario.consulta}"/>
-            <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPropiedadesFormulario.ayuda()}" process="@this"/>
+            <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogPropiedadesFormulario.ayuda()}" process="@this"/>
           </f:facet>
         </p:toolbar>
         </p:outputPanel>
@@ -209,7 +209,7 @@
             <p:confirmDialog global="true" >
                 <p:outputPanel styleClass="confirmar_botonera">
                     <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
                 </p:outputPanel>
             </p:confirmDialog>
 
@@ -390,10 +390,10 @@
                 <p:menuitem id="mnuCopyPagina" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" />
                 <p:separator/>
         <p:menuitem id="mnuNuevaPagina" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevaPagina').click();" />
-        <p:menuitem id="mnuEditarPagina" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditarPagina').click();"/>
-        <p:menuitem id="mnuEliminarPagina" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminarPagina').click();" />
+        <p:menuitem id="mnuEditarPagina" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditarPagina').click();"/>
+        <p:menuitem id="mnuEliminarPagina" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminarPagina').click();" />
 
-        <p:menuitem id="mnuConsultarPagina" value="#{msg['botones.consultar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnConsultarPagina').click();" />
+        <p:menuitem id="mnuConsultarPagina" value="#{msg['botones.consultar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnConsultarPagina').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyPaginas" trigger="mnuCopyPagina" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogPropiedadesFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -404,11 +404,11 @@
                 <p:menuitem id="mnuCopyPlantilla" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" />
                 <p:separator/>
         <p:menuitem id="mnuNuevaPlantilla" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevaPlantilla').click();" />
-        <p:menuitem id="mnuEditarPlantilla" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditarPlantilla').click();"/>
-        <p:menuitem id="mnuEliminarPlantilla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminarPlantilla').click();" />
+        <p:menuitem id="mnuEditarPlantilla" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditarPlantilla').click();"/>
+        <p:menuitem id="mnuEliminarPlantilla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminarPlantilla').click();" />
 
-        <p:menuitem id="mnuConsultarPlantilla" value="#{msg['botones.consultar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnConsultarPlantilla').click();" />
-        <p:menuitem id="mnuFilesPlantilla" value="#{msg['dialogPropiedadesFormulario.botonIdioma']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:filesPlantilla').click();" />
+        <p:menuitem id="mnuConsultarPlantilla" value="#{msg['botones.consultar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnConsultarPlantilla').click();" />
+        <p:menuitem id="mnuFilesPlantilla" value="#{msg['dialogPropiedadesFormulario.botonIdioma']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:filesPlantilla').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyPlantillas" trigger="mnuCopyPlantilla" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogPropiedadesFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>

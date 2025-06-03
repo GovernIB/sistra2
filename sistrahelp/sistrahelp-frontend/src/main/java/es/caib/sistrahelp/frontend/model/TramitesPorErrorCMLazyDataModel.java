@@ -3,7 +3,9 @@ package es.caib.sistrahelp.frontend.model;
 import java.util.List;
 import java.util.Map;
 
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
 import es.caib.sistrahelp.core.api.model.EventoCM;
@@ -29,16 +31,33 @@ public class TramitesPorErrorCMLazyDataModel extends LazyDataModel<EventoCM> {
 
 	private List<EventoCM> lista;
 
+	public int count(Map<String, FilterMeta> filterBy) {
+		//TODO Implementar
+		//return getLista().size();
+		//return helpDeskService.countSoporte(filtros).intValue();
+		filtros.setSoloContar(true);
+		Long numElementos = helpDeskService.obtenerTramitesPorErrorCM(filtros, null).getNumElementos();
+		return numElementos == null ? 0 : numElementos.intValue();
+	}
+
 	@Override
-	public List<EventoCM> load(final int first, final int pageSize, final String sortField, final SortOrder sortOrder,
-			final Map<String, Object> filters) {
+	public List<EventoCM> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+		filtros.setSoloContar(false);
+
+		if (sortBy != null && !sortBy.isEmpty()) {
+			SortMeta sortMeta = sortBy.values().iterator().next();
+			SortOrder sortOrder = sortMeta.getOrder();
+			if (sortOrder != null) {
+				filtros.setSortOrder(sortOrder.name());
+			}
+			filtros.setSortField(sortMeta.getField());
+		}
+		/** TODO Implementar
 		if (filters.get("tipoEvento") != null && !filters.get("tipoEvento").toString().isEmpty()) {
 			filtros.setErrorTipo(filters.get("tipoEvento").toString());
 		} else {
 			filtros.setErrorTipo(null);
-		}
-		filtros.setSortField(sortField);
-		filtros.setSortOrder(sortOrder.name());
+		} */
 		setLista(helpDeskService.obtenerTramitesPorErrorCM(filtros, new FiltroPaginacion(first, pageSize))
 				.getListaEventosCM());
 
@@ -59,7 +78,7 @@ public class TramitesPorErrorCMLazyDataModel extends LazyDataModel<EventoCM> {
 	}
 
 	@Override
-	public Object getRowKey(final EventoCM evento) {
+	public String getRowKey(final EventoCM evento) {
 		return evento.getTipoEvento();
 	}
 

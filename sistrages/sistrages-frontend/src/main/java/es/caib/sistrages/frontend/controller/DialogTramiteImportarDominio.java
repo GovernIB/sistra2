@@ -277,7 +277,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 						UtilJSON.toJSON(data.getConfiguracionAutenticacionActual()));
 				params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
 			}
-			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
+			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 265);
 		}
 	}
 
@@ -348,7 +348,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 		params.put(TypeParametroVentana.DESACTIVAR_BOTONERA.toString(), "true");
 		params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
 		params.put(TypeParametroVentana.AMBITO.toString(), data.getDominio().getAmbito().toString());
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 265);
 	}
 
 	/**

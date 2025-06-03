@@ -7,11 +7,16 @@
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 	<h:form id="formViewDefinicionVersionPropiedades" styleClass="h100">
-
+		<h:outputStylesheet>
+			.ui-panelgrid-content {
+				border: none;
+				background: none;
+			}
+		</h:outputStylesheet>
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
+        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses="ui-datatable-even, ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.identificador']}" />
 			<p:inputText onblur="this.value = this.value.trim();" id="codigo" value="#{viewDefinicionVersionParams.tramite.getIdentificadorCompuesto()}" size="107"  readonly="true" />
@@ -76,7 +81,7 @@
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionPropiedades"  />
 					</p:commandButton>
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle"
 						actionListener="#{viewDefinicionVersionParams.ayudaPropiedades()}"
 						process="@this" update="growl" iconPos="top"/>
 				</p:outputPanel>

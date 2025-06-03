@@ -8,44 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import es.caib.sistrages.core.api.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.AvisoEntidad;
-import es.caib.sistrages.core.api.model.ComponenteFormulario;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
-import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
-import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
-import es.caib.sistrages.core.api.model.DisenyoFormulario;
-import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.DominioTramite;
-import es.caib.sistrages.core.api.model.Fichero;
-import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.FuenteDatos;
-import es.caib.sistrages.core.api.model.GestorExternoFormularios;
-import es.caib.sistrages.core.api.model.HistorialVersion;
-import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.PaginaFormulario;
-import es.caib.sistrages.core.api.model.Script;
-import es.caib.sistrages.core.api.model.SeccionReutilizable;
-import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
-import es.caib.sistrages.core.api.model.Tasa;
-import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramitePasoAnexar;
-import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
-import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
-import es.caib.sistrages.core.api.model.TramitePasoRellenar;
-import es.caib.sistrages.core.api.model.TramitePasoTasa;
-import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
@@ -288,8 +257,22 @@ public class TramiteServiceImpl implements TramiteService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public List<Tramite> listTramite(Long idEntidad, List<Long> areas, String filtro) {
-		return tramiteDao.getAllByFiltro(idEntidad, areas, filtro);
+		return tramiteDao.getAllByFiltro(idEntidad, areas, filtro, false);
+	}
+
+
+	@Override
+	@NegocioInterceptor
+	public List<Tramite> listTramiteSimple(Long idEntidad, List<Long> areas, String filtro) {
+		return tramiteDao.getAllByFiltro(idEntidad, areas, filtro, true);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<TramiteFrontal> listTramiteVersionesSimplicada(Long idEntidad, List<Long> idAreas, String filtro, Integer first, Integer pageSize, String sortField, Boolean sortAscending) {
+		return tramiteDao.getAllSimple(idEntidad, idAreas, filtro, first, pageSize, sortField,sortAscending);
 	}
 
 	@Override
@@ -1750,6 +1733,8 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteDao.getAllByFiltro(first, pageSize, sortField, asc, idEntidad, areas, filtro);
 	}
 
+
+
 	@Override
 	@NegocioInterceptor
 	public void actualizarDominios(TramiteVersion tramiteVersion, final List<ValorIdentificadorCompuesto> dominios) {
@@ -1779,5 +1764,7 @@ public class TramiteServiceImpl implements TramiteService {
 	public List<Long> getDisenyosLEByTramite(Long codigo) {
 		return tramiteDao.getDisenyosLEByTramite(codigo);
 	}
+
+
 
 }

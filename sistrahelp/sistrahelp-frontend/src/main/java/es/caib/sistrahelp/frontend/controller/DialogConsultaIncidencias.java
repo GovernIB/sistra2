@@ -134,7 +134,6 @@ public class DialogConsultaIncidencias extends DialogControllerBase {
 	/**
 	 * Abre dialogo.
 	 *
-	 * @param modoAccesoDlg Modo acceso
 	 */
 	public void abrirDlgNif() {
 
@@ -193,11 +192,9 @@ public class DialogConsultaIncidencias extends DialogControllerBase {
 //	}
 
 	public StreamedContent montarFichero() {
-		DefaultStreamedContent file = new DefaultStreamedContent();
-		file.setName(this.data.getNombreFichero());
-		file.setStream(new ByteArrayInputStream(data.getDatosFichero()));
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(data.getDatosFichero());
+		DefaultStreamedContent file = DefaultStreamedContent.builder().name(this.data.getNombreFichero()).stream(() -> inputStream).build();
 		return file;
-
 	}
 
 	/**

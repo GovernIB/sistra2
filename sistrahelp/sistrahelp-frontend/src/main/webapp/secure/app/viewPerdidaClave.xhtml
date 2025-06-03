@@ -17,6 +17,29 @@
 		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
 
 		<h:form id="form" style="height:88%;">
+
+			<script type="text/javascript">
+				function setHeight(){
+					// Altura de la pantalla
+					var altura = window.innerHeight - 50;
+					// Altura de la tabla
+					var alturaDatatable = altura - 290;
+					// Altura del scrollable body
+					var alturaScrollableBody = alturaDatatable - 57;
+
+					$('#form\\:dataTable').height(alturaDatatable);
+					$('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+				}
+
+				jQuery(document).ready(function() {
+					$(window).resize(function() {
+						setTimeout(function(){  setHeight(); }, 100);
+					});
+
+					setTimeout(function(){  setHeight(); }, 1000);
+				});
+			</script>
+
 			<h:outputScript>
 
 				var arrayCm = [];
@@ -155,64 +178,56 @@
 
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 noBorders">
-        		<p:row>
-        			<p:column styleClass="w50 noPadding">
-		        		<h:panelGrid columns="2" styleClass="w75" columnClasses="w25,">
-			        		<p:outputLabel for="filtroDato" value="#{msg['viewPerdidaClave.filtroDatoFormulario']}:" />
-				        	<p:inputText id="filtroDato" value="#{viewPerdidaClave.filtros.datoFormulario}" maxlength="60" style="width:95%; margin-left:2%" required="true" onkeyup="capitalize(this)" onblur="trim(this)"/>
-			        	</h:panelGrid>
-					</p:column>
-					<p:column styleClass="w25 noPadding">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
-			        		<h:panelGroup>
-			        			<p:outputLabel for="filtroTramite" value="#{msg['viewPerdidaClave.filtroTramite']}" indicateRequired=""/>
-			        			<p:outputLabel value="/" />
-			        			<p:outputLabel for="filtroVersion" value="#{msg['viewPerdidaClave.filtroVersion']}:"/>
-			        		</h:panelGroup>
-			        		<h:panelGroup>
-				        		<p:inputText id="filtroTramite" value="#{viewPerdidaClave.filtros.idTramite}" size="16" maxlength="20"  required="true" onkeyup="capitalize(this)" onblur="trim(this)">
-				        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-				        		</p:inputText>
-				        		<p:outputLabel value=" / "/>
-				        		<p:inputText id="filtroVersion" value="#{viewPerdidaClave.filtros.versionTramite}" size="1" maxlength="2" required="true" onkeyup="capitalize(this)" onblur="trim(this)">
-				        			<p:keyFilter regEx="/[0-9]/i"/>
-				        		</p:inputText>
-			        		</h:panelGroup>
-			        	</h:panelGrid>
-		        	</p:column>
-		        	<p:column styleClass="w25 noPadding">
+				<p:column styleClass=" noPadding columna-filtros">
+					<h:panelGrid columns="2" styleClass="noPadding" columnClasses=", w70">
+						<p:outputLabel for="filtroDato" value="#{msg['viewPerdidaClave.filtroDatoFormulario']}:" />
+						<p:inputText id="filtroDato" value="#{viewPerdidaClave.filtros.datoFormulario}" maxlength="60" style="width:95%; margin-left:2%" required="true" onkeyup="capitalize(this)" onblur="trim(this)"/>
+					</h:panelGrid>
 
-		        	</p:column>
-	        	</p:row>
-	        	<p:row>
-	        		<p:column styleClass="w33 noPadding"  >
-						<h:panelGrid columns="5" styleClass="w75" columnClasses="w15 grid-right,w5 grid-right,w10,w5 grid-right,w10">
-							<p:outputLabel value="#{msg['viewPerdidaClave.filtroFecha']}:" />
+					<!--columnClasses="w15 grid-right,w5 grid-right,w10,w5 grid-right,w10"-->
+					<h:panelGrid columns="5" styleClass="noPadding" columnClasses="padding-right-18,,padding-right-18,," style="white-space:nowrap;">
+						<p:outputLabel value="#{msg['viewPerdidaClave.filtroFecha']}:" />
 
-			        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewPerdidaClave.filtroFechaInicio']}:" styleClass="padding-right-4"/>
-			        		<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
+						<p:outputLabel for="filtroFechaInicio" value="#{msg['viewPerdidaClave.filtroFechaInicio']}:" styleClass="padding-right-4"/>
+						<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
 
-			        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewPerdidaClave.filtroFechaFin']}:" styleClass="padding-right-4"/>
-			        		<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
-						</h:panelGrid>
-					</p:column>
+						<p:outputLabel for="filtroFechaFin" value="#{msg['viewPerdidaClave.filtroFechaFin']}:" styleClass="padding-right-4"/>
+						<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
+					</h:panelGrid>
+				</p:column>
+				<p:column styleClass=" noPadding columna-filtros">
+					<!--columnClasses="w31 grid-right,w69"-->
+					<h:panelGrid columns="2" styleClass="noPadding" >
+						<h:panelGroup>
+							<p:outputLabel for="filtroTramite" value="#{msg['viewPerdidaClave.filtroTramite']}" indicateRequired=""/>
+							<p:outputLabel value="/" />
+							<p:outputLabel for="filtroVersion" value="#{msg['viewPerdidaClave.filtroVersion']}:"/>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:inputText id="filtroTramite" value="#{viewPerdidaClave.filtros.idTramite}" size="16" maxlength="20"  required="true" onkeyup="capitalize(this)" onblur="trim(this)">
+								<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+							</p:inputText>
+							<p:outputLabel value=" / "/>
+							<p:inputText id="filtroVersion" value="#{viewPerdidaClave.filtros.versionTramite}" size="1" maxlength="2" required="true" onkeyup="capitalize(this)" onblur="trim(this)">
+								<p:keyFilter regEx="/[0-9]/i"/>
+							</p:inputText>
+						</h:panelGroup>
+					</h:panelGrid>
 
-					<p:column styleClass="w33 noPadding">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
-			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewPerdidaClave.filtroProcedimiento']}:"/>
-			        		<p:inputText id="filtroProcedimiento" value="#{viewPerdidaClave.filtros.idProcedimientoCP}" size="24" maxlength="20" onkeyup="capitalize(this)" onblur="trim(this)">
-			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-			        		</p:inputText>
-			        	</h:panelGrid>
-	          		</p:column>
-
-	          		<p:column styleClass="w33 noPadding">
-						<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
-		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewPerdidaClave.filtrar}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
-		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewPerdidaClave.ayuda}"/>
-						</h:panelGrid>
-	          		</p:column>
-				</p:row>
+					<!--columnClasses="w31 grid-right,w69"-->
+					<h:panelGrid columns="2" styleClass="noPadding" >
+						<p:outputLabel for="filtroProcedimiento" value="#{msg['viewPerdidaClave.filtroProcedimiento']}:"/>
+						<p:inputText id="filtroProcedimiento" value="#{viewPerdidaClave.filtros.idProcedimientoCP}" size="24" maxlength="20" onkeyup="capitalize(this)" onblur="trim(this)">
+							<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+						</p:inputText>
+					</h:panelGrid>
+				</p:column>
+				<p:column styleClass=" noPadding columna-filtros-botones " style="border-style:inherit  !important;">
+					<h:panelGrid id="panelBotones" columns="1" styleClass="noPadding">
+						<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewPerdidaClave.filtrar}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewPerdidaClave.ayuda}"/>
+					</h:panelGrid>
+				</p:column>
           	</p:panelGrid>
 
 

@@ -19,12 +19,19 @@
 			display:contents;
 		}
 
+		.alturaPropiedadesPlugin{
+			height: 360px !important;
+		}
+
 	</style>
 </h:head>
 
 <h:body>
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -51,7 +58,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w15 dContents, w75, wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd, ui-datatable-even, ui-datatable-odd, ui-datatable-even, ui-datatable-odd alturaPropiedadesPlugin, ui-datatable-even" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18 w15, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w80, wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" style="padding-left: 2px; display: block;"/>
 					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}"  required="true" disabled="#{dialogPlugin.isConsulta()}" style="width:94%;">
@@ -81,7 +88,7 @@
 
    					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" style="padding-left: 2px; display: block;"/>
 					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
-								  rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="343"
+								  rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="328"
 								  paginator="false" selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -110,7 +117,7 @@
 	        					</p:commandButton>
 	        				</p>
 	        				<p>
-					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-pencil" title="#{msg['botones.editar']}" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
 	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
 	        					</p:commandButton>
 	        				</p>
@@ -146,7 +153,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"  rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"  rendered="#{dialogPlugin.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPlugin.ayuda}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogPlugin.ayuda}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
@@ -155,7 +162,7 @@
             <p:confirmDialog global="true" >
                 <p:outputPanel styleClass="confirmar_botonera">
                     <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
                 </p:outputPanel>
             </p:confirmDialog>
 
@@ -163,8 +170,8 @@
                 <p:menuitem id="mnuCopyPropiedades" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevoPropiedades" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogPlugin:btnNuevaPropiedad').click();" />
-				<p:menuitem id="mnuEditarPropiedades" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogPlugin:btnEditarPropiedad').click();"/>
-				<p:menuitem id="mnuEliminarPropiedades" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('dialogPlugin:btnEliminarPropiedad').click();" />
+				<p:menuitem id="mnuEditarPropiedades" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('dialogPlugin:btnEditarPropiedad').click();"/>
+				<p:menuitem id="mnuEliminarPropiedades" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('dialogPlugin:btnEliminarPropiedad').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyPropiedades" trigger="mnuCopyPropiedades" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogPlugin.copiadoCorr}" process="@this" update="@this growlDialog"/>

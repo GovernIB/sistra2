@@ -24,4 +24,23 @@ public interface ResEstadoCampoInt extends PluginScriptRes {
 	 */
 	void setSoloLectura(final boolean readOnly);
 
+	/**
+	 * Establece que el campo es visible.
+	 *
+	 * @param visible
+	 *            Booleano
+	 *
+	 */
+	void setVisible(final boolean visible);
+
+
+	/**
+	 * Establece que el campo es obligatorio.
+	 *
+	 * @param obligatorio
+	 *            Booleano
+	 *
+	 */
+	void setObligatorio(final boolean obligatorio);
+
 }

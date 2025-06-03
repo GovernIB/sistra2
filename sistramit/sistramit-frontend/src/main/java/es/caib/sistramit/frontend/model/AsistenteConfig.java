@@ -1,5 +1,7 @@
 package es.caib.sistramit.frontend.model;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+
 /**
  * Configuración asistente.
  *
@@ -34,6 +36,15 @@ public final class AsistenteConfig {
 
 	/** Formulario: carácteres búsqueda. */
 	private String formularioNumCharsBusqueda;
+
+	/** Formulario: ayuda activada. */
+	private String formularioAyudaActivada = "S";
+
+	/** Iframe digitalización width. */
+	private String iframeDigitalizacionWidth;
+
+	/** Iframe digitalización height. */
+	private String iframeDigitalizacionHeight;
 
 	/**
 	 * Método de acceso a url.
@@ -204,6 +215,63 @@ public final class AsistenteConfig {
 	 */
 	public void setIdSesion(String idSesion) {
 		this.idSesion = idSesion;
+	}
+
+	/**
+	 * Método de acceso a formularioAyudaActivada.
+	 *
+	 * @return formularioAyudaActivada
+	 */
+	public String getFormularioAyudaActivada() {
+		return formularioAyudaActivada;
+	}
+
+	/**
+	 * Método para establecer formularioAyudaActivada.
+	 *
+	 * @param formularioAyudaActivada
+	 *                                       formularioAyudaActivada a establecer
+	 */
+	public void setFormularioAyudaActivada(String formularioAyudaActivada) {
+		this.formularioAyudaActivada = formularioAyudaActivada;
+	}
+
+	/**
+	 * Método de acceso a iframeDigitalizacionWidth.
+	 *
+	 * @return iframeDigitalizacionWidth
+	 */
+	public String getIframeDigitalizacionWidth() {
+		return iframeDigitalizacionWidth;
+	}
+
+	/**
+	 * Método para establecer iframeDigitalizacionWidth.
+	 *
+	 * @param iframeDigitalizacionWidth
+	 *                                       iframeDigitalizacionWidth a establecer
+	 */
+	public void setIframeDigitalizacionWidth(String iframeDigitalizacionWidth) {
+		this.iframeDigitalizacionWidth = iframeDigitalizacionWidth;
+	}
+
+	/**
+	 * Método de acceso a iframeDigitalizacionHeight.
+	 *
+	 * @return iframeDigitalizacionHeight
+	 */
+	public String getIframeDigitalizacionHeight() {
+		return iframeDigitalizacionHeight;
+	}
+
+	/**
+	 * Método para establecer iframeDigitalizacionHeight.
+	 *
+	 * @param iframeDigitalizacionHeight
+	 *                                       iframeDigitalizacionHeight a establecer
+	 */
+	public void setIframeDigitalizacionHeight(String iframeDigitalizacionHeight) {
+		this.iframeDigitalizacionHeight = iframeDigitalizacionHeight;
 	}
 
 }

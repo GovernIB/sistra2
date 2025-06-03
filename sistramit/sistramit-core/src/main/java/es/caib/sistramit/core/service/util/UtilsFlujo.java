@@ -228,14 +228,14 @@ public final class UtilsFlujo {
 	/**
 	 * Verifica si el usuario puede cargar el tramite.
 	 *
-	 * @param datosPersistenciaTramite
-	 *                                     Datos persistencia tramite
+	 * @param datosPersistenciaTramite Datos persistencia tramite
 	 * @param usuarioAutenticadoInfo
-	 * @param recarga
-	 *                                     Indica si la carga viene de una recarga
+	 * @param funcionarioHabilitado
+	 * @param recarga                  Indica si la carga viene de una recarga
 	 */
 	public static void controlCargaTramite(final DatosPersistenciaTramite datosPersistenciaTramite,
-			final UsuarioAutenticadoInfo usuarioAutenticadoInfo, final boolean recarga) {
+										   final UsuarioAutenticadoInfo usuarioAutenticadoInfo,
+										   final PersonaDesglosado funcionarioHabilitado, final boolean recarga) {
 
 		// No dejamos cargar si se ha cancelado o purgado
 		if (datosPersistenciaTramite.isCancelado() || datosPersistenciaTramite.isPurgado()
@@ -257,6 +257,19 @@ public final class UtilsFlujo {
 					usuarioAutenticadoInfo.getAutenticacion(), usuarioAutenticadoInfo.getNif());
 		}
 
+		// Si el tramite se ha iniciado por FH, debe continuarse por FH (mismo FH)
+		if (datosPersistenciaTramite.getFuncionarioHabilitadoNif() != null && funcionarioHabilitado == null) {
+			throw new UsuarioNoPermitidoException("Tràmit iniciat per FH " + funcionarioHabilitado.getNif() + ", ha de continuar per FH",
+					usuarioAutenticadoInfo.getAutenticacion(), usuarioAutenticadoInfo.getNif());
+		}
+		if (datosPersistenciaTramite.getFuncionarioHabilitadoNif() == null && funcionarioHabilitado != null) {
+			throw new UsuarioNoPermitidoException("Tràmit no iniciat per FH. No es pot continuar per FH",
+					usuarioAutenticadoInfo.getAutenticacion(), usuarioAutenticadoInfo.getNif());
+		}
+		if (datosPersistenciaTramite.getFuncionarioHabilitadoNif() != null && funcionarioHabilitado != null && !datosPersistenciaTramite.getFuncionarioHabilitadoNif().equals(funcionarioHabilitado.getNif())) {
+			throw new UsuarioNoPermitidoException("Tràmit iniciat per FH " + datosPersistenciaTramite.getFuncionarioHabilitadoNif() + ", ha de continuar per FH " + funcionarioHabilitado.getNif(),
+					usuarioAutenticadoInfo.getAutenticacion(), usuarioAutenticadoInfo.getNif());
+		}
 	}
 
 	/**
@@ -331,6 +344,8 @@ public final class UtilsFlujo {
 		soporte.setAnexo(anexo);
 		e.setSoporte(soporte);
 
+		e.setAyudaContextual(TypeSiNo.fromBoolean(entidad.isAyudaContextual()));
+
 		return e;
 	}
 
@@ -395,6 +410,7 @@ public final class UtilsFlujo {
 		detalleTramite.setUsuario(pDatosSesion.getDatosTramite().getIniciador());
 		detalleTramite.setEntidad(
 				detalleTramiteEntidad(entidadInfo, pDatosSesion.getDatosTramite().getIdioma(), configuracionComponent));
+		detalleTramite.setFuncionarioHabilitado(TypeSiNo.fromBoolean(pDatosSesion.getDatosTramite().getUsuarioAutenticado().getFuncionarioHabilitado() != null));
 		return detalleTramite;
 	}
 
@@ -751,8 +767,9 @@ public final class UtilsFlujo {
 	/**
 	 * Convierte Java a JSON.
 	 *
-	 * @param obj
+	 * @param json
 	 *                Objeto
+	 * @param clase  Clase
 	 * @return JSON
 	 */
 	public static Object jsonToJava(final String json, final Class clase) {
@@ -788,8 +805,9 @@ public final class UtilsFlujo {
 	/**
 	 * Convierte Java a JSON.
 	 *
-	 * @param obj
-	 *                Objeto
+	 * @param jsonBytes
+	 *                Objeto en bytes
+	 * @param clase Clase
 	 * @return JSON
 	 */
 	public static Object jsonToJava(final byte[] jsonBytes, final Class clase) {

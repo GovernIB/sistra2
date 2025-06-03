@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
+import es.caib.sistramit.core.api.model.system.types.TypeIniciadoPor;
 
 /**
  * Filtros para la auditoria de tramites (RestApiInternaService)
@@ -22,6 +23,9 @@ public class FiltroEventoAuditoria implements Serializable {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
+
+	private TypeIniciadoPor iniciadoPor;
+
 	private String excepcion;
 	private String codSia;
 	private String estado;
@@ -119,6 +123,14 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public void setEvento(final TypeEvento evento) {
 		this.evento = evento;
+	}
+
+	public TypeIniciadoPor getIniciadoPor() {
+		return iniciadoPor;
+	}
+
+	public void setIniciadoPor(TypeIniciadoPor iniciadoPor) {
+		this.iniciadoPor = iniciadoPor;
 	}
 
 	public String getIdTramite() {

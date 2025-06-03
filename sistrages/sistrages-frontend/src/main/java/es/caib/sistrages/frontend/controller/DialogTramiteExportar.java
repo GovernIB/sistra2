@@ -306,8 +306,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		final String resumen = getResumen();
 		InputStream myInputStream = new ByteArrayInputStream(resumen.getBytes(Charset.forName("UTF-8")));
-		return new DefaultStreamedContent(myInputStream, "application/txt", getNombreZip() + ".txt");
-
+		return DefaultStreamedContent.builder().contentType("application/txt").name(getNombreZip() + ".txt").stream(() -> myInputStream).build();
 	}
 
 	/**
@@ -539,7 +538,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 10. Descargar.
 		final InputStream myInputStream = new ByteArrayInputStream(content);
-		return new DefaultStreamedContent(myInputStream, "application/zip", getNombreZip() + ".zip");
+		return DefaultStreamedContent.builder().contentType("application/zip").name(getNombreZip() + ".zip").stream(() -> myInputStream).build();
 
 	}
 
@@ -585,6 +584,17 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
+	 * Para obtener el patch de la configuracion global.
+	 *
+	 * @return
+	 */
+	private String getPatch() {
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService
+				.getConfiguracionGlobal(TypePropiedadConfiguracion.VERSION_PATCH);
+		return confGlobal.getValor();
+	}
+
+	/**
 	 * Perpara el resumen.
 	 *
 	 * @return
@@ -594,6 +604,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		StringBuilder texto = new StringBuilder();
 		texto.append("Entorno:"); texto.append(UtilJSF.getEntorno()); texto.append("\n");
 		texto.append("Version:"); texto.append(getVersion());texto.append("\n");
+		texto.append("Patch:"); texto.append(getPatch());texto.append("\n");
 		texto.append("Fecha:"); texto.append( Calendar.getInstance().getTime().toString());texto.append("\n");
 		texto.append("Usuario:"); texto.append( UtilJSF.getSessionBean().getUserName());texto.append("\n");
 		//texto.append("tipo:"); texto.append( TypeImportarTipo.TRAMITE.toString());texto.append("\n");
@@ -764,6 +775,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		final Properties prop = new Properties();
 		prop.setProperty("entorno", UtilJSF.getEntorno());
 		prop.setProperty("version", getVersion());
+		prop.setProperty("patch", getPatch());
 		prop.setProperty("fecha", Calendar.getInstance().getTime().toString());
 		prop.setProperty("usuario", UtilJSF.getSessionBean().getUserName());
 		prop.setProperty("tipo", TypeImportarTipo.TRAMITE.toString());

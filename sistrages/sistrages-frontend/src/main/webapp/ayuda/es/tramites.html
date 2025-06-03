@@ -53,9 +53,9 @@
 		<li><span class="nombreCampo">Descripción:</span> texto descriptivo para la versión</li>
 		<li><span class="nombreCampo">Flujo:</span> texto descriptivo del objeto del trámite</li>
 		<li><span class="nombreCampo">Activa:</span> casilla de verificación que indica si el trámite cuenta con versiones activas</li>
-		<li><span class="nombreCampo">Release:</span> código que identifica unívocamente un conjunto de cambios realizados sobre una versión</li>
+		<li><span class="nombreCampo">Release:</span> código que identifica unívocamente un conjunto de cambios realizados sobre una versión. La release se incrementa cuando se desbloquea la versión o si se sustituye una versión. Si es crea una versión al importarla, duplicarla o procesar cuaderno de carga, la release es 1. Esto hace que se puedan tener dos trámites con versión y/o release diferentes, pero con la misma huella</li>
 		<li><span class="nombreCampo">Bloqueado por:</span> indica el código de usuario que tiene bloqueada para edición la versión</li>
-		<li><span class="nombreCampo">Huella:</span> código aleatorio que se genera cada vez que el usuario desbloquea una versión</li>
+		<li><span class="nombreCampo">Huella:</span> código aleatorio que se genera cada vez que el usuario desbloquea una versión y que identifica unívocamente si una versión/release es idéntica a otra</li>
 	</ul>
 </p>
 <h2 class="stgH2">OPERATIVA VERSIÓN</h2>

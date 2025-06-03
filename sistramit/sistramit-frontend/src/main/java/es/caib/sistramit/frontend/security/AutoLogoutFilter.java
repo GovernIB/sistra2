@@ -28,9 +28,11 @@ public final class AutoLogoutFilter implements Filter {
 		final String url = ((HttpServletRequest) request).getRequestURI();
 		if (url.contains(ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE)
 				|| url.contains(ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE)
+				|| url.contains(ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE_DESDE_PERSISTENCIA)
 				|| url.contains(ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_EXTERNO)
 				|| url.contains(ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO)
-				|| url.contains(ConstantesSeguridad.PUNTOENTRADA_RETORNO_CARPETA)) {
+				|| url.contains(ConstantesSeguridad.PUNTOENTRADA_RETORNO_CARPETA)
+				|| url.contains(ConstantesSeguridad.PUNTOENTRADA_RETORNO_FH)) {
 
 			// Forzamos logout eliminando la sesion
 			final HttpSession session = ((HttpServletRequest) request).getSession(false);

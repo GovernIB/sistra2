@@ -13,12 +13,17 @@
 	<ui:define name="icerick">
 		<script type="text/javascript">
 		function setHeight(){
-	    	var altura = window.innerHeight - 50;
-	    	var alturaDatatable = altura - 250;
-            var alturaScrollableBody = altura - 293;
+			// Altura de la pantalla menos 50px del footer
+			var altura = window.innerHeight - 50;
+			// Altura de la tabla menos altura de la cabecera y del toolbar
+			var alturaDatatable = altura - 240;
+			// Altura del scrollable body, tabla menos cabecera y footer (de la tabla)
+			var alturaScrollableBody = alturaDatatable - 57;
 
             $('#form\\:dataTable').height(alturaDatatable);
             $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+
+			// console.log("altura: " + altura + ", alturaDatatable: " + alturaDatatable + ", alturaScrollableBody: " + alturaScrollableBody);
 	    }
 
 		jQuery(document).ready(function() {
@@ -27,7 +32,7 @@
               setTimeout(function(){  setHeight(); }, 100);
   			});
 
-	      setHeight();
+			setTimeout(function(){  setHeight(); }, 10);
 	  });
 
 		function cerrarDialog(){
@@ -50,8 +55,8 @@
                 <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
-				<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
-				<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
+				<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
+				<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewFormateadorFormulario.copiadoCorr}" process="@this" update="@this growl"/>
@@ -96,13 +101,13 @@
 		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewFormateadorFormulario.editar()}" process="@this" update="growl" rendered="#{viewFormateadorFormulario.permiteEditar or viewFormateadorFormulario.permiteAlta}" oncomplete="cerrarDialog()">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewFormateadorFormulario.editar()}" process="@this" update="growl" rendered="#{viewFormateadorFormulario.permiteEditar or viewFormateadorFormulario.permiteAlta}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewFormateadorFormulario.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewFormateadorFormulario.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewFormateadorFormulario.permiteAlta}" oncomplete="setHeight()">
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewFormateadorFormulario.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewFormateadorFormulario.permiteAlta}" oncomplete="setHeight()">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFormateadorFormulario.ayuda()}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewFormateadorFormulario.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 
@@ -123,29 +128,28 @@
 				<p:ajax event="rowSelect" global="false"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
 		                        />
 		        <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 		        <p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbar"/>
 
 				<!-- Columnas -->
-				<p:column headerText="#{msg['viewFormateadorFormulario.headerIdentificador']}" width="15%">
+				<p:column headerText="#{msg['viewFormateadorFormulario.headerIdentificador']}" width="15%" sortBy="#{td.identificador}">
 			        <h:outputText value="#{td.identificador}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewFormateadorFormulario.headerClassname']}" width="25%">
+			    <p:column headerText="#{msg['viewFormateadorFormulario.headerClassname']}" width="25%" sortBy="#{td.classname}">
 			        <h:outputText value="#{td.classname}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewFormateadorFormulario.headerDescripcion']}" width="25%">
+			    <p:column headerText="#{msg['viewFormateadorFormulario.headerDescripcion']}" width="25%" sortBy="#{td.descripcion}">
 			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewFormateadorFormulario.headerGenerico']}" width="10%">
+			    <p:column headerText="#{msg['viewFormateadorFormulario.headerGenerico']}" width="10%" sortBy="#{td.generico}">
 			        <p:selectBooleanCheckbox  value="#{td.generico}" />
 			    </p:column>
 
-				<p:column headerText="#{msg['viewFormateadorFormulario.headerDesactivarPersonalizacion']}" width="25%" style="text-align:center">
+				<p:column headerText="#{msg['viewFormateadorFormulario.headerDesactivarPersonalizacion']}" width="25%" style="text-align:center" sortBy="#{td.desactivarPersonalizacion}">
 					<p:selectBooleanCheckbox  value="#{td.desactivarPersonalizacion}" />
 			    </p:column>
 
@@ -157,7 +161,7 @@
 		      }
 		    </h:outputScript>
 
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewFormateadorFormulario.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewFormateadorFormulario.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
        			<p:ajax event="dialogReturn" listener="#{viewFormateadorFormulario.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
@@ -165,7 +169,7 @@
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 
@@ -173,8 +177,8 @@
                 <p:menuitem id="mnuCopyFormateador" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevoFormateador" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
-				<p:menuitem id="mnuEditarFormateador" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
-				<p:menuitem id="mnuEliminarFormateador" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
+				<p:menuitem id="mnuEditarFormateador" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
+				<p:menuitem id="mnuEliminarFormateador" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyFormateadores" trigger="mnuCopyFormateador" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewFormateadorFormulario.copiadoCorr}" process="@this" update="@this growl"/>

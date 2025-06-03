@@ -567,8 +567,7 @@ public final class ValidacionesTipo {
 		if (respuesta && validacionPrecisa) {
 			try {
 				final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-				Phonenumber.PhoneNumber phone = phoneNumberUtil.parse(pTelefono,
-						Phonenumber.PhoneNumber.CountryCodeSource.UNSPECIFIED.name());
+				Phonenumber.PhoneNumber phone = phoneNumberUtil.parse(pTelefono, null);
 				respuesta = phoneNumberUtil.isValidNumber(phone);
 			} catch (final Exception e) {
 				respuesta = false;

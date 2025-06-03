@@ -173,6 +173,9 @@ public final class LoginController {
 		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_CARPETA.equals(puntoEntrada)) {
 			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
 					ConstantesSeguridad.PARAM_TICKETAUTH);
+		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_FH.equals(puntoEntrada)) {
+			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_FH,
+					ConstantesSeguridad.PARAM_TICKETAUTH);
 		} else {
 			throw new ErrorFrontException("Punt de entrada a la aplicació no vàlido: " + url);
 		}
@@ -394,8 +397,7 @@ public final class LoginController {
 			final String servicioCP = getParamValue(savedRequest, PARAM_SERVICIOCP, "false");
 			infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
 					Integer.parseInt(paramVersionTramite), paramIdTramiteCP,
-					Boolean.parseBoolean(servicioCP.toLowerCase()), sesionHttp.getIdioma(),
-					savedRequest.getRedirectUrl());
+					Boolean.parseBoolean(servicioCP.toLowerCase()), sesionHttp.getIdioma());
 		} else {
 			// Carga trámite: a través info persistencia
 			final String paramIdSesionTramitacion = getParamValue(savedRequest, ConstantesSeguridad.PARAM_IDSESION);

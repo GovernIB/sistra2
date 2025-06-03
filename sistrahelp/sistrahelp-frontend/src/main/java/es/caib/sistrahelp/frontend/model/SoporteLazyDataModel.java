@@ -3,15 +3,12 @@ package es.caib.sistrahelp.frontend.model;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistrahelp.core.api.model.*;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
-import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
-import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
-import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
-import es.caib.sistrahelp.core.api.model.Soporte;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 
 public class SoporteLazyDataModel extends LazyDataModel<Soporte> {
@@ -32,12 +29,22 @@ public class SoporteLazyDataModel extends LazyDataModel<Soporte> {
 
 	private List<Soporte> lista;
 
-	@Override
-	public List<Soporte> load(final int first, final int pageSize, final String sortField, final SortOrder sortOrder,
-			final Map<String, Object> filters) {
+	public int count(Map<String, FilterMeta> filterBy) {
+		//TODO Implementar
+		return 20;
+		//return helpDeskService.countSoporte(filtros).intValue();
+	}
 
-		filtros.setSortField(sortField);
-		filtros.setSortOrder(sortOrder.name());
+	@Override
+	public List<Soporte> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+		if (sortBy != null && !sortBy.isEmpty()) {
+			SortMeta sortMeta = sortBy.values().iterator().next();
+			SortOrder sortOrder = sortMeta.getOrder();
+			if (sortOrder != null) {
+				filtros.setSortOrder(sortOrder.name());
+			}
+			filtros.setSortField(sortMeta.getField());
+		}
 		setLista(helpDeskService.obtenerFormularioSoporte(filtros, new FiltroPaginacion(first, pageSize))
 				.getListaFormularios());
 
@@ -57,8 +64,8 @@ public class SoporteLazyDataModel extends LazyDataModel<Soporte> {
 	}
 
 	@Override
-	public Object getRowKey(final Soporte evento) {
-		return evento.getCodigo();
+	public String getRowKey(final Soporte evento) {
+		return evento.getCodigo().toString();
 	}
 
 	public List<Soporte> getLista() {

@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
 import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
@@ -31,10 +32,9 @@ public class SecurityServiceBean implements SecurityService {
 
 	@Override
 	public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite, final int versionTramite,
-			final String idTramiteCatalogo, final boolean servicioCatalogo, final String idioma,
-			final String urlInicioTramite) {
+			final String idTramiteCatalogo, final boolean servicioCatalogo, final String idioma) {
 		return securityService.obtenerInfoLoginTramite(codigoTramite, versionTramite, idTramiteCatalogo,
-				servicioCatalogo, idioma, urlInicioTramite);
+				servicioCatalogo, idioma);
 	}
 
 	@Override
@@ -57,8 +57,13 @@ public class SecurityServiceBean implements SecurityService {
 	}
 
 	@Override
-	public UsuarioAutenticadoInfo validarTicketAutenticacion(final SesionInfo sesionInfo, final String ticket) {
-		return securityService.validarTicketAutenticacion(sesionInfo, ticket);
+	public UsuarioAutenticadoInfo validarTicketFH(final SesionInfo sesionInfo, final String ticket) {
+		return securityService.validarTicketFH(sesionInfo, ticket);
+	}
+
+	@Override
+	public UsuarioAutenticadoInfo validarTicketAutenticacionClave(final SesionInfo sesionInfo, final String ticket) {
+		return securityService.validarTicketAutenticacionClave(sesionInfo, ticket);
 	}
 
 	@Override
@@ -92,13 +97,13 @@ public class SecurityServiceBean implements SecurityService {
 	}
 
 	@Override
-	public InfoTicketAcceso obtenerTicketAccesoCDC(final String ticket) {
-		return securityService.obtenerTicketAccesoCDC(ticket);
+	public InfoTicketAcceso obtenerTicketAcceso(final String ticket) {
+		return securityService.obtenerTicketAcceso(ticket);
 	}
 
 	@Override
-	public List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo) {
-		return securityService.obtenerTramitacionesIniciadas(nif, tramite, version, idTramiteCatalogo, servicioCatalogo);
+	public List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo, String nifFH) {
+		return securityService.obtenerTramitacionesIniciadas(nif, tramite, version, idTramiteCatalogo, servicioCatalogo, nifFH);
 	}
 
 }

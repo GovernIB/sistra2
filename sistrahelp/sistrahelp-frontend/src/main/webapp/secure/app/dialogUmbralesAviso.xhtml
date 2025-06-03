@@ -16,6 +16,9 @@
 <h:body>
     <f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
     </f:facet>
 
 	<!-- Parametros dialogo -->
@@ -32,11 +35,11 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growldialogUmbralesAvisoData" widgetVar="growldialogUmbralesAvisoData" />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "1" width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "1" width="100%">
 					<h:outputText value="#{msg['viewCuadroMando.umbralesAviso']}" rendered="#{dialogUmbralesAviso.alta or dialogUmbralesAviso.edicion}"/>
 					<h:outputText value="#{msg['viewCuadroMando.umbralesAvisoSinPermiso']}" rendered="#{dialogUmbralesAviso.consulta}"/>
 				</h:panelGrid>
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "11" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "11" cellpadding = "5" cellspacing = "0"  width="100%">
 					<p:outputLabel value="0% &gt;= " />
 				 	<p:outputLabel value="#{msg['viewCuadroMando.normal']}" />
 				 	<p:outputLabel value=" &lt; " />

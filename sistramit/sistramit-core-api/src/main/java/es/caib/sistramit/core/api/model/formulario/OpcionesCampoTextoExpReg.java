@@ -20,6 +20,11 @@ public final class OpcionesCampoTextoExpReg implements Serializable {
 	private String regexp;
 
 	/**
+	 * Tamaño máximo (carácteres).
+	 */
+	private Integer tamanyo = null;
+
+	/**
 	 * Prevenir pegar.
 	 */
 	private TypeSiNo pegar = TypeSiNo.SI;
@@ -60,6 +65,25 @@ public final class OpcionesCampoTextoExpReg implements Serializable {
 	 */
 	public void setRegexp(final String pRegexp) {
 		regexp = pRegexp;
+	}
+
+	/**
+	 * Método de acceso a tamanyo.
+	 *
+	 * @return tamanyo
+	 */
+	public Integer getTamanyo() {
+		return tamanyo;
+	}
+
+	/**
+	 * Método para establecer tamanyo.
+	 *
+	 * @param pTamanyo
+	 *                    tamanyo a establecer
+	 */
+	public void setTamanyo(final Integer pTamanyo) {
+		tamanyo = pTamanyo;
 	}
 
 }

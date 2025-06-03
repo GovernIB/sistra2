@@ -14,12 +14,18 @@
 	<ui:define name="icerick">
 		<script type="text/javascript">
 		function setHeight(){
-	    	var altura = window.innerHeight - 50;
-	    	var alturaDatatable = altura - 250;
-            var alturaScrollableBody = altura - 293;
+			// Altura de la pantalla menos 50px del footer
+			console.log("altura: " + altura);
+			var altura = window.innerHeight - 50;
+			// Altura de la tabla menos altura de la cabecera y del toolbar
+			var alturaDatatable = altura - 240;
+			// Altura del scrollable body, tabla menos cabecera y footer (de la tabla)
+			var alturaScrollableBody = alturaDatatable - 57;
 
             $('#form\\:dataTable').height(alturaDatatable);
             $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+
+			console.log("alturaDatatable: " + alturaDatatable);
 	    }
 
 		jQuery(document).ready(function() {
@@ -28,7 +34,7 @@
               setTimeout(function(){  setHeight(); }, 100);
   			});
 
-	      setHeight();
+			setTimeout(function(){  setHeight(); }, 10);
 	  });
 
 		function cerrarDialog(){
@@ -53,8 +59,8 @@
                 <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
-				<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
-				<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
+				<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
+				<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewPlugins.copiadoCorr}" process="@this" update="@this growl"/>
@@ -97,14 +103,14 @@
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewPlugins.consultar()}" process="@this" update="growl" rendered="#{not viewPlugins.permiteEditar and not viewPlugins.permiteAlta}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPlugins.editar()}" process="@this" update="growl"  rendered="#{viewPlugins.permiteAlta}" oncomplete="cerrarDialog()">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewPlugins.editar()}" process="@this" update="growl"  rendered="#{viewPlugins.permiteAlta}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewPlugins.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewPlugins.permiteAlta}" oncomplete="setHeight()">
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewPlugins.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewPlugins.permiteAlta}" oncomplete="setHeight()">
 	       		   			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 						</p:commandButton>
 
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPlugins.ayuda()}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewPlugins.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 
@@ -124,21 +130,20 @@
 				<p:ajax event="rowSelect" global="false"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
 		                        />
 		         <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 		         <p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbar"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewPlugins.tipo']}">
+			    <p:column headerText="#{msg['viewPlugins.tipo']}" sortBy="#{msg['typePlugin.' += td.tipo]}">
 			        <h:outputText value="#{msg['typePlugin.' += td.tipo]}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewPlugins.classname']}">
+			    <p:column headerText="#{msg['viewPlugins.classname']}" sortBy="#{td.classname}">
 			        <h:outputText value="#{td.classname}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewPlugins.descripcion']}" >
+			    <p:column headerText="#{msg['viewPlugins.descripcion']}" sortBy="#{td.descripcion}">
 			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
@@ -151,7 +156,7 @@
 		      }
 		    </h:outputScript>
 
-			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPlugins.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewPlugins.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
@@ -159,7 +164,7 @@
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 
@@ -168,8 +173,8 @@
                 <p:menuitem id="mnuCopyPlugins" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevoPlugins" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
-				<p:menuitem id="mnuEditarPlugins" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
-				<p:menuitem id="mnuEliminarPlugins" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
+				<p:menuitem id="mnuEditarPlugins" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
+				<p:menuitem id="mnuEliminarPlugins" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyPlugins" trigger="mnuCopyPlugins" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewPlugins.copiadoCorr}" process="@this" update="@this growl"/>

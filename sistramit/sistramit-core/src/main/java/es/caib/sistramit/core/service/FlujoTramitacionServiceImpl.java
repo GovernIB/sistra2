@@ -2,19 +2,13 @@ package es.caib.sistramit.core.service;
 
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.flujo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistramit.core.api.exception.NoExisteFlujoTramitacionException;
-import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
-import es.caib.sistramit.core.api.model.flujo.DetallePasos;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
@@ -40,8 +34,8 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	@Override
 	@NegocioInterceptor
 	public String iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticado, final String idTramite,
-			final int version, final String idioma, final String idTramiteCatalogo, final boolean servicioCatalogo,
-			final String urlInicio, final Map<String, String> parametrosInicio) {
+								 final int version, final String idioma, final String idTramiteCatalogo, final boolean servicioCatalogo,
+								 final String urlInicio, final Map<String, String> parametrosInicio) {
 		// Generamos flujo de tramitacion
 		final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) ApplicationContextProvider
 				.getApplicationContext().getBean("flujoTramitacionComponent");

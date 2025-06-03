@@ -16,13 +16,13 @@
   		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esFecha">esHora</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esHora">esHora</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	esFecha(String hora, String formatoHora): boolean
+	esHora(String hora, String formatoHora): boolean
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
@@ -82,7 +82,7 @@
 
 <p><b>Ejemplo 5</b> Validar la cadena de caracteres '10:06'. </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esFecha('10:06', null);
+	var valido = PLUGIN_UTILS.esHora('10:06', null);
 	</p>
 <p>La función esHora retorna 'true', debido a que el valor indicado es una hora válida.</p>
 <br />

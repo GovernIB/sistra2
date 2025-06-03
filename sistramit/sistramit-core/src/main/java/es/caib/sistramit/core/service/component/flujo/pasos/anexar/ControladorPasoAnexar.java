@@ -81,6 +81,12 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	/** Accion borrar documento. */
 	@Autowired
 	private AccionBorrarAnexo accionBorrarAnexo;
+	/** Accion iniciar digitalizacion documento. */
+	@Autowired
+	private AccionIniciarDigitalizacionAnexo accionIniciarDigitalizacionAnexo;
+	/** Accion finalizar digitalizacion documento. */
+	@Autowired
+	private AccionFinalizarDigitalizacionAnexo accionFinalizarDigitalizacionAnexo;
 
 	/** Marcador estado paso que indica que hay algun anexo pendiente. */
 	private static final String MARCADOR_PENDIENTE_ASISTENTE = "pendienteAsistente";
@@ -159,6 +165,12 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			break;
 		case BORRAR_ANEXO:
 			accionPaso = accionBorrarAnexo;
+			break;
+		case INICIAR_DIGITALIZACION_ANEXO:
+			accionPaso = accionIniciarDigitalizacionAnexo;
+			break;
+		case FINALIZAR_DIGITALIZACION_ANEXO:
+			accionPaso = accionFinalizarDigitalizacionAnexo;
 			break;
 		default:
 			throw new AccionPasoNoExisteException("No existeix acció " + pAccionPaso + " a la passa Anexar");
@@ -403,7 +415,12 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				anexo.setAyuda(anexd.getAyuda());
 				anexo.setTipoENI("TD99");
 				anexo.setPresentacion(TypePresentacion.ELECTRONICA);
-				anexo.setExtensiones(calcularExtensionesPermitidas(anexd.getExtensiones()));
+				// FH fija extensión a pdf
+				if (pVariablesFlujo.isFuncionarioHabilitado()) {
+					anexo.setExtensiones("pdf");
+				} else {
+					anexo.setExtensiones(calcularExtensionesPermitidas(anexd.getExtensiones()));
+				}
 				if (StringUtils.isNotBlank(anexd.getTamanyoMaximo())
 						&& !("0KB".equals(StringUtils.deleteWhitespace(anexd.getTamanyoMaximo().toUpperCase())))) {
 					anexo.setTamMax(anexd.getTamanyoMaximo());
@@ -417,10 +434,12 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				} else {
 					anexo.setObligatorio(TypeObligatoriedad.OPCIONAL);
 				}
-				if (anexd.isConvertirPDF()) {
+				// FH no convierte a PDF, se tiene que retornar PDF
+				if (!pVariablesFlujo.isFuncionarioHabilitado() && anexd.isConvertirPDF()) {
 					anexo.setConvertirPDF(TypeSiNo.SI);
 				}
-				if (anexd.isFirmar()) {
+				// FH no hace caso firma
+				if (!pVariablesFlujo.isFuncionarioHabilitado()  && anexd.isFirmar()) {
 					anexo.setFirmar(TypeSiNo.SI);
 					final Firmante f = Firmante.createNewFirmante();
 					f.setNif(pVariablesFlujo.getUsuario().getNif());
@@ -488,7 +507,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				continue;
 			}
 
-			// Establece detalle anexo
+			// Establece detalle anexo (si es modo FH solo se tienen en cuenta obligatoriedad)
 			final Anexo anexoDetalle = Anexo.createNewAnexo();
 			anexoDetalle.setObligatorio(obligatoriedad);
 			anexoDetalle.setId(anexoDef.getIdentificador());
@@ -502,44 +521,46 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				anexoDetalle.setPlantilla(PlantillaAnexo.createNewPlantillaAnexo(TypePlantillaAnexo.EXTERNA,
 						anexoDef.getAyuda().getUrl()));
 			}
-
 			if (anexoDetalle.getPresentacion() == TypePresentacion.ELECTRONICA) {
 				// Max instancias
 				anexoDetalle.setMaxInstancias(anexoDef.getPresentacionElectronica().getInstancias());
-				// Conversion PDF
-				if (anexoDef.getPresentacionElectronica().isConvertirPDF()) {
-					anexoDetalle.setConvertirPDF(TypeSiNo.SI);
-				}
 				// Extensiones y tamanyo
 				if (anexoDef.getPresentacionElectronica().getTamanyoMax() > 0) {
 					anexoDetalle.setTamMax(anexoDef.getPresentacionElectronica().getTamanyoMax()
 							+ anexoDef.getPresentacionElectronica().getTamanyoUnidad());
 				}
-				String extensiones = "";
-				if (anexoDef.getPresentacionElectronica().getExtensiones() != null
-						&& !anexoDef.getPresentacionElectronica().getExtensiones().isEmpty()) {
-					for (final String ext : anexoDef.getPresentacionElectronica().getExtensiones()) {
-						if (StringUtils.isNotBlank(extensiones)) {
-							extensiones += ",";
-						}
-						extensiones += ext;
+				// Si es modo FH no se tiene en cuenta extensiones (se fija a pdf) ni la firma
+				if (!pVariablesFlujo.isFuncionarioHabilitado()) {
+					// Conversion PDF
+					if (anexoDef.getPresentacionElectronica().isConvertirPDF()) {
+						anexoDetalle.setConvertirPDF(TypeSiNo.SI);
 					}
+					// Extensiones permitidas
+					String extensiones = "";
+					if (anexoDef.getPresentacionElectronica().getExtensiones() != null
+							&& !anexoDef.getPresentacionElectronica().getExtensiones().isEmpty()) {
+						for (final String ext : anexoDef.getPresentacionElectronica().getExtensiones()) {
+							if (StringUtils.isNotBlank(extensiones)) {
+								extensiones += ",";
+							}
+							extensiones += ext;
+						}
+					}
+					anexoDetalle.setExtensiones(calcularExtensionesPermitidas(extensiones));
+					// Si debe firmarse digitalmente mediante asistente
+					anexoDetalle.setFirmar(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isFirmar()));
+					// Si se debe anexarse firmado al anexar
+					anexoDetalle.setAnexarfirmado(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isAnexarFirmado()));
+					// Comprobamos si se debe validar firmantes (anexado firmado o firma mediante asistente)
+					anexoDetalle.setValidarFirmantes(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isValidarFirmantes()));
+					// Si hay que validar firmantes, calculamos los firmantes
+					if ((anexoDef.getPresentacionElectronica().isFirmar() || anexoDef.getPresentacionElectronica().isAnexarFirmado()) && anexoDef.getPresentacionElectronica().isValidarFirmantes()) {
+						calcularFirmantes(anexoDef, anexoDetalle, pDefinicionTramite, pVariablesFlujo);
+					}
+				} else {
+					// Extensiones permitidas: fijo a PDF
+					anexoDetalle.setExtensiones("pdf");
 				}
-				anexoDetalle.setExtensiones(calcularExtensionesPermitidas(extensiones));
-
-				// Si debe firmarse digitalmente mediante asistente
-				anexoDetalle.setFirmar(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isFirmar()));
-				// Si se debe anexarse firmado al anexar
-				anexoDetalle.setAnexarfirmado(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isAnexarFirmado()));
-
-				// Comprobamos si se debe validar firmantes (anexado firmado o firma mediante asistente)
-				anexoDetalle.setValidarFirmantes(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isValidarFirmantes()));
-
-				// Si hay que validar firmantes, calculamos los firmantes
-				if ((anexoDef.getPresentacionElectronica().isFirmar() || anexoDef.getPresentacionElectronica().isAnexarFirmado()) && anexoDef.getPresentacionElectronica().isValidarFirmantes()) {
-					calcularFirmantes(anexoDef, anexoDetalle, pDefinicionTramite, pVariablesFlujo);
-				}
-
 			}
 
 			// Añadimos a lista anexos

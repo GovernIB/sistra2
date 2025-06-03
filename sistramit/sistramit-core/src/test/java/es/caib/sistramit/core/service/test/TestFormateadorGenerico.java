@@ -102,7 +102,7 @@ public class TestFormateadorGenerico {
 
 		final FormateadorGenerico formateador = new FormateadorGenerico();
 		final byte[] resultado = formateador.formatear(UtilsFormulario.valoresToXml(formulario), paginasFormulario,
-				plantilla, "es", formularioInterno, "Título del procedimiento", "Título del trámite", "1234", "1234");
+				plantilla, "es", formularioInterno, "Título del procedimiento", "Título del trámite", "1234", "1234", false);
 		final Path path = Paths.get("/formateador.pdf");
 		Files.write(path, resultado);
 	}

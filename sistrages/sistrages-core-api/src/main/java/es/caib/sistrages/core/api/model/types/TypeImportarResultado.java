@@ -9,11 +9,11 @@ package es.caib.sistrages.core.api.model.types;
 public enum TypeImportarResultado {
 
 	/** OK **/
-	OK("fa fa-check fa-2x", "0, 204, 0", "typeImportar.resultado.OK"),
+	OK("fa fa fa-check fa-2x", "0, 204, 0", "typeImportar.resultado.OK"),
 	/** INFO **/
 	INFO("fa fa-info-circle fa-2x", "0, 0, 214", "typeImportar.resultado.INFO"),
 	/** WARNING. **/
-	WARNING("fa fa-warning fa-2x", "214, 214, 0", "typeImportar.resultado.WARNING"),
+	WARNING("fa fa-exclamation-triangle fa-2x", "214, 214, 0", "typeImportar.resultado.WARNING"),
 	/** ERROR. **/
 	ERROR("fa fa-times fa-2x", "255, 19, 19", "typeImportar.resultado.ERROR");
 

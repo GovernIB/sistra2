@@ -15,6 +15,9 @@
 <h:body>
   	<f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -138,7 +141,7 @@
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
 			<p:outputPanel>
-			 		<h:panelGrid id="bordes" rowClasses=",ui-datatable-odd" columnClasses="w15 padding-right-8, w85 padding-right-8" columns="2" styleClass="w100" cellpadding="8px">
+			 		<h:panelGrid id="bordes" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="w15 padding-right-8, w85 padding-right-8" columns="2" styleClass="w100" cellpadding="8px">
  							<p:outputLabel value="#{msg['dialogInformacionPersistencia.estado']}:"/>
 							<h:panelGrid styleClass="w100" columnClasses="grid-right dipC1, dipC2,grid-right dipC3, dipC4,grid-right dipC5, dipC6" columns="6">
 				 				<p:outputLabel for="estado" value="#{msg['dialogInformacionPersistencia.estado']}:"/>
@@ -229,7 +232,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" actionListener="#{dialogInformacionPersistencia.ayuda}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" actionListener="#{dialogInformacionPersistencia.ayuda}"/>
 						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogInformacionPersistencia.cerrar}" process="@this" styleClass="boton-azul"/>
 					</f:facet>
 				</p:toolbar>

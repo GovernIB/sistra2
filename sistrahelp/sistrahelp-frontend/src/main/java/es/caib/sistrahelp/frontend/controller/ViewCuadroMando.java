@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,16 +21,12 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.exception.CargaConfiguracionException;
 import es.caib.sistrahelp.core.api.model.Area;
-import es.caib.sistrahelp.core.api.model.ErroresCuadroMando;
 import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
-import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCMRe;
-import es.caib.sistrahelp.core.api.model.ErroresTramites;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.EventoCM;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
@@ -49,7 +44,6 @@ import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMExpansionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMLazyDataModel;
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMPlataformaLazyDataModel;
-import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.TramitesPorErrorCMExpansionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.TramitesPorErrorCMLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
@@ -147,8 +141,6 @@ public class ViewCuadroMando extends ViewControllerBase {
 	private int formFin;
 
 	private int firmaIni;
-
-	private int firmaFin;
 
 	private int firmaFinOk;
 
@@ -432,7 +424,6 @@ public class ViewCuadroMando extends ViewControllerBase {
 		formIni = 0;
 		formFin = 0;
 		firmaIni = 0;
-		firmaFin = 0;
 		firmaFinOk = 0;
 		if(filtros.getClasificacionSeleccionada().equals("et")) {
 			PrimeFaces.current().executeScript(
@@ -534,7 +525,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 		params.put("umbralNormalAtencionPropertiesString", umbralNormalAtencionProperties.toString());
 		params.put("umbralAtencionRevisarPropertiesString", umbralAtencionRevisarProperties.toString());
 
-		UtilJSF.openDialog(DialogEnviarMail.class, TypeModoAcceso.EDICION, params, true, 500, 110);
+		UtilJSF.openDialog(DialogEnviarMail.class, TypeModoAcceso.EDICION, params, true, 500, 135);
 
 	}
 
@@ -646,9 +637,6 @@ public class ViewCuadroMando extends ViewControllerBase {
 			case FIRMA_INICIO:
 				firmaIni = ev.getConcurrencias().intValue();
 				break;
-			case FIRMA_FIN:
-				firmaFin = ev.getConcurrencias().intValue();
-				break;
 			case FIRMA_FIN_OK:
 				firmaFinOk = ev.getConcurrencias().intValue();
 				break;
@@ -658,9 +646,9 @@ public class ViewCuadroMando extends ViewControllerBase {
 			case PAGO_ELECTRONICO_VERIFICADO:
 				pagFin += ev.getConcurrencias();
 				break;
-			case PAGO_PRESENCIAL:
+			/*case PAGO_PRESENCIAL:
 				pagFin += ev.getConcurrencias();
-				break;
+				break;*/
 			case INICIAR_TRAMITE:
 				tramIni = ev.getConcurrencias().intValue();
 				break;
@@ -1007,20 +995,12 @@ public class ViewCuadroMando extends ViewControllerBase {
 		this.firmaIni = firmaIni;
 	}
 
-	public final int getFirmaFin() {
-		return firmaFin;
-	}
-
 	public int getFirmaFinOk() {
 		return firmaFinOk;
 	}
 
 	public void setFirmaFinOk(int firmaFinOk) {
 		this.firmaFinOk = firmaFinOk;
-	}
-
-	public final void setFirmaFin(int firmaFin) {
-		this.firmaFin = firmaFin;
 	}
 
 	public Date getFechaDesde() {

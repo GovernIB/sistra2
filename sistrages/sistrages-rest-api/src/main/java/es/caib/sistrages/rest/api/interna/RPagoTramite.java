@@ -24,10 +24,6 @@ public class RPagoTramite {
 	@ApiModelProperty(value = "Obligatoriedad: Si (S) / No (N) / Depende (D)")
 	private String obligatoriedad;
 
-	/** Tipo: Telematico (T) / Presencial (P) / Ambos (A). */
-	@ApiModelProperty(value = "Tipo: Telematico (T) / Presencial (P) / Ambos (A)")
-	private String tipo;
-
 	/** Script dependencia. */
 	@ApiModelProperty(value = "Script dependencia")
 	private RScript scriptDependencia;

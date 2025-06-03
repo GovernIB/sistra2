@@ -46,6 +46,8 @@ public class ViewEntidades extends ViewControllerBase {
 		UtilJSF.verificarAccesoSuperAdministrador();
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+		// Inicializar codigo entidad seleccionada
+		UtilJSF.getSessionBean().setCodigoEntidadSeleccionada(null);
 		// Recuperar datos
 		buscar();
 	}
@@ -89,7 +91,7 @@ public class ViewEntidades extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.ALTA, null, true, 570, 290);
+		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.ALTA, null, true, 800, 355);
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class ViewEntidades extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true, 570, 300);
+		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true, 800, 355);
 	}
 
 	/**
@@ -227,6 +229,7 @@ public class ViewEntidades extends ViewControllerBase {
 	 */
 	public void setDatoSeleccionado(final Entidad datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
+		UtilJSF.getSessionBean().setCodigoEntidadSeleccionada(datoSeleccionado.getCodigo());
 	}
 
 	/**

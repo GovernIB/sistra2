@@ -13,7 +13,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import org.primefaces.context.RequestContext;
+import org.apache.commons.lang3.BooleanUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -218,6 +219,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	private boolean requiereFirma;
 
+	private boolean mostrarConvertirPDF;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -261,19 +264,32 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		DefaultMenuItem item = null;
 
-		item = new DefaultMenuItem(area.getIdentificador());
-		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo());
-		breadCrumbRoot.addElement(item);
+		//Anyadimos el item raiz que será la casita
+		item = new DefaultMenuItem();
+		item.setAriaLabel(area.getIdentificador());
+		item.setValue(area.getIdentificador());
+		item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml");
+		breadCrumbRoot.getElements().add(item);
 
-		item = new DefaultMenuItem(tramite.getIdentificador());
-		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo()
+		item = new DefaultMenuItem();
+		item.setAriaLabel(area.getIdentificador());
+		item.setValue(area.getIdentificador());
+		item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + area.getCodigo());
+		breadCrumbRoot.getElements().add(item);
+
+		item = new DefaultMenuItem();
+		item.setAriaLabel(tramite.getIdentificador());
+		item.setValue(tramite.getIdentificador());
+		item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo()
 				+ "&pag=" + pagina);
-		breadCrumbRoot.addElement(item);
+		breadCrumbRoot.getElements().add(item);
 
-		item = new DefaultMenuItem(UtilJSF.getLiteral("botones.version") + " " + tramiteVersion.getNumeroVersion());
-		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo()
+		item = new DefaultMenuItem();
+		item.setAriaLabel(UtilJSF.getLiteral("botones.version") + " " + tramiteVersion.getNumeroVersion());
+		item.setValue(UtilJSF.getLiteral("botones.version") + " " + tramiteVersion.getNumeroVersion());
+		item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo()
 				+ "&tramite_version=" + tramiteVersion.getCodigo() + "&pag=" + pagina);
-		breadCrumbRoot.addElement(item);
+		breadCrumbRoot.getElements().add(item);
 		breadCrumbRoot.generateUniqueIds();
 		breadCrumb = copyMenuModel(breadCrumbRoot);
 
@@ -282,6 +298,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		/** Marcamos las propiedades, que es el primer hijo. **/
 		this.opcionUrl = UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPropiedades");
+
+		final String propConvertirPDF = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_CONVERTIR_PDF.toString());
+		mostrarConvertirPDF = propConvertirPDF != null && BooleanUtils.toBoolean(propConvertirPDF);
 
 		checkPermiteEditar();
 		checkPermiteConsultar();
@@ -541,10 +561,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		if (this.permiteEditar()) {
-			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 430);
+			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 460);
 		} else {
 			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 830,
-					430);
+					460);
 		}
 	}
 
@@ -638,7 +658,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Consultar Script.
 	 *
-	 * @param iScript
+	 * @param tipoScript tipo script
+	 * @param idScript id script
 	 */
 	public void consultarScript(final String tipoScript, final Long idScript) {
 
@@ -741,7 +762,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1100, 570);
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1100, 600);
 	}
 
 	/**
@@ -768,7 +789,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			 */
 
 		}
-		RequestContext.getCurrentInstance().execute("clickUpdate();");
+		PrimeFaces.current().executeScript("clickUpdate();");
 	}
 
 	/**
@@ -883,7 +904,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), seccionesSeleccionado.getCodigo().toString());
-		UtilJSF.openDialog(DialogSeccionReutilizable.class, TypeModoAcceso.CONSULTA, params, true, 770, 230);
+		UtilJSF.openDialog(DialogSeccionReutilizable.class, TypeModoAcceso.CONSULTA, params, true, 770, 310);
 	}
 
 	/** Edita documento a través del doble click. **/
@@ -1174,9 +1195,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	// ------- VIEW DE PASO DE DOCUMENTO ------------------------------
 
 	/**
-	 * Consultar Script.
+	 * Editar script lista dinamica.
 	 *
-	 * @param iScript
 	 */
 	public void editarScriptListaDinamica() {
 
@@ -1292,7 +1312,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(),
 				entidadService.loadEntidadByArea(area.getCodigo()).getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 1050, 685);
+		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 1100, 635);
 	}
 
 	/**
@@ -1531,7 +1551,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 700, 450);
+		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 750, 350);
 	}
 
 	/**
@@ -1552,8 +1572,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public void returnDialogPrevisualizar(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-		RequestContext requestContext = RequestContext.getCurrentInstance();
-		requestContext.update(":workDefinicionVersion");
+		PrimeFaces.current().ajax().update(":workDefinicionVersion");
 
 	}
 
@@ -1893,7 +1912,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	private void setExpandedRecursively(final TreeNode node, final boolean expanded) {
 		if (node != null) {
-			for (final TreeNode child : node.getChildren()) {
+			for (final Object object : node.getChildren()) {
+				TreeNode child = (TreeNode) object;
 				setExpandedRecursively(child, expanded);
 			}
 			node.setExpanded(expanded);
@@ -2035,7 +2055,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		inicializarArbol();
 
 		if (arbol.getParent().getData().equals("Root")) {
-			root.getChildren().get(Integer.parseInt(arbol.getRowKey())).setSelected(true);
+			((TreeNode)root.getChildren().get(Integer.parseInt(arbol.getRowKey()))).setSelected(true);
 		}
 
 		OpcionArbol opArbol = (OpcionArbol) arbol.getData();
@@ -2088,7 +2108,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			if (!"root".equals(arbol.getRowKey())) {
 				final OpcionArbol opcionArbol = (OpcionArbol) arbol.getData();
-				final DefaultMenuItem item = new DefaultMenuItem(opcionArbol.getName());
+				final DefaultMenuItem item = new DefaultMenuItem();
+				item.setAriaLabel(opcionArbol.getName());
+				item.setValue(opcionArbol.getName());
 				item.setProcess("@this");
 				item.setDelay("500");
 				item.setUpdate("@form :workDefinicionVersion :formArbol:arbol");
@@ -2097,19 +2119,19 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 					mpan = arbol;
 					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan())}");
 
-					breadCrumb.addElement(item);
+					breadCrumb.getElements().add(item);
 					conti++;
 				} else if (conti == 1) {
 					mpan1 = arbol;
 					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan1())}");
 
-					breadCrumb.addElement(item);
+					breadCrumb.getElements().add(item);
 					conti++;
 				} else {
 					mpan2 = arbol;
 					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan2())}");
 
-					breadCrumb.addElement(item);
+					breadCrumb.getElements().add(item);
 				}
 
 			} else {
@@ -2129,7 +2151,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (menumodel != null && !menumodel.getElements().isEmpty()) {
 			res = new DefaultMenuModel();
 			for (final MenuElement item : menumodel.getElements()) {
-				res.addElement(item);
+				res.getElements().add(item);
 			}
 		}
 		return res;
@@ -2570,5 +2592,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Actualizamos los valores de debeAnexarFirmado y debeFirmarDigitalmente
 //		this.getDocumentoTramiteSeleccionado().setDebeAnexarFirmado(requiereFirma);
 //		this.getDocumentoTramiteSeleccionado().setDebeFirmarDigitalmente(requiereFirma);
+	}
+
+	public boolean isMostrarConvertirPDF() {
+		return mostrarConvertirPDF;
+	}
+
+	public void setMostrarConvertirPDF(boolean mostrarConvertirPDF) {
+		this.mostrarConvertirPDF = mostrarConvertirPDF;
 	}
 }

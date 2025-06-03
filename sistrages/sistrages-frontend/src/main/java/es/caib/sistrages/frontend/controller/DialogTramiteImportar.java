@@ -19,10 +19,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +97,8 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilImportacion;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import org.primefaces.model.file.UploadedFile;
+import org.primefaces.model.file.UploadedFiles;
 
 @ManagedBean
 @ViewScoped
@@ -286,23 +288,57 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		todoCorrecto = false;
 	}
 
-	/**
-	 * carga de fichero.
-	 *
-	 * @param event el evento
-	 * @throws IOException
-	 *
-	 */
-	public void upload(final FileUploadEvent event) throws IOException {
 
-		if (event != null && event.getFile() != null) {
-			final UploadedFile file = event.getFile();
-			contenido = file.getContents();
-			prepararImportacion(contenido);
+/*
+	public void upload(final FileUploadEvent event)  {
+		UploadedFile uploadedFile = event.getFile();
+		if (uploadedFile != null) {
+			// Guardar el archivo en una ubicación temporal o procesarlo según sea necesario
+			// Asegúrate de gestionar la lógica para que no "resetee" el componente después de la carga
+		}
+	}*/
+
+	UploadedFile file;
+
+	public UploadedFile getFile() {
+		return file;
+	}
+
+	public void setFile(UploadedFile file) {
+		this.file = file;
+		if (file != null) {
+			contenido = file.getContent();
+			try {
+				prepararImportacion(contenido);
+			} catch (final IOException e) {
+				UtilJSF.loggearErrorFront("Error al cargar el fichero", e);
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.error.fichero"));
+			}
 		} else {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
 		}
 	}
+	/**
+	 * carga de fichero.
+	 *
+	 * @param event el evento
+
+	public void upload(final FileUploadEvent event)  {
+
+		if (event != null && event.getFile() != null) {
+			final UploadedFile file = event.getFile();
+			contenido = file.getContent();
+			try {
+				prepararImportacion(contenido);
+			} catch (final IOException e) {
+				UtilJSF.loggearErrorFront("Error al cargar el fichero", e);
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.error.fichero"));
+			}
+		} else {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
+		}
+	}**/
+
 
 	/**
 	 * Método privado que prepara toda la importación. Pasos a realizar: <br />
@@ -415,7 +451,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		checkTodoCorrecto();
 
 		if (!dominios.isEmpty() || !gestores.isEmpty()) {
-			RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
+			PrimeFaces.current().executeScript("PF('avisoDlg').show();");
 		}
 	}
 
@@ -1196,7 +1232,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * Check dominio.
 	 *
-	 * @param idDominio
+	 * @param identificador
 	 */
 	public void checkDominio(final String identificador) {
 
@@ -1945,7 +1981,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominiosId the dominiosId to set
+	 * @param dominios the dominiosId to set
 	 */
 	public void setDominios(final Map<Long, Dominio> dominios) {
 		this.dominios = dominios;

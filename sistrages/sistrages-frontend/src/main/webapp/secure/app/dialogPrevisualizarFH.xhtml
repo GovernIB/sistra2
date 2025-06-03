@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogPrevisualizarFH.titulo']}"/></title>
+</h:head>
+
+<h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogPrevisualizarFH.modoAcceso}"/>
+		<f:viewParam name="IDIOMA" value="#{dialogPrevisualizarFH.tramiteFH.idioma}"/>
+		<f:viewParam name="TRAMITE" value="#{dialogPrevisualizarFH.tramiteFH.tramite}"/>
+		<f:viewParam name="NUMEROVERSION" converter="javax.faces.Integer" value="#{dialogPrevisualizarFH.tramiteFH.version}"/>
+		<f:viewParam name="tramiteSeleccionado" value="#{dialogPrevisualizarFH.tramiteFH.idTramiteCatalogo}"/>
+		<f:viewParam name="parametros" value="#{dialogPrevisualizarFH.tramiteFH.parametros}"/>
+		<f:viewParam name="servicioCatalogo" converter="javax.faces.Boolean" value="#{dialogPrevisualizarFH.tramiteFH.servicioCatalogo}"/>
+		<f:viewAction action="#{dialogPrevisualizarFH.init}" />
+	</f:metadata>
+	<h:form id="dialogPrevisualizarFH" styleClass="margin-top-10">
+            <style>
+                .ui-tabs-panels .ui-helper-hidden {
+                    display: none !important;
+                }
+            </style>
+			<h:outputScript >
+
+			  var arrayCm = [];
+
+				  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogPrevisualizarFH:auxCopiar");
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}else{
+		          aux.value = '';
+		        }
+
+				if(aux.value!='' ){
+            var multiple = false;
+            var hijos = el.children;
+			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+		            multiple = true;
+		                  }else if(hijos.length &gt;= 1 ){
+		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+		                  		hijos = hijos[0].children;
+		                  	}
+			                    for(i=0;i&lt;hijos.length;i++){
+					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+					                multiple=true;
+					              }
+			                    }
+
+		                  }
+                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+                  if(multiple){
+                    for(i=0;i&lt;listaCm.length;i++){
+                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.add("d-none");
+					}
+                  }else{
+                  	for(i=0;i&lt;listaCm.length;i++){
+                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+                  }
+
+               }
+			 }
+
+			</h:outputScript>
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+				<p:tabView width="100%" dynamic="true">
+					<p:tab title="#{msg['dialogPrevisualizarFH.tab.fh']}">
+						<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w70" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+							<p:outputLabel for="usuario" value="#{msg['dialogPrevisualizarFH.usr']}" />
+							<p:inputText id="usuario" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.funcionarioHabilitado.username}" required="true" styleClass="w90" maxlength="50">
+							</p:inputText>
+
+							<p:outputLabel for="nif" value="#{msg['dialogPrevisualizarFH.nif']}" />
+							<p:inputText id="nif" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.funcionarioHabilitado.nif}" required="true" styleClass="w90" maxlength="20">
+							</p:inputText>
+
+							<p:outputLabel for="nombre" value="#{msg['dialogPrevisualizarFH.nombre']}" />
+							<p:inputText id="nombre" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.funcionarioHabilitado.nombre}" required="true" styleClass="w90" maxlength="50">
+							</p:inputText>
+
+							<p:outputLabel for="apellido1" value="#{msg['dialogPrevisualizarFH.apellido1']}" />
+							<p:inputText id="apellido1" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.funcionarioHabilitado.apellido1}" required="true" styleClass="w90" maxlength="50">
+							</p:inputText>
+
+							<p:outputLabel for="apellido2" value="#{msg['dialogPrevisualizarFH.apellido2']}" />
+							<p:inputText id="apellido2" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.funcionarioHabilitado.apellido2}" required="false" styleClass="w90" maxlength="50">
+							</p:inputText>
+
+							<p:outputLabel for="dir3" value="#{msg['dialogPrevisualizarFH.organo']}" />
+							<p:inputText id="dir3" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.funcionarioHabilitado.dir3}" required="true" styleClass="w90" maxlength="20">
+							</p:inputText>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{msg['dialogPrevisualizarFH.tab.int']}">
+						<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w70" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+							<p:outputLabel for="nifInt" value="#{msg['dialogPrevisualizarFH.nif']}" />
+							<p:inputText id="nifInt" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.interesado.nif}" required="true" styleClass="w90" maxlength="20">
+							</p:inputText>
+
+							<p:outputLabel for="nombreInt" value="#{msg['dialogPrevisualizarFH.nombre']}" />
+							<p:inputText id="nombreInt" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.interesado.nombre}" required="true" styleClass="w90" maxlength="50">
+							</p:inputText>
+
+							<p:outputLabel for="apellido1Int" value="#{msg['dialogPrevisualizarFH.apellido1']}" />
+							<p:inputText id="apellido1Int" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.interesado.apellido1}" required="false" styleClass="w90" maxlength="50" >
+							</p:inputText>
+
+							<p:outputLabel for="apellido2Int" value="#{msg['dialogPrevisualizarFH.apellido2']}" />
+							<p:inputText id="apellido2Int" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.interesado.apellido2}" required="false" styleClass="w90" maxlength="50">
+							</p:inputText>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{msg['dialogPrevisualizarFH.tab.rep']}">
+						<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w70" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+							<p:outputLabel for="nifRep" value="#{msg['dialogPrevisualizarFH.nif']}" />
+							<p:inputText id="nifRep" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.representante.nif}" required="false" styleClass="w90" maxlength="20">
+							</p:inputText>
+	
+							<p:outputLabel for="nombreRep" value="#{msg['dialogPrevisualizarFH.nombre']}" />
+							<p:inputText id="nombreRep" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.representante.nombre}" required="false" styleClass="w90" maxlength="50">
+							</p:inputText>
+
+							<p:outputLabel for="apellido1Rep" value="#{msg['dialogPrevisualizarFH.apellido1']}" />
+							<p:inputText id="apellido1Rep" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.representante.apellido1}" required="false" styleClass="w90" maxlength="50">
+							</p:inputText>
+
+							<p:outputLabel for="apellido2Rep" value="#{msg['dialogPrevisualizarFH.apellido2']}" />
+							<p:inputText id="apellido2Rep" onblur="this.value = this.value.trim();" value="#{dialogPrevisualizarFH.representante.apellido2}" required="false" styleClass="w90" maxlength="50">
+							</p:inputText>
+						</h:panelGrid>
+					</p:tab>
+				</p:tabView>
+
+                <h:panelGroup id="popup">
+                    <ui:fragment rendered="#{not empty dialogPrevisualizarFH.url}">
+                        <script>window.open('#{dialogPrevisualizarFH.url}');</script>
+                        <script>document.getElementById("dialogPrevisualizarFH:btnCancelar").click();</script>
+                    </ui:fragment>
+                </h:panelGroup>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera" id="botonera">
+		     	<p:toolbar>
+		     		<f:facet name="left">
+		     		</f:facet>
+					<f:facet name="right" >
+		        		<p:commandButton value="#{msg['dialogPrevisualizarFH.boton.previsualizar']}" actionListener="#{dialogPrevisualizarFH.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul"/>
+						<p:commandButton id="btnCancelar" value="#{msg['botones.cancelar']}" actionListener="#{dialogPrevisualizarFH.cancelar()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogPrevisualizarFH.ayuda}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+		    <p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogPrevisualizarFH:auxCopiar" update="growlDialog" />
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogPrevisualizarFH.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogPrevisualizarFH.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+
+			<p:inputText id="auxCopiar" value="#{dialogPrevisualizarFH.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

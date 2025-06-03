@@ -19,6 +19,28 @@
     <h:outputScript library="primefaces-custom" name="calendar_ca.js" />
     <p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeEvento" var="TypeEvento"/>
 
+      <script type="text/javascript">
+          function setHeight(){
+              // Altura de la pantalla
+              var altura = window.innerHeight - 50;
+              // Altura de la tabla
+              var alturaDatatable = altura - 290;
+              // Altura del scrollable body
+              var alturaScrollableBody = alturaDatatable - 57;
+
+              $('#form\\:dataTable').height(alturaDatatable);
+              $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+          }
+
+          jQuery(document).ready(function() {
+              $(window).resize(function() {
+                  setTimeout(function(){  setHeight(); }, 100);
+              });
+
+              setTimeout(function(){  setHeight(); }, 1000);
+          });
+      </script>
+
     <h:form id="form" style="height:91%;">
 		<h:outputScript>
 
@@ -171,7 +193,7 @@
       	<!-- Toolbar -->
 		<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 ,showcase-text-align-center">
-				<p:column styleClass=" noPadding "  style="border-style:inherit !important;">
+				<p:column styleClass="noPadding columna-filtros"  style="border-style:inherit !important;">
 			    	<h:panelGrid columns="4" styleClass="w100, noPadding" >
 		        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
 			        	<p:inputText id="filtroIdSesion" value="#{viewConsultaIncidencias.filtros.idSesionTramitacion}" size="20" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)" style="width:150px; margin-left:1px;"/>
@@ -186,7 +208,7 @@
 			        	<p:inputText id="filtroNombre" value="#{viewConsultaIncidencias.filtros.nombre}" size="50" maxlength="50" style="margin-left:12px" onkeyup="capitalize(this)" onblur="trim(this)"/>
 		        	</h:panelGrid>
 	        	</p:column>
-	        	<p:column styleClass=" noPadding "  style="border-style:inherit  !important;">
+	        	<p:column styleClass="noPadding columna-filtros"  style="border-style:inherit  !important;">
 		        	<h:panelGrid columns="2" styleClass="w100, noPadding">
 		        		<p:outputLabel for="filtroArea" value="#{msg['viewAuditoriaTramites.headArea']}:"/>
 		        		<p:selectOneMenu id="filtroArea" value="#{viewConsultaIncidencias.filtroArea}">
@@ -199,7 +221,7 @@
 			        	<p:inputText id="filtroNif" value="#{viewConsultaIncidencias.filtros.nif}" size="22" maxlength="12" style="margin-left: 8px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 		        	</h:panelGrid>
 		        </p:column>
-				<p:column styleClass=" noPadding "  style="border-style:inherit  !important;">
+				<p:column styleClass="noPadding columna-filtros"  style="border-style:inherit  !important;">
 					<h:panelGrid columns="4" styleClass="w100, noPadding" >
 		        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
 		        		<p:inputText id="filtroTramite" value="#{viewConsultaIncidencias.filtros.idTramite}" size="15" maxlength="20" onkeyup="capitalize(this)" onblur="trim(this)">
@@ -217,7 +239,7 @@
 			        	</p:inputText>
 			        </h:panelGrid>
 				</p:column>
-	        	<p:column styleClass=" noPadding " style="border-style:inherit  !important;">
+	        	<p:column styleClass="noPadding columna-filtros" style="border-style:inherit  !important;">
 	        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
 		        		<p:outputLabel for="filtroTipoProblema" value="#{msg['viewConsultaIncidencias.desc.prob']}:" />
 			           	<p:selectOneMenu id="filtroTipoProblema" value="#{viewConsultaIncidencias.filtros.tipoProblemaIncidencia}">
@@ -230,7 +252,7 @@
 			        	<p:inputText id="filtroMail" value="#{viewConsultaIncidencias.filtros.email}" size="20" maxlength="12" style="margin-left:20px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 		        	</h:panelGrid>
 	        	</p:column>
-				<p:column styleClass=" noPadding " style="border-style:inherit  !important;">
+				<p:column styleClass="noPadding columna-filtros" style="border-style:inherit  !important;">
 				<h:panelGrid columns="2" styleClass="w100, noPadding">
 					<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
 		        	<p:calendar id="filtroFechaInicio" value="#{viewConsultaIncidencias.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" />
@@ -240,10 +262,10 @@
 		        	<p:calendar id="filtroFechaFin" value="#{viewConsultaIncidencias.filtros.fechaHasta}" style="margin-left:15px" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 				</h:panelGrid>
 			</p:column>
-			<p:column styleClass=" noPadding " style="border-style:inherit  !important;">
+			<p:column styleClass="noPadding columna-filtros-botones" style="border-style:inherit  !important;">
 	        	<h:panelGrid id="panelBotones" columns="1" styleClass="w100, noPadding">
 	       			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewConsultaIncidencias.filtrar()}" process="@form:panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
-	       			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewConsultaIncidencias.ayuda()}"/>
+	       			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConsultaIncidencias.ayuda()}"/>
 				</h:panelGrid>
 			</p:column>
        	</p:panelGrid>
@@ -265,7 +287,7 @@
         <p:ajax event="page" update=":form:dataTable"/>
         <p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcIdSesion();"/>
 		<p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcNifUsu();"/>
-		<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+		<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 
         <!-- Columnas -->
        	  <p:column headerText="#{msg['dialogInformacionPersistencia.estado']}" style="width:20% !important;" sortBy="#{dt.estado}">
@@ -311,13 +333,13 @@
               $('#form\\:btnEditarHidden').click();
           }
         </h:outputScript>
-        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConsultaIncidencias.rcDobleClick()}" process="@this" update=":form:growl" style="display:none">
+        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConsultaIncidencias.rcDobleClick()}" process="@this" update=":form:growl" style="display:none">
            <p:ajax event="dialogReturn" listener="#{viewConsultaIncidencias.returnDialogo}" update="@form:growl @form:dataTable"/>
         </p:commandButton>
-        <p:commandButton id="btnSesionHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConsultaIncidencias.abrirDlgSesion()}" process="@this" update=":form:growl" style="display:none">
+        <p:commandButton id="btnSesionHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConsultaIncidencias.abrirDlgSesion()}" process="@this" update=":form:growl" style="display:none">
            <p:ajax event="dialogReturn" listener="#{viewConsultaIncidencias.returnDialogo}" update="@form:growl @form:dataTable"/>
         </p:commandButton>
-        <p:commandButton id="btnNifHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConsultaIncidencias.abrirDlgNif()}" process="@this" update=":form:growl" style="display:none">
+        <p:commandButton id="btnNifHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConsultaIncidencias.abrirDlgNif()}" process="@this" update=":form:growl" style="display:none">
            <p:ajax event="dialogReturn" listener="#{viewConsultaIncidencias.returnDialogo}" update="@form:growl @form:dataTable"/>
         </p:commandButton>
         <h:outputScript >
@@ -334,7 +356,7 @@
       <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 	      <p:contextMenu for=":work">

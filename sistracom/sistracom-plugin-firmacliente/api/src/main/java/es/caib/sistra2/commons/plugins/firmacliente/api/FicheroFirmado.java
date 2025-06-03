@@ -23,6 +23,9 @@ public class FicheroFirmado {
 	/** Tipo firma. */
 	private TypeFirmaDigital firmaTipo;
 
+	/** Método de firma (proporcionado por plugin). */
+	private String metodoFirma;
+
 	/**
 	 * @return the nombreFichero
 	 */
@@ -102,5 +105,24 @@ public class FicheroFirmado {
 	 *            estadoFirma a establecer
 	 */
 	public void setEstadoFirma(EstadoFirma estadoFirma) {this.estadoFirma = estadoFirma;}
+
+	/**
+	 * Método de acceso a metodoFirma.
+	 *
+	 * @return metodoFirma
+	 */
+	public String getMetodoFirma() {
+		return metodoFirma;
+	}
+
+	/**
+	 * Método para establecer metodoFirma.
+	 *
+	 * @param metodoFirma
+	 *            metodoFirma a establecer
+	 */
+	public void setMetodoFirma(String metodoFirma) {
+		this.metodoFirma = metodoFirma;
+	}
 
 }

@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -180,10 +181,12 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setContactoUrl(entidad.isUrlSoporteHabilitado());
 		jEntidad.setUrlSoporte(entidad.getUrlSoporte());
 		jEntidad.setContactoFormularioIncidencias(entidad.isFormularioIncidenciasHabilitado());
+		jEntidad.setAyudaContextualFormulario(entidad.isAyudaContextFormHabilitada());
 		jEntidad.setUrlSede(JLiteral.mergeModel(jEntidad.getUrlSede(), entidad.getUrlSede()));
 		jEntidad.setUrlCarpetaCiudadana(
 				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
 		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
+		jEntidad.setModoFuncionarioHabilitado(entidad.isModoFuncionarioHabilitado());
 		jEntidad.setTituloAsistenteTramitacion(
 				JLiteral.mergeModel(jEntidad.getTituloAsistenteTramitacion(), entidad.getTituloAsistenteTramitacion()));
 		jEntidad.setMapaWeb(JLiteral.mergeModel(jEntidad.getMapaWeb(), entidad.getMapaWeb()));
@@ -206,6 +209,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setValorarTramite(entidad.isValorarTramite());
 		jEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
 		jEntidad.setHabilitarModoEntrega(entidad.isHabilitarModoEntrega());
+
 		entityManager.merge(jEntidad);
 	}
 

@@ -13,12 +13,17 @@
 	<ui:define name="icerick">
 		<script type="text/javascript">
 		function setHeight(){
-	    	var altura = window.innerHeight - 50;
-	    	var alturaDatatable = altura - 250;
-            var alturaScrollableBody = altura - 293;
+			// Altura de la pantalla menos 50px del footer
+			var altura = window.innerHeight - 50;
+			// Altura de la tabla menos altura de la cabecera y del toolbar
+			var alturaDatatable = altura - 240;
+			// Altura del scrollable body, tabla menos cabecera y footer (de la tabla)
+			var alturaScrollableBody = alturaDatatable - 57;
 
             $('#form\\:dataTable').height(alturaDatatable);
             $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+
+			// console.log("altura: " + altura + ", alturaDatatable: " + alturaDatatable + ", alturaScrollableBody: " + alturaScrollableBody);
 	    }
 
 		jQuery(document).ready(function() {
@@ -27,7 +32,7 @@
               setTimeout(function(){  setHeight(); }, 100);
   			});
 
-	      setHeight();
+			setTimeout(function(){  setHeight(); }, 10);
 	  });
 
 		function cerrarDialog(){
@@ -86,11 +91,11 @@
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPropiedadesConfiguracion.editar()}" process="@this" update="growl" oncomplete="cerrarDialog()">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewPropiedadesConfiguracion.editar()}" process="@this" update="growl" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewPropiedadesConfiguracion.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPropiedadesConfiguracion.ayuda}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewPropiedadesConfiguracion.ayuda}" process="@this" update="growl dataTable"/>
 
 		        	</h:panelGrid>
 		        </f:facet>
@@ -108,25 +113,22 @@
 			        	 selectionMode="single" selection="#{viewPropiedadesConfiguracion.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-				<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
-		                        />
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"  />
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false"/>
 				<p:ajax event="rowUnselect" />
 				<p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbar"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerCodigo']}" styleClass="w33">
+			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerCodigo']}" styleClass="w33" sortBy="#{td.propiedades}">
 			        <h:outputText value="#{td.propiedad}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerValor']}" styleClass="w33">
+			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerValor']}" styleClass="w33" sortBy="#{td.valor}">
 			        <h:outputText value="#{td.valor}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerDescripcion']}" styleClass="w33">
+			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerDescripcion']}" styleClass="w33" sortBy="#{td.descripcion}">
 			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
@@ -137,14 +139,14 @@
 		       		$('#form\\:btnEditarHidden').click();
 		      }
 		    </h:outputScript>
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPropiedadesConfiguracion.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewPropiedadesConfiguracion.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
        			<p:ajax event="dialogReturn" listener="#{viewPropiedadesConfiguracion.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
 			<p:contextMenu for="dataTable" id="cMenuPropiedades" widgetVar="cMenuPropiedadesWV" beforeShow="return true;">
                 <p:menuitem id="mnuCopyPropiedades" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
                 <p:separator/>
-				<p:menuitem id="mnuEditarPropiedades" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
+				<p:menuitem id="mnuEditarPropiedades" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyPropiedades" trigger="mnuCopyPropiedades" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewPropiedadesConfiguracion.copiadoCorr}" process="@this" update="@this growl"/>

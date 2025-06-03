@@ -11,12 +11,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.service.EntidadService;
 import org.apache.commons.lang3.SerializationUtils;
 import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
@@ -57,6 +57,9 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Componente service. */
 	@Inject
 	private ComponenteService componenteService;
+
+	@Inject
+	private EntidadService entidadService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -118,6 +121,10 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 	private boolean disableTramites;
 
+	private boolean servicioCatalogo;
+
+	private boolean modoFH;
+
 	public String getText(final DefinicionTramiteCP tramite) {
 
 		final StringBuilder texto = new StringBuilder();
@@ -178,6 +185,10 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 //			parametros = tramitePrevisualizacion.getParametros();
 //		}
 
+		Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+
+		modoFH = entidad.isModoFuncionarioHabilitado();
+
 		disableTramites = true;
 		PrimeFaces.current().ajax().update("dialogTramite:procedimiento");
 		PrimeFaces.current().ajax().update("dialogTramite:botonera");
@@ -185,6 +196,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		PrimeFaces.current().ajax().update("dialogTramite:btnEditarValor");
 		PrimeFaces.current().ajax().update("dialogTramite:btnEliminarValor");
 		PrimeFaces.current().ajax().update("dialogTramite:idioma");
+		PrimeFaces.current().ajax().update("dialogTramite:btnModoFH");
 		PrimeFaces.current().executeScript("document.getElementById('dialogTramite:procedimiento_label').innerHTML=\""
 				+ UtilJSF.getLiteral("cargando")
 				+ "...<marquee direction='right' behavior='alternate' scrolldelay='333' style='width:5% !important'>.</marquee>\";");
@@ -303,6 +315,32 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		}
 	}
 
+	public void openDialogPrevisualizarFH() {
+		String valida = validarSiaVigente(tramiteSeleccionado);
+		if (!valida.isEmpty()) {
+			addMessageContext(TypeNivelGravedad.WARNING, valida);
+			return;
+		}
+
+		Map<String, String> params = null;
+		params = new HashMap<>();
+		params.put("IDIOMA", idioma);
+		params.put(TypeParametroVentana.TRAMITE.toString(), this.tramite.getIdentificadorCompuesto());
+		params.put("NUMEROVERSION", String.valueOf(this.data.getNumeroVersion()));
+		if(tramiteSeleccionado != null && !simularCatalogo) {
+			params.put("tramiteSeleccionado", tramiteSeleccionado);
+		}else{
+			params.put("tramiteSeleccionado", "$--SIMULADO--$");
+		}
+		if(parametros != null){
+			params.put("parametros", getParamsUrl().replace("&parametros=", ""));
+		}else{
+			params.put("parametros", "");
+		}
+		params.put("servicioCatalogo", String.valueOf(servicioCatalogo));
+		UtilJSF.openDialog(DialogPrevisualizarFH.class, TypeModoAcceso.EDICION, params, true, 450, 405);
+	}
+
 	/**
 	 * Previsualizar
 	 *
@@ -380,7 +418,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL.toString());
 
 		final String params = getParamsUrl();
-		boolean servicioCatalogo = false;
+		servicioCatalogo = false;
 		if (!simularCatalogo) {
 			for (final DefinicionTramiteCP tram : tramites) {
 				if (tram.getIdentificador().equals(tramCP)) {
@@ -487,7 +525,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 * Crea nuevo valor.
 	 */
 	public void nuevoValor() {
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 170);
 	}
 
 	/**
@@ -500,7 +538,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 170);
 	}
 
 	/**
@@ -933,4 +971,17 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		this.soloPublicas = soloPublicas;
 	}
 
+	/**
+	 * @return the modoFH
+	 */
+	public boolean isModoFH() {
+		return modoFH;
+	}
+
+	/**
+	 * @param modoFH the modoFH to set
+	 */
+	public void setModoFH(boolean modoFH) {
+		this.modoFH = modoFH;
+	}
 }

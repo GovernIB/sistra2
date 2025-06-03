@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
@@ -439,7 +439,7 @@ public class DialogDominio extends DialogControllerBase {
 		isDialogoPropiedad = true;
 		final Map<String, String> params = new HashMap<>();
 		params.put("OCULTARVALOR", "S");
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, params, true, 430, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, params, true, 430, 170);
 	}
 
 	/**
@@ -450,7 +450,7 @@ public class DialogDominio extends DialogControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.AREA.toString(), this.idArea);
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 265);
 	}
 
 	/**
@@ -469,7 +469,7 @@ public class DialogDominio extends DialogControllerBase {
 			}
 			params.put(TypeParametroVentana.ID.toString(),
 					this.data.getConfiguracionAutenticacion().getCodigo().toString());
-			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
+			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 265);
 		}
 	}
 
@@ -501,7 +501,7 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	public void nuevoValor() {
 		isDialogoPropiedad = false;
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 170);
 	}
 
 	/**
@@ -516,7 +516,7 @@ public class DialogDominio extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.propiedadSeleccionada));
 		params.put("OCULTARVALOR", "S");
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 100);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 170);
 	}
 
 	/**
@@ -530,7 +530,7 @@ public class DialogDominio extends DialogControllerBase {
 		isDialogoPropiedad = false;
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 170);
 	}
 
 	/**
@@ -1348,8 +1348,7 @@ public class DialogDominio extends DialogControllerBase {
 
 	public final void setHayCambios(Boolean hayCambios) {
 		this.hayCambios = hayCambios;
-		RequestContext requestContext = RequestContext.getCurrentInstance();
-		requestContext.update("dialogDominio:inputEscondida");
+		PrimeFaces.current().executeScript("dialogDominio:inputEscondida");
 	}
 
 	public boolean isEsIframe() {

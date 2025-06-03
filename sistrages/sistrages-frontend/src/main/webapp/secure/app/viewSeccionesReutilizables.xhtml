@@ -19,23 +19,30 @@
 		<h:form id="form" styleClass="h100">
 
 			<h:outputScript >
-              function setHeight(){
-			    	var altura = window.innerHeight - 50;
-			    	var alturaSecciones = altura - 250;
-		            var alturaSeccionesBody = altura - 278;
+				function setHeight(){
+					// Altura de la pantalla
+					var altura = window.innerHeight - 30;
+					// Altura de la tabla
+					var alturaDatatable = altura - 186 - 40;
+					// Altura del scrollable body
+					var alturaScrollableBody = alturaDatatable - 57;
 
-		            $('#form\\:dataTable').height(alturaSecciones);
-		            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaSeccionesBody);
-			    }
+					if(#{viewDominios.mostrarBreadcrumb} == true){
+						alturaScrollableBody -= 15;
+					}
+
+					$('#form\\:dataTable').height(alturaDatatable);
+					$('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+				}
 
 				jQuery(document).ready(function() {
 
-			      $(window).resize(function() {
-		              setTimeout(function(){  setHeight(); }, 100);
-		  			});
+				$(window).resize(function() {
+					setTimeout(function(){  setHeight(); }, 100);
+				});
 
-			      setHeight();
-			  });
+				setTimeout(function(){  setHeight(); }, 10);
+				});
 
 			  function cerrarDialog(){
 			      var iconX = parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')
@@ -193,14 +200,14 @@
 		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoDesbloquear}" update="growl @form" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewSeccionesReutilizables.editar()}" process="@this" update="growl"  rendered="#{viewSeccionesReutilizables.getTienePermisosEditarSeccion()}" oncomplete="cerrarDialog()">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewSeccionesReutilizables.editar()}" process="@this" update="growl"  rendered="#{viewSeccionesReutilizables.getTienePermisosEditarSeccion()}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewSeccionesReutilizables.consultar()}" process="@this" update="growl"  rendered="#{viewSeccionesReutilizables.getTienePermisosConsultarSeccion()}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewSeccionesReutilizables.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewSeccionesReutilizables.permiteAlta}" oncomplete="setHeight()">
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewSeccionesReutilizables.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewSeccionesReutilizables.permiteAlta}" oncomplete="setHeight()">
 	       		   			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 						</p:commandButton>
 
@@ -213,7 +220,7 @@
 	        			<p:commandButton id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewSeccionesReutilizables.historialVersion}" process="@this" update="growl" />
 
 
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewSeccionesReutilizables.ayuda()}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewSeccionesReutilizables.ayuda()}" process="@this" update="growl"/>
 
 		        	</h:panelGrid>
 		        </f:facet>
@@ -231,33 +238,30 @@
 			        	 selectionMode="single" selection="#{viewSeccionesReutilizables.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" global="false" update="@form"/>
-				<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
-		                        />
+				<p:ajax event="rowSelect" global="false" />
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 				<p:ajax event="contextMenu" global="false" process="@this"  update="@form:panelBotones" oncomplete="opcTabla();"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerIdentificador']}" width="15%" >
+			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerIdentificador']}" width="15%" sortBy="#{td.identificador}">
 			         <h:outputText value="#{td.identificador}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerDescripcion']}" width="35%" >
+			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerDescripcion']}" width="35%" sortBy="#{td.descripcion}">
 			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerRelease']}" width="15%">
+			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerRelease']}" width="15%" sortBy="#{td.release}">
 			        <h:outputText value="#{td.release}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerFecha']}" width="15%">
+			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerFecha']}" width="15%" sortBy="#{td.fecha}">
 			        <h:outputText value="#{td.fecha}" >
 			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm" type="date" timeZone="CET"/>
 				    </h:outputText>
 			    </p:column>
 
-				<p:column headerText="#{msg['viewSeccionesReutilizables.headerUsuarioBloqueado']}" width="20%" >
+				<p:column headerText="#{msg['viewSeccionesReutilizables.headerUsuarioBloqueado']}" width="20%" sortBy="#{td.bloqueadoUsuario}">
 			        <h:outputText value="#{td.bloqueadoUsuario}" />
 			    </p:column>
 
@@ -268,9 +272,9 @@
 	            <p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" rendered="#{viewSeccionesReutilizables.permiteAlta}"/>
         		<p:menuitem id="mnuBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" onclick="document.getElementById('form:btnBloquear').click();" process="@this" />
 	        	<p:menuitem id="mnuDesploquear" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" onclick="document.getElementById('form:btnDesploquear').click();" process="@this" />
-        		<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewSeccionesReutilizables.getTienePermisosEditarSeccion()}"/>
+        		<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewSeccionesReutilizables.getTienePermisosEditarSeccion()}"/>
         		<p:menuitem id="mnuConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewSeccionesReutilizables.getTienePermisosConsultarSeccion()}"/>
-        		<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this"  rendered="#{viewSeccionesReutilizables.permiteAlta}" />
+        		<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this"  rendered="#{viewSeccionesReutilizables.permiteAlta}" />
 				<p:menuitem id="mnuImportar"  value="#{msg['botones.importar']}" icon="fa fa-download"  onclick="document.getElementById('form:btnImportar').click();"  process="@this" rendered="#{viewSeccionesReutilizables.permiteImportar}" />
 				<p:menuitem id="mnuExportar" value="#{msg['botones.exportar']}" icon="fa fa-upload" onclick="document.getElementById('form:btnExportar').click();" process="@this"  rendered="#{viewSeccionesReutilizables.permiteExportar}" />
        			<p:menuitem id="mnuHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" onclick="document.getElementById('form:btnHistorial').click();" process="@this" />
@@ -285,7 +289,7 @@
 		      }
 		    </h:outputScript>
 
-			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewSeccionesReutilizables.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewSeccionesReutilizables.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
@@ -293,7 +297,7 @@
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 			<p:contextMenu id="cMenuMain" for=":work">
@@ -302,9 +306,9 @@
 	            <p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" rendered="#{viewSeccionesReutilizables.permiteAlta}"/>
         		<p:menuitem id="mnuBloquearMain" value="#{msg['botones.bloquear']}" icon="fa fa-lock" onclick="document.getElementById('form:btnBloquear').click();" process="@this"/>
 	        	<p:menuitem id="mnuDesploquearMain" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" onclick="document.getElementById('form:btnDesploquear').click();" process="@this"/>
-        		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewSeccionesReutilizables.getTienePermisosEditarSeccion()}"/>
+        		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewSeccionesReutilizables.getTienePermisosEditarSeccion()}"/>
         		<p:menuitem id="mnuConsultarMain" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewSeccionesReutilizables.getTienePermisosConsultarSeccion()}"/>
-        		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this"  rendered="#{viewSeccionesReutilizables.permiteAlta}" />
+        		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this"  rendered="#{viewSeccionesReutilizables.permiteAlta}" />
 				<p:menuitem id="mnuImportarMain"  value="#{msg['botones.importar']}" icon="fa fa-download"  onclick="document.getElementById('form:btnImportar').click();"  process="@this" rendered="#{viewSeccionesReutilizables.permiteImportar}" />
 				<p:menuitem id="mnuExportarMain" value="#{msg['botones.exportar']}" icon="fa fa-upload" onclick="document.getElementById('form:btnExportar').click();" process="@this"  rendered="#{viewSeccionesReutilizables.permiteExportar}" />
        			<p:menuitem id="mnuHistorialMain" value="#{msg['botones.historial']}" icon="fa fa-history" onclick="document.getElementById('form:btnHistorial').click();" process="@this" />

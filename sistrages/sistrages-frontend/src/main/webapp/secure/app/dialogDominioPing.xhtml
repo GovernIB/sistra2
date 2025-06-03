@@ -14,6 +14,9 @@
 
   	<f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   	</f:facet>
 </h:head>
 
@@ -188,7 +191,7 @@
 					<c:if test="${not empty dialogDominioPing.valoresDominio.datos}">
 						<!-- Columnas, sin el rowIndex no va muy bien que se diga -->
 						<c:forEach items="#{dialogDominioPing.valoresDominio.datos.get(rowIndex)}" var="dato">
-							<p:column headerText="#{dato.key}">
+							<p:column headerText="#{dato.key}" sortBy="#{dato.value}">
 						        <h:outputText value="#{dato.value}" />
 						    </p:column>
 						</c:forEach>
@@ -211,13 +214,13 @@
 			        	 	  rendered="#{dialogDominioPing.mostrarTablaFicheros}"
 				        	  rowIndexVar="rowIndex">
 
-						<p:column headerText="#{msg['dialogDominioPing.headerNombre']}">
+						<p:column headerText="#{msg['dialogDominioPing.headerNombre']}" sortBy="#{td.nombre}">
 						        <h:outputText value="#{td.nombre}" />
 						    </p:column>
-						    <p:column headerText="#{msg['dialogDominioPing.headerDescripcion']}">
+						    <p:column headerText="#{msg['dialogDominioPing.headerDescripcion']}" sortBy="#{td.descripcion}">
 						        <h:outputText value="#{td.descripcion}" />
 						    </p:column>
-						    <p:column headerText="#{msg['dialogDominioPing.headerContenido']}">
+						    <p:column headerText="#{msg['dialogDominioPing.headerContenido']}" sortBy="#{td.contenidoB64}">
 						        <h:outputText value="#{td.contenidoB64}" />
 						    </p:column>
 

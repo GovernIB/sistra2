@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import es.caib.sistrages.core.api.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -21,18 +22,6 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.ImportacionError;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.exception.TramiteVersionException;
-import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.DisenyoFormulario;
-import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.DominioTramite;
-import es.caib.sistrages.core.api.model.GestorExternoFormularios;
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Script;
-import es.caib.sistrages.core.api.model.SeccionReutilizable;
-import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
-import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
@@ -142,10 +131,14 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public List<Tramite> getAllByFiltro(Long idEntidad, List<Long> areas, String filtro) {
+	public List<Tramite> getAllByFiltro(Long idEntidad, List<Long> areas, String filtro, boolean simplificado) {
 		final List<Tramite> resultado = new ArrayList<>();
-		StringBuilder sql = new StringBuilder(" Select t From JTramite t where ");
-
+		StringBuilder sql;
+		if (simplificado) {
+			sql = new StringBuilder(" Select t.codigo, t.identificador, t.descripcion,t.area.codigo From JTramite t where ");
+		} else {
+			sql = new StringBuilder(" Select t From JTramite t where ");
+		}
 		if (idEntidad == null) {
 			sql.append(" t.area.entidad is not null ");
 		} else {
@@ -174,15 +167,29 @@ public class TramiteDaoImpl implements TramiteDao {
 			query.setParameter("filtro", "%" + filtro.replace("@", "").toUpperCase() + "%");
 		}
 
-		final List<JTramite> results = query.getResultList();
+		if (simplificado) {
+			final List<Object[]> results = query.getResultList();
+			if (results != null && !results.isEmpty()) {
+				for(Object[] fila : results) {
+					Tramite tramiteSimple = new Tramite();
+					tramiteSimple.setCodigo((Long) fila[0]);
+					tramiteSimple.setIdentificador((String) fila[1]);
+					tramiteSimple.setDescripcion((String) fila[2]);
+					tramiteSimple.setIdArea((Long) fila[3]);
+					tramiteSimple.setActivo(false);
+					resultado.add(tramiteSimple);
+				}
+			}
+		} else {
+			final List<JTramite> results = query.getResultList();
 
-		if (results != null && !results.isEmpty()) {
-			for (final Iterator<JTramite> iterator = results.iterator(); iterator.hasNext();) {
-				final JTramite jTramite = iterator.next();
-				resultado.add(jTramite.toModel());
+			if (results != null && !results.isEmpty()) {
+				for (final Iterator<JTramite> iterator = results.iterator(); iterator.hasNext(); ) {
+					final JTramite jTramite = iterator.next();
+					resultado.add(jTramite.toModel());
+				}
 			}
 		}
-
 		return resultado;
 	}
 
@@ -765,7 +772,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	 * Devuelve el anexo.
 	 *
 	 * @param jpaso
-	 * @param ficheroPlantilla
+	 * @param codigo
 	 * @return
 	 */
 	private JFichero getFicheroAnexoTramite(final JPasoTramitacion jpaso, final Long codigo) {
@@ -1677,7 +1684,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	/**
 	 * Método que coge una version de tramite y quita los codigo.
 	 *
-	 * @param fromModel
+	 * @param version
 	 * @return
 	 */
 	private JVersionTramite limpiar(final JVersionTramite version) {
@@ -2009,6 +2016,137 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	public List<TramiteFrontal> getAllSimple(Long idEntidad, List<Long> areas, String filtro, Integer first, Integer pageSize, String sortField, Boolean sortAscending) {
+		StringBuilder  sql = new StringBuilder(" Select t.codigo, trim(t.identificador), trim(t.descripcion),t.area.codigo,t.area.identificador,  coalesce(max(v.numeroVersion),0) as maxVersion,")
+				.append("    CASE " )
+				.append("         WHEN MAX(CASE WHEN v.activa = true THEN 1 ELSE 0 END) = 1 THEN true " )
+				.append("       	  ELSE false " )
+				.append("      	 	END AS tieneActiva," )
+				.append("       	COUNT(CASE WHEN v.activa = true THEN 1 END) AS totalVersionesActivas ")
+				.append(" From JTramite t left join t.versionTramite v where ");
+
+		if (idEntidad == null) {
+			sql.append(" t.area.entidad is not null ");
+		} else {
+			sql.append(" t.area.entidad.codigo = :idEntidad ");
+		}
+
+		if (areas == null || areas.isEmpty()) {
+			sql.append(" AND t.area.codigo is not null ");
+		} else {
+			sql.append(" AND t.area.codigo IN (:idAreas) ");
+		}
+
+		if (StringUtils.isNotBlank(filtro)) {
+			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
+		}
+		sql.append(" group by t.codigo, t.identificador, t.descripcion, t.area.codigo, t.area.identificador ");
+		if (sortField == null) {
+			sql.append("ORDER BY t.identificador");
+		} else {
+			sql.append("ORDER BY ").append(getOrden(sortField, sortAscending));
+		}
+
+		final Query query = entityManager.createQuery(sql.toString());
+		if (idEntidad != null) {
+			query.setParameter("idEntidad", idEntidad);
+		}
+		if (areas != null && !areas.isEmpty()) {
+			query.setParameter("idAreas", areas);
+		}
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.replace("@", "").toUpperCase() + "%");
+		}
+		query.setFirstResult(first);
+		query.setMaxResults(pageSize);
+
+		final List<Object[]> results = query.getResultList();
+		final List<TramiteFrontal> resultado = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for(Object[] fila : results) {
+				//Tramite
+				Tramite tramiteSimple = new Tramite();
+				tramiteSimple.setCodigo((Long) fila[0]);
+				tramiteSimple.setIdentificador((String) fila[1]);
+				tramiteSimple.setDescripcion((String) fila[2]);
+				tramiteSimple.setIdArea((Long) fila[3]);
+				tramiteSimple.setIdentificadorArea((String) fila[4]);
+				Integer ultimaVersion = (Integer) fila[5];
+				tramiteSimple.setActivo((Boolean) fila[6]);
+
+				//Obtenemos los tramites version
+				final List<TramiteVersion> tramitesVersion = new ArrayList<>();
+
+				String sqlVersion = "Select t.codigo, t.numeroVersion, t.bloqueada, t.usuarioIdBloqueo, t.usuarioDatosBloqueo, t.activa, t.tipoflujo, t.descripcion, t.tipoTramite, t.release, ( Select max(HV.fecha) From JHistorialVersion HV where HV.versionTramite.codigo = t.codigo ), t.huella, t.descripcion From JVersionTramite t where t.tramite.codigo = :idTramite  order by t.numeroVersion desc";
+				final Query queryVersion = entityManager.createQuery(sqlVersion);
+				queryVersion.setParameter("idTramite", tramiteSimple.getCodigo());
+
+				@SuppressWarnings("unchecked")
+				final List<Object[]> resultsTV = queryVersion.getResultList();
+
+				if (resultsTV != null && !resultsTV.isEmpty()) {
+					for (Object[] jTramiteVersion : resultsTV) {
+						final TramiteVersion tramiteVersion = new TramiteVersion();
+						tramiteVersion.setCodigo((Long)jTramiteVersion[0]);
+						tramiteVersion.setNumeroVersion((Integer)jTramiteVersion[1]);
+						tramiteVersion.setBloqueada((Boolean)jTramiteVersion[2]);
+						tramiteVersion.setCodigoUsuarioBloqueo((String)jTramiteVersion[3]);
+						tramiteVersion.setDatosUsuarioBloqueo((String) jTramiteVersion[4]);
+						tramiteVersion.setActiva((Boolean) jTramiteVersion[5]);
+						tramiteVersion.setTipoFlujo(TypeFlujo.fromString((String)jTramiteVersion[6]));
+						tramiteVersion.setDescripcion((String)jTramiteVersion[7]);
+						tramiteVersion.setTipoTramite((String)jTramiteVersion[8]);
+						tramiteVersion.setRelease((Integer)jTramiteVersion[9]);
+						tramiteVersion.setIdTramite(tramiteSimple.getCodigo());
+						tramiteVersion.setFechaUltima((Date)jTramiteVersion[10]);
+						tramiteVersion.setHuella((String)jTramiteVersion[11]);
+						tramiteVersion.setDescripcion((String)jTramiteVersion[12]);
+						tramiteVersion.setIdArea(tramiteSimple.getIdArea());
+						tramitesVersion.add(tramiteVersion);
+					}
+				}
+
+				resultado.add(new TramiteFrontal(tramiteSimple, tramitesVersion, ultimaVersion));
+
+			}
+		}
+
+		return resultado;
+	}
+
+	/**
+	 * Obtiene el orden
+	 * @param sortField
+	 * @return
+	 */
+	private String getOrden(String sortField, Boolean sortAscending) {
+		String orden = "";
+		if (sortAscending != null) {
+			orden = sortAscending ? " ASC" : " DESC";
+		}
+
+		if (sortField == null) {
+			return "trim(t.identificador) " + orden;
+		}
+		switch (sortField) {
+			case "identificador":
+			case "descripcion":
+				return "trim(t."+sortField+")  " + orden;
+			case "activo":
+				/*return "  CASE WHEN (SELECT COUNT(v) FROM JVersionTramite v " +
+					   "        WHERE v.tramite = t AND v.activa = true) > 0 " +
+						"       THEN 0 ELSE 1 END, t.codigo";*/
+				return " totalVersionesActivas "+orden+", t.codigo ";
+			case "ultima":
+				return " coalesce(max(v.numeroVersion), 0)  " + orden;
+			case "area":
+				return "trim(t.area.identificador)  " + orden;
+			default:
+				return "trim(t.identificador)  " + orden;
+		}
 	}
 
 }

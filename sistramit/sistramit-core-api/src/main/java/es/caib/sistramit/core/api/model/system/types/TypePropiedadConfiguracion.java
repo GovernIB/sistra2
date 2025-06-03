@@ -139,6 +139,11 @@ public enum TypePropiedadConfiguracion {
 	FORM_NUMCHARS_BUSQUEDA("formularioNumCharsBusqueda"),
 
 
+	/** Iframe digitalización height. */
+	IFRAME_DIGITALIZACION_WIDTH("iframeDigitalizacionWidth"),
+	/** Iframe digitalización height. */
+	IFRAME_DIGITALIZACION_HEIGHT("iframeDigitalizacionHeight"),
+
 	/** Sistrahelp view url. **/
 	SISTRAHELP_VIEW_URL("sistrahelp.view.url");
 

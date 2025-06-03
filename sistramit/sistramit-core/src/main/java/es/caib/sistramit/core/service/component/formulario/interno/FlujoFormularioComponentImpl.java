@@ -152,7 +152,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	public PaginaFormulario cargarPaginaFormularioActual() {
 
 		// Calculamos estado dinámico de los campos y actualizamos configuración campos
-		actualizarEstadoCamposPagina(datosSesion, false, false);
+		actualizarEstadoCamposPagina(datosSesion, false);
 
 		// Genera pagina formulario
 		final PaginaFormulario pagAct = generarPaginaFormularioAsistente(false);
@@ -327,7 +327,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		pagEle.actualizarValoresPagina(valoresElemento);
 
 		// Actualiza estado campos (solo lectura / visible)
-		actualizarEstadoCamposPagina(datosSesion, true, false);
+		actualizarEstadoCamposPagina(datosSesion, true);
 
 		// Realizamos validaciones pagina
 		final MensajeValidacion mv = validarGuardarPagina(datosSesion, null, true);
@@ -383,7 +383,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		final RPaginaFormulario paginaDefInicial = UtilsFormularioInterno
 				.obtenerDefinicionSiguientePaginaFormulario(defForm, null);
 		final PaginaData paginaDataInicial = inicializarPagina(idFormulario, defForm, paginaDefInicial,
-				valoresIniciales);
+				valoresIniciales, false);
 
 		// Datos formulario interno: configuracion y datos.
 		final DatosFormularioInterno df = new DatosFormularioInterno(valoresIniciales, paginaDataInicial);
@@ -393,16 +393,14 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	/**
 	 * Inicializa página del formulario (configuración y datos).
 	 *
-	 * @param idFormulario
-	 *                         id formulario
-	 * @param defForm
-	 *                         definición formulario
-	 * @param valoresCampo
-	 *                         valores campo
+	 * @param idFormulario      id formulario
+	 * @param defForm           definición formulario
+	 * @param valoresCampo      valores campo
+	 * @param forzarSoloLectura Fuerza solo lectura
 	 * @return
 	 */
 	private PaginaData inicializarPagina(final String idFormulario, final RFormularioInterno defForm,
-			final RPaginaFormulario defPagina, final List<ValorCampo> valoresCampo) {
+										 final RPaginaFormulario defPagina, final List<ValorCampo> valoresCampo, boolean forzarSoloLectura) {
 
 		// Añadimos pagina
 		final PaginaData paginaForm = new PaginaData(idFormulario, defPagina.getIdentificador());
@@ -431,6 +429,11 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 			// Calculamos configuracion campo
 			final ConfiguracionCampo confCampo = configuracionFormularioHelper.obtenerConfiguracionCampo(campoDef);
+
+			// Forzar solo lectura
+			if (forzarSoloLectura) {
+				confCampo.setForzarSoloLectura(TypeSiNo.SI);
+			}
 
 			// Inicializamos campo: configuracion, valor inicial y dependencias
 			paginaForm.inicializaCampo(confCampo, valorInicialCampo);
@@ -640,7 +643,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 				definicionTramiteSTG.getDefinicionVersion().getIdioma(), defFormulario,
 				datosInicioSesionFormulario.getTituloProcedimiento(), datosInicioSesionFormulario.getTituloTramite(),
 				datosInicioSesionFormulario.getCodigoSiaProcedimiento(),
-				datosInicioSesionFormulario.getDir3ResponsableProcedimiento());
+				datosInicioSesionFormulario.getDir3ResponsableProcedimiento(),
+				datosInicioSesionFormulario.getInfoAutenticacion().getFuncionarioHabilitado() != null);
 
 	}
 
@@ -748,7 +752,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 					// Si no se ha rellenado todavía la inicializamos
 					paginaSiguiente = inicializarPagina(datosSesion.getDatosInicioSesion().getIdFormulario(),
 							defFormulario, paginaSiguienteDef,
-							datosSesion.getDatosFormulario().obtenerValoresIniciales());
+							datosSesion.getDatosFormulario().obtenerValoresIniciales(), false);
 				}
 				// Establecemos pagina siguietne como pagina actual
 				datosSesion.getDatosFormulario().pushPaginaFormulario(paginaSiguiente);
@@ -879,7 +883,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		}
 
 		// Calculamos estado dinámico de los campos y actualizamos configuración campos
-		actualizarEstadoCamposPagina(datosSesion, true, forzarSoloLectura);
+		actualizarEstadoCamposPagina(datosSesion, true);
 
 		// Genera pagina formulario
 		final PaginaFormulario pagElemento = generarPaginaFormularioAsistente(true);
@@ -898,7 +902,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *                                   indiceElemento elemento (nulo si nuevo)
 	 * @param valoresPaginaPrincipal
 	 *                                   valores actuales página formulario
-	 * @param modoConsulta
+	 * @param forzarSoloLectura
 	 *                                   Indica si el elemento se abre en modo
 	 *                                   consulta
 	 *
@@ -906,7 +910,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 */
 	private DatosEdicionElemento inicializarDatosEdicionElemento(final DatosSesionFormularioInterno datosSesion,
 			final String idCampoListaElementos, final Integer indiceElemento,
-			final List<ValorCampo> valoresPaginaPrincipal, final boolean modoConsulta) {
+			final List<ValorCampo> valoresPaginaPrincipal, final boolean forzarSoloLectura) {
 
 		// Recupera pagina formulario actual
 		final RPaginaFormulario paginaActualFormulario = datosSesion.obtenerDefinicionPaginaActual(false);
@@ -921,8 +925,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 				valoresPaginaPrincipal);
 
 		// Inicializa pagina
-		final PaginaData pe = inicializarPagina(datosSesion.getDatosInicioSesion().getIdFormulario(), formDef,
-				paginaDef, ve);
+		final PaginaData pe = inicializarPagina(datosSesion.getDatosInicioSesion().getIdFormulario(), formDef, paginaDef, ve, forzarSoloLectura);
 
 		// Retorna datos edicion elemento (pagina elemento y dependencias)
 		final DatosEdicionElemento dee = new DatosEdicionElemento();
@@ -940,24 +943,18 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * @param elemento
 	 *                        Si es pagina elemento
 	 */
-	private void actualizarEstadoCamposPagina(final DatosSesionFormularioInterno datosSesion, final boolean elemento,
-			final boolean forzarSoloLectura) {
+	private void actualizarEstadoCamposPagina(final DatosSesionFormularioInterno datosSesion, final boolean elemento) {
 		// Obtenemos pagina actual
 		final PaginaData pagAct = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
-
-		if (forzarSoloLectura) {
-			// Si se fuerza solo lectura, marcamos como solo lectura
-			for (final ConfiguracionCampo confCampo : pagAct.getConfiguracion()) {
-				confCampo.setSoloLectura(TypeSiNo.SI);
-			}
-		} else {
-			// Calculamos estado dinamico de los campos y actualizamos configuracion
-			final List<ConfiguracionModificadaCampo> confDinamica = configuracionFormularioHelper
-					.evaluarEstadoCamposPagina(datosSesion, elemento);
-			for (final ConfiguracionModificadaCampo confDinamicaCampo : confDinamica) {
-				final ConfiguracionCampo confCampo = pagAct.getConfiguracionCampo(confDinamicaCampo.getId());
-				confCampo.setSoloLectura(confDinamicaCampo.getSoloLectura());
-			}
+		// Calculamos estado dinamico de los campos
+		final List<ConfiguracionModificadaCampo> confDinamica = configuracionFormularioHelper
+				.evaluarEstadoCamposPagina(datosSesion, elemento);
+		// Actualizamos configuracion campo
+		for (final ConfiguracionModificadaCampo confDinamicaCampo : confDinamica) {
+			final ConfiguracionCampo confCampo = pagAct.getConfiguracionCampo(confDinamicaCampo.getId());
+			confCampo.setSoloLectura(confDinamicaCampo.getSoloLectura());
+			confCampo.setOculto(confDinamicaCampo.getOculto());
+			confCampo.setObligatorio(confDinamicaCampo.getObligatorio());
 		}
 	}
 
@@ -1006,6 +1003,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 		// Devolvemos información página actual
 		final PaginaFormulario pagAct = UtilsFormularioInterno.convertToPaginaFormulario(pagData);
+		pagAct.setDesplazarocultos(TypeSiNo.SI);
 		pagAct.setPermitirGuardar(guardarSinFinalizar);
 		pagAct.setValoresPosibles(vpp);
 		pagAct.setHtml(html);

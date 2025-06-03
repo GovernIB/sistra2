@@ -102,6 +102,7 @@ public class DialogPlugin extends DialogControllerBase {
 			tipos.add(TypePlugin.REGISTRO);
 			tipos.add(TypePlugin.VALIDACION_FIRMA_SERVIDOR);
 			tipos.add(TypePlugin.ENVIO_REMOTO);
+			tipos.add(TypePlugin.DIGITALIZACION);
 			// Permite plugins multiinstancia (pagos)
 			break;
 		default:
@@ -192,7 +193,7 @@ public class DialogPlugin extends DialogControllerBase {
 	 * Crea nueva propiedad.
 	 */
 	public void nuevaPropiedad() {
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 405, 140);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 405, 170);
 	}
 
 	/**
@@ -206,7 +207,7 @@ public class DialogPlugin extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.propiedadSeleccionada));
 
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 405, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 405, 170);
 	}
 
 	/**

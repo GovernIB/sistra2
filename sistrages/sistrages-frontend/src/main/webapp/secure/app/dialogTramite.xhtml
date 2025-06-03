@@ -145,16 +145,16 @@
 
 				</h:outputScript>
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="identificador" value="#{msg['dialogTramite.codigo']}"  />
-				 	<p:inputText id="identificador" value="#{dialogTramite.data.identificador}" required="true" size="65" maxlength="50" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}" readonly="#{dialogTramite.consulta}"   >
+				 	<p:inputText id="identificador" value="#{dialogTramite.data.identificador}" required="true" styleClass="w90" maxlength="50" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}" readonly="#{dialogTramite.consulta}"   >
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" />
 				   	</p:inputText>
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogTramite.descripcion']}" />
-			 		<p:inputTextarea id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogTramite.data.descripcion}" readonly="#{dialogTramite.consulta}" required="true" cols="63" autoResize="false" maxlength="1000"/>
+			 		<p:inputTextarea id="descripcion" onblur="this.value = this.value.trim();" styleClass="w90" value="#{dialogTramite.data.descripcion}" readonly="#{dialogTramite.consulta}" required="true" cols="63" autoResize="false" maxlength="1000"/>
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">

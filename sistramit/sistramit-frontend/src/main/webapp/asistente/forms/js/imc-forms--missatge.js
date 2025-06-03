@@ -61,6 +61,7 @@ $.fn.appFormsMissatge = function(options) {
 			boto: false
 			,accio: "informa" // informa, carregant, etc
 			,titol: ""
+			,titolHTML: false
 			,text: ""
 			,debug: false
 			,bt: false
@@ -80,6 +81,7 @@ $.fn.appFormsMissatge = function(options) {
 			,element_c = element.find(".imc--c:first")
 			,element_text = element.find(".imc--text:first")
 			,titol_txt = settings.titol
+			,titolHTML = settings.titolHTML
 			,text_txt = settings.text
 			,debug_txt = settings.debug
 			,bt = settings.bt
@@ -116,7 +118,7 @@ $.fn.appFormsMissatge = function(options) {
 					.off('.appFormsMissatge')
 					.on('click.appFormsMissatge', tanca);
 
-				// titol HTML
+				// titol
 
 				if (titol_txt !== "") {
 
@@ -130,7 +132,7 @@ $.fn.appFormsMissatge = function(options) {
 						.end()
 					.attr("data-accio", accio);
 
-				// text HTML
+				// text
 
 				if (text_txt !== "") {
 
@@ -142,7 +144,21 @@ $.fn.appFormsMissatge = function(options) {
 					.find(".imc--explicacio:first")
 						.html( text_txt );
 
-				// debug HTML
+				
+				// el titol té HTML incrustat?
+
+				if (titolHTML) {
+
+					element
+						.find("h2 span")
+							.html( "" )
+							.end()
+						.find(".imc--explicacio:first")
+							.html( titol_txt );
+
+				}
+
+				// debug
 
 				element
 					.find(".imc--desenvolupadors:first")

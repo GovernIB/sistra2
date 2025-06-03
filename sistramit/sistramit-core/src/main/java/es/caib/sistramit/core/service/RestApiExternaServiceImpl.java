@@ -2,19 +2,13 @@ package es.caib.sistramit.core.service;
 
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.system.rest.externo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
-import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.service.RestApiExternaService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.system.RestApiExternaComponent;

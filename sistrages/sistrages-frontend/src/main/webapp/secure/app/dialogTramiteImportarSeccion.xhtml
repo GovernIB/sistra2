@@ -15,6 +15,9 @@
 <h:body>
   	<f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -134,7 +137,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-left-18 w70, w10" columns = "4" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-left-18 w70, w10" columns = "4" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerAccion']}:" />
 					<p:column>

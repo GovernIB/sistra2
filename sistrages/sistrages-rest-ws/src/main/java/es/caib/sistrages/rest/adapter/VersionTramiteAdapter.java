@@ -1197,6 +1197,7 @@ public class VersionTramiteAdapter {
 		final RPropiedadesTextoExpRegular res = new RPropiedadesTextoExpRegular();
 		res.setExpresionRegular(ct.getExpresionRegular());
 		res.setPrevenirPegar(ct.isPrevenirPegar());
+		res.setTamanyoMax(ct.getNormalTamanyo());
 		return res;
 	}
 

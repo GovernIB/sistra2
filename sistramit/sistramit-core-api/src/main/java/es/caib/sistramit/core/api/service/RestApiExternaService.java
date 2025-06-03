@@ -2,13 +2,7 @@ package es.caib.sistramit.core.api.service;
 
 import java.util.List;
 
-import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
-import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
+import es.caib.sistramit.core.api.model.system.rest.externo.*;
 
 /**
  * Servicio funcionalidades Rest Api Externa.
@@ -39,8 +33,8 @@ public interface RestApiExternaService {
 	/**
 	 * Obtener ticket acceso.
 	 *
-	 * @param filtro
-	 *                   filtro
+	 * @param pInfoTicketAcceso info ticket
+	 *
 	 * @return url con ticket de acceso
 	 */
 	public String obtenerTicketAcceso(InfoTicketAcceso pInfoTicketAcceso);

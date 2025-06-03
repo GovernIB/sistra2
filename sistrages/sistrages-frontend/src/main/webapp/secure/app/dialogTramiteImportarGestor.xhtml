@@ -134,7 +134,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-left-18 w70, w10" columns = "4" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-left-18 w70, w10" columns = "4" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="configAut" value="#{msg['dialogTramiteImportarDominio.headerConfiguracion']}:"   />
 			 	 	<p:selectOneMenu id="configAut" value="#{dialogTramiteImportarGestor.data.configuracionAutenticacionActual}"  style="width:240px" disabled="#{dialogTramiteImportarGestor.isConsulta()}" converter="#{configuracionConverter}"   >

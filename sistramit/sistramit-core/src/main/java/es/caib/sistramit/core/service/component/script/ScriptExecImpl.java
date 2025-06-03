@@ -531,7 +531,7 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new ResValorCampo());
 			break;
 		case SCRIPT_ESTADO:
-			plugins.add(new ResEstadoCampo());
+			plugins.add(new ResEstadoCampo(pIdElemento));
 			break;
 		case SCRIPT_VALORES_POSIBLES:
 			plugins.add(new ResValoresPosibles());

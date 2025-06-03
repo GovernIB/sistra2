@@ -14,6 +14,10 @@
 
 <h:head>
   <title><h:outputText value="#{msg['dialogDefinicionVersionFormulario.titulo']}"/></title>
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -146,7 +150,7 @@
 	<p:outputPanel>
 
 
-    <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
+    <h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
 
             <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionFormulario.identificador']}" />
             <p:inputText id="identificador" required="true" styleClass="w25" maxlength="20" value="#{dialogDefinicionVersionFormulario.data.identificador}" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -158,7 +162,7 @@
             <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
                <p:inputText id="descripcion" required="true" readonly="true" onblur="this.value = this.value.trim();" styleClass="w85" value="#{dialogDefinicionVersionFormulario.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionFormulario.idiomas)}" />
-               <p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionFormulario.editarDescripcion()}"	process="@this" update="growl">
+               <p:commandButton icon="fa fa-globe" actionListener="#{dialogDefinicionVersionFormulario.editarDescripcion()}"	process="@this" update="growl">
                  <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogo}" update="growl descripcion" />
             </p:commandButton>
            </p:outputPanel>
@@ -174,7 +178,7 @@
 	             </p:column>
 	             <p:column>
 		               <p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionFormulario.data.scriptObligatoriedad)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
-		              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptObligatoriedad)}"
+		              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptObligatoriedad)} btn-no-line-break"
 		                      process="@this" update="growl">
 		              <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoObligatoriedad}" update="growl scriptObligatoriedad" />
 		            </p:commandButton>
@@ -191,8 +195,9 @@
             </p:selectBooleanCheckbox>
              </p:column>
              <p:column>
-               <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionFormulario.data.scriptFirma)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
-              styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptFirma)}"
+               <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionFormulario.data.scriptFirma)}"
+								value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
+              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptFirma)} btn-no-line-break"
                       process="@this" update="growl">
 		                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoFirma}" update="growl scriptFirma" />
 		            </p:commandButton>
@@ -255,7 +260,7 @@
 				<f:facet name="right">
 	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionFormulario.aceptar()}" process="@form" update="@form growl"  styleClass="boton-azul"/>
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionFormulario.cancelar()}" process="@this" />
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionFormulario.ayuda()}" process="@this"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogDefinicionVersionFormulario.ayuda()}" process="@this"/>
 				</f:facet>
 			</p:toolbar>
 	 </p:outputPanel>

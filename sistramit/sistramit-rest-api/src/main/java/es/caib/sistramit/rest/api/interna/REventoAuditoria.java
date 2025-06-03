@@ -2,6 +2,7 @@ package es.caib.sistramit.rest.api.interna;
 
 import java.util.Date;
 
+import es.caib.sistramit.rest.api.externa.v1.RFuncionarioHabilitadoInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -118,6 +119,9 @@ public class REventoAuditoria {
 
 	@ApiModelProperty(value = "detalle")
 	private String detalle;
+
+	@ApiModelProperty(value = "Funcionario habilitado")
+	private RFuncionarioHabilitadoInfo funcionarioHabilitado;
 
 	/**
 	 * Instancia un nuevo evento
@@ -428,4 +432,13 @@ public class REventoAuditoria {
 		this.descripcionTramite = descripcionTramite;
 	}
 
+	public RFuncionarioHabilitadoInfo getFuncionarioHabilitado() {
+		return funcionarioHabilitado;
+	}
+
+	public void setFuncionarioHabilitado(RFuncionarioHabilitadoInfo funcionarioHabilitado) {
+		this.funcionarioHabilitado = funcionarioHabilitado;
+	}
 }
+
+

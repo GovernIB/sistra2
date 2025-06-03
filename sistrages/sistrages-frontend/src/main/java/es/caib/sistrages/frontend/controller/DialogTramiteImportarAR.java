@@ -122,7 +122,7 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 			// Muestra dialogo
 			final Map<String, String> params = new HashMap<>();
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getAreaActual().getCodigo()));
-			UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.CONSULTA, params, true, 520, 160);
+			UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.CONSULTA, params, true, 520, 230);
 		}
 	}
 

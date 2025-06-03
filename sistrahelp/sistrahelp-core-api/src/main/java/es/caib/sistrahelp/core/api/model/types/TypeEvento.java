@@ -41,7 +41,7 @@ public enum TypeEvento {
 	/**
 	 * PAGO PRESENCIAL (CARTA PAGO).
 	 */
-	PAGO_PRESENCIAL("TR_PAP"),
+//	PAGO_PRESENCIAL("TR_PAP"),
 	/**
 	 * PAGO ELECTRÓNICO CANCELADO.
 	 */
@@ -83,10 +83,6 @@ public enum TypeEvento {
 	 */
 	FIRMA_INICIO("TR_SGI"),
 	/**
-	 * FIRMA FIN.
-	 */
-	FIRMA_FIN("TR_SGF"),
-	/**
 	 * FIRMA FIN (OK).
 	 */
 	FIRMA_FIN_OK("TR_SGO"),
@@ -107,7 +103,9 @@ public enum TypeEvento {
 	/**
 	 * DEBUG FLUJO
 	 */
-	DEBUG_FLUJO("TR_DEB");
+	DEBUG_FLUJO("TR_DEB"),
+
+	PROCESO_ENTREGA("TR_ETG");
 
 	/**
 	 * Valor como string.

@@ -17,6 +17,9 @@
 <h:body>
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -28,7 +31,7 @@
 		<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -150,19 +153,19 @@
 		                <p:ajax event="contextMenu" global="false" process="@this"/>
 
 						<!-- Columnas -->
-						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoIncidencia']}">
+						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoIncidencia']}" sortBy="#{td.tipoIncidencia.getTraduccion(sessionBean.lang,sessionBean.idiomas)}">
 							<h:outputText value="#{td.tipoIncidencia.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
 						</p:column>
 
-						<p:column headerText="#{msg['viewFormularioSoporte.headerDescripcion']}">
+						<p:column headerText="#{msg['viewFormularioSoporte.headerDescripcion']}" sortBy="#{td.descripcion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}">
 							<h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
 						</p:column>
 
-						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoDestinatario']}">
+						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoDestinatario']}" sortBy="#{viewFormularioSoporte.showTipos(td.tipoDestinatario)}">
 						  	<h:outputText value="#{viewFormularioSoporte.showTipos(td.tipoDestinatario)}" escape="false"/>
 						</p:column>
 
-						<p:column headerText="#{msg['viewFormularioSoporte.headerEmails']}">
+						<p:column headerText="#{msg['viewFormularioSoporte.headerEmails']}" sortBy="#{td.listaEmails}">
 							<h:outputText value="#{td.listaEmails}" />
 						</p:column>
 					</p:dataTable>
@@ -174,7 +177,7 @@
 							</p:commandButton>
 						</p>
 						<p>
-							<p:commandButton id="btnEditarFormulario" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{viewFormularioSoporte.editarFormulario}" process="@this" update="growlDialog" rendered="#{!viewFormularioSoporte.consulta}">
+							<p:commandButton id="btnEditarFormulario" icon="fa fa-pencil" title="#{msg['botones.editar']}" actionListener="#{viewFormularioSoporte.editarFormulario}" process="@this" update="growlDialog" rendered="#{!viewFormularioSoporte.consulta}">
 								<p:ajax event="dialogReturn" listener="#{viewFormularioSoporte.returnDialogo}" update="growlDialog dataTableFormularios" />
 							</p:commandButton>
 						</p>
@@ -191,7 +194,7 @@
             <p:confirmDialog global="true" >
                 <p:outputPanel styleClass="confirmar_botonera">
                     <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
                 </p:outputPanel>
             </p:confirmDialog>
 
@@ -199,8 +202,8 @@
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioSoporte:auxCopiar" update="growlDialog" />
        			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFormularioSoporte:btnNuevoFormulario').click();" process="@this"  rendered="#{!viewFormularioSoporte.consulta}"/>
-        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFormularioSoporte:btnEditarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
-        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFormularioSoporte:btnEliminarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('dialogFormularioSoporte:btnEditarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('dialogFormularioSoporte:btnEliminarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewFormularioSoporte.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -216,7 +219,7 @@
 			<p:toolbar>
 				<f:facet name="right">
 					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{viewFormularioSoporte.cerrar}" process="@form" update="@form growlDialog" />
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFormularioSoporte.ayuda()}" process="@this" update="growlDialog"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewFormularioSoporte.ayuda()}" process="@this" update="growlDialog"/>
 				</f:facet>
 			</p:toolbar>
 		</p:outputPanel>
@@ -224,8 +227,8 @@
       		<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogFormularioSoporte:auxCopiar" update="growlDialog" />
       		<p:separator/>
       		<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFormularioSoporte:btnNuevoFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
-       		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFormularioSoporte:btnEditarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
-       		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFormularioSoporte:btnEliminarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+       		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('dialogFormularioSoporte:btnEditarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+       		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('dialogFormularioSoporte:btnEliminarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
 	    </p:contextMenu>
 	    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
 			<p:ajax event="success" listener="#{viewFormularioSoporte.copiadoCorr}" process="@this" update="@this growlDialog"/>

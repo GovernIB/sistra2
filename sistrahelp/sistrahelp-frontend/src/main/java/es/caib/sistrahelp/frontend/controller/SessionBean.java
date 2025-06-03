@@ -17,6 +17,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,7 @@ import es.caib.sistrahelp.frontend.util.UtilJSF;
 @ManagedBean(name = "sessionBean")
 @SessionScoped
 public class SessionBean {
+
 
 	/**
 	 * Usuario.
@@ -234,13 +236,13 @@ public class SessionBean {
 
 		// Por defecto, se activa el rol supervisor por defecto y luego el operador
 		// helpdesk
-		if(activeRole == null) {
+ 		if(activeRole == null) {
 			if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
 				activeRole = TypeRoleAcceso.SUPERVISOR_ENTIDAD;
 			} else if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
 				activeRole = TypeRoleAcceso.HELPDESK;
 			} else {
-				UtilJSF.redirectJsfPage(URL_ERROR_USUARIO_SIN_ROL, null);
+				UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
 				return;
 			}
 		}
@@ -323,7 +325,7 @@ public class SessionBean {
 		} else if (activeRole == TypeRoleAcceso.HELPDESK) {
 			listaEntidades = listaEntidadesHelpDesk;
 		} else {
-			UtilJSF.redirectJsfPage(URL_ERROR_USUARIO_SIN_ROL, null);
+			UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
 			return;
 		}
 
@@ -337,7 +339,7 @@ public class SessionBean {
 				listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpDesk, entidad);
 			}
 		} else {
-			UtilJSF.redirectJsfPage(URL_ERROR_USUARIO_SIN_ROL, null);
+			UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
 			return;
 		}
 
@@ -391,12 +393,14 @@ public class SessionBean {
 					? entidad.getNombre().getTraduccion(this.lang)
 					: entidad.getNombre().getTraduccion(this.lang).substring(0, 25) + "...");
 
-			entidadSubmenu = new DefaultSubMenu(nombreEntidad);
+			entidadSubmenu = new DefaultSubMenu();
+			entidadSubmenu.setLabel(nombreEntidad);
 		} else {
-			entidadSubmenu = new DefaultSubMenu("-");
+			entidadSubmenu = new DefaultSubMenu();
+			entidadSubmenu.setLabel("-");
 		}
 
-		entidadSubmenu.setIcon("fa-li fa fa-institution");
+		entidadSubmenu.setIcon("pi-icono-izquierda fa fa-building");
 
 		if (entidad != null && listaEntidades != null) {
 			for (final Entidad newEntidad : listaEntidades) {
@@ -405,38 +409,47 @@ public class SessionBean {
 							? newEntidad.getNombre().getTraduccion(this.lang)
 							: newEntidad.getNombre().getTraduccion(this.lang).substring(0, 25) + "...");
 
-					final DefaultMenuItem item3 = new DefaultMenuItem(nombreSubEntidad);
+					final DefaultMenuItem item3 = new DefaultMenuItem();
+					item3.setAriaLabel(nombreSubEntidad);
+					item3.setValue(nombreSubEntidad);
 					item3.setCommand("#{sessionBean.cambiarEntidadActivo(\"" + newEntidad.getCodigoDIR3() + "\")}");
-					item3.setIcon("fa-li fa fa-institution");
-					entidadSubmenu.addElement(item3);
+					item3.setIcon("pi-icono-izquierda fa fa-building");
+					entidadSubmenu.getElements().add(item3);
 				}
 			}
 		}
 
-		model.addElement(entidadSubmenu);
+		model.getElements().add(entidadSubmenu);
 
-		final DefaultSubMenu firstSubmenu = new DefaultSubMenu(getUserName());
-		firstSubmenu.setIcon("fa-li fa fa-user-o");
-		final DefaultMenuItem item = new DefaultMenuItem(UtilJSF.getLiteral(getChangeLang()));
+		final DefaultSubMenu firstSubmenu = new DefaultSubMenu();
+		firstSubmenu.setLabel(getUserName());
+		firstSubmenu.setIcon("pi-icono-izquierda fa fa fa-user");
+		final DefaultMenuItem item = new DefaultMenuItem();
+		item.setAriaLabel(UtilJSF.getLiteral(getChangeLang()));
+		item.setValue(UtilJSF.getLiteral(getChangeLang()));
 		item.setCommand("#{sessionBean.cambiarIdioma(sessionBean.getChangeLang())}");
-		item.setIcon("fa-li fa fa-flag");
-		firstSubmenu.addElement(item);
+		item.setIcon("pi-icono-izquierda fa fa-flag");
+		firstSubmenu.getElements().add(item);
 
-		model.addElement(firstSubmenu);
+		model.getElements().add(firstSubmenu);
 
-		final DefaultSubMenu secondSubmenu = new DefaultSubMenu(
+		final DefaultSubMenu secondSubmenu = new DefaultSubMenu();
+		secondSubmenu.setLabel(
 				UtilJSF.getLiteral("roles." + activeRole.name().toLowerCase()));
-		secondSubmenu.setIcon("fa-li fa fa-id-card-o");
+		secondSubmenu.setIcon("pi-icono-izquierda fa fa-id-card");
 		for (final TypeRoleAcceso role : rolesList) {
 			if (!activeRole.equals(role)) {
-				final DefaultMenuItem item2 = new DefaultMenuItem(
+				final DefaultMenuItem item2 = new DefaultMenuItem();
+				item2.setAriaLabel(
+						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
+				item2.setValue(
 						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
 				item2.setCommand("#{sessionBean.cambiarRoleActivo(\"" + role.toString() + "\")}");
-				item2.setIcon("fa-li fa fa-id-card-o");
-				secondSubmenu.addElement(item2);
+				item2.setIcon("pi-icono-izquierda fa fa-id-card");
+				secondSubmenu.getElements().add(item2);
 			}
 		}
-		model.addElement(secondSubmenu);
+		model.getElements().add(secondSubmenu);
 		model.generateUniqueIds();
 		return model;
 	}
@@ -478,9 +491,11 @@ public class SessionBean {
 		for (final TypeOpcionMenu opcion : TypeOpcionMenu.values()) {
 			if (!opcion.name().equals("ALERTAS")
 					|| (opcion.name().equals("ALERTAS") && this.activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
-				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-				item.setUrl(UtilJSF.getUrlOpcionMenu(opcion, idEntidad));
-				model.addElement(item);
+				item = new DefaultMenuItem();
+				item.setAriaLabel(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+				item.setValue(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+				item.setUrl(UtilJSF.getContextPath()  + UtilJSF.getUrlOpcionMenu(opcion, idEntidad));
+				model.getElements().add(item);
 			}
 		}
 
@@ -781,7 +796,7 @@ public class SessionBean {
 	}
 
 	/**
-	 * @param umbralNA and umbralAR to delete
+	 * Eliminar umbrales
 	 */
 	public void eliminarUmbrales() {
 		propiedades.removeIf(prop -> prop.getCodigo().equals("umbralNA"));
@@ -917,7 +932,7 @@ public class SessionBean {
 
 
 	/**
-	 * @param umbralNA the umbralNAUsuario to set
+	 * @param umbralNAUsuario the umbralNAUsuario to set
 	 */
 	public void setUmbralNAUsuario(String umbralNAUsuario) {
 		this.umbralNAUsuario = umbralNAUsuario;
@@ -948,7 +963,7 @@ public class SessionBean {
 
 
 	/**
-	 * @param umbralAR the umbralARUsuario to set
+	 * @param umbralARUsuario the umbralARUsuario to set
 	 */
 	public void setUmbralARUsuario(String umbralARUsuario) {
 		this.umbralARUsuario = umbralARUsuario;

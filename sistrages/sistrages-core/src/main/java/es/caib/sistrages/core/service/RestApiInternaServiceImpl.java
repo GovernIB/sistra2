@@ -583,7 +583,7 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		ids.add(area.getCodigo());
 		Entidad entidad = entidadDao.getByArea(area.getCodigo());
 		List<String> aux = new ArrayList<String>();
-		for(Tramite tram : tramiteDao.getAllByFiltro(entidad.getCodigo(), ids, null)) {
+		for(Tramite tram : tramiteDao.getAllByFiltro(entidad.getCodigo(), ids, null, false)) {
 			aux.add(tram.getIdentificador());
 		}
 		return aux;

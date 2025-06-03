@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import es.caib.sistramit.core.api.exception.*;
+import es.caib.sistramit.core.api.model.flujo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,26 +31,7 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
-import es.caib.sistramit.core.api.exception.AutenticacionException;
-import es.caib.sistramit.core.api.exception.CatalogoProcedimientosVerificacionException;
-import es.caib.sistramit.core.api.exception.EmailException;
-import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
-import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
-import es.caib.sistramit.core.api.exception.GenerarPdfClaveException;
-import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
-import es.caib.sistramit.core.api.exception.MetodoAutenticacionException;
-import es.caib.sistramit.core.api.exception.QaaInicioTramiteException;
-import es.caib.sistramit.core.api.exception.QaaRecargaTramiteException;
-import es.caib.sistramit.core.api.exception.TipoNoControladoException;
-import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
-import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
-import es.caib.sistramit.core.api.model.flujo.DetallePasos;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
@@ -334,14 +317,15 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	 *                                    usuario autenticado
 	 * @param pFechaCaducidad
 	 *                                    fecha caducidad
+	 * @param pFechaInicio Fecha inicio
 	 * @return Datos sesion tramitacion
 	 * @throws CatalogoPluginException
 	 */
 	private DatosSesionTramitacion generarDatosSesion(final boolean inicio, final String idSesionTramitacion,
-			final TypeEstadoTramite estado, final String pIdTramite, final int pVersion, final String pIdioma,
-			final String pIdTramiteCP, final boolean servicioCP, final String pUrlInicio,
-			final Map<String, String> pParametrosInicio, final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo,
-			final Date pFechaInicio, final Date pFechaCaducidad) {
+													  final TypeEstadoTramite estado, final String pIdTramite, final int pVersion, final String pIdioma,
+													  final String pIdTramiteCP, final boolean servicioCP, final String pUrlInicio,
+													  final Map<String, String> pParametrosInicio, final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo,
+													  final Date pFechaInicio, final Date pFechaCaducidad) {
 
 		// Obtenemos la definición del trámite(si no está el idioma
 		// disponible, se coge el idioma por defecto o bien el primero
@@ -357,6 +341,11 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 		// Control QAA
 		controlQAA(inicio, idSesionTramitacion, defTramSTG);
+
+		// Control FH
+		if (pUsuarioAutenticadoInfo.getFuncionarioHabilitado() != null) {
+			controlFH(defTramSTG);
+		}
 
 		// Obtenemos las propiedades del trámite en el Catalogo de
 		// Procedimientos
@@ -460,8 +449,18 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		st.getDatosTramite().setPlazoFin(tramiteCP.getPlazoFin());
 		st.getDatosTramite().setFechaCaducidad(pFechaCaducidad);
 		st.getDatosTramite().setFechaInicio(pFechaInicio);
-
 		return st;
+	}
+
+	/**
+	 * Control FH respecto a la definición del trámite.
+	 * @param defTramSTG Definición trámite
+	 */
+	private void controlFH(DefinicionTramiteSTG defTramSTG) {
+		// No pueden existir pagos
+		if (UtilsSTG.requierePagoElectronico(defTramSTG)) {
+			throw new ErrorConfiguracionException("No es pot tramitar un tràmit amb pagament electrònic amb un funcionari habilitat.");
+		}
 	}
 
 	/**
@@ -553,6 +552,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	 *                                 Indica si la carga se produce tras un error
 	 */
 	private void cargarImpl(final String pIdSesionTramitacion, final boolean recarga) {
+
 		// Control de si el flujo es válido
 		controlFlujoInvalido();
 
@@ -561,9 +561,16 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		if (tram == null) {
 			throw new TramiteNoExisteException(pIdSesionTramitacion);
 		}
+		// Carga datos FH
+		PersonaDesglosado funcionarioHabilitado = null;
+		if (tram.getFuncionarioHabilitadoNif() != null) {
+			funcionarioHabilitado = new PersonaDesglosado(tram.getFuncionarioHabilitadoNif(),
+					tram.getFuncionarioHabilitadoNombre(), tram.getFuncionarioHabilitadoApellido1(),
+					tram.getFuncionarioHabilitadoApellido2());
+		}
 
 		// Verificamos si usuario puede cargar el tramite
-		UtilsFlujo.controlCargaTramite(tram, usuarioAutenticadoInfo, recarga);
+		UtilsFlujo.controlCargaTramite(tram, usuarioAutenticadoInfo, funcionarioHabilitado, recarga);
 
 		// Inicializa datos de sesión
 		datosSesion = generarDatosSesion(false, pIdSesionTramitacion, tram.getEstado(), tram.getIdTramite(),

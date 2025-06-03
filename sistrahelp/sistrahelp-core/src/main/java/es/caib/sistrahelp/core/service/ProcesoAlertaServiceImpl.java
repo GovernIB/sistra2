@@ -95,8 +95,6 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 
 	private int firmaIni;
 
-	private int firmaFin;
-
 	private int firmaFinOk;
 
 	private Alerta alert;
@@ -400,9 +398,9 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			}
 			String firmaPor;
 			if (firmaIni != 0) {
-				firmaPor = formatDouble((100 - (((Double.valueOf(firmaFin) + Double.valueOf(firmaFinOk)) * 100) / Double.valueOf(firmaIni))));
+				firmaPor = formatDouble((100 - ((Double.valueOf(firmaFinOk) * 100) / Double.valueOf(firmaIni))));
 			} else {
-				if ((firmaFin + firmaFinOk) == 0) {
+				if (firmaFinOk == 0) {
 					firmaPor = "0,00";
 				} else {
 					firmaPor = "100,00";
@@ -494,7 +492,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
-					+ (firmaFin + firmaFinOk) + "</td>"
+					+ firmaFinOk + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaPor + "%</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -814,7 +812,6 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 		formIni = 0;
 		formFin = 0;
 		firmaIni = 0;
-		firmaFin = 0;
 		firmaFinOk = 0;
 		listaErrores = new ArrayList<ErroresPorTramiteCM>();
 		listaTramErrores = new ArrayList<EventoCM>();
@@ -898,9 +895,6 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			case FIRMA_INICIO:
 				firmaIni = ev.getConcurrencias().intValue();
 				break;
-			case FIRMA_FIN:
-				firmaFin = ev.getConcurrencias().intValue();
-				break;
 			case FIRMA_FIN_OK:
 				firmaFinOk = ev.getConcurrencias().intValue();
 				break;
@@ -910,9 +904,9 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			case PAGO_ELECTRONICO_VERIFICADO:
 				pagFin += ev.getConcurrencias();
 				break;
-			case PAGO_PRESENCIAL:
+			/*case PAGO_PRESENCIAL:
 				pagFin += ev.getConcurrencias();
-				break;
+				break;*/
 			case INICIAR_TRAMITE:
 				tramIni = ev.getConcurrencias().intValue();
 				break;
@@ -1187,20 +1181,6 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 	 */
 	public final void setFirmaIni(int firmaIni) {
 		this.firmaIni = firmaIni;
-	}
-
-	/**
-	 * @return the firmaFin
-	 */
-	public final int getFirmaFin() {
-		return firmaFin;
-	}
-
-	/**
-	 * @param firmaFin the firmaFin to set
-	 */
-	public final void setFirmaFin(int firmaFin) {
-		this.firmaFin = firmaFin;
 	}
 
 	public int getFirmaFinOk() {

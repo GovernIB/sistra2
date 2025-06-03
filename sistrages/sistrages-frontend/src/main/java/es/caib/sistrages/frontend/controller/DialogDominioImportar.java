@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,7 +143,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 		if (event != null && event.getFile() != null) {
 			mostrarBotonImportar = false;
 			final UploadedFile file = event.getFile();
-			contenido = file.getContents();
+			contenido = file.getContent();
 			prepararImportacion(contenido);
 			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("variable.area.asociada.elemento"));
 		} else {

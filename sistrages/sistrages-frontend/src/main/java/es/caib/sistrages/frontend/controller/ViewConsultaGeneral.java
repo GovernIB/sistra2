@@ -130,7 +130,7 @@ public class ViewConsultaGeneral extends ViewControllerBase {
 		if (this.datoSeleccionado.getIdArea() != null) {
 			params.put(TypeParametroVentana.AREA.toString(), this.datoSeleccionado.getIdArea().toString());
 		}
-		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 490, 215);
+		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 490, 300);
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class ViewConsultaGeneral extends ViewControllerBase {
 			params.put(TypeParametroVentana.ENTIDAD.toString(), UtilJSF.getIdEntidad().toString());
 		}
 		params.put(TypeParametroVentana.AMBITO.toString(), this.datoSeleccionado.getAmbito().toString());
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 550, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 550, 265);
 
 	}
 

@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -138,9 +138,11 @@ public class ViewDominios extends ViewControllerBase {
 
 			DefaultMenuItem item = null;
 
-			item = new DefaultMenuItem(area);
-			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
-			breadCrumb.addElement(item);
+			item = new DefaultMenuItem();
+			item.setAriaLabel(area);
+			item.setValue(area);
+			item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.getElements().add(item);
 
 		} else {
 			mostrarBreadcrumb = false;
@@ -202,8 +204,7 @@ public class ViewDominios extends ViewControllerBase {
 		case "S":
 			UtilJSF.redirectJsfPage("/secure/app/viewFormulariosExternos.xhtml?ambito=A&id=" + id + "&area=" + area);
 		case "C":
-			UtilJSF.redirectJsfPage(
-					"/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + id + "&area=" + area);
+			UtilJSF.redirectJsfPage("/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + id + "&area=" + area);
 		case "E":
 			UtilJSF.redirectJsfPage("/secure/app/viewEnviosRemotos.xhtml?ambito=A&id=" + id + "&area=" + area);
 		default:
@@ -261,18 +262,17 @@ public class ViewDominios extends ViewControllerBase {
 			return;
 		}
 
-		final RequestContext contextReq = RequestContext.getCurrentInstance();
 
 		if (this.datoSeleccionado.getTipo().equals(TypeDominio.FUENTE_DATOS)) {
 			String[] param = new String[1];
 			param[0] = this.datoSeleccionado.getIdentificadorFD();
 			this.msg = UtilJSF.getLiteral("confirm.componente.eliminarFD", param);
-			contextReq.update("form:dlgConfirmar");
+			PrimeFaces.current().ajax().update("form:dlgConfirmar");
 		} else {
 			this.msg = UtilJSF.getLiteral("confirm.borrado");
-			contextReq.update("form:dlgConfirmar");
+			PrimeFaces.current().ajax().update("form:dlgConfirmar");
 		}
-		contextReq.execute("PF('confirmationButton').jq.click();");
+		PrimeFaces.current().executeScript("PF('confirmationButton').jq.click();");
 	}
 
 	/**
@@ -582,7 +582,6 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Abre dialogo de tramites.
 	 *
-	 * @param modoAccesoDlg Modo acceso
 	 */
 	public void tramites() {
 

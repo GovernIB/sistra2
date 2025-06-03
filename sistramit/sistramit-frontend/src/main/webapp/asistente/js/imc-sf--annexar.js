@@ -25,6 +25,9 @@ var imc_navegacio;
 
 var HTML_FORM_ELECTRONIC;
 
+var imc_annexe_digit
+	,imc_annexe_iframe;
+
 
 // onReady
 
@@ -55,6 +58,10 @@ function appPasAnnexarInicia() {
 	imc_navegacio = imc_contingut.find(".imc--navegacio:first");
 
 	HTML_FORM_ELECTRONIC = imc_contingut.find(".imc-input-annex:first").html();
+
+	imc_annexe_digit = imc_contingut.find(".imc--annexe-digit:first");
+	imc_annexe_digit_cont = imc_annexe_digit.find(".imc--ad-cont:first");
+	imc_annexe_iframe = imc_annexe_digit.find("iframe:first");
 
 	imc_docs
 		.appAnnexa()
@@ -637,10 +644,202 @@ $.fn.appAnnexaLlistat = function(opcions){
 			,doc_tipus = false
 			,arxiuObri = function(e) {
 
+				var bt = $(this);
+
+				// està completat?
+
+				if (bt.closest("li").hasClass("imc--completat")) {
+					return;
+				}
+
+				// és funcionari habilitat?
+
+				if (APP_JSON_TRAMIT_D.funcionarioHabilitado && APP_JSON_TRAMIT_D.funcionarioHabilitado === "s") {
+
+					imc_missatge
+						.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtAnnexeCarregant, alMostrar: function() { arxiuObrint(bt); } });
+
+					return;
+
+				}
+
+				// annexe intern
+
+				arxiuObrim(bt);
+
+			}
+			,arxiuObrint = function(bt) {
+
+				// revisem si és intern o amb iframe
+
+				var annex = bt.closest(".imc--doc-li")
+					,arxiu = bt.parent().find("strong");
+
+				annex_id = annex.attr("data-id");
+				arxiu_id = arxiu.attr("data-id");
+
+
+				// envia config
+
+				var	pag_url = APP_ANNEXE_URL
+					,formData = new FormData();
+
+				// dades
+
+				formData
+					.append("idPaso", APP_TRAMIT_PAS_ID);
+
+				formData
+					.append("idAnexo", annex_id);
+
+				// envia ajax
+
+				$.ajax({
+					type: "post",
+					url: pag_url,
+					data: formData,
+					processData: false,
+					cache: false,
+					contentType: false,
+					timeout: APP_TIMEOUT
+				})
+				.done(function( data ) {
+					
+					var json = data;
+
+					if (json.estado === "SUCCESS" || json.estado === "WARNING") {
+
+						var annexe_ext_missatge = json.mensaje
+							,annexe_ext_iframe = json.datos.iframe
+							,annexe_ext_url = json.datos.url;
+						
+						// annexe iframe
+
+						if( annexe_ext_url && annexe_ext_url !== "" ) {
+
+							annexeExterior(annexe_ext_url, annexe_ext_iframe, annexe_ext_missatge);
+							return;
+						}
+
+
+						// annexe intern
+
+						arxiuObrim(bt);
+
+					} else {
+
+						envia_ajax = false;
+
+						consola("Annexe obri: error des de JSON");
+
+						imc_contenidor
+							.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
+
+					}
+
+				})
+				.fail(function(dades, tipus, errorThrown) {
+
+					if (tipus === "abort") {
+						return false;
+					}
+					
+					consola("Annexe obri: error des de FAIL");
+
+					imc_contenidor
+						.errors({ estat: "fail" });
+					
+				});
+
+			}
+			,annexeExteriorIframe = function(annexe_ext_url) {
+				
+				// obrim iframe
+
+				var iframeTanca = function() {
+
+						imc_annexe_digit
+							.removeClass("imc--on");
+
+						imc_annexe_iframe
+							.off("");
+
+						setTimeout(
+							function() {
+
+								imc_annexe_iframe
+									.attr("src", "");
+
+							}
+							,300
+						);
+
+					}
+					,iframeCarregat = function() {
+
+						// amaguem missatge carregant
+
+						imc_missatge
+							.appMissatge({ araAmaga: true });
+
+						imc_annexe_digit
+							.addClass("imc--on")
+							.off(".annexeIframe")
+							.on("click.annexeIframe", "button[data-accio=iframe-tanca]", iframeTanca);
+
+					};
+
+				imc_annexe_iframe
+					.off("")
+					.on("load", iframeCarregat);
+
+				imc_annexe_iframe
+					.attr("src", annexe_ext_url);
+
+
+				if (typeof APP_DIGIT_IFRAME_WIDTH !== "undefined" && typeof APP_DIGIT_IFRAME_HEIGHT !== "undefined") {
+
+					if (APP_DIGIT_IFRAME_WIDTH === "" || APP_DIGIT_IFRAME_HEIGHT === "") {
+						return;
+					}
+
+					imc_annexe_digit_cont
+						.css({ width: APP_DIGIT_IFRAME_WIDTH+"px", height: APP_DIGIT_IFRAME_HEIGHT+"px" });
+					
+				}
+			
+			}
+			,annexeExterior = function(annexe_ext_url, annexe_ext_iframe, annexe_ext_missatge) {
+
+				if (annexe_ext_iframe && annexe_ext_iframe === "s") {
+					annexeExteriorIframe(annexe_ext_url);
+					return;
+				}
+
+				var titol_ = annexe_ext_missatge.titulo
+					,text_ = annexe_ext_missatge.texto;
+
+				var annexeExteriorURL = function() {
+
+						document
+							.location = annexe_ext_url;
+
+					};
+
+				imc_missatge
+					.appMissatge({ accio: "alerta", amagaDesdeFons: false, titol: titol_, text: text_, alAcceptar: function() { annexeExteriorURL(); } });
+
+			}
+			,arxiuObrim = function(bt) {
+
+				// amaguem missatge carregant
+
+				imc_missatge
+					.appMissatge({ araAmaga: true });
+
 				// dades annex
 
-				var bt = $(this),
-					bt_titol_text = bt.find("strong:first").text(),
+				var bt_titol_text = bt.find("strong:first").text(),
 					item_bt = bt.closest("li"),
 					bt_id = item_bt.attr("data-id"),
 					bt_omplit = item_bt.attr("data-omplit"),
@@ -824,7 +1023,7 @@ $.fn.appAnnexaLlistat = function(opcions){
 				}
 
 				
-				// netegem valor del ´camp títol
+				// netegem valor del camp títol
 
 				imc_document
 					.find(".imc--titol:first input")

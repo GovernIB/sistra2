@@ -158,6 +158,8 @@ public class SessionBean {
 	/** Datos elemento. */
 	private Sesion data;
 
+	private Long codigoEntidadSeleccionada;
+
 	public void submitAspect() {
 
 		String swidth = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
@@ -449,7 +451,13 @@ public class SessionBean {
 
 	/** Abrir dialog info sesion. */
 	public void infoSesion() {
-		UtilJSF.openDialog(DialogInfoSesion.class, TypeModoAcceso.CONSULTA, null, true, 620, 340);
+		if (TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)
+				&& (!FacesContext.getCurrentInstance().getViewRoot().getViewId().contains("viewEntidades.xhtml")
+				|| codigoEntidadSeleccionada == null)) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.datosSesion.noSeleccionado"));
+		} else {
+			UtilJSF.openDialog(DialogInfoSesion.class, TypeModoAcceso.CONSULTA, null, true, 620, 340);
+		}
 	}
 
 	/** Genera menu segun role activo. */
@@ -459,52 +467,67 @@ public class SessionBean {
 			final String nombreEntidad = (entidad.getNombre().getTraduccion(this.lang).length() < 28
 					? entidad.getNombre().getTraduccion(this.lang)
 					: entidad.getNombre().getTraduccion(this.lang).substring(0, 25) + "...");
-			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(nombreEntidad);
-			entidadSubmenu.setIcon("fa-li fa fa-institution");
+			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu();
+			entidadSubmenu.setLabel(nombreEntidad);
+			entidadSubmenu.setStyleClass("colorBlanco");
+			entidadSubmenu.setIcon("fa fa-building");
 			for (final Entidad newEntidad : listaEntidades) {
 				if (!entidad.equals(newEntidad)) {
 					final String nombreSubEntidad = (newEntidad.getNombre().getTraduccion(this.lang).length() < 28
 							? newEntidad.getNombre().getTraduccion(this.lang)
 							: newEntidad.getNombre().getTraduccion(this.lang).substring(0, 25) + "...");
-					final DefaultMenuItem item3 = new DefaultMenuItem(nombreSubEntidad);
+					final DefaultMenuItem item3 = new DefaultMenuItem();
+					item3.setAriaLabel(nombreSubEntidad);
+					item3.setValue(nombreSubEntidad);
 					item3.setCommand("#{sessionBean.cambiarEntidadActivo(" + newEntidad.getCodigo() + ")}");
-					item3.setIcon("fa-li fa fa-institution");
-					entidadSubmenu.addElement(item3);
+					item3.setIcon("fa fa-building");
+					entidadSubmenu.getElements().add(item3);
 				}
 			}
-			model.addElement(entidadSubmenu);
+			model.getElements().add(entidadSubmenu);
 		}
 
-		final DefaultSubMenu firstSubmenu = new DefaultSubMenu(getUserName());
-		firstSubmenu.setIcon("fa-li fa fa-user-o");
-		final DefaultMenuItem item0 = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones.datosSesion"));
+		final DefaultSubMenu firstSubmenu = new DefaultSubMenu();
+		firstSubmenu.setLabel(getUserName());
+		firstSubmenu.setIcon("fa fa-user");
+		firstSubmenu.setStyleClass("colorBlanco");
+		final DefaultMenuItem item0 = new DefaultMenuItem();
+		item0.setAriaLabel(UtilJSF.getLiteral("cabecera.opciones.datosSesion"));
+		item0.setValue(UtilJSF.getLiteral("cabecera.opciones.datosSesion"));
 		item0.setCommand("#{sessionBean.infoSesion()}");
 		item0.setProcess("@this");
 		item0.setUpdate("growlHeader");
-		firstSubmenu.addElement(item0);
-		final DefaultMenuItem item = new DefaultMenuItem(UtilJSF.getLiteral(getChangeLang()));
+		firstSubmenu.getElements().add(item0);
+		final DefaultMenuItem item = new DefaultMenuItem();
+		item.setAriaLabel(UtilJSF.getLiteral(getChangeLang()));
+		item.setValue(UtilJSF.getLiteral(getChangeLang()));
 		item.setCommand("#{sessionBean.cambiarIdioma(sessionBean.getChangeLang())}");
-		item.setIcon("fa-li fa fa-flag");
-		firstSubmenu.addElement(item);
+		item.setIcon("fa fa-flag");
+		firstSubmenu.getElements().add(item);
 
-		model.addElement(firstSubmenu);
+		model.getElements().add(firstSubmenu);
 
-		final DefaultSubMenu secondSubmenu = new DefaultSubMenu(
+		final DefaultSubMenu secondSubmenu = new DefaultSubMenu();
+		secondSubmenu.setLabel(
 				UtilJSF.getLiteral("roles." + activeRole.name().toLowerCase()));
-		secondSubmenu.setIcon("fa-li fa fa-id-card-o");
+		secondSubmenu.setIcon("fa fa-id-card");
+		secondSubmenu.setStyleClass("colorBlanco hijowpx180");
 		for (final TypeRoleAcceso role : rolesList) {
 			if (!activeRole.equals(role)) {
-				final DefaultMenuItem item2 = new DefaultMenuItem(
+				final DefaultMenuItem item2 = new DefaultMenuItem();
+				item2.setAriaLabel(
+						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
+				item2.setValue(
 						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
 				item2.setCommand("#{sessionBean.cambiarRoleActivo(\"" + role.toString() + "\")}");
-				item2.setIcon("fa-li fa fa-id-card-o");
+				item2.setIcon("fa fa-id-card");
 				if (!TypeRoleAcceso.HELPDESK.equals(role) && !TypeRoleAcceso.SUPERVISOR_ENTIDAD.equals(role)) {
-					secondSubmenu.addElement(item2);
+					secondSubmenu.getElements().add(item2);
 				}
 
 			}
 		}
-		model.addElement(secondSubmenu);
+		model.getElements().add(secondSubmenu);
 		model.generateUniqueIds();
 		return model;
 	}
@@ -518,18 +541,22 @@ public class SessionBean {
 		if (TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
 
 			for (final TypeOpcionMenuSuperAdministrador opcion : TypeOpcionMenuSuperAdministrador.values()) {
-				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-				item.setUrl(UtilJSF.getUrlOpcionMenuSuperadministrador(opcion));
-				model.addElement(item);
+				item = new DefaultMenuItem();
+				item.setAriaLabel(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+				item.setValue(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+				item.setUrl(UtilJSF.getContextPath() + UtilJSF.getUrlOpcionMenuSuperadministrador(opcion));
+				model.getElements().add(item);
 			}
 
 		} else {
 
 			for (final TypeOpcionMenuAdmOper opcion : TypeOpcionMenuAdmOper.values()) {
 				if (!opcion.equals(TypeOpcionMenuAdmOper.ENVIOS_REMOTOS) || UtilJSF.isServicioActivado()) {
-					item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-					item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getCodigo()));
-					model.addElement(item);
+					item = new DefaultMenuItem();
+					item.setAriaLabel(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+					item.setValue(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+					item.setUrl(UtilJSF.getContextPath() + UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getCodigo()));
+					model.getElements().add(item);
 				}
 			}
 
@@ -537,9 +564,11 @@ public class SessionBean {
 			// y en entorno de desarrollo o servicios estables
 			if (activeRole == TypeRoleAcceso.ADMIN_ENT
 					&& (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString()) || UtilJSF.getEntorno().equals(TypeEntorno.SERVICIOS_ESTABLES.toString()))) {
-				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones.migracion"));
-				item.setUrl(UtilJSF.getUrlArbolDefinicionVersion("migracion/viewMigracion"));
-				model.addElement(item);
+				item = new DefaultMenuItem();
+				item.setAriaLabel(UtilJSF.getLiteral("cabecera.opciones.migracion"));
+				item.setValue(UtilJSF.getLiteral("cabecera.opciones.migracion"));
+				item.setUrl(UtilJSF.getContextPath() + UtilJSF.getUrlArbolDefinicionVersion("migracion/viewMigracion"));
+				model.getElements().add(item);
 			}
 
 		}
@@ -982,5 +1011,13 @@ public class SessionBean {
 	 */
 	public void setIndexColorFondoScript(Integer indexColorFondoScript) {
 		this.indexColorFondoScript = indexColorFondoScript;
+	}
+
+	public Long getCodigoEntidadSeleccionada() {
+		return codigoEntidadSeleccionada;
+	}
+
+	public void setCodigoEntidadSeleccionada(Long codigoEntidadSeleccionada) {
+		this.codigoEntidadSeleccionada = codigoEntidadSeleccionada;
 	}
 }

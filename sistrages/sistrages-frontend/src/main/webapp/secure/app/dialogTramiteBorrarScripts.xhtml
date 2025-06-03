@@ -16,6 +16,10 @@
 <h:body>
     <f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
+
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
     </f:facet>
 
 	<!-- Parametros dialogo -->
@@ -136,7 +140,7 @@
 		<h3 style="margin:15px">#{msg['dialogBorrarScript.descripcion']} #{dialogTramiteBorrarScripts.tramite} - #{dialogTramiteBorrarScripts.version}</h3>
 
         <p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-		<h:panelGrid columns="1" columnClasses="grid-left padding-left-10"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="10" cellspacing="0">
+		<h:panelGrid columns="1" columnClasses="grid-left padding-left-10"  rowClasses="ui-datatable-even, ui-datatable-odd" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
 		        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.propiedades}" itemLabel="#{msg['dialogBorrarScript.propiedades']}" >
 		        </p:selectBooleanCheckbox>
@@ -163,7 +167,7 @@
 		  	<p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-					    <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteBorrarScripts.ayuda}" process="@this"/>
+					    <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogTramiteBorrarScripts.ayuda}" process="@this"/>
 			    		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTramiteBorrarScripts.aceptar}" process="@form" update="growlDialog" >
 					   		<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 					    </p:commandButton>
@@ -174,7 +178,7 @@
               <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form" />
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 				<p:contextMenu>

@@ -1,16 +1,16 @@
 package es.caib.sistrahelp.core.api.model;
 
+import es.caib.sistrahelp.core.api.exception.CargaConfiguracionException;
+import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.model.types.TypeIniciadoPor;
+import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
-import es.caib.sistrahelp.core.api.exception.CargaConfiguracionException;
-import es.caib.sistrahelp.core.api.model.types.TypeEvento;
-import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
-import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 
 /**
  * Filtros para la auditoria de tramites
@@ -31,6 +31,8 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
+
+	private TypeIniciadoPor iniciadoPor;
 	private String excepcion;
 
 	private String tlf;
@@ -108,6 +110,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.fechaDesde = pFiltroAuditoriaTramitacion.fechaDesde;
 			this.fechaHasta = pFiltroAuditoriaTramitacion.fechaHasta;
 			this.evento = pFiltroAuditoriaTramitacion.evento;
+			this.iniciadoPor = pFiltroAuditoriaTramitacion.iniciadoPor;
 			this.idTramite = pFiltroAuditoriaTramitacion.idTramite;
 			this.versionTramite = pFiltroAuditoriaTramitacion.versionTramite;
 			this.idProcedimientoCP = pFiltroAuditoriaTramitacion.idProcedimientoCP;
@@ -204,6 +207,14 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	public void setEvento(final TypeEvento evento) {
 		this.evento = evento;
+	}
+
+	public TypeIniciadoPor getIniciadoPor() {
+		return iniciadoPor;
+	}
+
+	public void setIniciadoPor(TypeIniciadoPor iniciadoPor) {
+		this.iniciadoPor = iniciadoPor;
 	}
 
 	public String getIdTramite() {

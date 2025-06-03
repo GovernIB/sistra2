@@ -82,8 +82,6 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 	private int firmaIni;
 
-	private int firmaFin;
-
 	private int firmaFinOk;
 
 	private List<ErroresPorTramiteCM> listaErrores;
@@ -207,9 +205,9 @@ public class DialogEnviarMail extends DialogControllerBase {
 			}
 			String firmaPor;
 			if (firmaIni != 0) {
-				firmaPor = formatDouble((100 - (((Double.valueOf(firmaFin) + Double.valueOf(firmaFinOk)) * 100) / Double.valueOf(firmaIni))));
+				firmaPor = formatDouble((100 - ((Double.valueOf(firmaFinOk) * 100) / Double.valueOf(firmaIni))));
 			} else {
-				if ((firmaFin + firmaFinOk) == 0) {
+				if (firmaFinOk == 0) {
 					firmaPor = "0,00";
 				} else {
 					firmaPor = "100,00";
@@ -307,7 +305,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
-					+ (firmaFin + firmaFinOk) + "</td>"
+					+ firmaFinOk + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaPor + "%</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -557,7 +555,6 @@ public class DialogEnviarMail extends DialogControllerBase {
 		formIni = 0;
 		formFin = 0;
 		firmaIni = 0;
-		firmaFin = 0;
 		firmaFinOk = 0;
 		listaErrores = new ArrayList<ErroresPorTramiteCM>();
 		listaTramErrores = new ArrayList<EventoCM>();
@@ -641,9 +638,6 @@ public class DialogEnviarMail extends DialogControllerBase {
 			case FIRMA_INICIO:
 				firmaIni = ev.getConcurrencias().intValue();
 				break;
-			case FIRMA_FIN:
-				firmaFin = ev.getConcurrencias().intValue();
-				break;
 			case FIRMA_FIN_OK:
 				firmaFinOk = ev.getConcurrencias().intValue();
 				break;
@@ -653,9 +647,9 @@ public class DialogEnviarMail extends DialogControllerBase {
 			case PAGO_ELECTRONICO_VERIFICADO:
 				pagFin += ev.getConcurrencias();
 				break;
-			case PAGO_PRESENCIAL:
+			/*case PAGO_PRESENCIAL:
 				pagFin += ev.getConcurrencias();
-				break;
+				break;*/
 			case INICIAR_TRAMITE:
 				tramIni = ev.getConcurrencias().intValue();
 				break;

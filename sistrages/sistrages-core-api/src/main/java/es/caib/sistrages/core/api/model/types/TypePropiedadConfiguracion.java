@@ -13,6 +13,8 @@ public enum TypePropiedadConfiguracion {
 	ENTORNO("entorno"),
 	/** Versión. */
 	VERSION("sistra2.version"),
+	/** Versión.patch */
+	VERSION_PATCH("sistra2.version.patch"),
 	/** Url asistente. */
 	SISTRAMIT_URL("sistramit.url"),
 	/** Prefijo plugin. */
@@ -23,6 +25,7 @@ public enum TypePropiedadConfiguracion {
 	SISTRAGES_AYUDA_PATH("ayuda.sistrages.path"),
 	/** Sistrages habilitar modo entrega. */
 	SISTRAGES_MODOENTREGA_HABILITAR("sistrages.modoEntrega.habilitar"),
+	SISTRAGES_CONVERTIR_PDF("sistrages.mostrarConvertirPDF"),
 	/** Sistramit rest password. **/
 	SISTRAMIT_REST_PWD("sistramit.rest.pwd"),
 	/** Sistramit rest usuario. **/
@@ -34,7 +37,13 @@ public enum TypePropiedadConfiguracion {
 	/** Sistramit rest url. **/
 	ANEXO_TAMANYO_MAX_INDIVIDUAL("sistramit.anexos.tamanyoMaximoIndividual"),
 	/** Anexo extensiones permitidas **/
-	ANEXOS_EXTENSIONES_PERMITIDAS("sistramit.anexos.extensionesPermitidas");
+	ANEXOS_EXTENSIONES_PERMITIDAS("sistramit.anexos.extensionesPermitidas"),
+	/** Sistramit rest password. **/
+	SISTRAMIT_REST_APIEXTERNA_PWD("sistramit.rest.externa.pwd"),
+	/** Sistramit rest usuario. **/
+	SISTRAMIT_REST_APIEXTERNA_USER("sistramit.rest.externa.user"),
+	/** Sistramit rest url. **/
+	SISTRAMIT_REST_APIEXTERNA_URL("sistramit.rest.externa.url");
 
 	/**
 	 * Valor como string.

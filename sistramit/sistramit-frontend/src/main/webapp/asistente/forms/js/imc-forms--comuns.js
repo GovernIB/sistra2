@@ -179,6 +179,8 @@ $.fn.submenu = function(options) {
 		ultima_opcio = false,
 		onClick = function() {
 
+			console.log("Submenú select");
+
 			if (element.find("a.imc-select:first").is(".imc-select-deshabilitat, .imc-select-lectura")) {
 				return;
 			}
@@ -196,7 +198,7 @@ $.fn.submenu = function(options) {
 
 				if (esLlistaElements) {
 
-					var form_llista_contenidor = element.closest(".imc--form")
+					var form_llista_contenidor = element.closest(".imc--form-contenidor")
 						,form_llista_contenidor_H = form_llista_contenidor.height();
 
 					var form_submenu_a = element.find("a.imc-select:first")

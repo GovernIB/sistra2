@@ -140,7 +140,7 @@
 						</p:selectOneMenu>
 					</p:outputPanel>
 
-					<i class="fa fa-fw fa-arrow-right" style="#{viewMigracion.setVisibleExcepcion(0)}"/>
+					<i class="fa fa-arrow-right" style="#{viewMigracion.setVisibleExcepcion(0)}"/>
 
 					<p:outputPanel style="#{viewMigracion.setVisibleExcepcion(0)}">
 						<p:outputLabel value="#{msg['viewMigracion.area']}2:" styleClass="va-middle margin-right-3" for="comboTramites"/>
@@ -179,7 +179,7 @@
 							selectionMode="single" rowKey="#{dt.hashCode()}">
 
 					<!-- Columnas -->
-						<p:column headerText="#{msg['dialogErroresValidacion.tipo']}" styleClass="grid-left" style="width:12%;" sortBy="#{dt.tipo}">
+						<p:column headerText="#{msg['dialogErroresValidacion.tipo']}" styleClass="grid-left" style="width:12%;" sortBy="#{msg['typeErrorMigracion.' += dt.tipo]}">
 							<h:outputText value="#{msg['typeErrorMigracion.' += dt.tipo]}"/>
 						</p:column>
 

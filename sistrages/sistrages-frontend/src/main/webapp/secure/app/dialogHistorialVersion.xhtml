@@ -156,31 +156,31 @@
 					<p:ajax event="rowUnselect"/>
 
 					<!-- Columnas -->
-				    <p:column headerText="#{msg['dialogHistorialVersion.headerRelease']}">
+				    <p:column headerText="#{msg['dialogHistorialVersion.headerRelease']}" sortBy="#{td.release}">
 				        <h:outputText value="#{td.release}" />
 				    </p:column>
 
-				    <p:column headerText="#{msg['dialogHistorialVersion.headerHuella']}" style="width:20%;">
+				    <p:column headerText="#{msg['dialogHistorialVersion.headerHuella']}" style="width:20%;" sortBy="#{td.huella}">
 				        <h:outputText value="#{td.huella}" />
 				    </p:column>
 
-				    <p:column headerText="#{msg['dialogHistorialVersion.headerAccion']}">
+				    <p:column headerText="#{msg['dialogHistorialVersion.headerAccion']}" sortBy="#{msg['typeAccionHistorial.' += td.tipoAccion]}">
 				        <h:outputText value="#{msg['typeAccionHistorial.' += td.tipoAccion]}" />
 				    </p:column>
 
-	 				<p:column headerText="#{msg['dialogHistorialVersion.headerFecha']}">
+	 				<p:column headerText="#{msg['dialogHistorialVersion.headerFecha']}" sortBy="#{td.fecha}">
 				         <h:outputText value="#{td.fecha}">
 	 			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm" type="date" timeZone="CET"/>
 				        </h:outputText>
 				    </p:column>
 
-	 				<p:column headerText="#{msg['dialogHistorialVersion.headerUsuario']}">
+	 				<p:column headerText="#{msg['dialogHistorialVersion.headerUsuario']}" sortBy="#{td.usuario}">
 				       <h:outputText value="#{td.usuario}" />
 				    </p:column>
 
 				</p:dataTable>
 			<p:outputPanel>
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
 
 					<p:outputLabel value=" " />
 					<p:outputLabel  value=" " />
@@ -199,7 +199,7 @@
 
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogHistorialVersion.cancelar}" process="@this" />
 		        		<p:commandButton value="#{msg['dialogDisenyoFormulario.title.copy']}" icon="fa fa-clipboard" actionListener="#{dialogHistorialVersion.generarTxt()}"  process="@this"/>
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogHistorialVersion.ayuda()}" process="@this"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogHistorialVersion.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
@@ -208,7 +208,7 @@
 	 		<p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 			<p:contextMenu>

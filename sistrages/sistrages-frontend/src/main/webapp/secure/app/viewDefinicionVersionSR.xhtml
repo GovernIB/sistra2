@@ -8,7 +8,12 @@
 	</f:metadata>
 
 	<h:form id="formViewDefinicionVersionSR" styleClass="h100">
-
+		<h:outputStylesheet>
+			.ui-widget-content {
+				border: none;
+				background: none;
+			}
+		</h:outputStylesheet>
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
@@ -22,7 +27,7 @@
 						update="growl"/>
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
-						icon="fa fa-question-circle-o"
+						icon="fa fa-question-circle"
 						actionListener="#{viewDefinicionVersion.ayudaSR()}" process="@this"
 						update="growl dataTable" />
 				</h:panelGrid>
@@ -45,7 +50,7 @@
 			<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
 
 			<!-- Columnas -->
-		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{seccion.codigo}">
+		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{seccion.identificador}">
 		        <h:outputText value="#{seccion.identificador}" />
 		    </p:column>
 
@@ -58,7 +63,7 @@
 		<p:confirmDialog global="true" >
 			<p:outputPanel styleClass="confirmar_botonera">
 	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 			</p:outputPanel>
 	    </p:confirmDialog>
 
@@ -69,7 +74,7 @@
 	    </h:outputScript>
 
 		<p:commandButton id="btnEditarDblClickHidden"
-			 	value="#{msg['botones.editar']}" icon="fa fa-edit"
+			 	value="#{msg['botones.editar']}" icon="fa fa-pencil"
 				actionListener="#{viewDefinicionVersion.consultarSR()}" process="@this"
 				update="growl dataTable" style="display:none">
      	</p:commandButton>

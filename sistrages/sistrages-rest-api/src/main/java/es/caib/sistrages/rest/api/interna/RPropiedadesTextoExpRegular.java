@@ -16,6 +16,10 @@ public class RPropiedadesTextoExpRegular {
 	@ApiModelProperty(value = "Texto exp regular: expresion")
 	private String expresionRegular;
 
+	/** Tamaño máximo. */
+	@ApiModelProperty(value = "Tamaño máximo")
+	private Integer tamanyoMax;
+
 	@ApiModelProperty(value = "Prevenir pegar")
 	private boolean prevenirPegar;
 
@@ -50,4 +54,23 @@ public class RPropiedadesTextoExpRegular {
 	public void setExpresionRegular(String expresionRegular) {
 		this.expresionRegular = expresionRegular;
 	}
+
+	/**
+	 * Método de acceso a tamanyoMax.
+	 *
+	 * @return tamanyoMax
+	 */
+	public Integer getTamanyoMax() {
+		return tamanyoMax;
+	}
+
+	/**
+	 * Método para establecer tamanyoMax.
+	 *
+	 * @param tamanyoMax tamanyoMax a establecer
+	 */
+	public void setTamanyoMax(Integer tamanyoMax) {
+		this.tamanyoMax = tamanyoMax;
+	}
+
 }

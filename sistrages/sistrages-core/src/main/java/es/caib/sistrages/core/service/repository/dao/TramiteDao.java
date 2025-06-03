@@ -2,16 +2,7 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
 
-import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.DisenyoFormulario;
-import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.DominioTramite;
-import es.caib.sistrages.core.api.model.GestorExternoFormularios;
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.SeccionReutilizable;
-import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
-import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.*;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
@@ -56,7 +47,7 @@ public interface TramiteDao {
 	 * @param filtro
 	 * @return
 	 */
-	List<Tramite> getAllByFiltro(Long idEntidad, List<Long> areas, String filtro);
+	List<Tramite> getAllByFiltro(Long idEntidad, List<Long> areas, String filtro, boolean simplificado);
 
 	List<Tramite> getAllByFiltro(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
 			List<Long> areas, String filtro);
@@ -455,4 +446,14 @@ public interface TramiteDao {
 	 */
 	List<Long> getDisenyosLEByFormulario(Long codigo);
 
+	/**
+	 * Devuelve la lista de tramites version que utilizan la seccion reutilizable
+	 * @param idEntidad id de la entidad
+	 * @param idAreas id de las areas
+	 * @param filtro filtro
+	 * @param sortField campo de ordenación
+	 * @param sortAscending ordenación ascendente
+	 * @return lista de tramites version
+	 */
+	List<TramiteFrontal> getAllSimple(Long idEntidad, List<Long> idAreas, String filtro, Integer first, Integer pageSize, String sortField, Boolean sortAscending);
 }

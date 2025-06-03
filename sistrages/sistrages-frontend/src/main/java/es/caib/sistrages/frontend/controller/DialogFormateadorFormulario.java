@@ -156,7 +156,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id);
 		UtilJSF.openDialog(DialogPlantillaFormateador.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430,
-				170);
+				0);
 	}
 
 	/**

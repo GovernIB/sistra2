@@ -29,7 +29,7 @@
   			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -140,7 +140,7 @@
 			<!-- Contenido dialogo -->
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 				<p:outputLabel for="usr" value="#{msg['dialogInfoSesion.usr']}" />
 				<h:outputText id="usr" value="#{dialogInfoSesion.usr}" />
 
@@ -149,11 +149,11 @@
 
 				<p:outputLabel for="RolesArea" value="#{msg['dialogInfoSesion.rolesArea']}" />
 				<p:dataTable id="RolesArea" var="td" value="#{dialogInfoSesion.listaRoles}">
-					<p:column headerText="#{msg['viewConsultaGeneral.area']}">
+					<p:column headerText="#{msg['viewConsultaGeneral.area']}" sortBy="#{td.area.identificador}">
 		                <h:outputText value="#{td.area.identificador}" />
 		            </p:column>
 
-		            <p:column headerText="#{msg['dialogInfoSesion.roles']}">
+		            <p:column headerText="#{msg['dialogInfoSesion.roles']}" sortBy="#{td.valor}">
 		                <h:outputText value="#{td.valor}" />
 		            </p:column>
 				</p:dataTable>

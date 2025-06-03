@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import es.caib.sistramit.core.api.model.flujo.FuncionarioHabilitado;
+import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -271,6 +273,14 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 				pDatosSesion.getDefinicionTramite().getDefinicionVersion().getPropiedades().isPersistente());
 		dpdt.setPlazoDinamico(pDatosSesion.getDatosTramite().isPlazoDinamico());
 		dpdt.setUrlInicio(pDatosSesion.getDatosTramite().getUrlInicio());
+		FuncionarioHabilitado fh = pDatosSesion.getDatosTramite().getUsuarioAutenticado().getFuncionarioHabilitado();
+		if (fh != null) {
+			dpdt.setFuncionarioHabilitadoUsername(fh.getUserName());
+			dpdt.setFuncionarioHabilitadoNif(fh.getNif());
+			dpdt.setFuncionarioHabilitadoNombre(fh.getNombre());
+			dpdt.setFuncionarioHabilitadoApellido1(fh.getApellido1());
+			dpdt.setFuncionarioHabilitadoApellido2(fh.getApellido2());
+		}
 		dao.crearTramitePersistencia(dpdt);
 
 		// Indicamos que el tramite es nuevo

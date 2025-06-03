@@ -139,6 +139,8 @@ public class Entidad extends ModelApi {
 	 */
 	private String urlFacebook;
 
+	private boolean modoFuncionarioHabilitado;
+
 	/**
 	 * Obtiene el valor de codigo.
 	 *
@@ -556,4 +558,11 @@ public class Entidad extends ModelApi {
 		this.urlFacebook = urlFacebook;
 	}
 
+	public boolean isModoFuncionarioHabilitado() {
+		return modoFuncionarioHabilitado;
+	}
+
+	public void setModoFuncionarioHabilitado(boolean modoFuncionarioHabilitado) {
+		this.modoFuncionarioHabilitado = modoFuncionarioHabilitado;
+	}
 }

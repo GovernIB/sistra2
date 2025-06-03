@@ -818,7 +818,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 					String[] extensiones = documento.getExtensiones().split(";");
 					for (String extension : extensiones) {
-						if (!pluginConverterPDF.isFileExtensionSupported(extension)) {
+						if (!"*".equals(extension) && !pluginConverterPDF.isFileExtensionSupported(extension)) {
 							String[] paramLiteral = { extension };
 							final ErrorValidacion error = new ErrorValidacion(documento.getIdentificador(),
 									literales.getLiteral("validador", "documento.extension", paramLiteral, pIdioma));

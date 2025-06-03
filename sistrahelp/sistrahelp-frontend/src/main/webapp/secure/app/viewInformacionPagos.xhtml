@@ -18,6 +18,28 @@
 		<p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeAutenticacion" var="TypeAutenticacion"/>
 
 		<h:form id="form" style="height:85%;">
+
+			<script type="text/javascript">
+				function setHeight(){
+					// Altura de la pantalla
+					var altura = window.innerHeight - 50;
+					// Altura de la tabla
+					var alturaDatatable = altura - 290;
+					// Altura del scrollable body
+					var alturaScrollableBody = alturaDatatable - 57;
+
+					$('#form\\:dataTable').height(alturaDatatable);
+					$('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+				}
+
+				jQuery(document).ready(function() {
+					$(window).resize(function() {
+						setTimeout(function(){  setHeight(); }, 100);
+					});
+
+					setTimeout(function(){  setHeight(); }, 1000);
+				});
+			</script>
 	  	    <h:outputScript>
 
 	  	    	var arrayCm = [];
@@ -174,57 +196,54 @@
 
 
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10" style="border-color:#f0f0f0">
-        	<p:row style="border-color:#f0f0f0">
-        	<p:column styleClass="noPadding">
-        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w23 grid-right, w69">
-	        		<p:outputLabel for="filtroTipoAcceso" value="#{msg['viewInformacionPagos.filtroTipoAcceso']}:"/>
-					<p:selectOneMenu id="filtroTipoAcceso" value="#{viewInformacionPagos.filtros.tipoAcceso}" style="margin-left: 5%">
-						<f:selectItem itemLabel="" itemValue="" />
-    					<f:selectItems value="#{TypeAutenticacion.ALL_VALUES}" var="tipoAcceso" itemLabel="#{msg['typeTipoAcceso.' += tipoAcceso]}"/>
-    					<p:ajax event="change" update="id1 id2" oncomplete="$('.ui-state-error').removeClass('ui-state-error');" />
-					</p:selectOneMenu >
-	        	</h:panelGrid>
+        	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10">
+				<p:column styleClass="noPadding columna-filtros">
+					<h:panelGrid columns="2" styleClass="w100" columnClasses="w23 grid-right, w69">
+						<p:outputLabel for="filtroTipoAcceso" value="#{msg['viewInformacionPagos.filtroTipoAcceso']}:"/>
+						<p:selectOneMenu id="filtroTipoAcceso" value="#{viewInformacionPagos.filtros.tipoAcceso}" style="margin-left: 5%">
+							<f:selectItem itemLabel="" itemValue="" />
+							<f:selectItems value="#{TypeAutenticacion.ALL_VALUES}" var="tipoAcceso" itemLabel="#{msg['typeTipoAcceso.' += tipoAcceso]}"/>
+							<p:ajax event="change" update="id1 id2" oncomplete="$('.ui-state-error').removeClass('ui-state-error');" />
+						</p:selectOneMenu >
+					</h:panelGrid>
 
-				<h:panelGrid columns="5" styleClass="w100" columnClasses="w15 grid-right,w10 grid-right,w10,w5 grid-right,w10">
+					<h:panelGrid columns="5" styleClass="w100" columnClasses="w15 grid-right,w10 grid-right,w10,w5 grid-right,w10">
 
-					<p:outputLabel value="#{msg['viewInformacionPagos.filtroFecha']}:" styleClass="padding-right-2pct"/>
+						<p:outputLabel value="#{msg['viewInformacionPagos.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
-					<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPagos.filtroFechaInicio']}:" styleClass="padding-right-4"/>
-					<p:calendar id="filtroFechaInicio" value="#{viewInformacionPagos.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
+						<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPagos.filtroFechaInicio']}:" styleClass="padding-right-4"/>
+						<p:calendar id="filtroFechaInicio" value="#{viewInformacionPagos.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
 
-					<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPagos.filtroFechaFin']}:" styleClass="padding-right-4"/>
-					<p:calendar id="filtroFechaFin" value="#{viewInformacionPagos.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
-				</h:panelGrid>
-	        </p:column>
+						<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPagos.filtroFechaFin']}:" styleClass="padding-right-4"/>
+						<p:calendar id="filtroFechaFin" value="#{viewInformacionPagos.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+					</h:panelGrid>
+				</p:column>
 
-	        <p:column styleClass="noPadding p-justify-start">
-        		<h:panelGrid id="id1" columns="2" styleClass="w100" columnClasses="w45 grid-right,w74">
-	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPagos.filtroIdSesion']}:"/>
-		        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPagos.filtros.idSesionTramitacion}" size="30" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
-	        	</h:panelGrid>
+				<p:column styleClass="noPadding columna-filtros">
+					<h:panelGrid id="id1" columns="2" styleClass="w100" columnClasses="w45 grid-right,w74">
+						<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPagos.filtroIdSesion']}:"/>
+						<p:inputText id="filtroIdSesion" value="#{viewInformacionPagos.filtros.idSesionTramitacion}" size="30" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
+					</h:panelGrid>
 
-				<h:panelGrid id="id2" columns="2" styleClass="w100" columnClasses="w45 grid-right,w75">
-					<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPagos.filtroNif']}:"/>
-					<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="30" maxlength="12" disabled="#{viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.ANONIMO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
-				</h:panelGrid>
-	        </p:column>
+					<h:panelGrid id="id2" columns="2" styleClass="w100" columnClasses="w45 grid-right,w75">
+						<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPagos.filtroNif']}:"/>
+						<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="30" maxlength="12" disabled="#{viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.ANONIMO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
+					</h:panelGrid>
+				</p:column>
 
-	        <p:column styleClass="noPadding p-justify-start">
-				<h:panelGrid columns="2" styleClass="w100" columnClasses="w90 grid-right,w75">
-					<p:outputLabel for="filtroMostrarErrores" value="#{msg['viewInformacionPagos.filtroMostarErrores']}:"/>
-					<p:selectBooleanCheckbox id="filtroMostrarErrores" value="#{viewInformacionPagos.filtros.mostrarErrores}" styleClass="fondoAzul">
-					</p:selectBooleanCheckbox>
-				</h:panelGrid>
-	        </p:column>
+				<p:column styleClass="noPadding columna-filtros align-content-center">
+					<h:panelGrid columns="2" styleClass="w100 table-centered" rowClasses="centrar-celda-tabla">
+						<p:outputLabel for="filtroMostrarErrores" value="#{msg['viewInformacionPagos.filtroMostarErrores']}:"/>
+						<p:selectBooleanCheckbox id="filtroMostrarErrores" value="#{viewInformacionPagos.filtros.mostrarErrores}" styleClass="fondoAzul" />
+					</h:panelGrid>
+				</p:column>
 
-			<p:column>
-				<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
-					<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPagos.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewInformacionPagos.ayuda}"/>
-				</h:panelGrid>
-			</p:column>
-			</p:row>
+				<p:column styleClass="noPadding columna-filtros-botones align-content-center">
+					<h:panelGrid id="panelBotones" columns="2" styleClass="table-rightaligned">
+						<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPagos.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewInformacionPagos.ayuda}"/>
+					</h:panelGrid>
+				</p:column>
           	</p:panelGrid>
 
 
@@ -242,7 +261,7 @@
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false"/>
-				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 				<p:ajax event="page" update=":form:dataTable"/>
 
 				<!-- Columnas -->

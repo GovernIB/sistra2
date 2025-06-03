@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,19 +16,17 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.sistrages.core.api.model.*;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
-import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.Rol;
-import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
@@ -41,7 +40,6 @@ import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
-import es.caib.sistrages.frontend.model.TramiteVersiones;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -89,13 +87,13 @@ public class ViewTramites extends ViewControllerBase {
 	private String idTramiteVersion;
 
 	/** Dato seleccionado en la lista. */
-	private TramiteVersiones tramiteSeleccionada;
+	private TramiteFrontal tramiteSeleccionada;
 
 	/** Dato seleccionado en la lista. */
-	private TramiteVersiones tramiteSeleccionadaBreadcrumb;
+	private TramiteFrontal tramiteSeleccionadaBreadcrumb;
 
 	/** Lista de datos. */
-	private List<TramiteVersiones> listaTramiteVersiones;
+	private List<TramiteFrontal> listaTramiteFrontal;
 
 	/** Dato seleccionado en la lista. */
 	private TramiteVersion versionSeleccionada;
@@ -123,7 +121,7 @@ public class ViewTramites extends ViewControllerBase {
 	private static final String LITERAL_INFO_BORRADO_OK = "info.borrado.ok";
 	private static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";
 
-	private LazyDataModel<TramiteVersiones> dataModel;
+	private LazyDataModel<TramiteFrontal> dataModel;
 	/** Datos que obtienen el ancho y alto de la pantalla. **/
 	private String height;
 	private String width;
@@ -141,6 +139,8 @@ public class ViewTramites extends ViewControllerBase {
 	private Boolean renderCmenu = true;
 
 	private String errorCopiar;
+	/** Se necesita para cuando hace doble click, pasarlo **/
+	private Integer numPag;
 
 	/**
 	 * Inicializacion.
@@ -188,7 +188,7 @@ public class ViewTramites extends ViewControllerBase {
 
 			final Tramite tramCrumb = tramiteService.getTramite(Long.valueOf(idTramite));
 
-			tramiteSeleccionadaBreadcrumb = new TramiteVersiones(tramCrumb, null);
+			tramiteSeleccionadaBreadcrumb = new TramiteFrontal(tramCrumb, null);
 			tramiteSeleccionada = tramiteSeleccionadaBreadcrumb;
 		}
 
@@ -203,15 +203,15 @@ public class ViewTramites extends ViewControllerBase {
 		String codigo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("param");
 		String x = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("x");
 		String y = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("y");
-		// TramiteVersiones tv = new
-		// TramiteVersiones(tramiteService.getTramite(Long.parseLong(codigo)),
+		// TramiteFrontal tv = new
+		// TramiteFrontal(tramiteService.getTramite(Long.parseLong(codigo)),
 		// tramiteService.listTramiteVersion(Long.parseLong(codigo), null));
 		try {
-			TramiteVersiones tv = this.dataModel.getRowData(codigo);
+			TramiteFrontal tv = this.dataModel.getRowData(codigo);
 			if (tv == null) {
 				Tramite tr = tramiteService.getTramite(Long.parseLong(codigo));
 				List<TramiteVersion> ltv = new ArrayList<TramiteVersion>();
-				tv = new TramiteVersiones(tr, ltv);
+				tv = new TramiteFrontal(tr, ltv);
 			}
 			this.setTramiteSeleccionada(tv);
 		} catch (NumberFormatException e) {
@@ -240,7 +240,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * Abre dialogo de nueva Area.
 	 */
 	public void nuevaArea() {
-		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.ALTA, null, true, 520, 180);
+		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.ALTA, null, true, 520, 230);
 	}
 
 	/**
@@ -287,8 +287,7 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		UtilJSF.redirectJsfPage(
-				"/secure/app/viewDominios.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
+		UtilJSF.redirectJsfPage( "/secure/app/viewDominios.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
 	}
 
 	/**
@@ -302,7 +301,8 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		UtilJSF.redirectJsfPage("/secure/app/viewVariablesArea.xhtml?id=" + area.getCodigo());
+		String url = "/secure/app/viewVariablesArea.xhtml?id=" + area.getCodigo();
+		UtilJSF.redirectJsfPage(url );
 
 	}
 
@@ -344,7 +344,7 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		UtilJSF.redirectJsfPage("/secure/app/viewEnviosRemotos.xhtml?ambito=A&id=" + area.getCodigo() + "&area="
+		UtilJSF.redirectJsfPage( "/secure/app/viewEnviosRemotos.xhtml?ambito=A&id=" + area.getCodigo() + "&area="
 				+ area.getIdentificador());
 	}
 
@@ -358,8 +358,7 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		UtilJSF.redirectJsfPage(
-				"/secure/app/viewFuentes.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
+		UtilJSF.redirectJsfPage( "/secure/app/viewFuentes.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
 	}
 
 	/**
@@ -476,7 +475,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
-		UtilJSF.openDialog(DialogTramiteControlAcceso.class, TypeModoAcceso.EDICION, params, true, 1000, 500);
+		UtilJSF.openDialog(DialogTramiteControlAcceso.class, TypeModoAcceso.EDICION, params, true, 1000, 530);
 
 	}
 
@@ -541,10 +540,10 @@ public class ViewTramites extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
 
 		if (this.isPermiteDesbloquear() && this.getTienePermisosVersion()) {
-			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 430);
+			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 460);
 		} else {
 			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 830,
-					430);
+					460);
 		}
 	}
 
@@ -554,7 +553,7 @@ public class ViewTramites extends ViewControllerBase {
 	public void previsualizarEdicion() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 950, 430);
+		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 950, 460);
 	}
 
 	/**
@@ -1043,10 +1042,10 @@ public class ViewTramites extends ViewControllerBase {
 		tramiteSeleccionada = null;
 		versionSeleccionada = null;
 
-		if (listaTramiteVersiones == null) {
-			listaTramiteVersiones = new ArrayList<>();
+		if (listaTramiteFrontal == null) {
+			listaTramiteFrontal = new ArrayList<>();
 		} else {
-			listaTramiteVersiones.clear();
+			listaTramiteFrontal.clear();
 		}
 	}
 
@@ -1092,132 +1091,67 @@ public class ViewTramites extends ViewControllerBase {
 
 		desmarcar();
 
-		this.dataModel = new LazyDataModel<TramiteVersiones>() {
+		this.dataModel = new LazyDataModel<TramiteFrontal>() {
 
 			private static final long serialVersionUID = 1l;
 
 			@Override
-			public List<TramiteVersiones> load(int first, final int pageSize, final String sortField,
-					final SortOrder sortOrder, final Map<String, Object> filters) {
+			public List<TramiteFrontal> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+
+				if (pageSize == 0) {
+					pageSize = 20;
+				}
+
 				String filtroNuevo = null;
-				listaTramiteVersiones.clear();
+				listaTramiteFrontal.clear();
 				setRowCount(tramiteService.listTramiteTotal(UtilJSF.getSessionBean().getEntidad().getCodigo(),
 						convertirAreas(), filtro));
 
 				List<Tramite> tramites = new ArrayList<>();
-				String sortFieldAux = "";
+				String sortField = null;
 
-				if (listaAreasSeleccionadas != null && !listaAreasSeleccionadas.isEmpty()) {
-					if (nuevaArea) {
-						first = 0;
-
-					}
-					if (!pag.equals("0")) {
-						final int primero = Integer.parseInt(pag);
-						first = primero * pageSize;
-
-						pag = "0";
-					}
-					if (sortField != null && !sortField.isEmpty()) {
-						sortFieldAux = sortField.substring(sortField.indexOf('.') + 1, sortField.length());
-					}
-
-					tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(),
-							convertirAreas(), filtro);
-
+				if (listaAreasSeleccionadas == null || listaAreasSeleccionadas.isEmpty()) {
+					return listaTramiteFrontal;
 				}
 
-				// Obtenemos activa a los tramites que tengan alguna version activa
+				if (nuevaArea) {
+					first = 0;
+				}
+				if (pag != null && !pag.equals("0")) {
+					final int primero = Integer.parseInt(pag);
+					first = primero * pageSize;
+					pag = "0";
+				}
 
-				for (final Tramite tramite : tramites) {
-					final List<Long> idTramites = tramiteService.listTramiteVersionActiva(tramite.getIdArea());
-					if (idTramites.contains(tramite.getCodigo())) {
-						tramite.setActivo(true);
+				Boolean sortAscending = null;
+				if (sortBy != null && !sortBy.isEmpty()) {
+					SortMeta sortMeta = sortBy.values().iterator().next();
+					sortField = sortMeta.getField().substring(sortMeta.getField().indexOf('.') + 1, sortMeta.getField().length());
+					SortOrder sortOrder = sortMeta.getOrder();
+					if (sortOrder != null) {
+						sortAscending = sortOrder.equals(SortOrder.ASCENDING);
 					}
-
-					final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(),
-							null);
-
-					if (!StringUtils.isEmpty(filtro)) {
-						filtroNuevo = filtro.replace("@", "");
-					}
-
-					if ((StringUtils.isNotEmpty(filtroNuevo)
-							&& (tramite.getIdentificador().toUpperCase().contains(filtroNuevo.toUpperCase())
-									|| tramite.getDescripcion().toUpperCase().contains(filtroNuevo.toUpperCase())))
-							|| StringUtils.isEmpty(filtroNuevo))
-
-						listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
-
 				}
 
-				if (idTramite != null && !idTramite.isEmpty()) {
-					buscarTramitesPorDefecto();
-				}
+				numPag = first;
+				listaTramiteFrontal = tramiteService.listTramiteVersionesSimplicada(UtilJSF.getSessionBean().getEntidad().getCodigo(),
+						convertirAreas(), filtro, first ,pageSize, sortField, sortAscending);
 
-				if (sortFieldAux != null && !sortFieldAux.isEmpty()) {
-					switch (sortFieldAux) {
-					case "identificador":
-						Collections.sort(listaTramiteVersiones, (o1, o2) -> o1.getTramite().getIdentificador()
-								.toUpperCase().compareTo((o2.getTramite().getIdentificador().toUpperCase())));
-						if (sortOrder.equals(SortOrder.DESCENDING)) {
-							Collections.reverse(listaTramiteVersiones);
-						}
-						break;
+				return listaTramiteFrontal;
+			}
 
-					case "descripcion":
-						Collections.sort(listaTramiteVersiones, (o1, o2) -> o1.getTramite().getDescripcion()
-								.toUpperCase().compareTo((o2.getTramite().getDescripcion().toUpperCase())));
-						if (sortOrder.equals(SortOrder.DESCENDING)) {
-							Collections.reverse(listaTramiteVersiones);
-						}
-						break;
 
-					case "area":
-						Collections.sort(listaTramiteVersiones, (o1, o2) -> o1.getTramite().getIdentificadorArea()
-								.toUpperCase().compareTo((o2.getTramite().getIdentificadorArea().toUpperCase())));
-						if (sortOrder.equals(SortOrder.DESCENDING)) {
-							Collections.reverse(listaTramiteVersiones);
-						}
-						break;
-
-					case "activo":
-						Collections.sort(listaTramiteVersiones, (o1, o2) -> Boolean.toString(o1.getTramite().isActivo())
-								.compareTo((Boolean.toString(o2.getTramite().isActivo()))));
-						if (sortOrder.equals(SortOrder.DESCENDING)) {
-							Collections.reverse(listaTramiteVersiones);
-						}
-						break;
-
-					case "ultima":
-						Collections.sort(listaTramiteVersiones,
-								(o1, o2) -> (getUltimaVersionFecha(o1.getTramite().getCodigo()))
-										.compareTo((getUltimaVersionFecha(o2.getTramite().getCodigo()))));
-						if (sortOrder.equals(SortOrder.DESCENDING)) {
-							Collections.reverse(listaTramiteVersiones);
-						}
-						break;
-					}
-				} else {
-					Collections.sort(listaTramiteVersiones, (o1, o2) -> o1.getTramite().getIdentificador()
-							.compareTo((o2.getTramite().getIdentificador())));
-				}
-
-				List<TramiteVersiones> listAux = new ArrayList<TramiteVersiones>();
-				for (int i = first; (i < pageSize + first) && (i < listaTramiteVersiones.size()); i++) {
-					listAux.add(listaTramiteVersiones.get(i));
-				}
-				return listAux;
-
+			public int count(Map<String, FilterMeta> filterBy) {
+				return getRowCount();
 			}
 
 			@Override
-			public TramiteVersiones getRowData(final String rowKey) {
+			public TramiteFrontal getRowData(final String rowKey) {
 
-				for (final TramiteVersiones tramiteVersiones : listaTramiteVersiones) {
+				for (final TramiteFrontal TramiteFrontal : this.getWrappedData()) {
 
-					if (tramiteVersiones.getTramite().getCodigo().toString().equals(rowKey)) {
-						return tramiteVersiones;
+					if (TramiteFrontal.getTramite().getCodigo().toString().equals(rowKey)) {
+						return TramiteFrontal;
 					}
 				}
 
@@ -1225,12 +1159,25 @@ public class ViewTramites extends ViewControllerBase {
 			}
 
 			@Override
-			public Object getRowKey(final TramiteVersiones tramiteVersiones) {
-				return tramiteVersiones.getTramite().getCodigo();
+			public String getRowKey(final TramiteFrontal TramiteFrontal) {
+				return TramiteFrontal.getTramite().getCodigo().toString();
 
 			}
 
 		};
+	}
+
+	private List<TramiteFrontal> convertir(List<TramiteFrontal> tramitesFrontal) {
+		if (tramitesFrontal == null) {
+			return new ArrayList<>();
+		}
+
+		List<TramiteFrontal> tramites = new ArrayList<>();
+		for(TramiteFrontal tramiteFrontal : tramitesFrontal) {
+			tramites.add(new TramiteFrontal(tramiteFrontal.getTramite(), tramiteFrontal.getListaVersiones()));
+		}
+		return tramites;
+
 	}
 
 	private List<Long> convertirAreas() {
@@ -1252,10 +1199,9 @@ public class ViewTramites extends ViewControllerBase {
 		 * Comprobamos si hay que marcar algo por defecto (tramite o tramite version).
 		 **/
 		final Long lIdTramite = Long.valueOf(idTramite);
-		for (final TramiteVersiones itemTramiteVersiones : listaTramiteVersiones) {
-			if (itemTramiteVersiones.getTramite().getCodigo().compareTo(lIdTramite) == 0) {
-				this.tramiteSeleccionada = itemTramiteVersiones;
-
+		for (final TramiteFrontal itemTramiteFrontal : listaTramiteFrontal) {
+			if (itemTramiteFrontal.getTramite().getCodigo().compareTo(lIdTramite) == 0) {
+				this.tramiteSeleccionada = itemTramiteFrontal;
 				break;
 			}
 		}
@@ -1281,7 +1227,7 @@ public class ViewTramites extends ViewControllerBase {
 	 *
 	 * @param tv
 	 */
-	public boolean expandir(final TramiteVersiones tv) {
+	public boolean expandir(final TramiteFrontal tv) {
 		boolean expandir;
 		if (idTramite != null && !idTramite.isEmpty()
 				&& tv.getTramite().getCodigo().compareTo(Long.valueOf(idTramite)) == 0) {
@@ -1292,12 +1238,14 @@ public class ViewTramites extends ViewControllerBase {
 		return expandir;
 	}
 
+
+
 	private int numPagina(Long idAreas, Long idTramite) {
 		idArea = idAreas.toString();
 		// refrescamos
 		buscarAreas();
 		int paginaIni = 0;
-		this.dataModel.load(paginaIni, paginacion, null, null, null);
+		this.dataModel.load(paginaIni, paginacion, null, null);
 		// DataModel model = getDataModel();
 		/*
 		 * if (model != null && model instanceof LazyDataModel) { LazyDataModel
@@ -1308,14 +1256,14 @@ public class ViewTramites extends ViewControllerBase {
 		boolean encontrado = false;
 		while (!encontrado) {
 
-			if (listaTramiteVersiones.get(i).getTramite().getCodigo().compareTo(idTramite) == 0) {
+			if (listaTramiteFrontal.get(i).getTramite().getCodigo().compareTo(idTramite) == 0) {
 				encontrado = true;
 				break;
-			} else if (i == listaTramiteVersiones.size() - 1) {
+			} else if (i == listaTramiteFrontal.size() - 1) {
 				i = 0;
 				paginaIni += paginacion;
 				// data = lazyModel.load(paginaIni, paginacion, null, null, null);
-				this.dataModel.load(paginaIni, paginacion, null, null, null);
+				this.dataModel.load(paginaIni, paginacion, null, null);
 			} else {
 				i++;
 			}
@@ -1350,7 +1298,7 @@ public class ViewTramites extends ViewControllerBase {
 		final Area areaSeleccionada = listaAreasSeleccionadas.get(0);
 
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(areaSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogArea.class, modoAcceso, params, true, 520, 180);
+		UtilJSF.openDialog(DialogArea.class, modoAcceso, params, true, 520, 230);
 	}
 
 	/**
@@ -1502,18 +1450,8 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
-		// params.put(TypeParametroVentana.ID.toString(),
-		// final DataTable dataTable = (DataTable)
-		// FacesContext.getCurrentInstance().getViewRoot()
-		// .findComponent("form:dataTableTramites");
-		// final int pagina = dataTable.getPage();
-
-		// params.put("pagina", Arrays.asList(String.valueOf(1)));
-		TramiteVersion versionSeleccionadaPre = versionSeleccionada;
-		int numPag = numPagina(versionSeleccionada.getIdArea(), versionSeleccionada.getIdTramite());
-		versionSeleccionada = versionSeleccionadaPre;
-		params.put("pagina", Arrays.asList(String.valueOf(numPag)));
-		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(versionSeleccionada.getCodigo().toString()));
+		params.put("pagina", Collections.singletonList(String.valueOf(numPag)));
+		params.put(TypeParametroVentana.ID.toString(), Collections.singletonList(versionSeleccionada.getCodigo().toString()));
 		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
 
 	}
@@ -1570,7 +1508,7 @@ public class ViewTramites extends ViewControllerBase {
 		this.versionSeleccionada = null;
 		final Tramite tramCrumb = tramiteService.getTramite(Long.valueOf(idTramite));
 
-		tramiteSeleccionadaBreadcrumb = new TramiteVersiones(tramCrumb, null);
+		tramiteSeleccionadaBreadcrumb = new TramiteFrontal(tramCrumb, null);
 		tramiteSeleccionada = tramiteSeleccionadaBreadcrumb;
 		// Mostramos mensaje
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_BORRADO_OK));
@@ -2027,7 +1965,7 @@ public class ViewTramites extends ViewControllerBase {
 				modoAccesoErrores = TypeModoAcceso.CONSULTA;
 			}
 
-			UtilJSF.openDialog(DialogErroresValidacion.class, modoAccesoErrores, params, true, 1050, 520);
+			UtilJSF.openDialog(DialogErroresValidacion.class, modoAccesoErrores, params, true, 1050, 530);
 			return false;
 		}
 
@@ -2057,7 +1995,7 @@ public class ViewTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de tramiteSeleccionada
 	 */
-	public TramiteVersiones getTramiteSeleccionada() {
+	public TramiteFrontal getTramiteSeleccionada() {
 		return tramiteSeleccionada;
 	}
 
@@ -2066,7 +2004,7 @@ public class ViewTramites extends ViewControllerBase {
 	 *
 	 * @param tramiteSeleccionada el nuevo valor de tramiteSeleccionada
 	 */
-	public void setTramiteSeleccionada(final TramiteVersiones tramiteSeleccionada) {
+	public void setTramiteSeleccionada(final TramiteFrontal tramiteSeleccionada) {
 		this.tramiteSeleccionada = tramiteSeleccionada;
 	}
 
@@ -2092,12 +2030,12 @@ public class ViewTramites extends ViewControllerBase {
 		this.versionSeleccionada = versionSeleccionado;
 	}
 
-	public List<TramiteVersiones> getListaTramiteVersiones() {
-		return listaTramiteVersiones;
+	public List<TramiteFrontal> getListaTramiteFrontal() {
+		return listaTramiteFrontal;
 	}
 
-	public void setListaTramiteVersiones(final List<TramiteVersiones> listaTramiteVersiones) {
-		this.listaTramiteVersiones = listaTramiteVersiones;
+	public void setListaTramiteFrontal(final List<TramiteFrontal> listaTramiteFrontal) {
+		this.listaTramiteFrontal = listaTramiteFrontal;
 	}
 
 	public List<Area> getListaAreas() {
@@ -2187,11 +2125,11 @@ public class ViewTramites extends ViewControllerBase {
 		this.mostrarTodasAreas = mostrarTodasAreas;
 	}
 
-	public LazyDataModel<TramiteVersiones> getDataModel() {
+	public LazyDataModel<TramiteFrontal> getDataModel() {
 		return dataModel;
 	}
 
-	public void setDataModel(final LazyDataModel<TramiteVersiones> dataModel) {
+	public void setDataModel(final LazyDataModel<TramiteFrontal> dataModel) {
 		this.dataModel = dataModel;
 	}
 

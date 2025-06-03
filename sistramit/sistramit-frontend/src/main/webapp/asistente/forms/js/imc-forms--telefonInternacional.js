@@ -108,6 +108,11 @@ $.fn.appFormsTelefonInternacional = function(options) {
 						revisemLectura(tel_int_);
 
 
+						// event només números i tecla '+'?
+
+						revisaTeclat();
+
+
 					});
 
 			}
@@ -123,6 +128,61 @@ $.fn.appFormsTelefonInternacional = function(options) {
 						.end()
 					.find(".iti__tel-input")
 						.attr("readonly", "readonly");
+
+			}
+			,revisaTeclat = function() {
+
+				// events
+
+				element
+					.off(".appFormsTelefonInternacional")
+					.on("keydown.appFormsTelefonInternacional", "input.iti__tel-input", revisemTeclat);
+
+
+			}
+			,revisemTeclat = function(e) {
+
+				var tecla_ = e.keyCode;
+
+				var input = $(this)
+					,input_size = input.val().length
+					,esCorrecte = true;
+
+				//console.log("revisemTeclat: " + e.keyCode + " -- Llargada: " + input_size);
+
+
+				// números
+
+				if ( (tecla_ < 48 || tecla_ > 57) && (tecla_ < 96 || tecla_ > 105) && tecla_ !== 8 && tecla_ !== 9 && tecla_ !== 39 && tecla_ !== 37 && tecla_ !== 46 && tecla_ !== 171) {
+
+					esCorrecte = false;
+
+				}
+
+				// amplaria número
+
+				if (input_size > 15) {
+
+					esCorrecte = false;
+
+				}
+
+				// esborrar i suprimir
+
+				if (tecla_ === 8 || tecla_ === 46 || tecla_ === 37 || tecla_ === 39) {
+
+					esCorrecte = true;
+
+				}
+
+				// es correcte?
+
+				if ( !esCorrecte ) {
+
+					e.preventDefault();
+					return;
+
+				}
 
 			};
 

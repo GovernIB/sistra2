@@ -2,13 +2,7 @@ package es.caib.sistramit.core.api.service;
 
 import java.util.Map;
 
-import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
-import es.caib.sistramit.core.api.model.flujo.DetallePasos;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
+import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 
@@ -39,7 +33,6 @@ public interface FlujoTramitacionService {
 	 *                               url inicio
 	 * @param parametrosInicio
 	 *                               parametros inicio
-	 *
 	 */
 	String iniciarTramite(UsuarioAutenticadoInfo usuarioAutenticado, final String idTramite, final int version,
 			final String idioma, final String idTramiteCatalogo, final boolean servicioCatalogo, final String urlInicio,

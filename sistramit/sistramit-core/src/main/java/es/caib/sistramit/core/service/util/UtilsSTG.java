@@ -761,4 +761,30 @@ public final class UtilsSTG {
 		return res;
 	}
 
+	/**
+	 * Verifica si el trámite requiere firma (tiene algún documento marcado para
+	 * firmar).
+	 *
+	 * @param definicionTramiteSTG
+	 *                                 Definición trámite
+	 * @return boolean
+	 */
+	public static boolean requierePagoElectronico(final DefinicionTramiteSTG definicionTramiteSTG) {
+		boolean pago = false;
+		for (final RPasoTramitacion paso : definicionTramiteSTG.getDefinicionVersion().getPasos()) {
+			final TypePaso tipoPaso = TypePaso.fromString(paso.getTipo());
+			switch (tipoPaso) {
+				case PAGAR:
+					final RPasoTramitacionPagar pasoPagar = (RPasoTramitacionPagar) paso;
+					pago = pasoPagar.getPagos() != null && !pasoPagar.getPagos().isEmpty();
+					break;
+				default:
+					break;
+			}
+			if (pago) {
+				break;
+			}
+		}
+		return pago;
+	}
 }

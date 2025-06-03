@@ -18,6 +18,9 @@
 <h:body>
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -170,7 +173,7 @@
 				<p:growl id="growlDialog" widgetVar="growlDialog" />
 
 				<p:outputLabel value="" style="margin-top:10px" />
-				<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid styleClass="h100" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 					<p:outputLabel for="nif" value="#{msg['dialogAuditoriaTramites.nifUsu']}:"/>
 					<p:inputText id="nif" value="#{dialogConsultaIncidencias.data.nif}" style="width:100%;" readonly="true" />
 
@@ -230,15 +233,15 @@
 					<f:facet name="right">
 						<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConsultaIncidencias.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogConsultaIncidencias.cancelar()}" process="@this"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogConsultaIncidencias.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogConsultaIncidencias.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
 
-			<p:commandButton id="btnSesionHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogConsultaIncidencias.abrirDlgSesion()}" process="@this" update="@form:growlDialog" style="display:none">
+			<p:commandButton id="btnSesionHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogConsultaIncidencias.abrirDlgSesion()}" process="@this" update="@form:growlDialog" style="display:none">
 	           <p:ajax event="dialogReturn" listener="#{dialogConsultaIncidencias.returnDialogo}" update="@form:growlDialog"/>
 	        </p:commandButton>
-			<p:commandButton id="btnNifHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogConsultaIncidencias.abrirDlgNif()}" process="@this" update="@form:growlDialog" style="display:none">
+			<p:commandButton id="btnNifHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogConsultaIncidencias.abrirDlgNif()}" process="@this" update="@form:growlDialog" style="display:none">
 	           <p:ajax event="dialogReturn" listener="#{dialogConsultaIncidencias.returnDialogo}" update="@form:growlDialog"/>
 	        </p:commandButton>
 

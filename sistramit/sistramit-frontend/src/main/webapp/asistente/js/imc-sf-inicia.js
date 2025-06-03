@@ -30,6 +30,7 @@ function iniciaHTML() {
 		.appCap();
 
 	var resize_appCap;
+	
 	imc_finestra
 		.on('resize', function(e) {
 			clearTimeout(resize_appCap);
@@ -85,8 +86,16 @@ function iniciaHTML() {
 
 			if (APP_JSON_TRAMIT_MISSATGE) {
 
+				var func_ = function() { document.location = "#pas/" + APP_JSON_TRAMIT_D.idPasoActual; }
+
 				imc_missatge
-					.appMissatge({ accio: "warning", titol: APP_JSON_TRAMIT_MISSATGE.titulo, text: APP_JSON_TRAMIT_MISSATGE.texto, alAcceptar: function() { document.location = "#pas/" + APP_JSON_TRAMIT_D.idPasoActual; } });
+					.appMissatge({
+						accio: APP_JSON_TRAMIT_MISSATGE_TIPUS
+						, titol: APP_JSON_TRAMIT_MISSATGE.titulo
+						, text: APP_JSON_TRAMIT_MISSATGE.texto
+						, alAcceptar: func_
+						, alTancar: func_
+					});
 
 				return;
 

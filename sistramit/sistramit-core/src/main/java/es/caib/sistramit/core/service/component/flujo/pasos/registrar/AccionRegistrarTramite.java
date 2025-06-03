@@ -905,7 +905,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		} else if (NifUtils.esNifPersonaFisica(datosInteresado.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.NIF;
 		} else {
-			throw new TipoNoControladoException("Tipus d'identificació no controlat");
+			throw new TipoNoControladoException("Tipus d'identificació no controlat para identificació: " + datosInteresado.getNif());
 		}
 
 		final Interesado interesado = new Interesado();

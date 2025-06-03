@@ -17,6 +17,9 @@
 
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   </f:facet>
 </h:head>
 
@@ -138,7 +141,7 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid styleClass="h100" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTableDatos"
@@ -149,6 +152,9 @@
 						 scrollable="true"
 						 scrollHeight="100%"
 						 styleClass="h100"
+						  resizeMode="fit"
+						 reflow="true"
+
                          paginator="true"
                          paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -157,7 +163,8 @@
 			        	 selectionMode="single"
 			        	 selection="#{dialogFuenteDatos.valorSeleccionado}"
 			        	 rowIndexVar="rowIndex"
-			        	 rowKey="#{td.codigo}">
+			        	 rowKey="#{td.codigo}"
+			>
 
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -171,7 +178,7 @@
 				<c:if test="${not empty dialogFuenteDatos.data.filas}">
 					<!-- Columnas, sin el rowIndex no va muy bien que se diga -->
 					<c:forEach items="#{dialogFuenteDatos.data.filas.get(rowIndex).datos}" var="dato">
-						<p:column headerText="#{dato.idCampo}">
+						<p:column headerText="#{dato.idCampo}" sortBy="#{dato.valor}">
 					        <h:outputText value="#{dato.valor}" />
 					    </p:column>
 					</c:forEach>
@@ -187,7 +194,7 @@
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-						    		<p:commandButton id="btnEditarDato" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogFuenteDatos.editarFuenteDato()}" process="@this" update="growlDialog">
+						    		<p:commandButton id="btnEditarDato" title="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogFuenteDatos.editarFuenteDato()}" process="@this" update="growlDialog">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuenteDatos.returnDialogo}" update="growlDialog dataTableDatos"/>
 		        					</p:commandButton>
 		        				</p>
@@ -215,8 +222,8 @@
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyTabla"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" />
        			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFuenteDatos:btnNuevoDato').click();" process="@this"  rendered="#{dialogFuenteDatos.permiteEdicion}"/>
-        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFuenteDatos:btnEditarDato').click();" process="@this" rendered="#{dialogFuenteDatos.permiteEdicion}"/>
-        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFuenteDatos:btnEliminarDato').click();" process="@this" rendered="#{dialogFuenteDatos.permiteEdicion}"/>
+        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('dialogFuenteDatos:btnEditarDato').click();" process="@this" rendered="#{dialogFuenteDatos.permiteEdicion}"/>
+        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('dialogFuenteDatos:btnEliminarDato').click();" process="@this" rendered="#{dialogFuenteDatos.permiteEdicion}"/>
         		<p:menuitem id="mnuUploadCSVTabla" value="#{msg['botones.importarCSV']}" icon="fa fa-upload" onclick="document.getElementById('dialogFuenteDatos:btnUploadCSV').click();" process="@this" rendered="#{dialogFuenteDatos.permiteEdicion}"/>
         		<p:menuitem id="mnuDownloadCSVTabla" value="#{msg['botones.exportarCSV']}" icon="fa fa-download" onclick="document.getElementById('dialogFuenteDatos:btnDownloadCSV').click();" process="@this" rendered="#{dialogFuenteDatos.permiteEdicion}"/>
 		    </p:contextMenu>
@@ -228,7 +235,7 @@
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFuenteDatos.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogFuenteDatos.ayuda()}" process="@this"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogFuenteDatos.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
@@ -239,16 +246,16 @@
 		      }
 		    </h:outputScript>
 
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogFuenteDatos.editarFuenteDato()}" process="@this" update="growlDialog" style="display:none">
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogFuenteDatos.editarFuenteDato()}" process="@this" update="growlDialog" style="display:none">
        				<p:ajax event="dialogReturn" listener="#{dialogFuenteDatos.returnDialogo}" update="growlDialog dataTableDatos"/>
        		</p:commandButton>
-!
+
 
 		    <!-- dialogo para confirmar -->
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 		    <p:contextMenu>

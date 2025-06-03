@@ -76,6 +76,8 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/** id tramite. */
 	private String descripcionTramite;
 
+	private FuncionarioHabilitado funcionarioHabilitado;
+
 	/**
 	 * Obtiene el valor de tipoEvento.
 	 *
@@ -392,4 +394,12 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 		this.area = area;
 	}
 
+
+	public FuncionarioHabilitado getFuncionarioHabilitado() {
+		return funcionarioHabilitado;
+	}
+
+	public void setFuncionarioHabilitado(FuncionarioHabilitado funcionarioHabilitado) {
+		this.funcionarioHabilitado = funcionarioHabilitado;
+	}
 }

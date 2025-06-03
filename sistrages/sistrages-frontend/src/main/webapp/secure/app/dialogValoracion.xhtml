@@ -19,6 +19,9 @@
 <h:body>
 	<f:facet name="last">
 	    <h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -137,7 +140,7 @@
   		<!-- Growl mensajes -->
 		<p:growl id="growlDialogValoracion" widgetVar="growlDialogValoracion" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+		<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:outputLabel for="inputIdentificador" value="#{msg['dialogValoracion.headerIdentificador']}" />
 			<p:inputText id="inputIdentificador" value="#{dialogValoracion.data.identificador}" size="40" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -149,7 +152,7 @@
 			<p:column>
 				<p:inputText id="inputDescripcion"  value="#{dialogValoracion.descripcion}" onblur="this.value = this.value.trim();" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
 				<p:inputText id="inputDescripcionHidden" value="#{dialogValoracion.descripcion}" onblur="this.value = this.value.trim();" type="hidden" required="true" binding="#{descripcionComponent}"/>
-				<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogValoracion.editarDescripcion}" process="@this" update="growlDialogValoracion" style="margin-right:5px">
+				<p:commandButton id="btnDescripcion" icon="fa fa-globe" actionListener="#{dialogValoracion.editarDescripcion}" process="@this" update="growlDialogValoracion" style="margin-right:5px">
             		<p:ajax event="dialogReturn" listener="#{dialogValoracion.returnDialogoDescripcion}" update="growlDialogValoracion inputDescripcion inputDescripcionHidden" />
         		</p:commandButton>
 			</p:column>

@@ -63,7 +63,6 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tramiteVersion.setActiva(true);
 		tramiteVersion.setDebug(true);
 		tramiteVersion.setAutenticado(true);
-		tramiteVersion.setNoAutenticado(true);
 		tramiteVersion.setIdiomasSoportados(pIdiomasSoportados);
 		tramiteVersion.setPersistencia(true);
 		tramiteVersion.setPersistenciaInfinita(true);
@@ -75,7 +74,6 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tramiteVersion.setDatosUsuarioBloqueo(pDatosUsuarioBloqueo);
 		List<TypeAutenticacion> tiposAutenticacion = new ArrayList<>();
 		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
-		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PIN);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PERMANENTE);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_MOVIL);
 		tramiteVersion.setTiposAutenticacion(tiposAutenticacion);
@@ -102,7 +100,6 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tramiteVersion.setBloqueada(false);
 		List<TypeAutenticacion> tiposAutenticacion = new ArrayList<>();
 		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
-		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PIN);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PERMANENTE);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_MOVIL);
 		tramiteVersion.setTiposAutenticacion(tiposAutenticacion);
@@ -207,7 +204,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		documento.setTipoTamanyo(TypeTamanyo.KILOBYTES);
 		documento.setTipoPresentacion(TypePresentacion.ELECTRONICA);
 		documento.setNumeroInstancia(1);
-		documento.setExtensiones("pdf;odt");
+		documento.setExtensiones("pdf");
 		documento.setTamanyoMaximo(1024);
 		documento.setTipoDocumental(TypeTipoDocumental.TD99_OTROS);
 		return documento;

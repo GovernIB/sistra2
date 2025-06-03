@@ -85,13 +85,19 @@ public final class UtilsPasoRegistrar {
 					"El document " + idDocumento + "-" + instancia + " no està configurat per firmar");
 		}
 
+		// Si es FH, debe ser nulo
+		if (pVariablesFlujo.isFuncionarioHabilitado() && nifFirmante != null) {
+			throw new AccionPasoNoPermitidaException(
+					"El document " + idDocumento + "-" + instancia + " és per firmar per FH però s'ha especificat firmant");
+		}
+
 		// Verificamos si el documento debe verificar firmantes, pero no se le ha especificado ningún firmante a validar
 		if (nifFirmante == null && !dd.getFirmantes().isEmpty()) {
 			throw new AccionPasoNoPermitidaException(
 					"El document " + idDocumento + "-" + instancia + " està configurat per firmar però no s'ha especificat cap firmant");
 		}
 
-		// Verificamos si la persona esta como firmante del documento
+		// Verificamos si la persona esta como firmante del documento (si no es FH)
 		if (nifFirmante != null) {
 
 			final Persona firmante = obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia, nifFirmante);

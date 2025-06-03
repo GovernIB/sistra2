@@ -5,6 +5,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import es.caib.sistra2.commons.utils.NifUtils;
+import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
+import es.caib.sistramit.core.api.model.system.rest.externo.*;
+import es.caib.sistramit.core.api.model.system.types.TypeTicketAcceso;
+import es.caib.sistramit.rest.api.externa.v1.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,23 +24,8 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoRepresentante
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
-import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
-import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.service.RestApiExternaService;
-import es.caib.sistramit.rest.api.externa.v1.REvento;
-import es.caib.sistramit.rest.api.externa.v1.RFiltroEvento;
-import es.caib.sistramit.rest.api.externa.v1.RFiltroTramiteFinalizado;
-import es.caib.sistramit.rest.api.externa.v1.RFiltroTramitePersistencia;
-import es.caib.sistramit.rest.api.externa.v1.RInfoTicketAcceso;
-import es.caib.sistramit.rest.api.externa.v1.RTramiteFinalizado;
-import es.caib.sistramit.rest.api.externa.v1.RTramitePersistencia;
-import es.caib.sistramit.rest.api.externa.v1.RUsuarioAutenticadoInfo;
 import es.caib.sistramit.rest.api.util.JsonException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -111,7 +102,7 @@ public class ApiExternaRestController {
 		}
 	}
 
-	@ApiOperation(value = "Obtener ticket de acceso", notes = "Obtener ticket de acceso", response = String.class)
+	@ApiOperation(value = "Obtener ticket de acceso para Carpeta", notes = "Obtener ticket de acceso para Carpeta", response = String.class)
 	@RequestMapping(value = "/ticketAcceso", method = RequestMethod.POST)
 	public String obtenerTicketAcceso(@RequestBody final RInfoTicketAcceso infoTicket) {
 		String ticket = null;
@@ -120,6 +111,15 @@ public class ApiExternaRestController {
 
 		ticket = restApiExternaService.obtenerTicketAcceso(infoTicketAcceso);
 
+		return ticket;
+	}
+
+	@ApiOperation(value = "Obtener ticket de acceso para FH", notes = "Obtener ticket de acceso para FH", response = String.class)
+	@RequestMapping(value = "/ticketAccesoFH", method = RequestMethod.POST)
+	public String obtenerTicketAccesoFH(@RequestBody final RInfoTicketAccesoFH infoTicket) {
+		String ticket = null;
+		final InfoTicketAcceso infoTicketAcceso = convierteInfoTicketAccesoFH(infoTicket);
+		ticket = restApiExternaService.obtenerTicketAcceso(infoTicketAcceso);
 		return ticket;
 	}
 
@@ -139,50 +139,44 @@ public class ApiExternaRestController {
 	}
 
 	/**
-	 * Convierte filtro ticket acceso.
+	 * Convierte filtro ticket acceso para carpeta.
 	 *
 	 * @param pRInfo
 	 *                   filtro
 	 * @return info ticket acceso
 	 */
 	private InfoTicketAcceso convierteInfoTicketAcceso(final RInfoTicketAcceso pRInfo) {
-		InfoTicketAcceso info = null;
+		InfoTicketAcceso info = new InfoTicketAcceso();
+		info.setTipoTicketAcceso(TypeTicketAcceso.CARPETA);
+		info.setIdSesionTramitacion(pRInfo.getIdSesionTramitacion());
+		info.setUrlCallbackError(pRInfo.getUrlCallbackError());
+		final RUsuarioAutenticadoInfo rUsuarioAutenticadoInfo = pRInfo.getUsuarioAutenticadoInfo();
+		if (rUsuarioAutenticadoInfo != null) {
+			final UsuarioAutenticadoInfo usuarioAutenticadoInfo = new UsuarioAutenticadoInfo();
+			usuarioAutenticadoInfo.setApellido1(rUsuarioAutenticadoInfo.getApellido1());
+			usuarioAutenticadoInfo.setApellido2(rUsuarioAutenticadoInfo.getApellido2());
+			usuarioAutenticadoInfo
+					.setAutenticacion(TypeAutenticacion.fromString(rUsuarioAutenticadoInfo.getAutenticacion()));
+			usuarioAutenticadoInfo.setQaa(TypeQAA.fromString(rUsuarioAutenticadoInfo.getQaa()));
+			usuarioAutenticadoInfo.setEmail(rUsuarioAutenticadoInfo.getEmail());
+			usuarioAutenticadoInfo.setMetodoAutenticacion(
+					TypeMetodoAutenticacion.fromString(rUsuarioAutenticadoInfo.getMetodoAutenticacion()));
+			usuarioAutenticadoInfo.setNif(rUsuarioAutenticadoInfo.getNif());
+			usuarioAutenticadoInfo.setNombre(rUsuarioAutenticadoInfo.getNombre());
+			usuarioAutenticadoInfo.setUsername(rUsuarioAutenticadoInfo.getUsername());
 
-		if (pRInfo != null) {
-			info = new InfoTicketAcceso();
+			if(rUsuarioAutenticadoInfo.getRepresentanteInfo() != null) {
+				final UsuarioAutenticadoRepresentante usuarioAutenticadoRepresentante = new UsuarioAutenticadoRepresentante();
+				usuarioAutenticadoRepresentante.setNif(rUsuarioAutenticadoInfo.getRepresentanteInfo().getNif());
+				usuarioAutenticadoRepresentante.setNombre(rUsuarioAutenticadoInfo.getRepresentanteInfo().getNombre());
+				usuarioAutenticadoRepresentante.setApellido1(rUsuarioAutenticadoInfo.getRepresentanteInfo().getApellido1());
+				usuarioAutenticadoRepresentante.setApellido2(rUsuarioAutenticadoInfo.getRepresentanteInfo().getApellido2());
+				usuarioAutenticadoRepresentante.setEmail(rUsuarioAutenticadoInfo.getRepresentanteInfo().getEmail());
+				usuarioAutenticadoInfo.setRepresentante(usuarioAutenticadoRepresentante);
 
-			info.setIdSesionTramitacion(pRInfo.getIdSesionTramitacion());
-			info.setUrlCallbackError(pRInfo.getUrlCallbackError());
-
-			final RUsuarioAutenticadoInfo rUsuarioAutenticadoInfo = pRInfo.getUsuarioAutenticadoInfo();
-			if (rUsuarioAutenticadoInfo != null) {
-				final UsuarioAutenticadoInfo usuarioAutenticadoInfo = new UsuarioAutenticadoInfo();
-				usuarioAutenticadoInfo.setApellido1(rUsuarioAutenticadoInfo.getApellido1());
-				usuarioAutenticadoInfo.setApellido2(rUsuarioAutenticadoInfo.getApellido2());
-				usuarioAutenticadoInfo
-						.setAutenticacion(TypeAutenticacion.fromString(rUsuarioAutenticadoInfo.getAutenticacion()));
-				usuarioAutenticadoInfo.setQaa(TypeQAA.fromString(rUsuarioAutenticadoInfo.getQaa()));
-				usuarioAutenticadoInfo.setEmail(rUsuarioAutenticadoInfo.getEmail());
-				usuarioAutenticadoInfo.setMetodoAutenticacion(
-						TypeMetodoAutenticacion.fromString(rUsuarioAutenticadoInfo.getMetodoAutenticacion()));
-				usuarioAutenticadoInfo.setNif(rUsuarioAutenticadoInfo.getNif());
-				usuarioAutenticadoInfo.setNombre(rUsuarioAutenticadoInfo.getNombre());
-				usuarioAutenticadoInfo.setUsername(rUsuarioAutenticadoInfo.getUsername());
-
-				if(rUsuarioAutenticadoInfo.getRepresentanteInfo() != null) {
-					final UsuarioAutenticadoRepresentante usuarioAutenticadoRepresentante = new UsuarioAutenticadoRepresentante();
-					usuarioAutenticadoRepresentante.setNif(rUsuarioAutenticadoInfo.getRepresentanteInfo().getNif());
-					usuarioAutenticadoRepresentante.setNombre(rUsuarioAutenticadoInfo.getRepresentanteInfo().getNombre());
-					usuarioAutenticadoRepresentante.setApellido1(rUsuarioAutenticadoInfo.getRepresentanteInfo().getApellido1());
-					usuarioAutenticadoRepresentante.setApellido2(rUsuarioAutenticadoInfo.getRepresentanteInfo().getApellido2());
-					usuarioAutenticadoRepresentante.setEmail(rUsuarioAutenticadoInfo.getRepresentanteInfo().getEmail());
-					usuarioAutenticadoInfo.setRepresentante(usuarioAutenticadoRepresentante);
-
-				}
-				info.setUsuarioAutenticadoInfo(usuarioAutenticadoInfo);
 			}
+			info.setUsuarioAutenticadoInfo(usuarioAutenticadoInfo);
 		}
-
 		return info;
 	}
 
@@ -304,7 +298,7 @@ public class ApiExternaRestController {
 	/**
 	 * Convierte tramite finalizado
 	 *
-	 * @param tramite
+	 * @param pTramite
 	 *                    tramite
 	 * @return RTramiteFinalizado
 	 */
@@ -325,9 +319,67 @@ public class ApiExternaRestController {
 			rTramite.setNif(pTramite.getNif());
 			rTramite.setNombreApellidos(pTramite.getNombreApellidos());
 			rTramite.setNumeroRegistro(pTramite.getNumeroRegistro());
+			rTramite.setTramitadoPorFuncionarioHabilitado(pTramite.getFuncionarioHabilitadoNif() != null);
 		}
 
 		return rTramite;
 	}
+
+
+	/**
+	 * Convierte objeto REST en objeto modelo.
+	 *
+	 * @param rInfoTicketAccesoFH objeto REST
+	 * @return InfoTicketAccesoFH
+	 */
+	private InfoTicketAcceso convierteInfoTicketAccesoFH(RInfoTicketAccesoFH rInfoTicketAccesoFH) {
+		// Usuario autenticado es el FH (fijamos autenticacion a certificado nivel medio)
+		UsuarioAutenticadoInfo usuarioAutenticado = new UsuarioAutenticadoInfo();
+		usuarioAutenticado.setAutenticacion(TypeAutenticacion.AUTENTICADO);
+		usuarioAutenticado.setMetodoAutenticacion(TypeMetodoAutenticacion.CLAVE_CERTIFICADO);
+		usuarioAutenticado.setQaa(TypeQAA.MEDIO);
+		usuarioAutenticado.setUsername(rInfoTicketAccesoFH.getFuncionarioHabilitado().getUsername());
+		usuarioAutenticado.setNif(NifUtils.normalizarNif(rInfoTicketAccesoFH.getFuncionarioHabilitado().getNif()));
+		usuarioAutenticado.setNombre(StringUtils.defaultIfBlank(rInfoTicketAccesoFH.getFuncionarioHabilitado().getNombre(), null));
+		usuarioAutenticado.setApellido1(StringUtils.defaultIfBlank(rInfoTicketAccesoFH.getFuncionarioHabilitado().getApellido1(), null));
+		usuarioAutenticado.setApellido2(StringUtils.defaultIfBlank(rInfoTicketAccesoFH.getFuncionarioHabilitado().getApellido2(), null));
+		// Información representación
+		InfoAccesoFH infoAccesoFH = new InfoAccesoFH();
+		infoAccesoFH.setDir3FH(rInfoTicketAccesoFH.getFuncionarioHabilitado().getDir3());
+		infoAccesoFH.setInteresado(conviertePersonaDesglosado(rInfoTicketAccesoFH.getInteresado()));
+		if (rInfoTicketAccesoFH.getRepresentante() != null) {
+			infoAccesoFH.setRepresentante(conviertePersonaDesglosado(rInfoTicketAccesoFH.getRepresentante()));
+		}
+		InfoTramiteFH infoTramiteFH = new InfoTramiteFH();
+		infoTramiteFH.setTramite(rInfoTicketAccesoFH.getTramiteFH().getTramite());
+		infoTramiteFH.setVersion(rInfoTicketAccesoFH.getTramiteFH().getVersion());
+		infoTramiteFH.setIdioma(rInfoTicketAccesoFH.getTramiteFH().getIdioma());
+		infoTramiteFH.setIdTramiteCatalogo(rInfoTicketAccesoFH.getTramiteFH().getIdTramiteCatalogo());
+		infoTramiteFH.setServicioCatalogo(rInfoTicketAccesoFH.getTramiteFH().isServicioCatalogo());
+		infoTramiteFH.setParametros(rInfoTicketAccesoFH.getTramiteFH().getParametros());
+		infoAccesoFH.setTramiteFH(infoTramiteFH);
+		// Retorna info ticket accceso
+		InfoTicketAcceso infoTicketAcceso = new InfoTicketAcceso();
+		infoTicketAcceso.setTipoTicketAcceso(TypeTicketAcceso.FUNCIONARIO_HABILITADO);
+		infoTicketAcceso.setUsuarioAutenticadoInfo(usuarioAutenticado);
+		infoTicketAcceso.setInfoAccesoFH(infoAccesoFH);
+		return infoTicketAcceso;
+	}
+
+	/**
+	 * Convierte objeto REST en objeto modelo.
+	 *
+	 * @param rPersonaInfo objeto REST
+	 * @return PersonaDesglosado
+	 */
+	private static PersonaDesglosado conviertePersonaDesglosado(RPersonaInfo rPersonaInfo) {
+		return new PersonaDesglosado(
+				NifUtils.normalizarNif(rPersonaInfo.getNif()),
+				StringUtils.defaultIfBlank(rPersonaInfo.getNombre(), null),
+				StringUtils.defaultIfBlank(rPersonaInfo.getApellido1(), null),
+				StringUtils.defaultIfBlank(rPersonaInfo.getApellido2(), null)
+		);
+	}
+
 
 }

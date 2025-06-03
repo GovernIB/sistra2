@@ -36,6 +36,11 @@ public final class DetalleTramite implements ModelApi {
 	private Entidad entidad;
 
 	/**
+	 * Indica si se tramita en modo funcionario habilitado.
+	 */
+	private TypeSiNo funcionarioHabilitado = TypeSiNo.NO;
+
+	/**
 	 * Imprime detalle tramite.
 	 *
 	 * @return Detalle tramite
@@ -48,6 +53,7 @@ public final class DetalleTramite implements ModelApi {
 		if (getUsuario() != null) {
 			strb.append("Usuario:" + getUsuario().print() + "\n");
 		}
+		strb.append("FH:" + getFuncionarioHabilitado().toBoolean() + "\n");
 		strb.append("Idioma:" + tramite.getIdioma() + "\n");
 		strb.append("Titulo:" + tramite.getTitulo() + "\n");
 		strb.append("Tipo flujo:" + tramite.getTipoFlujo() + "\n");
@@ -188,6 +194,25 @@ public final class DetalleTramite implements ModelApi {
 	 */
 	public void setEntidad(Entidad entidad) {
 		this.entidad = entidad;
+	}
+
+	/**
+	 * Método de acceso a funcionarioHabilitado.
+	 *
+	 * @return funcionarioHabilitado
+	 */
+	public TypeSiNo getFuncionarioHabilitado() {
+		return funcionarioHabilitado;
+	}
+
+	/**
+	 * Método para establecer funcionarioHabilitado.
+	 *
+	 * @param funcionarioHabilitado
+	 *            funcionarioHabilitado a establecer
+	 */
+	public void setFuncionarioHabilitado(TypeSiNo funcionarioHabilitado) {
+		this.funcionarioHabilitado = funcionarioHabilitado;
 	}
 
 }

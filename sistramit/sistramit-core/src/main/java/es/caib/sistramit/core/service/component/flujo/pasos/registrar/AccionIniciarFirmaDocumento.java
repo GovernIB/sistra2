@@ -1,14 +1,14 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.*;
+import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -61,15 +61,24 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		final int instancia = UtilsFlujo.instanciaStrToInt(instanciaStr);
 		final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", false);
 
+
 		// Validaciones
 		UtilsPasoRegistrar.getInstance().validacionesFirmaDocumento(pDatosPaso, pVariablesFlujo, idDocumento, instancia,
 				nifFirmante);
 
 		// Buscamos datos firmante
 		Persona firmante = null;
-		if (nifFirmante != null) {
-			firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento,
-					instancia, nifFirmante);
+		// - Si es FH, debe firmar el FH
+		if (pVariablesFlujo.isFuncionarioHabilitado()) {
+			FuncionarioHabilitado fh = pVariablesFlujo.getUsuarioAutenticado().getFuncionarioHabilitado();
+			firmante = new Firmante(fh.getNif(),
+					fh.getNombreApellidos(),
+					TypeObligatoriedadFirmante.OBLIGATORIO);
+		} else {
+			if (nifFirmante != null) {
+				firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento,
+						instancia, nifFirmante);
+			}
 		}
 
 		// Envia fichero a firmar

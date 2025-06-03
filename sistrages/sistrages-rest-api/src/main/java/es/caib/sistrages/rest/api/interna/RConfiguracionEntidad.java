@@ -93,6 +93,10 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "Ayuda formulario soporte")
 	private List<ROpcionFormularioSoporte> ayudaFormulario;
 
+	/** Ayuda contextual. */
+	@ApiModelProperty(value = "Ayuda contextual")
+	private boolean ayudaContextual;
+
 	/** Plugins entidad. */
 	@ApiModelProperty(value = "Plugins entidad")
 	private List<RPlugin> plugins;
@@ -160,6 +164,9 @@ public class RConfiguracionEntidad {
 	/** Instrucciones presencial */
 	@ApiModelProperty(value = "instrucciones presencial")
 	private RLiteral instruccionesPresencial;
+
+	@ApiModelProperty(value = "modo funcionario habilitado activado")
+	private boolean modoFuncionarioHabilitado;
 
 	/** Registro centralizado. */
 	@ApiModelProperty(value = "Registro centralizado")
@@ -384,6 +391,25 @@ public class RConfiguracionEntidad {
 	 */
 	public void setAyudaFormulario(final List<ROpcionFormularioSoporte> ayudaFormulario) {
 		this.ayudaFormulario = ayudaFormulario;
+	}
+
+	/**
+	 * Método de acceso a ayudaContextual.
+	 *
+	 * @return ayudaContextual
+	 */
+	public boolean isAyudaContextual() {
+		return ayudaContextual;
+	}
+
+	/**
+	 * Método para establecer ayudaContextual.
+	 *
+	 * @param ayudaContextual
+	 *                            ayudaContextual a establecer
+	 */
+	public void setAyudaContextual(boolean ayudaContextual) {
+		this.ayudaContextual = ayudaContextual;
 	}
 
 	/**
@@ -643,6 +669,8 @@ public class RConfiguracionEntidad {
 		this.permiteSubsanarRegistrar = permiteSubsanarRegistrar;
 	}
 
+
+
 	/**
 	 * @return the instruccionesSubsanacion
 	 */
@@ -686,6 +714,21 @@ public class RConfiguracionEntidad {
 	 */
 	public final void setInstruccionesPresencial(final RLiteral instruccionesPresencial) {
 		this.instruccionesPresencial = instruccionesPresencial;
+	}
+
+	/**
+	 * @return the modoFuncionarioHabilitado
+	 */
+	public boolean isModoFuncionarioHabilitado() {
+		return modoFuncionarioHabilitado;
+	}
+
+	/**
+	 * @param modoFuncionarioHabilitado
+	 *                                      the modoFuncionarioHabilitado to set
+	 */
+	public void setModoFuncionarioHabilitado(boolean modoFuncionarioHabilitado) {
+		this.modoFuncionarioHabilitado = modoFuncionarioHabilitado;
 	}
 
 	/**

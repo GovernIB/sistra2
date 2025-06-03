@@ -12,11 +12,16 @@
 
 
 	<h:form id="formViewDefinicionVersionAnexo" styleClass="h100">
-
+		<h:outputStylesheet>
+			.ui-widget-content {
+				border: none;
+				background: none;
+			}
+		</h:outputStylesheet>
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-       	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w15 grid-left, w85 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
+       	<h:panelGrid columns="2"  rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="w15 grid-left, w85 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionAnexo.identificador']}" />
           	<p:inputText onblur="this.value = this.value.trim();" id="identificador" required="true" readonly="true" styleClass="w35" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.identificador}"  />
@@ -25,7 +30,7 @@
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionAnexo.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="descripcion" onblur="this.value = this.value.trim();" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.documentoTramiteSeleccionado.descripcion)}"
+           		<p:commandButton icon="fa fa-globe" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.documentoTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
 
@@ -59,7 +64,7 @@
 					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.mensaje']}" />
 					<p:outputPanel styleClass="ui-inputgroup">
 	           			<p:inputText id="mensaje_input" onblur="this.value = this.value.trim();" readonly="true" styleClass="w85" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
-	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccionHTML(viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaTexto)}"
+	           			<p:commandButton icon="fa fa-globe" actionListener="#{viewDefinicionVersionParams.consultarTraduccionHTML(viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaTexto)}"
 							process="@this" update="growl"/>
 	       			</p:outputPanel>
 
@@ -143,7 +148,7 @@
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionAnexo" />
 					</p:commandButton>
-           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle"
 						actionListener="#{viewDefinicionVersionParams.ayudaAnexo()}"
 						process="@this" update="growl" iconPos="top"/>
 				</p:outputPanel>

@@ -200,6 +200,26 @@ $.fn.appPas = function(options) {
 				imc_contenidor
 					.removeClass("imc--mostra-acc");
 
+
+				// funcionari habilitat
+
+				imc_contenidor
+					.find("h1:first strong")
+						.remove()
+						.end()
+					.removeClass("imc--func-hab");
+
+				if (APP_JSON_TRAMIT_D.funcionarioHabilitado && APP_JSON_TRAMIT_D.funcionarioHabilitado === "s") {
+					
+					imc_contenidor
+						.find("h1:first")
+							.append( $("<strong>").text( txtFuncionariHabilitat ) )
+							.end()
+						.addClass("imc--func-hab");
+
+				}
+
+
 				// es un pas emplenar amb un formulari obert?
 				/*
 

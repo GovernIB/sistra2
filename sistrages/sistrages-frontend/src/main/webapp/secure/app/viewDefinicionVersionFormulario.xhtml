@@ -9,12 +9,17 @@
   <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioGestor" var="TypeFormularioGestor"/>
 
   <h:form id="formviewDefinicionVersionFormulario" styleClass="h100">
-
+	  <h:outputStylesheet>
+		  .ui-widget-content {
+			  border: none;
+			  background: none;
+		  }
+	  </h:outputStylesheet>
     <!-- Growl mensajes -->
     <p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 
-        <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
+        <h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionFormulario.identificador']}" />
             <p:inputText id="identificador" onblur="this.value = this.value.trim();" required="true" readonly="true" styleClass="w35" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.identificador}" />
@@ -23,7 +28,7 @@
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
                <p:inputText id="descripcion" onblur="this.value = this.value.trim();" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
-               <p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.formularioTramiteSeleccionado.descripcion)}"	process="@this" update="growl" />
+               <p:commandButton icon="fa fa-globe" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.formularioTramiteSeleccionado.descripcion)}"	process="@this" update="growl" />
            </p:outputPanel>
 
            <p:outputLabel value="#{msg['viewDefinicionVersionFormulario.obligatoriedad']}" />
@@ -35,9 +40,10 @@
               			</p:selectOneRadio>
              		</p:column>
              		<p:column>
-               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
+               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad.codigo)}"
+										 value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
               				disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad eq null}"
-              				styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad)}"
+              				styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad)}" style="white-space: nowrap;"
               				process="@this" update="growl"/>
           			</p:column>
         		</p:row>
@@ -52,7 +58,7 @@
              		<p:column>
                			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
               				disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma eq null}"
-              				styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma)}"
+              				styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma)} btn-no-line-break" style="white-space: nowrap;"
               				process="@this" update="growl"/>
           			</p:column>
         		</p:row>
@@ -107,7 +113,7 @@
             			process="@this" update="growl">
                 		<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formviewDefinicionVersionFormulario" />
            			</p:commandButton>
-           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle"
 						actionListener="#{viewDefinicionVersion.ayudaFormulario()}"
 						process="@this" update="growl" iconPos="top"/>
         		</p:outputPanel>

@@ -17,12 +17,17 @@
 	<ui:define name="icerick">
 		<script type="text/javascript">
 		function setHeight(){
-	    	var altura = window.innerHeight - 50;
-	    	var alturaDatatable = altura - 250;
-            var alturaScrollableBody = altura - 293;
+			// Altura de la pantalla menos 50px del footer
+			var altura = window.innerHeight - 50;
+			// Altura de la tabla menos altura de la cabecera y del toolbar
+			var alturaDatatable = altura - 240;
+			// Altura del scrollable body, tabla menos cabecera y footer (de la tabla)
+			var alturaScrollableBody = alturaDatatable - 57;
 
             $('#form\\:dataTable').height(alturaDatatable);
             $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+
+			// console.log("altura: " + altura + ", alturaDatatable: " + alturaDatatable + ", alturaScrollableBody: " + alturaScrollableBody);
 	    }
 
 		jQuery(document).ready(function() {
@@ -31,7 +36,7 @@
               setTimeout(function(){  setHeight(); }, 100);
   			});
 
-	      setHeight();
+			setTimeout(function(){  setHeight(); }, 10);
 	  });
 
 		function cerrarDialog(){
@@ -192,17 +197,17 @@
 		        		<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewEnviosRemotos.nuevo()}" process="@this" update="growl"  rendered="#{viewEnviosRemotos.getPermiteEditar()}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEnviosRemotos.editar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteEditar()}" oncomplete="cerrarDialog()">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewEnviosRemotos.editar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteEditar()}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewEnviosRemotos.consultar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteConsultar()}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEnviosRemotos.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewEnviosRemotos.getPermiteEditar()}" oncomplete="setHeight()">
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewEnviosRemotos.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewEnviosRemotos.getPermiteEditar()}" oncomplete="setHeight()">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{viewEnviosRemotos.tramites()}" process="@this" update="growl dataTable" rendered="#{viewEnviosRemotos.getPermiteConsultar()}"/>
-	        			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewEnviosRemotos.ayuda()}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-download" actionListener="#{viewEnviosRemotos.tramites()}" process="@this" update="growl dataTable" rendered="#{viewEnviosRemotos.getPermiteConsultar()}"/>
+	        			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewEnviosRemotos.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 		    </p:toolbar>
@@ -220,20 +225,17 @@
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false" update=":form:panelBotones"/>
-				<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
-		                        />
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 		        <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 		        <p:ajax event="contextMenu" global="false" process="@this"/>
 
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['dialogTestData.codigo']}">
+			    <p:column headerText="#{msg['dialogTestData.codigo']}" sortBy="#{td.identificador}">
 			        <h:outputText value="#{td.identificador}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['dialogTestData.descripcion']}">
+			    <p:column headerText="#{msg['dialogTestData.descripcion']}" sortBy="#{td.descripcion}">
 			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
@@ -243,9 +245,9 @@
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
-        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
+        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
         		<p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteConsultar()}" />
-        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
+        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewEnviosRemotos.copiadoCorr}" process="@this" update="@this growl"/>
@@ -257,23 +259,23 @@
 		      }
 		    </h:outputScript>
 
-			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEnviosRemotos.rcDobleClick}" process="@this" update="growl" style="display: none" oncomplete="cerrarDialog()">
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewEnviosRemotos.rcDobleClick}" process="@this" update="growl" style="display: none" oncomplete="cerrarDialog()">
 		    	<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		    </p:commandButton>
 
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 		    <p:contextMenu for=":work">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
-        		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
+        		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
         		<p:menuitem id="mnuConsultarMain" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteConsultar()}" />
-        		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
+        		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewEnviosRemotos.getPermiteEditar()}"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewEnviosRemotos.copiadoCorr}" process="@this" update="@this growl"/>

@@ -13,7 +13,7 @@ var FORMS_JS = false;
 
 var APP_FORMS_ = ""
 	,FORMS_CONTENIDOR = false
-	,APP_FORMS_VERSIO = "0.1";
+	,APP_FORMS_VERSIO = "version=0.5";
 
 
 // ajax SETUP
@@ -104,12 +104,19 @@ function appFormsInicia() {
 
 }
 
-// carga script sincrona
-function getScript(urlJs) {
-	$.ajax({async: false, url: urlJs, dataType:"script"});
-}
+
 
 // appCarregaScripts
+
+function getScript(urlJS) {
+
+	$.ajax({
+		async: false
+		,url: urlJS
+		,dataType: "script"
+	});
+
+}
 
 function appFormsCarregaScripts() {
 
@@ -137,27 +144,29 @@ function appFormsCarregaScripts() {
 		,$.get(APP_FORMS_ + "forms/css/imc-forms--taula-iframe.css?" + APP_FORMS_VERSIO)
 		,$.get(APP_FORMS_ + "forms/css/imc-forms--missatge.css?" + APP_FORMS_VERSIO)
 		,$.get(APP_FORMS_ + "forms/css/imc-forms.css?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/numeral.min.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--comuns.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--funcions.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--validacions.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--captcha.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--llistaElements.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--validaNumero.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--serialitza.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--missatge.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--moduls.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--ajuda.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--avalua.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--iframe.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--elementImatge.js?" + APP_FORMS_VERSIO)
-		,getScript(APP_FORMS_ + "forms/js/imc-forms--telefonInternacional.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/numeral.min.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--comuns.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--funcions.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--validacions.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--captcha.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--llistaElements.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--validaNumero.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--serialitza.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--missatge.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--moduls.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--ajuda.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--textarea.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--avalua.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--iframe.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--elementImatge.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--telefonInternacional.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--bloc.js?" + APP_FORMS_VERSIO)
 
 	).then(
 
 		function( cssFormsDestaca, cssFormsSelect, cssFormsTaulaIframe, cssFormsMissatge, cssForms) {
 
-			getScript(APP_FORMS_ + "forms/js/numeral.min_es-es.js?" + APP_FORMS_VERSIO);
+			$.getScript(APP_FORMS_ + "forms/js/numeral.min_es-es.js?" + APP_FORMS_VERSIO);
 
 			// estils
 

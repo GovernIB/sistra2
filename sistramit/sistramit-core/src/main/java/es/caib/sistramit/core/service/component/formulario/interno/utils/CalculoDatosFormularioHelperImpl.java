@@ -1,9 +1,11 @@
 package es.caib.sistramit.core.service.component.formulario.interno.utils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -441,9 +443,6 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		// Definicion pagina actual
 		final RPaginaFormulario paginaDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
 
-		// Página actual
-		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
-
 		// Creamos lista de campos modificados (el campo modificado más los que
 		// aparecen en resultado evaluar campo)
 		final List<String> camposModificados = new ArrayList<String>();
@@ -453,23 +452,13 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			camposModificados.add(vcm.getId());
 		}
 
-		// Revisa script de cambio de estado
-		final List<String> estadosModificado = revisarScriptEstadoCampos(datosSesion, idCampo, camposModificados,
+		// Revisa script de cambio de estado y actualiza configuración campos
+		final List<ConfiguracionModificadaCampo> estadosModificado = revisarScriptEstadoCampos(datosSesion, idCampo, camposModificados,
 				paginaDef, elemento);
 
-		// Evaluamos que configuracion de campos debemos pasar:
-		// - estado modificado
-		for (final RComponente campoDefAuto : UtilsFormularioInterno.devuelveListaCampos(paginaDef)) {
-			if (estadosModificado.contains(campoDefAuto.getIdentificador())) {
-				final ConfiguracionCampo confCampo = paginaActual
-						.getConfiguracionCampo(campoDefAuto.getIdentificador());
-				final ConfiguracionModificadaCampo cm = ConfiguracionModificadaCampo
-						.createNewConfiguracionModificadaCampo();
-				cm.setId(campoDefAuto.getIdentificador());
-				cm.setSoloLectura(confCampo.getSoloLectura());
-				res.getConfiguracion().add(cm);
-			}
-		}
+		// Devolvemos configuraciones modificadas
+		res.setConfiguracion(estadosModificado);
+
 	}
 
 	/**
@@ -485,12 +474,12 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 *                              Definicion paginas
 	 * @return Lista de campos modificados
 	 */
-	private List<String> revisarScriptEstadoCampos(final DatosSesionFormularioInterno datosSesion, final String idCampo,
+	private List<ConfiguracionModificadaCampo> revisarScriptEstadoCampos(final DatosSesionFormularioInterno datosSesion, final String idCampo,
 			final List<String> camposModificados, final RPaginaFormulario paginaDef, final boolean elemento) {
 
 		// Creamos lista de campos para los que se modifica o hay que refrescar
 		// su estado
-		final List<String> estadosModificado = new ArrayList<>();
+		final List<ConfiguracionModificadaCampo> estadosModificado = new ArrayList<>();
 
 		// Pagina actual
 		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
@@ -509,6 +498,8 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			} else if (campoPosterior) {
 				evaluarCampo = true;
 			}
+			// Propiedades generales campo
+			RPropiedadesCampo propiedadesCampo = UtilsFormularioInterno.obtenerPropiedadesCampo(campoDefAuto);
 			// Si hay que evaluar campo comprobamos si:
 			// - No debe estar marcado como readonly (no tiene efecto script)
 			// - tiene script estado
@@ -522,17 +513,15 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 						elemento);
 				// Actualizamos configuracion campo
 				if (rse != null) {
-					boolean modifConf = false;
-					final ConfiguracionCampo confCampo = paginaActual
-							.getConfiguracionCampo(campoDefAuto.getIdentificador());
-					if (rse.getEstadoCampo().getSoloLectura() != null) {
-						modifConf = true;
-						confCampo.setSoloLectura(rse.getEstadoCampo().getSoloLectura());
-					}
-					// Añadimos a lista de campos con estado modificado
-					if (modifConf && !estadosModificado.contains(campoDefAuto.getIdentificador())) {
-						estadosModificado.add(campoDefAuto.getIdentificador());
-					}
+					final ConfiguracionCampo confCampo = paginaActual.getConfiguracionCampo(campoDefAuto.getIdentificador());
+					// Calculamos modificación configuración estado
+					ConfiguracionModificadaCampo confModificada = UtilsFormularioInterno.calcularConfiguracionModificadaCampo(rse, confCampo, campoDefAuto);
+					// Actualizamos configuración campo
+					confCampo.setOculto(confModificada.getOculto());
+					confCampo.setSoloLectura(confModificada.getSoloLectura());
+					confCampo.setObligatorio(confModificada.getObligatorio());
+					// Añadimos a lista configuraciones modificadas
+					estadosModificado.add(confModificada);
 				}
 			}
 		}

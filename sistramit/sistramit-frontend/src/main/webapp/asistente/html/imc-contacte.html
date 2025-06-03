@@ -19,9 +19,11 @@
 				<p>{{txtAjudaIntro}}</p>
 
 				<ul class="imc--dades">
+					{{if jsonTipusProblema}}
 					<li>
 						{{txtEmplenarSeguent}} <a href="javascript:;" id="imc-bt-suport--form">{{txtFormIncidencias}}</a>
 					</li>
+					{{/if}}
 					{{if jsonSuportTecnic}}
 					<li data-suport="url">
 						{{txtVisitePag}} <a href="{{jsonSuportTecnic}}" target="_blank">{{txtSuportTecnic}}</a>
@@ -114,7 +116,7 @@
 
 					<div class="imc-el imc-el--descripcio" data-obligatori="si">
 						<label for="problemaDesc">{{txtDescripcioProblema}}</label>
-						<textarea id="problemaDesc" name="problemaDesc" rows="4" cols="30" required maxlength="3000"></textarea>
+						<textarea id="problemaDesc" name="problemaDesc" rows="4" cols="30" required maxlength="4000"></textarea>
 					</div>
 
 					<div class="imc-el imc-el--annexe">

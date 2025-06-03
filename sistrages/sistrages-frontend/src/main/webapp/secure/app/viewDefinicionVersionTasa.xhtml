@@ -9,12 +9,17 @@
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 	<h:form id="formViewDefinicionVersionTasa" styleClass="h100">
-
+		<h:outputStylesheet>
+			.ui-widget-content {
+				border: none;
+				background: none;
+			}
+		</h:outputStylesheet>
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 
-        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
+        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" rowClasses="ui-datatable-even, ui-datatable-odd" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionTasa.identificador']}" />
           	<p:inputText id="identificador" onblur="this.value = this.value.trim();" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.identificador}" required="true" readonly="true" styleClass="w35"/>
@@ -23,7 +28,7 @@
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionTasa.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" required="true" readonly="true" styleClass="w85"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tasaTramiteSeleccionado.descripcion)}"
+           		<p:commandButton icon="fa fa-globe" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tasaTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
 

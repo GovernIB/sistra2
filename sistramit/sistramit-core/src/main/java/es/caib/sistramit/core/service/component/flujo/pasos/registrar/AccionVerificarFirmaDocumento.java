@@ -58,8 +58,13 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		// Recogemos parametros
 		final String idDocumento = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "idDocumento", true);
 		final String instanciaStr = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "instancia", false);
-		final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", false);
+		String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", false);
 		final int instancia = UtilsFlujo.instanciaStrToInt(instanciaStr);
+
+		// Si es FH, establecemos firmante a nulo (no esta en lista firmantes)
+		if (pVariablesFlujo.isFuncionarioHabilitado()) {
+			nifFirmante = null;
+		}
 
 		// Datos internos paso
 		final DatosInternosPasoRegistrar dipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
@@ -69,6 +74,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 				nifFirmante);
 
 		// Recuperamos firma
+		// TODO FH --- VER SI FORZAR VERIFICACIN FIRMANTE ES FH
 		final FirmaClienteRespuesta resFirma = recuperarFirma(dipa, pDefinicionTramite, idDocumento, instancia,
 				nifFirmante, pVariablesFlujo);
 
@@ -86,6 +92,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		fv.setVerificada(TypeSiNo.fromBoolean(resFirma.isValida()));
 		fv.setCancelada(TypeSiNo.fromBoolean(resFirma.isCancelada()));
 		fv.setDetalleError(resFirma.getDetalleError());
+		fv.setMetodoFirma(resFirma.getMetodoFirma());
 		rp.addParametroRetorno("resultado", fv);
 		final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
 		rep.setRespuestaAccionPaso(rp);

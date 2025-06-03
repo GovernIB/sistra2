@@ -70,7 +70,7 @@ public class DialogInformacionPersistencia extends DialogControllerBase {
 	public StreamedContent descargarFichero(final FicheroPersistenciaAuditoria pFichero) {
 		StreamedContent resultado = null;
 		String mimeType = null;
-		InputStream is = null;
+		InputStream is;
 
 		if (pFichero != null) {
 			final FicheroAuditoria fichero = helpDeskService.obtenerAuditoriaFichero(pFichero.getCodigo(),
@@ -86,9 +86,12 @@ public class DialogInformacionPersistencia extends DialogControllerBase {
 				mimeType = "application/octet-stream";
 			}
 
-			resultado = new DefaultStreamedContent(is, mimeType, fichero.getNombre(), fichero.getContenido().length);
-		}
-		return resultado;
+			resultado = DefaultStreamedContent.builder().contentType(mimeType).name(fichero.getNombre()).stream(() -> is).build();
+
+		} else {
+            is = null;
+        }
+        return resultado;
 	}
 
 	public PersistenciaAuditoria getDato() {

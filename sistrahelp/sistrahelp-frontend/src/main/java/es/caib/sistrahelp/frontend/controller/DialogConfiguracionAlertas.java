@@ -1,41 +1,24 @@
 package es.caib.sistrahelp.frontend.controller;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.sun.mail.iap.Literal;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.DisparadorAlerta;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
-import es.caib.sistrahelp.core.api.model.types.TypeIdioma;
-import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
@@ -421,12 +404,6 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			}
 		}
 		return str;
-	}
-
-	public List<TypeEvento> eventosFiltrados(){
-		return eventos.stream()
-				.filter(e -> !e.equals(TypeEvento.FIRMA_FIN))
-				.collect(Collectors.toList());
 	}
 
 	public void hacerResumen() {

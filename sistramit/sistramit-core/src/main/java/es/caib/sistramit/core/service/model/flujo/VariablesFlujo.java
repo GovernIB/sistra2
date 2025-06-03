@@ -9,6 +9,7 @@ import java.util.Map;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
@@ -524,6 +525,14 @@ public final class VariablesFlujo implements Serializable {
 	 */
 	public void setTipoDestino(final TypeDestino tipoDestino) {
 		this.tipoDestino = tipoDestino;
+	}
+
+	/**
+	 * Indica si está en modo FH.
+	 * @return boolean true si está en modo FH
+	 */
+	public boolean isFuncionarioHabilitado() {
+		return usuarioAutenticado != null && usuarioAutenticado.getFuncionarioHabilitado() != null;
 	}
 
 }

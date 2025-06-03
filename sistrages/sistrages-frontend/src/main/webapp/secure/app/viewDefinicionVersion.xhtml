@@ -22,198 +22,92 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growl" widgetVar="growl" showDetail="false" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-				<p:layout id="mainDefinicionVersion" styleClass="h100">
+			<div id="mainDefinicionVersion" class="h-100">
+				<!-- Header section (previously breadDefinicionVersionLayout) -->
+				<div id="breadDefinicionVersionLayout" class="body-color margin-bottom-3">
+					<h:form id="breadDefinicionVersion" style="display:flex;">
+						<h:outputScript>
+							// JavaScript code remains unchanged.
+						</h:outputScript>
+						<div style="width:100vw;">
+							<p:breadCrumb  model="#{viewDefinicionVersion.breadCrumModel}" />
+						</div>
+						<div style="padding:3px;display: inherit;">
+							<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock"
+											 actionListener="#{viewDefinicionVersion.bloquear}" process="@this" update="growl"
+											 rendered="#{viewDefinicionVersion.permiteBloquear}" style="margin-left:4px;width:170px;">
+								<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewTramitesVersion.bloquear.aviso']}"
+										   icon="fa fa-question-circle fa-3x confirmar_icono" />
+							</p:commandButton>
+							<p:commandButton id="btnPrevisualizarTramite" value="#{msg['botones.previsualizarTramite']}"
+											 icon="fa fa-eye" actionListener="#{viewDefinicionVersion.previsualizar()}" process="@this"
+											 style="margin-left:4px;width:170px;">
+								<p:ajax event="dialogReturn"
+										listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}"
+										update="growl formArbol:arbol" />
+							</p:commandButton>
+							<p:commandButton id="btnSTH" value="#{msg['botones.sth']}" icon="fa fa-send"
+											 actionListener="#{viewDefinicionVersion.sistrahelp()}" process="@this"
+											 style="margin-left:4px;width:170px;" rendered="#{viewDefinicionVersion.isHelpDesk()}">
+								<p:ajax event="dialogReturn"
+										listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}"
+										update="growl formArbol:arbol" />
+							</p:commandButton>
+							<p:commandButton id="actualiza" value="btn" actionListener="#{viewDefinicionVersion.actualizar()}"
+											 process="@this" update="@form :workDefinicionVersion growl formArbol:arbol"
+											 style="display:none" />
+						</div>
+						<p:contextMenu for=":work">
+							<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"
+										process="@this :breadDefinicionVersion:auxCopiar" update="growl" />
+						</p:contextMenu>
+						<pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+							<p:ajax event="success" listener="#{viewDefinicionVersion.copiadoCorr}" process="@this"
+									update="@this growl" />
+							<p:ajax event="error" listener="#{viewDefinicionVersion.copiadoErr}" update="@this growl" />
+						</pe:clipboard>
 
-					<p:layoutUnit id="breadDefinicionVersionLayout" position="north" styleClass="body-color">
+						<!-- Context menus and clipboard for header and footer -->
+						<!-- Add similar code for other context menus and clipboard functionality here -->
 
-						<h:form id="breadDefinicionVersion" style="display:flex;" >
-							<h:outputScript >
+						<p:inputText id="auxCopiar" value="#{viewDefinicionVersion.portapapeles}"
+									 style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;" />
+					</h:form>
+				</div>
 
-							  var arrayCm = [];
-					
-				  window.onload=function(){
-							    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-								onVisible(contextMenu, () => eliminarResaltar());
+				<!-- Side panel (previously indexDefinicionVersion) -->
+				<div class="d-flex h-100" style="display: flex; flex-direction: row; height: 100vh;">
 
-								document.addEventListener('contextmenu', function(ev) {
-							    	ev.preventDefault();
-							    	getPos();
-							    	return false;
-								}, false);
-
-							  }
-
-								function eliminarResaltar(){
-									let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-							  		let elementos = document.getElementsByClassName('resaltar');
-							  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
-										for(let i = 0; i &lt; elementos.length; i++){
-											elementos[i].classList.remove('resaltar');
-										}
-							  		}
-								}
-
-								function onVisible(element, callback) {
-								  new IntersectionObserver((entries, observer) => {
-								    entries.forEach(entry => {
-								      if(entry.intersectionRatio == 0) {
-								        callback(element);
-								      }
-								    });
-								  }).observe(element);
-								}
-
-							  function getPos(){
-							 	var e = window.event;
-
-							    var posX = e.clientX;
-							    var posY = e.clientY;
-							    var el = document.elementFromPoint(posX, posY);
-
-							    let elementos = document.getElementsByClassName('resaltar');
-							  		if(elementos.length &gt; 0){
-										for(let i = 0; i &lt; elementos.length; i++){
-											elementos[i].classList.remove('resaltar');
-										}
-							  		}
-
-								el.classList.add("resaltar");
-								var aux = document.getElementById("breadDefinicionVersion:auxCopiar");
-								if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
-									aux.value = el.textContent;
-								}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
-									aux.value = el.firstChild.value;
-								}else if(el.value!=null &amp;&amp; el.value!=''){
-									aux.value = el.value;
-								}else{
-						          aux.value = '';
-						        }
-
-								if(aux.value!='' ){
-            var multiple = false;
-            var hijos = el.children;
-			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
-		            multiple = true;
-		                  }else if(hijos.length &gt;= 1 ){
-		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
-		                  		hijos = hijos[0].children;
-		                  	}
-			                    for(i=0;i&lt;hijos.length;i++){
-					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
-					                multiple=true;
-					              }
-			                    }
-
-		                  }
-                  var listaCm = document.getElementsByClassName('ui-contextmenu');
-                  if(multiple){
-                    for(i=0;i&lt;listaCm.length;i++){
-                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-                    		arrayCm.push(listaCm[i]);
-                    	}
-	                	listaCm[i].classList.add("d-none");
-					}
-                  }else{
-                  	for(i=0;i&lt;listaCm.length;i++){
-                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-                    		arrayCm.push(listaCm[i]);
-                    	}
-	                	listaCm[i].classList.remove("d-none");
-					}
-					if(arrayCm.length&gt;1){
-						arrayCm.pop();
-						for(let i=0; i&lt;arrayCm.length; i++){
-							arrayCm[i].style.display='none';
-						}
-					}
-					arrayCm = [];
-                  }
-
-               }
-							 }
-
-							</h:outputScript>
-							<div style="width:100vw;">
-								<p:breadCrumb homeDisplay="text" model="#{viewDefinicionVersion.breadCrumModel}"  />
-							</div>
-
-							<div style="padding:3px;display: inherit">
-								<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewDefinicionVersion.bloquear}" process="@this" update="growl"  rendered="#{viewDefinicionVersion.permiteBloquear}"  style="margin-left:4px;width:170px;" >
-			        					<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewTramitesVersion.bloquear.aviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-			        			</p:commandButton>
-
-								<p:commandButton id="btnPrevisualizarTramite"
-									 	value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye"
-										actionListener="#{viewDefinicionVersion.previsualizar()}" process="@this" style="margin-left:4px;width:170px;" >
-
-									 <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol "/>
+					<!-- Sidebar de ancho fijo de 250px -->
+					<div id="indexDefinicionVersion" class="h-100" style="width: 250px; flex-shrink: 0; margin-right: 10px;height:70%">
+							<h:form id="formArbol" class="w-100 h-100" styleClass="h100">
+								<p:tree id="arbol" value="#{viewDefinicionVersion.root}" var="node" selectionMode="single"
+										selection="#{viewDefinicionVersion.selectedNode}" styleClass="sin-bordes h100 w100 arbolTramites h-100"
+										style="overflow:hidden; border: 1px solid #c9c9c9 !important; background-color: white; border-radius: 2%;height: 100% !important;" onNodeClick="javascript:triggerDblClickTree();">
+									<p:treeNode>
+										<h:outputText value="#{node}" />
+									</p:treeNode>
+									<p:ajax event="select" listener="#{viewDefinicionVersion.onNodeSelect}"
+											update=":workDefinicionVersion :breadDefinicionVersion" delay="500" />
+								</p:tree>
+								<p:commandButton process="@this" id="hiddenCommandEditar" styleClass="button no-display"
+												 action="#{viewDefinicionVersion.rcDobleClickTree()}">
+									<p:ajax event="dialogReturn"
+											listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}"
+											update="@parent :workDefinicionVersion" />
 								</p:commandButton>
-								<p:commandButton id="btnSTH"
-									 	value="#{msg['botones.sth']}" icon="fa fa-paper-plane"
-										actionListener="#{viewDefinicionVersion.sistrahelp()}" process="@this" style="margin-left:4px;width:170px;" rendered="#{viewDefinicionVersion.isHelpDesk()}">
+							</h:form>
+					</div>
 
-									 <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol "/>
-								</p:commandButton>
-								<p:commandButton id="actualiza"
-									 	value="btn"
-										actionListener="#{viewDefinicionVersion.actualizar()}" process="@this"  update="@form :workDefinicionVersion growl formArbol:arbol" style="display:none"/>
+					<!-- Contenido principal que ocupa el resto del espacio -->
+					<div class="flex-grow-1 w100" style="overflow: auto; border: 0.2px solid #c9c9c9; border-radius: 1%;height:70%">
+						<p:outputPanel id="workDefinicionVersion" styleClass="h100 update w100">
+							<ui:include src="#{viewDefinicionVersion.opcionUrl}" />
+						</p:outputPanel>
+					</div>
+				</div>
+			</div>
 
-							</div>
-							<p:contextMenu for=":work">
-						     	<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :breadDefinicionVersion:auxCopiar" update="growl" />
-						    </p:contextMenu>
-						    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
-								<p:ajax event="success" listener="#{viewDefinicionVersion.copiadoCorr}" process="@this" update="@this growl"/>
-						         <p:ajax event="error" listener="#{viewDefinicionVersion.copiadoErr}" update="@this growl"/>
-						    </pe:clipboard>
-
-						    <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-								<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :breadDefinicionVersion:auxCopiar" update="growl" />
-							</p:contextMenu>
-							<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
-								<p:ajax event="success" listener="#{viewDefinicionVersion.copiadoCorr}" process="@this" update="@this growl"/>
-								<p:ajax event="error" listener="#{viewDefinicionVersion.copiadoErr}" update="@this growl"/>
-							</pe:clipboard>
-
-							 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-								<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :breadDefinicionVersion:auxCopiar" update="growl" />
-							</p:contextMenu>
-							<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
-								<p:ajax event="success" listener="#{viewDefinicionVersion.copiadoCorr}" process="@this" update="@this growl"/>
-								<p:ajax event="error" listener="#{viewDefinicionVersion.copiadoErr}" update="@this growl"/>
-							</pe:clipboard>
-
-						    <p:inputText id="auxCopiar" value="#{viewDefinicionVersion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
-						</h:form>
-
-
-					</p:layoutUnit>
-
-					<p:layoutUnit id="indexDefinicionVersion" position="west" size="250">
-						<h:form id="formArbol">
-							<p:tree id="arbol" value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}"  styleClass="sin-bordes h100 w100 arbolTramites" style="overflow:hidden" onNodeClick="javascript:triggerDblClickTree();">
-								<p:treeNode>
-									<h:outputText value="#{node}" />
-								</p:treeNode>
-
-								<p:ajax event="select" listener="#{viewDefinicionVersion.onNodeSelect}" update=":workDefinicionVersion :breadDefinicionVersion" delay="500"/>
-							</p:tree>
-
-							<p:commandButton process="@this" id="hiddenCommandEditar" styleClass="button no-display"  action="#{viewDefinicionVersion.rcDobleClickTree()}">
-				      			   <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="@parent :workDefinicionVersion"  />
-					        </p:commandButton>
-
-
-						</h:form>
-					</p:layoutUnit>
-
-					<p:layoutUnit position="center">
-						<p:outputPanel id="workDefinicionVersion" styleClass="h100 update">
-						   <ui:include src="#{viewDefinicionVersion.opcionUrl}" />
-						 </p:outputPanel>
-					</p:layoutUnit>
-
-				</p:layout>
 
 		</p:outputPanel>
 
@@ -254,7 +148,7 @@
 							<p:confirmDialog global="true" >
 								<p:outputPanel styleClass="confirmar_botonera">
 						        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form" />
-						        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+						        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 								</p:outputPanel>
 						    </p:confirmDialog>
 

@@ -149,9 +149,11 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 
 			DefaultMenuItem item = null;
 
-			item = new DefaultMenuItem(area);
-			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
-			breadCrumb.addElement(item);
+			item = new DefaultMenuItem();
+			item.setAriaLabel(area);
+			item.setValue(area);
+			item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.getElements().add(item);
 
 		} else if (ambito.equals(TypeAmbito.ENTIDAD.toString())) {
 
@@ -481,7 +483,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 			params.put(TypeParametroVentana.ENTIDAD.toString(), UtilJSF.getIdEntidad().toString());
 		}
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 580, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 580, 265);
 	}
 
 	/**

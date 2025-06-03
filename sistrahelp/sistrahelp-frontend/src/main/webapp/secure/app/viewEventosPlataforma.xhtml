@@ -19,6 +19,28 @@
 		<p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeEvento" var="TypeEvento"/>
 
 		<h:form id="form" style="height:91%;">
+
+			<script type="text/javascript">
+				function setHeight(){
+					// Altura de la pantalla
+					var altura = window.innerHeight - 50;
+					// Altura de la tabla
+					var alturaDatatable = altura - 260;
+					// Altura del scrollable body
+					var alturaScrollableBody = alturaDatatable - 57;
+
+					$('#form\\:dataTable').height(alturaDatatable);
+					$('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+				}
+
+				jQuery(document).ready(function() {
+					$(window).resize(function() {
+						setTimeout(function(){  setHeight(); }, 100);
+					});
+
+					setTimeout(function(){  setHeight(); }, 1000);
+				});
+			</script>
 			<h:outputScript>
 
 				var arrayCm = [];
@@ -32,6 +54,9 @@
 			    	getPos();
 			    	return false;
 				}, false);
+				setTimeout(() => {
+					$('#form\\:btnBuscar').click();
+				}, 10);
 			  }
 
 				function eliminarResaltar(){
@@ -118,14 +143,14 @@
                     	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.add("d-none");
+						listaCm[i].classList.add("d-none");
 					}
                   }else{
                   	for(i=0;i&lt;listaCm.length;i++){
                   		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.remove("d-none");
+						listaCm[i].classList.remove("d-none");
 					}
 					if(arrayCm.length&gt;1){
 						arrayCm.pop();
@@ -175,9 +200,8 @@
 
 
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro" style="border-color:#f0f0f0;" columnClasses="w50,w25,w25" styleClass="noBackground w100 h10">
-				<p:row style="border-color:#f0f0f0">
-	        	<p:column styleClass="va-middle w55" >
+        	<p:panelGrid id="panelFiltro" columnClasses="w50,w25,w25" styleClass="noBackground w100 h10">
+	        	<p:column styleClass="noPadding columna-filtros" >
 	        		<p:outputLabel value="#{msg['viewEventosPlataforma.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
 	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewEventosPlataforma.filtroFechaInicio']}:" styleClass="padding-right-4"/>
@@ -187,7 +211,7 @@
 	        		<p:calendar id="filtroFechaFin" value="#{viewEventosPlataforma.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 	        	</p:column>
 
-	        	<p:column columns="2" styleClass="w25" columnClasses="w31,w69" style="border-color:#f0f0f0" >
+	        	<p:column columns="2" styleClass="noPadding columna-filtros" columnClasses="w31,w69" style="border-color:#f0f0f0" >
 	        		<p:outputLabel for="filtroEvento" value="#{msg['viewEventosPlataforma.filtroEvento']}:" styleClass="padding-right-4"/>
 
 					<p:selectOneMenu id="filtroEvento" value="#{viewEventosPlataforma.filtros.evento}">
@@ -199,13 +223,12 @@
 
 	        	</p:column>
 
-				<p:column>
-	        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
-          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewEventosPlataforma.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
-          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewEventosPlataforma.ayuda}"/>
-				</h:panelGrid>
+				<p:column  styleClass=" noPadding columna-filtros-botones ">
+					<h:panelGrid id="panelBotones" columns="2" styleClass="table-rightaligned">
+						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewEventosPlataforma.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewEventosPlataforma.ayuda}"/>
+					</h:panelGrid>
 				</p:column>
-				</p:row>
           	</p:panelGrid>
 
 
@@ -223,11 +246,11 @@
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false"/>
-				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 				<p:ajax event="page" update=":form:dataTable"/>
 
 				<!-- Columnas -->
-				 <p:column headerText="#{msg['viewEventosPlataforma.headEvento']}" style="width:8% !important;" sortBy="#{dt.tipoEvento}">
+				<p:column headerText="#{msg['viewEventosPlataforma.headEvento']}" style="width:8% !important;" sortBy="#{dt.tipoEvento}">
 			        <h:outputText value="#{msg['typeEvento.' += dt.tipoEvento]}" />
 			    </p:column>
 			    <p:column headerText="#{msg['viewEventosPlataforma.headFecha']}" style="width:12% !important;" styleClass="grid-center" sortBy="#{dt.fecha}">
@@ -250,7 +273,7 @@
 		        	$('#form\\:btnEditarHidden').click();
 		      }
 		    </h:outputScript>
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEventosPlataforma.rcDobleClick()}" process="@this" update=":form:growl" style="display:none"/>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewEventosPlataforma.rcDobleClick()}" process="@this" update=":form:growl" style="display:none"/>
 		    <h:outputScript >
 		      document.getElementsByName("form:dataTable_rppDD")[0].addEventListener("change", refrescarPaginacion);
 		      function refrescarPaginacion() {

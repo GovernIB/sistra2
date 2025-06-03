@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.caib.sistra2</groupId>
 	<artifactId>sistra2</artifactId>
-	<version>1.7.5</version>
+	<version>1.8.0</version>
 	<packaging>pom</packaging>
 	<name>Sistra2</name>
 
 	<properties>
 		<!-- Version aplicacion y propiedades -->
-		<sistra2.version>1.7.5</sistra2.version>
+		<sistra2.version>1.8.0</sistra2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<schema.generate.databaseProductName>Oracle</schema.generate.databaseProductName>
@@ -40,9 +40,10 @@
 		<validation-api.version>1.1.0.Final</validation-api.version>
 		<jsf2.version>2.2.15</jsf2.version>
 		<jstl.version>1.2</jstl.version>
-		<primefaces.version>6.2</primefaces.version>
-		<primefacesExtensions.version>6.1.1</primefacesExtensions.version>
+		<primefaces.version>14.0.10</primefaces.version>
+		<primefacesExtensions.version>14.0.10</primefacesExtensions.version>
 		<primefaces.allThemes.version>1.1.0</primefaces.allThemes.version>
+		<primefacesResourcesCodemirror.version>6.1.0</primefacesResourcesCodemirror.version>
 		<jersey.version>2.27</jersey.version>
 		<!-- Da error en listas la version que viene con jersey 2.8.4 (con 2.9.4
 			devuelve list bien) -->
@@ -71,6 +72,7 @@
 		<plugins-ib.version>2.0.0</plugins-ib.version>
 		<plugins-ib-validatesignature.version>2.1.0-SNAPSHOT</plugins-ib-validatesignature.version>
 		<plugins-ib-validatecertificate.version>2.1.1-SNAPSHOT</plugins-ib-validatecertificate.version>
+
 		<xmlbeans.version>2.6.0</xmlbeans.version>
 		<loginib.version>2.5.0</loginib.version>
 		<paymentib.version>1.2.0</paymentib.version>
@@ -92,6 +94,8 @@
 		<jersey-http.version>1.19.4</jersey-http.version>
 		<aopalliance.version>1.0</aopalliance.version>
 		<libphonenumber.version>8.13.40</libphonenumber.version>
+
+
 	</properties>
 
 	<!-- Repositorio GOIB: https://github.com/GovernIB/maven/tree/gh-pages -->
@@ -336,7 +340,16 @@
 			<id>github-governib-maven-repos</id>
 			<name>GitHub GovernIB Maven Repository</name>
 			<url>https://governib.github.io/maven/maven/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
 		</repository>
+
 	</distributionManagement>
 
 </project>

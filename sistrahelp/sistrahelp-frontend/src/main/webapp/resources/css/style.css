@@ -752,3 +752,106 @@ textarea[readonly="readonly"] {
 .fondoAzul .ui-state-active {
     background-color: #007fff !important;
 }
+
+.opcionesFull {
+    flex-grow: 1;
+}
+.opcionesFull div {
+    display: flex; justify-content: flex-end;
+}
+
+
+.claseTitulo {
+    color: white;                    /* Texto blanco */
+    background-color: #726F6B;       /* Fondo gris oscuro */
+    padding: 10px 20px;               /* Espacio alrededor del texto */
+    border-radius: 15px;              /* Bordes redondeados */
+    text-align: center;               /* AlineaciÃƒÆ’Ã‚Â³n centrada del texto dentro del h2 */
+    margin: 5px !important;
+}
+.ui-icon-triangle-1-s {
+    -webkit-filter: brightness(0) invert(1); /* Invertir colores para que el icono sea blanco */
+    filter: brightness(0) invert(1); /* Para navegadores compatibles */
+}
+
+/*.ui-menu .ui-menuitem-text {
+    color: white;
+}*/
+
+.panelCabecera div{
+    background-color: #CC073C;
+}
+.pi-user, .pi-id-card {
+    -webkit-filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
+    padding-right: 4px;
+}
+
+
+.colorNegro span{
+    color: #000  !important;
+}
+
+/** PRIMEFACES 14 **/
+#work h2 {
+    background-color: #726f6b;
+    color: #ffffff;
+    text-align: center;
+    font-size: 20pt;
+    padding: 3px;
+    margin: 0;
+    border-radius: 10px;
+}
+
+[id$="headerLateralDer_content"] {
+    display: block !important;
+}
+
+[id$="menuOpciones_menu"] .ui-menuitem-text {
+    color: black !important;
+}
+
+[id$="menuOpciones_button"] .ui-icon-triangle-1-s {
+    -webkit-filter: brightness(1) invert(0) !important; /* Invertir colores para que el icono sea blanco */
+    filter: brightness(1) invert(0) !important; /* Para navegadores compatibles */
+}
+
+[id$="menuOpcionesSuperior"] .ui-menu-child span.ui-menuitem-text {
+    color: black !important;
+}
+/*
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    background: #ededed !important;
+}*/
+#form\:panelFiltro_content {
+    border: 0 !important;
+}
+
+/* Estilos filtros STH*/
+
+.columna-filtros {
+    flex-grow: 1 !important;
+}
+
+.columna-filtros-botones {
+    margin-left: auto !important;
+    flex-grow: 0 !important;
+    text-align: right !important;
+}
+
+.align-content-center {
+    align-content: center !important;
+}
+
+.centrar-celda-tabla {
+    display: flex;
+    justify-content: center;
+}
+
+.d-flex{
+    display:flex;
+}
+
+.flex-column{
+    flex-direction: column;
+}

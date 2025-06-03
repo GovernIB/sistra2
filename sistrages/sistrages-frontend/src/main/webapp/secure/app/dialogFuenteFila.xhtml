@@ -34,7 +34,7 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="w25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<c:forEach items="#{dialogFuenteFila.data.datos}" var="dato">
 			  			<p:outputLabel value="#{dato.idCampo}" />

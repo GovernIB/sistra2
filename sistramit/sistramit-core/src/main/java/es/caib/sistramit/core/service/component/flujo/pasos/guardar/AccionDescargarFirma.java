@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.guardar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,7 @@ public final class AccionDescargarFirma implements AccionPaso {
 		final String idDocumento = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "idDocumento", true);
 		final String instanciaStr = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "instancia", false);
 		final int instancia = UtilsFlujo.instanciaStrToInt(instanciaStr);
-		final String firmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", true);
+		final String firmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", false);
 
 		// Buscamos referencia fichero
 		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
@@ -60,10 +61,17 @@ public final class AccionDescargarFirma implements AccionPaso {
 		// Recupera firma asociada al fichero
 		final DocumentoPasoPersistencia docPersistencia = dao.obtenerDocumentoPersistencia(
 				pVariablesFlujo.getIdSesionTramitacion(), dd.getIdPaso(), idDocumento, instancia);
-		final FirmaDocumentoPersistencia fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmar.getId(), firmante);
+		FirmaDocumentoPersistencia fdp = null;
+		if (firmante != null) {
+			fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmar.getId(), firmante);
+		} else {
+			if (docPersistencia.obtenerFirmasFicheros().size() > 0) {
+				fdp = docPersistencia.obtenerFirmasFicheros().get(0);
+			}
+		}
 		if (fdp == null) {
 			throw new AccionPasoNoPermitidaException("No existeix firma document registre amb id: " + idDocumento + " - "
-					+ instanciaStr + " per signant " + firmante);
+					+ instanciaStr + (StringUtils.isNotBlank(firmante)?" per signant " + firmante : ""));
 		}
 
 		// Recuperamos datos firma

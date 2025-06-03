@@ -1,17 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import es.caib.sistrages.core.api.model.Entidad;
 
@@ -112,6 +101,10 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_CNTFOR", nullable = false, precision = 1, scale = 0)
 	private boolean contactoFormularioIncidencias;
 
+	/** Habilitado contacto formulario incidencias */
+	@Column(name = "ENT_AYCTFORM", nullable = false, precision = 1, scale = 0)
+	private boolean ayudaContextualFormulario;
+
 	/** Teléfono contacto */
 	@Column(name = "ENT_TELEFO", length = 10)
 	private String telefono;
@@ -132,6 +125,9 @@ public class JEntidad implements IModelApi {
 	/** Dias preregistro */
 	@Column(name = "ENT_PRGDIA")
 	private Integer diasPreregistro;
+
+	@Column(name = "ENT_MODFUNCHAB", nullable = false, precision = 1, scale = 0)
+	private boolean modoFuncionarioHabilitado;
 
 	/** Texto respecto LOPD. **/
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
@@ -479,6 +475,20 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
+	 * @return the ayudaContextualFormulario
+	 */
+	public boolean isAyudaContextualFormulario() {
+		return ayudaContextualFormulario;
+	}
+
+	/**
+	 * @param ayudaContextualFormulario the ayudaContextualFormulario to set
+	 */
+	public void setAyudaContextualFormulario(boolean ayudaContextualFormulario) {
+		this.ayudaContextualFormulario = ayudaContextualFormulario;
+	}
+
+	/**
 	 * @return the telefono
 	 */
 	public String getTelefono() {
@@ -532,6 +542,14 @@ public class JEntidad implements IModelApi {
 	 */
 	public void setDiasPreregistro(final Integer diasPreregistro) {
 		this.diasPreregistro = diasPreregistro;
+	}
+
+	public boolean isModoFuncionarioHabilitado() {
+		return modoFuncionarioHabilitado;
+	}
+
+	public void setModoFuncionarioHabilitado(boolean modoFuncionarioHabilitado) {
+		this.modoFuncionarioHabilitado = modoFuncionarioHabilitado;
 	}
 
 	/**
@@ -792,6 +810,7 @@ public class JEntidad implements IModelApi {
 		}
 		entidad.setEmailHabilitado(contactoEmail);
 		entidad.setFormularioIncidenciasHabilitado(contactoFormularioIncidencias);
+		entidad.setAyudaContextFormHabilitada(ayudaContextualFormulario);
 		if (this.logoAsistenteTramitacion != null) {
 			entidad.setLogoAsistente(this.logoAsistenteTramitacion.toModel());
 		}
@@ -819,6 +838,8 @@ public class JEntidad implements IModelApi {
 			entidad.setLopd(this.lopd.toModel());
 		}
 		entidad.setDiasPreregistro(this.diasPreregistro);
+
+		entidad.setModoFuncionarioHabilitado(modoFuncionarioHabilitado);
 
 		if (this.mapaWeb != null) {
 			entidad.setMapaWeb(this.mapaWeb.toModel());

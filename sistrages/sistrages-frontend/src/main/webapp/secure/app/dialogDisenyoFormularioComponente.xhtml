@@ -8,6 +8,10 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAlineacionTexto" var="TypeAlineacionTexto"/>
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFormulario" var="TypeScriptFormulario" />
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 <h:body>
 
 	<h:form id="formDisenyoTextbox" styleClass="h100">
@@ -40,10 +44,10 @@
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column>
 	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" readonly="true" styleClass="margin-right-10" onblur="this.value = this.value.trim();"/>
-	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto}" process="@this" styleClass="va-top" rendered="#{!dialogDisenyoFormulario.consulta and !dialogDisenyoFormulario.desactivarAplicarCambios}">
+	         		<p:commandButton id="btnEtiqueta" icon="fa fa-globe" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto}" process="@this" styleClass="va-top" rendered="#{!dialogDisenyoFormulario.consulta and !dialogDisenyoFormulario.desactivarAplicarCambios}">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
 	        		</p:commandButton>
-	        		<p:commandButton id="btnEtiqueta2" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.consultarTraduccionesTexto}" process="@this" styleClass="va-top" rendered="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+	        		<p:commandButton id="btnEtiqueta2" icon="fa fa-globe" actionListener="#{dialogDisenyoFormulario.consultarTraduccionesTexto}" process="@this" styleClass="va-top" rendered="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
 	        		</p:commandButton>
 	         	</h:column>
@@ -60,10 +64,10 @@
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.ayudaOnline']}" /></h:column>
 	         	<h:column>
 	         		<p:inputText id="ayuda" value="#{dialogDisenyoFormulario.objetoFormularioEdit.ayuda.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" readonly="true" styleClass="margin-right-10" onblur="this.value = this.value.trim();"/>
-	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda}" process="@this" styleClass="va-top" rendered="#{!dialogDisenyoFormulario.consulta and !dialogDisenyoFormulario.desactivarAplicarCambios}">
+	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-globe" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda}" process="@this" styleClass="va-top" rendered="#{!dialogDisenyoFormulario.consulta and !dialogDisenyoFormulario.desactivarAplicarCambios}">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesAyuda}" update="ayuda" />
 	        		</p:commandButton>
-	        		<p:commandButton id="btnAjudaOnline2" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.consultarTraduccionesAyuda}" process="@this" styleClass="va-top"  rendered="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+	        		<p:commandButton id="btnAjudaOnline2" icon="fa fa-globe" actionListener="#{dialogDisenyoFormulario.consultarTraduccionesAyuda}" process="@this" styleClass="va-top"  rendered="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesAyuda}" update="ayuda" />
 	        		</p:commandButton>
 				</h:column>

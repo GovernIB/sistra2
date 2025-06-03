@@ -11,6 +11,10 @@ body{
 	background-image: url(#{resource["primefaces-custom:images/seccionReutilizableIcono.png"]}) !important;
 	background-size: 16px 16px !important;
 }
+.listaElementosImg{
+    background-image: url(#{resource["primefaces-custom:images/listaElementosIcono.png"]}) !important;
+    background-size: 16px 16px !important;
+}
 
 /****  cabecera *****/
 /** Para el growl . **/
@@ -43,12 +47,28 @@ body{
 /* ajustamos los colores del menu para que sean blanco el texto y los iconos*/
 #header .ui-menu-parent > a > span,.titulo-color {font-weight: bold;color: #ffffff;}
 
+
+
+.ui-menu-parent .ui-submenu-link.ui-state-hover {color: black !important;}
+
+.ui-menu-parent .ui-submenu-link .ui-icon.fa {color: white;}
+
+/* ajustes fa icon
+#elementID {
+    color: #fff;
+    text-shadow: 1px 1px 1px #ccc;
+    font-size: 1.5em;
+}
+*/
+
+
 .titulo-color {
 	font-size:22pt;
 	white-space: nowrap;
 }
 
 #header .ui-menu-parent .ui-submenu-link .ui-icon {background-image: url(#{resource["primefaces-custom:images/ui-icons_ffffff_256x240.png"]});}
+
 
 /* quitamos los iconos de los submenus del menu de la cabecera*/
 #header .ui-menu-parent .ui-menu-child .ui-icon {display:none !important;}
@@ -316,6 +336,13 @@ body{
 	 width: 150px !important;
 }
 
+.wpx180{
+    width: 180px !important;
+}
+.hijowpx180 ul{
+    width: 180px !important;
+}
+
 .wpx200{
 	 width: 200px !important;
 }
@@ -569,7 +596,10 @@ label.ui-state-disabled {
 .ui-datatable-odd {
   background-color: #F2F5F9;
 }
-
+/** fila par  en otro color**/
+.ui-datatable-even {
+    background-color: #FFF;
+}
 /** eliminar cabecera tabla**/
 .hide-table-header thead {
     display: none;
@@ -619,7 +649,7 @@ label.ui-state-disabled {
 	height: 500px !important;
 }
 
-.scriptRelleno span.fa-bolt{
+.scriptRelleno span.pi-bolt{
 	color:#007fff;
 }
 
@@ -768,3 +798,207 @@ textarea[readonly="readonly"] {
 	padding:1em;
 }
 
+
+.opcionesFull {
+    flex-grow: 1;
+}
+.opcionesFull div {
+    display: flex; justify-content: flex-end;
+}
+
+
+.claseTitulo {
+    color: white;                    /* Texto blanco */
+    background-color: #726F6B;       /* Fondo gris oscuro */
+    padding: 10px 20px;               /* Espacio alrededor del texto */
+    border-radius: 15px;              /* Bordes redondeados */
+    text-align: center;               /* AlineaciÃƒÂ³n centrada del texto dentro del h2 */
+    margin: 5px !important;
+}
+
+/*.ui-menu .ui-menuitem-text {
+    color: white;
+}*/
+.panelCabecera div{
+    background-color: #CC073C;
+}
+.pi-user, .pi-id-card {
+    padding-right: 4px;
+}
+
+
+.colorNegro span{
+    color: #000  !important;
+}
+
+/** PRIMEFACES 14 **/
+#work h2 {
+    background-color: #726f6b;
+    color: #ffffff;
+    text-align: center;
+    font-size: 16pt;
+    padding: 3px;
+    margin: 0 0 10px 0;
+    border-radius: 10px;
+}
+
+[id$="headerLateralDer_content"] {
+    display: block !important;
+}
+
+/*
+[id$="menuOpciones_menu"] .ui-menuitem-text {
+    color: black !important;
+}
+
+[id$="menuOpciones_button"] .ui-icon-triangle-1-s {
+    -webkit-filter: brightness(1) invert(0) !important;
+    filter: brightness(1) invert(0) !important;
+}
+
+[id$="menuOpcionesSuperior"] .ui-menu-child span.ui-menuitem-text {
+    color: black !important;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    background: #ededed !important;
+}
+#form\:panelFiltro_content {
+    border: 0 !important;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    border: 1px solid #777620;
+} */
+
+.colorBlanco [aria-expanded] .ui-menuitem-text {
+    color: white;
+    font-weight: bold;
+}
+
+.colorBlanco {
+    color: white;
+}
+
+
+.colorBlanco [aria-expanded].ui-state-hover .ui-menuitem-text{
+    color: black;
+    font-weight: bold;
+}
+
+
+.colorBlanco [aria-expanded].ui-state-hover .ui-menuitem-icon{
+    color: black;
+    font-weight: bold;
+}
+
+.colorBlanco [aria-expanded].ui-state-hover .ui-icon-triangle-1-s {
+    color: black;
+    font-weight: bold;
+    filter: brightness(0) invert(0) !important;
+}
+
+
+.colorBlanco [aria-expanded] .ui-icon-triangle-1-s {
+    -webkit-filter: brightness(0) invert(1) !important; /* Invertir colores para que el icono sea blanco */
+    filter: brightness(0) invert(1) !important; /* Para navegadores compatibles */
+}
+.colorBlanco [aria-expanded] .pi {
+    -webkit-filter: brightness(0) invert(1) !important; /* Invertir colores para que el icono sea blanco */
+    filter: brightness(0) invert(1) !important; /* Para navegadores compatibles */
+}
+
+.invertir {
+    -webkit-filter: brightness(0) invert(1) !important; /* Invertir colores para que el icono sea blanco */
+    filter: brightness(0) invert(1) !important; /* Para navegadores compatibles */
+}
+/*
+.ui-icon-triangle-1-s {
+    -webkit-filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
+}*/
+
+/** LA MOLLA DE PA SE PIERDE EN P14, CON ESTE ESTILO ESTÁ A OTRO NIVEL **/
+ol.ui-breadcrumb-items li {
+    display: inline;
+    position: relative;
+    padding-left: 25px; /* Espacio total para centrar el icono horizontalmente */
+}
+ol.ui-breadcrumb-items li::before {
+    content: "\e901"; /* Código para el icono 'pi-angle-right' */
+    font-family: 'primeicons';
+    position: absolute;
+    top: 1px;
+    left: 8px; /* Ajusta este valor para centrar horizontalmente el icono */
+    color: #666; /* Cambia el color del icono */
+}
+ol.ui-breadcrumb-items li:first-child {
+    padding-left: 7px;
+}
+ol.ui-breadcrumb-items li:first-child::before {
+    content: ''; /* Ocultar el icono en el primer elemento */
+}
+.ui-divider.ui-divider-solid.ui-divider-horizontal::before {
+    border: 1px solid #c5c5c5;
+}
+
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td, .ui-datatable tfoot th {
+    border-color: #CCC !important;
+}
+.ui-panelgrid-content {
+    border: none;
+    background: none;
+}
+
+.ui-selectonemenu {
+    min-height: 24px;
+    display: inline-block;
+    position: relative;
+    width: auto;
+    cursor: pointer;
+    padding-right: 22px;
+    vertical-align: top;
+}
+
+
+.d-flex{
+    display:flex;
+}
+.flex-column{
+    flex-direction: column;
+}
+.tableConEspacio{
+    border-spacing: 0 12px;
+}
+
+.tableConEspacio-3{
+    border-spacing: 0 3px;
+}
+
+.labelDisabled{
+    display: inline-block;
+    width: 120%;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: inherit;
+    color: #666;
+    cursor: not-allowed;
+    white-space: nowrap;
+}
+
+.btn-no-line-break{
+    white-space: nowrap;
+}
+
+/*.ui-datatable-scrollable-body {*/
+/*    overflow: auto;*/
+/*    height: 100% !important;*/
+/*}*/
+
+.ui-menuitem > .ui-state-active, .ui-menuitem > .ui-widget-content .ui-state-active, .ui-menuitem > .ui-widget-header .ui-state-active {
+    background: none !important;
+    border: none !important;
+    color: inherit !important;
+}

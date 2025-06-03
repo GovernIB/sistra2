@@ -11,6 +11,9 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogArea.header']}"/></title>
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -140,21 +143,19 @@
 					 }
 
 					</h:outputScript>
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
-
-
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" layout="grid"  columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogArea.codigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogArea.data.identificador}" required="true" size="40" maxlength="20" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
+				 	<p:inputText id="codigo" value="#{dialogArea.data.identificador}" required="true" styleClass="w90" maxlength="20" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 				   		 <p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				   		 <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogArea.descripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogArea.data.descripcion}" onblur="this.value = this.value.trim();" readonly="#{dialogArea.consulta}" required="true" size="40" maxlength="255" />
+				 	<p:inputText id="descripcion" value="#{dialogArea.data.descripcion}" onblur="this.value = this.value.trim();" readonly="#{dialogArea.consulta}" required="true" styleClass="w90" maxlength="255" />
 
 					<p:outputLabel for="email" value="#{msg['dialogArea.email']}" />
-				 	<p:inputText id="email" value="#{dialogArea.data.email}" readonly="#{dialogArea.consulta}" size="40" maxlength="255" onblur="this.value = this.value.trim();"/>
+				 	<p:inputText id="email" value="#{dialogArea.data.email}" readonly="#{dialogArea.consulta}" styleClass="w90" maxlength="255" onblur="this.value = this.value.trim();"/>
 
 				 	<p:outputLabel for="aviso" value=" " />
 				 	<h:outputText id="aviso" value="#{msg['dialogArea.aviso']}" />

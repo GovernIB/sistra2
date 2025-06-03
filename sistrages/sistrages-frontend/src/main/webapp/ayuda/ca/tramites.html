@@ -53,9 +53,9 @@
 		<li><span class="nombreCampo">Descripció:</span> text descriptiu per a la versió</li>
 		<li><span class="nombreCampo">Flux:</span> text descriptiu de l'objecte del tràmit</li>
 		<li><span class="nombreCampo">Activa:</span> casella de verificació que indica si el tràmit compta amb versions actives</li>
-		<li><span class="nombreCampo">Release:</span> codi que identifica unívocament un conjunt de canvis realitzats damunt una versió</li>
+		<li><span class="nombreCampo">Release:</span> codi que identifica unívocament un conjunt de canvis realitzats damunt una versió. La release s'incrementa quan es desbloqueja la versió o si se substitueix una versió. Si es crea una versió en importar-la, duplicar-la o processar quadern de càrrega, la release és 1. Això fa que es puguin tenir dos tràmits amb versió i/o release diferents, però amb la mateixa empremta</li>
 		<li><span class="nombreCampo">Bloquejat per:</span> indica el codi d'usuari que té bloquejada per a edició la versió</li>
-		<li><span class="nombreCampo">Empremta:</span> codi aleatori que es genera cada vegada que l'usuari desbloqueja una versió</li>
+		<li><span class="nombreCampo">Empremta:</span> codi aleatori que es genera cada vegada que l'usuari desbloqueja una versió i que identifica unívocament si una versió/release és idèntica a una altra.</li>
 	</ul>
 </p>
 <h2 class="stgH2">OPERATIVA VERSIÓ</h2>

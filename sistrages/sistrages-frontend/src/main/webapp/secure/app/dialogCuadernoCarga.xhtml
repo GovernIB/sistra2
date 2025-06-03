@@ -16,10 +16,18 @@
 
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
    <p:ajaxStatus id="startAjaxDialog" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"/>
    <ui:include src="../common/popups.xhtml" />
+	<h:outputStylesheet library="css">
+		#formTramite\:panelInfo .pi{
+			font-size: 1.4rem;
+		}
+	</h:outputStylesheet>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
@@ -32,14 +40,25 @@
 
 			<p:growl id="growlDialogImportar" widgetVar="growlDialogImportar"	life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 			<p:outputPanel id="panelUpload" styleClass="padding-right-8 padding-left-8" rendered="#{!dialogCuadernoCarga.mostrarPanelInfo}">
-				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogCuadernoCarga.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
-					update="formTramite growlDialogImportar panelUpload panelInfo botonImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
+
+				<p:fileUpload id="fichero" mode="advanced"
+							  value="#{dialogCuadernoCarga.file}"
+							  label="#{msg['botones.explorar']}"
+							  uploadLabel="#{msg['botones.anexar']}"
+							  cancelLabel="#{msg['botones.cancelar']}"
+							  update="formTramite growlDialogImportar panelUpload panelInfo botonImportar"
+							  fileLimit="1"
+							  accept=".zip"
+							  multiple="false"
+							  auto="true"
+							  fileLimitMessage="#{msg['error.ficheros.limite']}" />
+
 			</p:outputPanel>
 
 			<p:outputPanel id="panelInfo" rendered="#{dialogCuadernoCarga.mostrarPanelInfo}" >
 
 				<h3 style="margin-left:10px;margin-bottom:0px">#{msg['dialogCuadernoCarga.headerTramiteVersion']}</h3>
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="imporTramitColumnaVT w10, w20, w50,grid-center w10 padding-right-18, grid-left w10" columns = "5" cellpadding = "3" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="imporTramitColumnaVT w10, w20, w50,grid-center w10 padding-right-18, grid-left w10" columns = "5" cellpadding = "3" cellspacing = "0"  width="100%">
 
 						<p:outputLabel value="" />
 						<p:outputLabel value="" />
@@ -138,7 +157,7 @@
 					<p class="pTituloCabecera">
 						<p:outputLabel value="#{msg['dialogCuadernoCarga.refrescarCache']}"  styleClass="subTituloCabecera"  />
 					</p>
-					<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-4 w15,padding-right-18 w10, w80" columns = "3" headerClass="grid-left" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-4 w15,padding-right-18 w10, w80" columns = "3" headerClass="grid-left" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 
 							<p:outputLabel value="#{msg['dialogCuadernoCarga.refrescarCacheTramite']}" />
 						 	<p:selectBooleanCheckbox value="#{dialogCuadernoCarga.refrescarCacheTramite}" />
@@ -194,7 +213,7 @@
 						<p:outputLabel value="#{msg['dialogCuadernoCarga.dominios']}"  styleClass="subTituloCabecera"  />
 					</p>
 
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogCuadernoCarga.filasDominios}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<h:dataTable rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogCuadernoCarga.filasDominios}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 
 						<h:column headerClass="subTituloTablaImportarIzq">
 							 <f:facet name = "header">
@@ -241,7 +260,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogCuadernoCarga.formateadores']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogCuadernoCarga.filasFormateador}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<h:dataTable rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogCuadernoCarga.filasFormateador}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 						<h:column headerClass="subTituloTablaImportarIzq">
 							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.formateador.identificador']}" /></f:facet>
 	      					#{fila.formateadorFormulario.identificador}
@@ -275,7 +294,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogCuadernoCarga.gestores']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable id="dataTablaGestores" rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" headerClass="grid-left" value="#{dialogCuadernoCarga.filasGestores}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<h:dataTable id="dataTablaGestores" rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" headerClass="grid-left" value="#{dialogCuadernoCarga.filasGestores}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.gestores.identificador']}" /></f:facet>
 		      					#{fila.gestor.identificador}
@@ -317,7 +336,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogTramiteImportar.secciones']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaSecciones" headerClass="grid-left" value="#{dialogCuadernoCarga.filasSecciones}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
+					<h:dataTable rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaSecciones" headerClass="grid-left" value="#{dialogCuadernoCarga.filasSecciones}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.secciones.identificador']}" /></f:facet>
 		      					#{fila.seccion.identificador}

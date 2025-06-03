@@ -710,9 +710,17 @@ $.fn.appSuport = function(options) {
 
 				}
 
+
 				// problemes?
 
 				problemes();
+
+
+				// form, textarea amplaria màxima
+
+				$("#problemaDesc")
+					.appAsisTextareaAmplaria();
+				
 
 			},
 			obri = function() {
@@ -1116,7 +1124,7 @@ $.fn.appSuport = function(options) {
 
 				var problemaDesc_val = $("#problemaDesc").val();
 
-				var esProblemaDescCorrecte = problemaDesc_val.length <= 4000 ? true : false;;
+				var esProblemaDescCorrecte = problemaDesc_val.length <= 4000 ? true : false;
 
 				if (!esProblemaDescCorrecte) {
 
@@ -1344,6 +1352,60 @@ $.fn.appSuport = function(options) {
 	});
 	return this;
 }
+
+
+$.fn.appAsisTextareaAmplaria = function(options) {
+
+	var settings = $.extend({
+			amplaria: false
+		}, options);
+
+	this.each(function(){
+
+		var element = $(this)
+			,amplaria_max = settings.amplaria
+			,revisa = function(e) {
+
+				var textarea_valor_ = element.val()
+                    ,salt_linia = textarea_valor_.match(/(\r\n|\n|\r)/g)
+                    ,salt_linia_size = (salt_linia !== null) ? salt_linia.length : 0
+                    ,textarea_amplaria_ = textarea_valor_.length + salt_linia_size;
+
+				if (textarea_amplaria_ >= amplaria_max) {
+
+					var el_valor = element.val()
+						,el_valor_str = el_valor.substr(0, amplaria_max);
+
+					element
+						.val( el_valor_str );
+					
+					return;
+				}
+
+			}
+			,inicia = function() {
+
+				// revisa amplaria
+
+				amplaria_max = parseInt( element.attr("maxlength"), 10 );
+
+				// events
+
+				element
+					.off('.appAsisTextareaAmplaria')
+					.on('keyup.appAsisTextareaAmplaria,', revisa);
+
+			};
+
+		// inicia
+
+		inicia();
+
+	});
+
+	return this;
+}
+
 
 
 // valida identificador SUPORT

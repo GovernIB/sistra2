@@ -41,6 +41,8 @@ public final class RTramiteFinalizado {
 	private String nombreApellidos;
 	@ApiModelProperty(value = "Número registro")
 	private String numeroRegistro;
+	@ApiModelProperty(value = "Indica si se ha tramitado por Funcionario Habilitado")
+	private boolean tramitadoPorFuncionarioHabilitado;
 
 	public String getIdSesionTramitacion() {
 		return idSesionTramitacion;
@@ -213,6 +215,25 @@ public final class RTramiteFinalizado {
 	 */
 	public void setNumeroRegistro(final String numeroRegistro) {
 		this.numeroRegistro = numeroRegistro;
+	}
+
+	/**
+	 * Método de acceso a tramitadoPorFuncionarioHabilitado.
+	 *
+	 * @return tramitadoPorFuncionarioHabilitado
+	 */
+	public boolean isTramitadoPorFuncionarioHabilitado() {
+		return tramitadoPorFuncionarioHabilitado;
+	}
+
+	/**
+	 * Método para establecer tramitadoPorFuncionarioHabilitado.
+	 *
+	 * @param tramitadoPorFuncionarioHabilitado
+	 *                           tramitadoPorFuncionarioHabilitado a establecer
+	 */
+	public void setTramitadoPorFuncionarioHabilitado(final boolean tramitadoPorFuncionarioHabilitado) {
+		this.tramitadoPorFuncionarioHabilitado = tramitadoPorFuncionarioHabilitado;
 	}
 
 }

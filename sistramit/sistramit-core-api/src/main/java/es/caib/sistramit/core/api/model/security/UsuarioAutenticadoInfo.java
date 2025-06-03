@@ -2,6 +2,8 @@ package es.caib.sistramit.core.api.model.security;
 
 import java.io.Serializable;
 
+import es.caib.sistramit.core.api.model.flujo.FuncionarioHabilitado;
+import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
@@ -65,6 +67,11 @@ public final class UsuarioAutenticadoInfo implements Serializable {
 	 * Representante.
 	 */
 	private UsuarioAutenticadoRepresentante representante;
+
+	/**
+	 * Funcionario habilitado.
+	 */
+	private FuncionarioHabilitado funcionarioHabilitado;
 
 	/**
 	 * Información sesión web.
@@ -208,6 +215,25 @@ public final class UsuarioAutenticadoInfo implements Serializable {
 			res.append(" ").append(this.getApellido2());
 		}
 		return res.toString();
+	}
+
+	/**
+	 * Método de acceso a funcionarioHabilitado.
+	 *
+	 * @return funcionarioHabilitado
+	 */
+	public FuncionarioHabilitado getFuncionarioHabilitado() {
+		return funcionarioHabilitado;
+	}
+
+	/**
+	 * Método para establecer funcionarioHabilitado.
+	 *
+	 * @param funcionarioHabilitado
+	 *                funcionarioHabilitado a establecer
+	 */
+	public void setFuncionarioHabilitado(final FuncionarioHabilitado funcionarioHabilitado) {
+		this.funcionarioHabilitado = funcionarioHabilitado;
 	}
 
 }

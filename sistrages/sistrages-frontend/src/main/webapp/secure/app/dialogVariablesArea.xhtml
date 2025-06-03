@@ -139,26 +139,23 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30,w60," columns = "3" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px;">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w70" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px;">
 
 
 					<p:outputLabel for="identificador" value="#{msg['viewEntidades.headerIdentificador']}" />
-					<p:inputText id="identificador" value="#{dialogVariablesArea.data.identificador}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogVariablesArea.data.identificador}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" styleClass="w90" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 						<p:ajax event="keyup" process="@this" update="@form:botonera" />
 				   	</p:inputText>
-				   	<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['viewDominios.headerDescripcion']}" />
-					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogVariablesArea.data.descripcion}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="256">
+					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogVariablesArea.data.descripcion}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" styleClass="w90" maxlength="256">
 					</p:inputText>
-					<p:outputLabel value="" />
 
 					<p:outputLabel for="url" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}" />
-					<p:inputText id="url" value="#{dialogVariablesArea.data.url}" onblur="this.value = this.value.trim();" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="512">
+					<p:inputText id="url" value="#{dialogVariablesArea.data.url}" onblur="this.value = this.value.trim();" readonly="#{dialogVariablesArea.isConsulta()}" required="true" styleClass="w90" maxlength="512">
 					</p:inputText>
-					<p:outputLabel value="" />
 
 
 				</h:panelGrid>
@@ -175,15 +172,15 @@
 		  	 <p:outputPanel styleClass="botonera" id="botonera">
 		     	<p:toolbar>
 		     		<f:facet name="left">
-		     			<p:commandButton id="btnDominios" value="#{msg['botones.dominios']}" icon="fa fa-level-down" actionListener="#{dialogVariablesArea.dominios()}" process="@this" rendered="#{dialogVariablesArea.data.codigo ne null}" />
-		     			<p:commandButton id="btnSge" value="#{msg['botones.sgeArea']}" icon="fa fa-level-down" actionListener="#{dialogVariablesArea.formsExternos()}" process="@this" rendered="#{dialogVariablesArea.data.codigo ne null}" />
-						<p:commandButton id="btnEr" value="#{msg['botones.envioRemoto']}" icon="fa fa-level-down" actionListener="#{dialogVariablesArea.enviosRemotos()}" process="@this" rendered="#{dialogVariablesArea.data.codigo ne null}" />
+		     			<p:commandButton id="btnDominios" value="#{msg['botones.dominios']}" icon="fa fa-download" actionListener="#{dialogVariablesArea.dominios()}" process="@this" rendered="#{dialogVariablesArea.data.codigo ne null}" />
+		     			<p:commandButton id="btnSge" value="#{msg['botones.sgeArea']}" icon="fa fa-download" actionListener="#{dialogVariablesArea.formsExternos()}" process="@this" rendered="#{dialogVariablesArea.data.codigo ne null}" />
+						<p:commandButton id="btnEr" value="#{msg['botones.envioRemoto']}" icon="fa fa-download" actionListener="#{dialogVariablesArea.enviosRemotos()}" process="@this" rendered="#{dialogVariablesArea.data.codigo ne null}" />
 		     		</f:facet>
 					<f:facet name="right" >
 		        		<p:commandButton value="#{msg['botones.guardar']}" id="guard2" actionListener="#{dialogVariablesArea.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogVariablesArea.isAlta() or dialogVariablesArea.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogVariablesArea.cancelar()}" process="@this"  rendered="#{dialogVariablesArea.isAlta() or dialogVariablesArea.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogVariablesArea.cancelar()}" process="@this"  rendered="#{dialogVariablesArea.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogVariablesArea.ayuda}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogVariablesArea.ayuda}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

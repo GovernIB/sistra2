@@ -2,6 +2,7 @@ package es.caib.sistramit.core.api.service;
 
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
 import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
@@ -33,12 +34,10 @@ public interface SecurityService {
 	 *                              indica si es servicio
 	 * @param idioma
 	 *                              idioma
-	 * @param urlInicioTramite
-	 *                              url inicio trámite
 	 * @return información para mostrar login
 	 */
 	InfoLoginTramite obtenerInfoLoginTramite(String codigoTramite, int versionTramite, String idTramiteCatalogo,
-			final boolean servicioCatalogo, String idioma, String urlInicioTramite);
+			final boolean servicioCatalogo, String idioma);
 
 	/**
 	 * Obtiene información para mostrar el login en la carga trámite persistente.
@@ -107,7 +106,7 @@ public interface SecurityService {
 	 *                       Ticket
 	 * @return info usuario
 	 */
-	UsuarioAutenticadoInfo validarTicketAutenticacion(SesionInfo sesionInfo, String ticket);
+	UsuarioAutenticadoInfo validarTicketAutenticacionClave(SesionInfo sesionInfo, String ticket);
 
 	/**
 	 * Valida acceso usuario desde Gestor Formularios.
@@ -163,16 +162,26 @@ public interface SecurityService {
 	 *                   ticket
 	 * @return información ticket acceso
 	 */
-	InfoTicketAcceso obtenerTicketAccesoCDC(String ticket);
+	InfoTicketAcceso obtenerTicketAcceso(String ticket);
 
 	/**
 	 * Obtiene tramitaciones iniciadas del usuario.
-	 *  @param nif nif
-	 * @param tramite Trámite
-	 * @param version Versión
-	 * @param idTramiteCatalogo Id Trámite Catálogo
-	 * @param servicioCatalogo Indica si es servicio
+	 *
+	 * @param nif                   nif
+	 * @param tramite               Trámite
+	 * @param version               Versión
+	 * @param idTramiteCatalogo     Id Trámite Catálogo
+	 * @param servicioCatalogo      Indica si es servicio
+	 * @param nifFH 				Funcionario habilitado
 	 * @return Lista tramitaciones iniciadas
 	 */
-	List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo);
+	List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo, String  nifFH);
+
+	/**
+	 * Valida acceso FH
+	 * @param sesionInfo Info sesión
+	 * @param ticket Ticket
+	 * @return Info usuario
+	 */
+	UsuarioAutenticadoInfo validarTicketFH(SesionInfo sesionInfo, String ticket);
 }

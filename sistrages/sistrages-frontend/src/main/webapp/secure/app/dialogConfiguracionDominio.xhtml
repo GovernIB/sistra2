@@ -14,6 +14,9 @@
 
 		<f:facet name="last">
 			<h:outputStylesheet library="css" name="style.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 		</f:facet>
 	</h:head>
 
@@ -136,7 +139,7 @@
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid styleClass="h100" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<!-- Data table -->
 				<p:dataTable  id="dataTableDatos"
@@ -159,19 +162,19 @@
 							  rowKey="#{td.identificador}">
 					<p:ajax event="rowSelect" update="@([id$=pingButton])" />
 					<!-- Columnas -->
-					<p:column headerText="#{msg['viewDominios.headerCodigo']}">
+					<p:column headerText="#{msg['viewDominios.headerCodigo']}" sortBy="#{td.identificador}">
 						<h:outputText value="#{td.identificador}" />
 					</p:column>
 
-					<p:column headerText="#{msg['viewDominios.headerDescripcion']}">
+					<p:column headerText="#{msg['viewDominios.headerDescripcion']}" sortBy="#{td.descripcion}">
 						<h:outputText value="#{td.descripcion}" />
 					</p:column>
 
-					<p:column headerText="#{msg['viewDominios.headerTipo']}">
+					<p:column headerText="#{msg['viewDominios.headerTipo']}" sortBy="#{msg['typeDominio.' += td.tipo]}">
 						<h:outputText value="#{msg['typeDominio.' += td.tipo]}" />
 					</p:column>
 
-					<p:column headerText="#{msg['viewDominios.headerCacheable']}">
+					<p:column headerText="#{msg['viewDominios.headerCacheable']}" sortBy="#{msg['typeCache.' += td.cache]}">
 						<h:outputText value="#{msg['typeCache.' += td.cache]}" />
 					</p:column>
 

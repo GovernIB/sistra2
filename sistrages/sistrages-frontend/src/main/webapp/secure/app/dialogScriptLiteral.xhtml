@@ -16,6 +16,9 @@
 
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -34,7 +37,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="identificador" value="#{msg['dialogScriptLiteral.codigo']}" />
 				 	<p:inputText id="identificador" value="#{dialogScriptLiteral.data.identificador}" readonly="#{dialogScriptLiteral.modoConsulta()}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -46,7 +49,7 @@
 				 	<p:column>
 						<p:inputText id="nombre" value="#{dialogScriptLiteral.literal}" onblur="this.value = this.value.trim();" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
 						<p:inputText id="nombreHidden" value="#{dialogScriptLiteral.literal}" onblur="this.value = this.value.trim();" type="hidden" required="true" binding="#{mensajesComponent}" />
-						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogScriptLiteral.editarDescripcion()}" process="@this" update="growlDialog" style="margin-right:5px">
+						<p:commandButton id="btnNombre" icon="fa fa-globe" actionListener="#{dialogScriptLiteral.editarDescripcion()}" process="@this" update="growlDialog" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{dialogScriptLiteral.returnDialogo}" update="growlDialog nombre nombreHidden" />
 		        		</p:commandButton>
 					</p:column>

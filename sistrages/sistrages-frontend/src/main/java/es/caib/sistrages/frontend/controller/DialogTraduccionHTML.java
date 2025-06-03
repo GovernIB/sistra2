@@ -361,6 +361,13 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("traduccionHTMLDialog");
+	}
+
+	/**
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {

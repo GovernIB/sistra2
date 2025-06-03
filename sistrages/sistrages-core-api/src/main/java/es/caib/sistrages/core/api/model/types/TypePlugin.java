@@ -54,7 +54,12 @@ public enum TypePlugin {
 	/**
 	 * plugin de validación de firma en servidor
 	 */
-	VALIDACION_FIRMA_SERVIDOR("S");
+	VALIDACION_FIRMA_SERVIDOR("S"),
+	/**
+	 * Plugin de digitalización
+	 */
+	DIGITALIZACION("X"),
+	;
 
 	/** Valor. **/
 	private String valor;

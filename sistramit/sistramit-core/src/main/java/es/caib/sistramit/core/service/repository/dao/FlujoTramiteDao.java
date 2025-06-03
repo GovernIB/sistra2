@@ -164,13 +164,15 @@ public interface FlujoTramiteDao {
 
 	/**
 	 * Obtiene tramitaciones iniciadas del usuario.
-	 * @param nif nif
-	 * @param tramite Trámite
-	 * @param version Versión
+	 *
+	 * @param nif               nif
+	 * @param tramite           Trámite
+	 * @param version           Versión
 	 * @param idTramiteCatalogo Id Trámite Catálogo
-	 * @param servicioCatalogo Indica si es servicio
+	 * @param servicioCatalogo  Indica si es servicio
+	 * @param nifFH 			Funcionario habilitado
 	 * @return Lista tramitaciones iniciadas
 	 */
-	List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo);
+	List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo, String nifFH);
 
 }

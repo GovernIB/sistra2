@@ -14,6 +14,9 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogConfiguracionAutenticacion.titulo']}"/></title>
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -145,28 +148,25 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30,w60," columns = "3" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px;">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px;">
 
 
 					<p:outputLabel for="identificador" value="#{msg['dialogConfiguracionAutenticacion.headerIdentificador']}" />
-					<p:inputText id="identificador" value="#{dialogConfiguracionAutenticacion.data.identificador}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogConfiguracionAutenticacion.data.identificador}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" styleClass="w90" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
-				   	<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogConfiguracionAutenticacion.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogConfiguracionAutenticacion.data.descripcion}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="55" maxlength="255"/>
-					<p:outputLabel value="" />
+					<p:inputText id="descripcion" value="#{dialogConfiguracionAutenticacion.data.descripcion}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" styleClass="w90" maxlength="255"/>
+
 
 					<p:outputLabel for="usuario" value="#{msg['dialogConfiguracionAutenticacion.headerUsuario']}" />
-					<p:inputText id="usuario" value="#{dialogConfiguracionAutenticacion.data.usuario}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="55" maxlength="50"/>
-					<p:outputLabel value="" />
+					<p:inputText id="usuario" value="#{dialogConfiguracionAutenticacion.data.usuario}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" styleClass="w90" maxlength="50"/>
+
 
 					<p:outputLabel for="password" value="#{msg['dialogConfiguracionAutenticacion.headerPass']}" />
-					<p:inputText id="password" value="#{dialogConfiguracionAutenticacion.data.password}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="55" maxlength="50"/>
-					<p:outputLabel value="" />
-
+					<p:inputText id="password" value="#{dialogConfiguracionAutenticacion.data.password}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" styleClass="w90" maxlength="50"/>
 
 				</h:panelGrid>
 				<h:outputScript rendered="#{!dialogConfiguracionAutenticacion.isConsulta()}">
@@ -182,14 +182,14 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 		     		<f:facet name="left">
-		     			<p:commandButton id="btnDominios" value="#{msg['botones.dominios']}" icon="fa fa-level-down" actionListener="#{dialogConfiguracionAutenticacion.dominios()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null and !dialogConfiguracionAutenticacion.desactivarBotoneraActivo}" />
-	     				<p:commandButton id="btnConfigs" value="#{msg['botones.sgeArea']}" icon="fa fa-level-down" actionListener="#{dialogConfiguracionAutenticacion.formsExternos()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null and !dialogConfiguracionAutenticacion.desactivarBotoneraActivo and dialogConfiguracionAutenticacion.isArea}" />
+		     			<p:commandButton id="btnDominios" value="#{msg['botones.dominios']}" icon="fa fa-download" actionListener="#{dialogConfiguracionAutenticacion.dominios()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null and !dialogConfiguracionAutenticacion.desactivarBotoneraActivo}" />
+	     				<p:commandButton id="btnConfigs" value="#{msg['botones.sgeArea']}" icon="fa fa-download" actionListener="#{dialogConfiguracionAutenticacion.formsExternos()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null and !dialogConfiguracionAutenticacion.desactivarBotoneraActivo and dialogConfiguracionAutenticacion.isArea}" />
 	     	 		</f:facet>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAutenticacion.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogConfiguracionAutenticacion.isAlta() or dialogConfiguracionAutenticacion.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogConfiguracionAutenticacion.cancelar()}" process="@this"  rendered="#{dialogConfiguracionAutenticacion.isAlta() or dialogConfiguracionAutenticacion.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogConfiguracionAutenticacion.cancelar()}" process="@this"  rendered="#{dialogConfiguracionAutenticacion.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogConfiguracionAutenticacion.ayuda}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogConfiguracionAutenticacion.ayuda}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

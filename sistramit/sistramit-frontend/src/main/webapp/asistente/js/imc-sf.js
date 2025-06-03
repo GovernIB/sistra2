@@ -16,7 +16,8 @@ var APP_JSON_TRAMIT
 	,APP_TRAMIT_DESTI
 	,APP_USUARI_ID;
 
-var APP_JSON_TRAMIT_MISSATGE = false;
+var APP_JSON_TRAMIT_MISSATGE = false
+	,APP_JSON_TRAMIT_MISSATGE_TIPUS = "warning";
 
 var HTML_MOLLA_PA;
 
@@ -154,6 +155,7 @@ $.fn.carregaInfoTramit = function(options) {
 
 							if (json_missatge_titol !== "") {
 
+								APP_JSON_TRAMIT_MISSATGE_TIPUS = (APP_JSON_TRAMIT.estado === "SUCCESS") ? "informa" : "warning";
 								APP_JSON_TRAMIT_MISSATGE = json_missatge;
 
 							}

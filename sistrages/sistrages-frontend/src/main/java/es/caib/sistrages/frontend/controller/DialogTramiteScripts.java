@@ -112,8 +112,8 @@ public class DialogTramiteScripts extends DialogControllerBase {
 		writer.close();
 
 		final InputStream myInputStream = new ByteArrayInputStream(outputStream.toByteArray());
-		return new DefaultStreamedContent(myInputStream, "text/plain",
-				"scripts_" + tram.getIdentificador() + "_" + tv.getNumeroVersion() + ".txt");
+		return DefaultStreamedContent.builder().contentType("text/plain").name("scripts_" + tram.getIdentificador() + "_" + tv.getNumeroVersion() + ".txt").stream(() -> myInputStream).build();
+
 
 	}
 

@@ -18,6 +18,29 @@
 		<p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeTramitePersistencia" var="TypeTramitePersistencia"/>
 
 		<h:form id="form"  style="height:85%;">
+
+			<script type="text/javascript">
+				function setHeight(){
+					// Altura de la pantalla
+					var altura = window.innerHeight - 50;
+					// Altura de la tabla
+					var alturaDatatable = altura - 290;
+					// Altura del scrollable body
+					var alturaScrollableBody = alturaDatatable - 57;
+
+					$('#form\\:dataTable').height(alturaDatatable);
+					$('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+				}
+
+				jQuery(document).ready(function() {
+					$(window).resize(function() {
+						setTimeout(function(){  setHeight(); }, 100);
+					});
+
+					setTimeout(function(){  setHeight(); }, 1000);
+				});
+			</script>
+
 			<h:outputScript>
 
 				var arrayCm = [];
@@ -31,7 +54,9 @@
 			    	getPos();
 			    	return false;
 				}, false);
-				$('#form\\:btnBuscar').click();
+				 setTimeout(() => {
+					 $('#form\\:btnBuscar').click();
+				 }, 10);
 			  }
 
 				function eliminarResaltar(){
@@ -147,7 +172,7 @@
 
 
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10">
+        	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10" columns="4">
         		<p:row style="border-color:#f0f0f0">
         			<p:column styleClass="w33">
 		        		<h:panelGrid columns="2" styleClass="w100 padding-right-2pct" columnClasses="w20 grid-right,w74">
@@ -175,7 +200,7 @@
 			        		</h:panelGroup>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w26">
+		        	<p:column styleClass="w14">
 
 		        	</p:column>
 				</p:row>
@@ -188,7 +213,7 @@
 		        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPersistencia.filtroFechaFin']}:" styleClass="padding-right-4"/>
 		        		<p:calendar id="filtroFechaFin" value="#{viewInformacionPersistencia.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 		        	</p:column>
-		        	<p:column>
+		        	<p:column styleClass="w23">
 			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
 							<p:outputLabel for="filtroTipo" value="#{msg['viewInformacionPersistencia.filtroTipo']}:"/>
 							<p:selectOneMenu id="filtroTipo" value="#{viewInformacionPersistencia.filtros.tipoTramitePersistencia}">
@@ -196,7 +221,7 @@
 							</p:selectOneMenu >
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column>
+		        	<p:column styleClass="w27">
 						<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
 			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewInformacionPersistencia.filtroProcedimiento']}:"/>
 			        		<p:inputText id="filtroProcedimiento" value="#{viewInformacionPersistencia.filtros.idProcedimientoCP}" size="25" maxlength="20" onkeyup="capitalize(this)" onblur="trim(this)">
@@ -204,10 +229,10 @@
 			        		</p:inputText>
 			        	</h:panelGrid>
 	          		</p:column>
-		        	<p:column>
+		        	<p:column  styleClass="w14">
 			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
 		          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPersistencia.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
-		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewInformacionPersistencia.ayuda}"/>
+		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewInformacionPersistencia.ayuda}"/>
 						</h:panelGrid>
 	          		</p:column>
 				</p:row>
@@ -228,7 +253,7 @@
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false"/>
-				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 				<p:ajax event="page" update=":form:dataTable"/>
 
 				<!-- Columnas -->
@@ -284,7 +309,7 @@
 		        	document.getElementById("form:paginacion").blur();
 		      }
 		    </h:outputScript>
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewInformacionPersistencia.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewInformacionPersistencia.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
 
 
 

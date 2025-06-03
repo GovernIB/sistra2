@@ -11,6 +11,7 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTram
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
@@ -882,6 +883,15 @@ public final class DatosTramite implements Serializable {
 	 */
 	public void setTipoDestino(final TypeDestino tipoDestino) {
 		this.tipoDestino = tipoDestino;
+	}
+
+	/**
+	 * Indica si es modo FH.
+	 *
+	 * @return true si es modo FH
+	 */
+	public boolean isModoFH() {
+		return (usuarioAutenticado != null && usuarioAutenticado.getFuncionarioHabilitado() != null);
 	}
 
 }

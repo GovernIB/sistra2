@@ -19,6 +19,11 @@
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
 	</f:facet>
+	<h:outputStylesheet library="css">
+		#formTramite\:panelInfo .pi{
+			font-size: 1.4rem;
+		}
+	</h:outputStylesheet>
 
    <p:ajaxStatus id="startAjaxDialog" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"/>
    <ui:include src="../common/popups.xhtml" />
@@ -137,15 +142,26 @@
 
 			</h:outputScript>
 			<p:growl id="growlDialogImportar" widgetVar="growlDialogImportar"	life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-			<p:outputPanel id="panelUpload" styleClass="padding-right-8 padding-left-8" rendered="#{!dialogTramiteImportar.mostrarPanelInfo}">
-				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogTramiteImportar.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
-					update="formTramite growlDialogImportar panelUpload panelInfo botonImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
-			</p:outputPanel>
+		<p:outputPanel id="panelUpload" styleClass="padding-right-8 padding-left-8" rendered="#{!dialogTramiteImportar.mostrarPanelInfo}">
 
-			<p:outputPanel id="panelInfo" rendered="#{dialogTramiteImportar.mostrarPanelInfo}" >
+			<p:fileUpload id="fichero" mode="advanced"
+  						  value="#{dialogTramiteImportar.file}"
+						  label="#{msg['botones.explorar']}"
+						  uploadLabel="#{msg['botones.anexar']}"
+						  cancelLabel="#{msg['botones.cancelar']}"
+						  update="formTramite growlDialogImportar panelUpload panelInfo botonImportar"
+						  fileLimit="1"
+						  accept=".zip"
+						multiple="false"
+						auto="true"
+						fileLimitMessage="#{msg['error.ficheros.limite']}" />
+		</p:outputPanel>
+
+
+		<p:outputPanel id="panelInfo" rendered="#{dialogTramiteImportar.mostrarPanelInfo}" >
 
 				<h3 style="margin-left:10px;margin-bottom:0px">#{msg['dialogTramiteImportar.headerTramiteVersion']}</h3>
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="imporTramitColumnaVT w10, w20, w20, w30,grid-center w10 padding-right-18, grid-left w10" columns = "6" cellpadding = "3" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="imporTramitColumnaVT w10, w20, w20, w30,grid-center w10 padding-right-18, grid-left w10" columns = "6" cellpadding = "3" cellspacing = "0"  width="100%">
 
 						<p:outputLabel value="" />
 						<p:outputLabel value="#{msg['dialogTramiteImportar.headerOrigen']}"   style="font-weight: bold;" />
@@ -290,7 +306,7 @@
 						<p:outputLabel value="#{msg['dialogTramiteImportar.dominios']}"  styleClass="subTituloCabecera"  />
 					</p>
 
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogTramiteImportar.filasDominios}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
+					<h:dataTable rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogTramiteImportar.filasDominios}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 
 						<h:column headerClass="subTituloTablaImportarIzq">
 							 <f:facet name = "header">
@@ -330,7 +346,7 @@
 
 					</h:dataTable>
 
-					<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-4 w15,padding-right-18" columns = "2" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-4 w15,padding-right-18" columns = "2" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 
 						 	<p:outputLabel value="#{msg['dialogTramiteImportar.refrescarCacheDominio']}" />
 						 	<p:selectBooleanCheckbox value="#{dialogTramiteImportar.refrescarCacheDominio}" />
@@ -344,7 +360,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogTramiteImportar.formateadores']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaFormateadores" headerClass="grid-left" value="#{dialogTramiteImportar.filasFormateador}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
+					<h:dataTable rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaFormateadores" headerClass="grid-left" value="#{dialogTramiteImportar.filasFormateador}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.formateador.identificador']}" /></f:facet>
 		      					#{fila.formateadorFormulario.identificador}
@@ -385,7 +401,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogTramiteImportar.gestores']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaGestores" headerClass="grid-left" value="#{dialogTramiteImportar.filasGestores}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
+					<h:dataTable rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaGestores" headerClass="grid-left" value="#{dialogTramiteImportar.filasGestores}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.gestores.identificador']}" /></f:facet>
 		      					#{fila.gestor.identificador}
@@ -427,7 +443,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogTramiteImportar.secciones']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaSecciones" headerClass="grid-left" value="#{dialogTramiteImportar.filasSecciones}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
+					<h:dataTable rowClasses="ui-datatable-even, ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaSecciones" headerClass="grid-left" value="#{dialogTramiteImportar.filasSecciones}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.secciones.identificador']}" /></f:facet>
 		      					#{fila.seccion.identificador}
@@ -484,7 +500,7 @@
 					<f:facet name="right">
 		        		<p:commandButton id="botonImportar" widgetVar="botonImportarWidget" onclick="disableClick()"  oncomplete="enableClick()" value="#{msg['botones.importar']}" actionListener="#{dialogTramiteImportar.importar}" process="@this" styleClass="boton-azul" update="@form growlDialogImportar" disabled="#{!dialogTramiteImportar.isTodoCorrecto()}"  />
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteImportar.cancelar}" process="@this" />
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteImportar.ayuda()}" process="@this"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogTramiteImportar.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

@@ -3,7 +3,10 @@ package es.caib.sistrahelp.frontend.model;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
@@ -29,11 +32,21 @@ public class PersistenciaLazyDataModel extends LazyDataModel<PersistenciaAuditor
 
 	private List<PersistenciaAuditoria> lista;
 
+	public int count(Map<String, FilterMeta> filterBy) {
+		return helpDeskService.countAuditoriaPersistencia(filtros).intValue();
+	}
+
 	@Override
-	public List<PersistenciaAuditoria> load(final int first, final int pageSize, final String sortField,
-			final SortOrder sortOrder, final Map<String, Object> filters) {
-		filtros.setSortField(sortField);
-		filtros.setSortOrder(sortOrder.name());
+	public List<PersistenciaAuditoria> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+
+		if (sortBy != null && !sortBy.isEmpty()) {
+			SortMeta sortMeta = sortBy.values().iterator().next();
+			SortOrder sortOrder = sortMeta.getOrder();
+			if (sortOrder != null) {
+				filtros.setSortOrder(sortOrder.name());
+			}
+			filtros.setSortField(sortMeta.getField());
+		}
 		setLista(helpDeskService.obtenerAuditoriaPersistencia(filtros, new FiltroPaginacion(first, pageSize)));
 
 		return getLista();
@@ -51,8 +64,8 @@ public class PersistenciaLazyDataModel extends LazyDataModel<PersistenciaAuditor
 	}
 
 	@Override
-	public Object getRowKey(final PersistenciaAuditoria evento) {
-		return evento.getId();
+	public String getRowKey(final PersistenciaAuditoria evento) {
+		return evento.getId().toString();
 	}
 
 	public List<PersistenciaAuditoria> getLista() {

@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.sistramit.core.api.model.flujo.RedireccionDigitalizacion;
+import es.caib.sistramit.core.api.model.flujo.RedireccionFirmaCliente;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,6 +87,46 @@ public final class PasoAnexarController extends TramitacionController {
 		}
 
 		return generarJsonView(resAnexar);
+	}
+
+	/**
+	 * Digitalizar documento: redirección a componente externo de digitalización.
+	 *
+	 * @param idPaso
+	 *                        Identificador paso.
+	 * @param idDocumento
+	 *                        Identificador documento.
+	 * @param instancia
+	 *                        Instancia documento.
+	 * @return Devuelve JSON indicando redireccion para firmar.
+	 */
+	@RequestMapping(value = "/digitalizarAnexo.json", method = RequestMethod.POST)
+	public ModelAndView digitalizarAnexo(@RequestParam(PARAM_ID_PASO) final String idPaso,
+										@RequestParam(PARAM_ID_ANEXO) final String idDocumento) {
+
+		debug("Redirigir digitalizar documento: " + idDocumento );
+
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada(PARAM_ID_ANEXO, idDocumento);
+
+		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoAnexar.INICIAR_DIGITALIZACION_ANEXO, pParametros);
+		final RedireccionDigitalizacion redireccion = (RedireccionDigitalizacion) rap.getParametroRetorno("redireccion");
+
+
+		debug("Iniciar digitalizar documento - redireccion url: " + redireccion.getUrl());
+
+		final RespuestaJSON respuesta = new RespuestaJSON();
+		respuesta.setDatos(redireccion);
+		final String tituloMensaje = getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "atencion", getIdioma());
+		final String textoMensaje = getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES,"redireccionDigitalizacion", getIdioma());
+		respuesta.setMensaje(new MensajeUsuario(tituloMensaje, textoMensaje));
+
+		return generarJsonView(respuesta);
+
 	}
 
 	/**

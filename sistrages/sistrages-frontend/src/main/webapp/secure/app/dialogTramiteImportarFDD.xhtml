@@ -51,7 +51,7 @@
 				<c:if test="${not empty dialogTramiteImportarFDD.csvdocumento.columnas}">
 					<!-- Columnas, sin el rowIndex no va muy bien que se diga -->
 					<c:forEach items="#{ dialogTramiteImportarFDD.csvdocumento.columnas}" var="columna">
-						<p:column headerText="#{columna}">
+						<p:column headerText="#{columna}" sortBy="#{td.get(columna)}">
 					        <h:outputText value="#{td.get(columna)}" />
 					    </p:column>
 					</c:forEach>

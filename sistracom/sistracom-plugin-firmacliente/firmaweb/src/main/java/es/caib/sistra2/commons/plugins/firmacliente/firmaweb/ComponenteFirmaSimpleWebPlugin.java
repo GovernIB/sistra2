@@ -4,15 +4,7 @@ import java.util.Properties;
 
 import es.caib.sistra2.commons.plugins.firmacliente.api.*;
 import org.fundaciobit.apisib.apifirmasimple.v1.ApiFirmaWebSimple;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleAddFileToSignRequest;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleCommonInfo;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleFile;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleFileInfoSignature;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleGetSignatureResultRequest;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleGetTransactionStatusResponse;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleSignatureResult;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleStartTransactionRequest;
-import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleStatus;
+import org.fundaciobit.apisib.apifirmasimple.v1.beans.*;
 import org.fundaciobit.apisib.apifirmasimple.v1.jersey.ApiFirmaWebSimpleJersey;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
@@ -187,11 +179,30 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			fic = new FicheroFirmado();
 			fic.setEstadoFirma(estadoFirma);
 		} else {
+			// Tipo firma
 			final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fssr.getSignedFileInfo().getEniTipoFirma());
 			if (tipoFirma == null) {
 				throw new FirmaPluginException(
 						"No se reconoce tipo de firma " + fssr.getSignedFileInfo().getEniTipoFirma());
 			}
+			// Metodo firma
+			String metodoFirma = null;
+			if (fssr.getSignedFileInfo().getSignerInfo().getAdditionalInformation() != null) {
+				String pluginName = null;
+				String pluginDesc = null;
+				 for (FirmaSimpleKeyValue fkv : fssr.getSignedFileInfo().getSignerInfo().getAdditionalInformation()) {
+					if (fkv.getKey().equals("SignaturePlugin.Name.Internal")) {
+						pluginName = fkv.getValue();
+					}
+					 if (fkv.getKey().equals("SignaturePlugin.Name.Public")) {
+						 pluginDesc = fkv.getValue();
+					 }
+				 }
+				if (pluginName != null || pluginDesc != null) {
+					metodoFirma = pluginName + " - " + pluginDesc;
+				}
+			}
+
 
 			EstadoFirma estadoFirma = new EstadoFirma();
 			estadoFirma.setEstadoFirmado(TypeEstadoFirmado.FINALIZADO_OK);
@@ -203,6 +214,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			fic.setMimetypeFichero(fsf.getMime());
 			fic.setNombreFichero(fsf.getNom());
 			fic.setFirmaTipo(tipoFirma);
+			fic.setMetodoFirma(metodoFirma);
 		}
 
 		return fic;

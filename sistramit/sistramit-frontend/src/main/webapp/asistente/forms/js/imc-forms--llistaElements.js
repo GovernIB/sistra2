@@ -29,6 +29,7 @@ $.fn.appFormsLlistaElements = function(options) {
 			,enllasColumnaFilla: false
 			,enllasIndex: false
 			,desDe: false
+			,titolTaula: false
 			,dades: false
 		}, options);
 
@@ -46,6 +47,7 @@ $.fn.appFormsLlistaElements = function(options) {
 			,enllasColumnaFilla = settings.enllasColumnaFilla
 			,enllasIndex = settings.enllasIndex
 			,desDe = settings.desDe
+			,titolTaula = settings.titolTaula
 			,filesActuals = 0
 			,dades = settings.dades
 			,elm_id = false
@@ -58,6 +60,13 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				elm_id = element.attr("data-id");
 				elm_label = element.find("legend:first").text();
+
+				if (titolTaula) {
+
+					element
+						.attr("taula-titol", titolTaula);
+
+				}
 
 				element
 					.find(".imc--sense-resultats")
@@ -172,6 +181,16 @@ $.fn.appFormsLlistaElements = function(options) {
 						.find("button:not(.imc-bt-afegix)")
 							.attr("disabled", "disabled");
 
+
+
+					if (enllasId) {
+
+						element
+							.find("button.imc-bt-afegix")
+								.attr("disabled", "disabled");
+
+					}
+
 					pintaEstructura();
 
 				}
@@ -243,17 +262,28 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				taula_body = element.find("tbody:first");
 
+
 				// pintem número màxim de files
 
 				if (filesMax && !isNaN(filesMax)) {
+
+					var txt_textMax_filla = "";
+
+					if (enllasId) {
+
+						var titol_pare = imc_forms_body.find("fieldset[data-id='" + enllasId + "']").attr("taula-titol")
+							,txt_textMax_filla = " " + txtFormDinTaulaMaxPareElements + " " + titol_pare;
+
+					}
 
 					var element_txt = (filesMax === 1) ? txtFormDinTaulaElement : txtFormDinTaulaElements;
 
 					element
 						.find("legend:first")
-							.append( " (" + txtFormDinTaulaMaxim + " " + filesMax + " " + element_txt + ")" );
+							.append( " (" + txtFormDinTaulaMaxim + " " + filesMax + " " + element_txt + txt_textMax_filla + ")" );
 
 				}
+
 
 				// pintem popup fila detall
 
@@ -442,15 +472,25 @@ $.fn.appFormsLlistaElements = function(options) {
 				// es filla de una llista pare? (enllasId)
 
 				enllasId = element.attr("data-enllas-id");
-				enllasIndex = parseInt( element.attr("data-enllas-index"), 10) + 1;
 
 				if (enllasId) {
 
-					// SELECCIONEM LA FILA DE L'INDEX QUE VINGA (enllasIndex)
+					element
+						.find("button.imc-bt-afegix")
+							.attr("disabled", "disabled");
 
-					imc_forms_body
-						.find("fieldset[data-id='" + enllasId + "'] tbody:first tr[data-id='" + enllasIndex + "']")
-							.trigger("click");
+					var enllasIndex = parseInt( element.attr("data-enllas-index"), 10) + 1
+						,taula_pare_files_num = imc_forms_body.find("fieldset[data-id='" + enllasId + "'] tbody:first tr").length;
+
+					if (taula_pare_files_num) {
+
+						// SELECCIONEM LA FILA DE L'INDEX QUE VINGA (enllasIndex)
+
+						imc_forms_body
+							.find("fieldset[data-id='" + enllasId + "'] tbody:first tr[data-id='" + enllasIndex + "']")
+								.trigger("click");
+
+					}
 
 				}
 
@@ -481,6 +521,7 @@ $.fn.appFormsLlistaElements = function(options) {
 						.find("tr.imc--seleccionada")
 							.removeClass("imc--seleccionada");
 
+
 				// es lectura?
 
 				var esLectura = (fila_el.closest(".imc-element").attr("data-lectura") === "s") ? true : false
@@ -502,6 +543,7 @@ $.fn.appFormsLlistaElements = function(options) {
 					.find("button:not(.imc-bt-afegix)")
 						.removeAttr("disabled");
 
+
 				// es filla de una llista pare? (enllasId)
 
 				var esPare = (element.attr("data-enllas")) ? true : false;
@@ -521,10 +563,38 @@ $.fn.appFormsLlistaElements = function(options) {
 						.each(function() {
 
 							var tr_ = $(this)
-								,tr_pare_enllas = tr_.attr("data-pare-enllas")
-								,valor_fila_ = tr_.find("td[data-id='" + llista_filla_col_filla + "']:first").text();
+								//,tr_pare_enllas = tr_.attr("data-pare-enllas")
+								,valor_fila_ = false; // tr_.find("td[data-id='" + llista_filla_col_filla + "']:first").text();
 
-							//if (tr_pare_enllas === fila_pare_id) {
+							var tr_json_dades = JSON.parse( tr_.attr("data-dades") );
+
+							$(tr_json_dades.elemento)
+								.each(function() {
+
+									var tjd = this
+										,tjd_id = tjd.id;
+
+									if (tjd_id === llista_filla_col_filla) {
+										valor_fila_ = tjd.valor;
+										return;
+									}
+
+								});
+
+							// llevem selecció de qualsevol element de la llista filla
+
+							if (tr_.hasClass("imc--seleccionada")) {
+
+								tr_
+									.find("input:first")
+										.prop("checked", false)
+										.end()
+									.removeClass("imc--seleccionada");
+
+							}
+
+							// mostrem o amaguem fills segons el pare
+
 							if (valor_fila_pare_ === valor_fila_) {
 
 								tr_
@@ -538,6 +608,15 @@ $.fn.appFormsLlistaElements = function(options) {
 							}
 
 						});
+
+					// reiniciem botonera, perquè no hi ha cap element seleccionat
+
+					llista_filla_
+						.find(".imc-el-taula-botonera:first button:not(.imc-bt-afegix)")
+							.attr("disabled", "disabled")
+							.end()
+						.find(".imc-el-taula-botonera:first button.imc-bt-afegix")
+							.removeAttr("disabled");
 
 				}
 
@@ -566,7 +645,7 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				if (enllasId && enllasIndex) {
 
-					valorsSerialitzats["idListaPadre"] = enllasId;
+					//valorsSerialitzats["idListaPadre"] = enllasId;
 
 					var llista_pare_ = imc_forms_body.find("fieldset[data-id='" + enllasId + "']:first")
 						,llista_filla_ = imc_forms_body.find("fieldset[data-id='" + elm_id + "']:first")
@@ -574,8 +653,8 @@ $.fn.appFormsLlistaElements = function(options) {
 					
 					valorsSerialitzats["indiceSeleccionadoListaPadre"] = indexLlistaPare;
 
-					valorsSerialitzats["columnaListaPadre"] = llista_filla_.attr("data-columna-pare");
-					valorsSerialitzats["columnaListaHija"] = llista_filla_.attr("data-columna-filla");
+					//valorsSerialitzats["columnaListaPadre"] = llista_filla_.attr("data-columna-pare");
+					//valorsSerialitzats["columnaListaHija"] = llista_filla_.attr("data-columna-filla");
 
 				}
 
@@ -666,9 +745,25 @@ $.fn.appFormsLlistaElements = function(options) {
 				imc_forms_missatge
 					.appFormsMissatge({ araAmaga: true });
 
+				var fila_pare_id = false
+					,taulaParentesc = false;
+
+				if (element.attr("data-enllas") && element.attr("data-enllas") !== "false") {
+
+					taulaParentesc = "pare";
+
+				}
+
+				if (enllasId) {
+
+					fila_pare_id = imc_forms_body.find("fieldset[data-id='" + enllasId + "']:first tbody:first input:checked:first").closest("tr").attr("data-pare-id");
+					taulaParentesc = "filla";
+
+				}
+
 				imc_forms_taula
 					.attr("aria-hidden", "false")
-					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "afegix", idLlistaPare: enllasId });
+					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "afegix", taulaParentesc: taulaParentesc, idLlistaPare: enllasId, fila_pare_id: fila_pare_id });
 
 				imc_forms_taula
 					.appFormsConfiguracio({ forms_json: json, desDe: "taula" });
@@ -687,7 +782,7 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				if (fieldset_enllas && fieldset_enllas_num) {
 
-					var titol_taula = imc_forms_body.find("fieldset[data-id='" + fieldset_enllas + "'] legend:first").text();
+					var titolTaula_filla = imc_forms_body.find("fieldset[data-id=" + fieldset_enllas + "]").attr("taula-titol");
 
 					var remarcaACC = function() {
 						
@@ -698,7 +793,7 @@ $.fn.appFormsLlistaElements = function(options) {
 						};
 
 					imc_forms_missatge
-						.appFormsMissatge({ accio: "error", titol: txtFormDinTaulaEsborraFillaTitol, text: txtFormDinTaulaEsborraFillaText1 + " " + titol_taula + ". " + txtFormDinTaulaEsborraFillaText2, bt: bt, alTancar: function() { remarcaACC(); } });
+						.appFormsMissatge({ accio: "error", titol: txtFormDinTaulaEsborraFillaTitol, text: txtFormDinTaulaEsborraFillaText1 + " " + titolTaula_filla + ". " + txtFormDinTaulaEsborraFillaText2, bt: bt, alTancar: function() { remarcaACC(); } });
 
 					return;
 
@@ -931,7 +1026,7 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				// es una llista filla?
 
-				if (enllasId && enllasIndex) {
+				/*if (enllasId && enllasIndex) {
 
 					valorsSerialitzats["idListaPadre"] = enllasId;
 
@@ -944,7 +1039,7 @@ $.fn.appFormsLlistaElements = function(options) {
 					valorsSerialitzats["columnaListaPadre"] = llista_filla_.attr("data-columna-pare");
 					valorsSerialitzats["columnaListaHija"] = llista_filla_.attr("data-columna-filla");
 
-				}
+				}*/
 
 				// dades ajax
 
@@ -1033,16 +1128,17 @@ $.fn.appFormsLlistaElements = function(options) {
 				imc_forms_missatge
 					.appFormsMissatge({ araAmaga: true });
 
+				var taulaParentesc = (element.attr("data-enllas") && element.attr("data-enllas") !== "false") ? "pare" : (enllasId) ? "filla" : false;
+
 				imc_forms_taula
 					.attr("aria-hidden", "false")
-					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "modifica", idLlistaPare: enllasId });
+					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "modifica", taulaParentesc: taulaParentesc, idLlistaPare: enllasId });
 
 				imc_forms_taula
 					.appFormsConfiguracio({ forms_json: json, desDe: "taula" });
 
 				imc_forms_taula
 					.appFormsPopupTabula();
-					//.focus();
 
 			},
 			consulta = function(e) {
@@ -1162,9 +1258,11 @@ $.fn.appFormsLlistaElements = function(options) {
 				imc_forms_missatge
 					.appFormsMissatge({ araAmaga: true });
 
+				var taulaParentesc = (element.attr("data-enllas") && element.attr("data-enllas") !== "false") ? "pare" : (enllasId) ? "filla" : false;
+
 				imc_forms_taula
 					.attr("aria-hidden", "false")
-					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "consulta" });
+					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "consulta", taulaParentesc: taulaParentesc });
 
 				imc_forms_taula
 					.appFormsConfiguracio({ forms_json: json, desDe: "taula" });
@@ -1177,14 +1275,20 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				var fila_el = taula_body.find("input:checked").closest("tr")
 					,fila_id = fila_el.attr("data-id")
-					,fila_id_num = parseInt(fila_id, 10);
+					,fila_id_num = parseInt(fila_id, 10)
+					,fila_taula_pare_id = fila_el.attr("data-pare-enllas");
 
 				if (fila_id_num === 1) {
 					return;
 				}
 
-				var fila_clone = fila_el.clone()
-					,fila_anterior = fila_el.prev();
+				var fila_anterior = (fila_taula_pare_id) ? fila_el.prev("[data-pare-enllas=" + fila_taula_pare_id + "]:first") : fila_el.prev();
+
+				if (!fila_anterior.length) {
+					return;
+				}
+
+				var fila_clone = fila_el.clone();
 
 				fila_el
 					.remove();
@@ -1199,19 +1303,25 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				var fila_el = taula_body.find("input:checked").closest("tr")
 					,fila_id = fila_el.attr("data-id")
-					,fila_id_num = parseInt(fila_id, 10);
+					,fila_id_num = parseInt(fila_id, 10)
+					,fila_taula_pare_id = fila_el.attr("data-pare-enllas");
 
 				if (fila_id_num === taula_body.find("tr").length) {
 					return;
 				}
 
-				var fila_clone = fila_el.clone()
-					,fila_anterior = fila_el.next();
+				var fila_posterior = (fila_taula_pare_id) ? fila_el.next("[data-pare-enllas=" + fila_taula_pare_id + "]:first") : fila_el.next();
+
+				if (!fila_posterior.length) {
+					return;
+				}
+
+				var fila_clone = fila_el.clone();
 
 				fila_el
 					.remove();
 
-				fila_anterior
+				fila_posterior
 					.after( fila_clone );
 
 				reordena();
@@ -1372,16 +1482,18 @@ $.fn.appFormsLlistaElements = function(options) {
 
 
 
-// events i accion del popuop detall de la llista d'elements (taula)
+// events i accions del popup detall de la llista d'elements (taula)
 
 $.fn.appFormsLlistaElementsForm = function(options) {
 
 	var settings = $.extend({
 			element_id: false
-			,titol: false
-			,desDe: false // afegix, modifica
-			,fila_id: false
-			,idLlistaPare: false
+			, titol: false
+			, desDe: false // afegix, modifica, cerca
+			, taulaParentesc: false // false, pare, filla  ->>>>>>>>>>>>>>> PER FERRRRRRRRRRRRRR!!
+			, fila_id: false
+			, idLlistaPare: false
+			, fila_pare_id: false
 		}, options);
 
 	this.each(function(){
@@ -1389,15 +1501,31 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 			,element_id = settings.element_id
 			,titol = settings.titol
 			,desDe = settings.desDe
+			,taulaParentesc = settings.taulaParentesc
 			,idLlistaPare = settings.idLlistaPare
+			,fila_pare_id = settings.fila_pare_id
 			,envia_url = false
 			,envia_ajax = false
 			,json = false
 			,inicia = function() {
 
+
+				// atributs del popup
+
 				imc_forms_taula
 					.attr("data-id", element_id)
-					.attr("data-des-de", desDe);
+					.attr("data-des-de", desDe)
+					.attr("data-fila-pare", fila_pare_id);
+
+				if (idLlistaPare) {
+
+					imc_forms_taula
+						.attr("data-pare-id", idLlistaPare);
+
+				}
+
+
+				// títol i sotatítol
 
 				element
 					.find(".imc--titol:first span")
@@ -1412,6 +1540,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 					.find(".imc--titol:first strong")
 						.text( sotatitol_txt );
 
+
 				// ajuda al camp
 
 				element
@@ -1423,6 +1552,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 						.appFormsAjudaCamp({ referent: element.find(".imc--form:first") });
 
 				}
+
 
 				// events botonera
 
@@ -1491,7 +1621,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 
 				// depen d'una llista pare?
 
-				if (idLlistaPare) {
+				/*if (idLlistaPare) {
 
 					valorsSerialitzats["idListaPadre"] = idLlistaPare;
 
@@ -1504,7 +1634,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 					valorsSerialitzats["columnaListaPadre"] = llista_filla_.attr("data-columna-pare");
 					valorsSerialitzats["columnaListaHija"] = llista_filla_.attr("data-columna-filla");
 
-				}
+				}*/
 
 				// dades ajax
 
@@ -1742,6 +1872,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 
 					var fina_nova = $("<tr>").attr("data-tipus", "nova");
 
+
 					// si hi ha ordre, colocar on toca
 
 					if (fila_ordre !== false) {
@@ -1768,26 +1899,58 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 
 					} else {
 
-						// sino hi ha ordre, fila al final
+						// sino hi ha ordre, fila al final (si és filla, agrupem)
 
-						taula_tbody_el
-							.append( fina_nova );
+						if (taulaParentesc === "filla") {
+
+							var elm_fill_ultim = taula_tbody_el.find("tr[data-pare-enllas=" + fila_pare_id + "]:last");
+
+							if (elm_fill_ultim.length) {
+
+								elm_fill_ultim
+									.after( fina_nova );
+
+							} else {
+
+								taula_tbody_el
+									.append( fina_nova );
+
+							}
+
+						} else {
+
+							taula_tbody_el
+								.append( fina_nova );
+
+						}
 
 					}
 
 
-					// seleccionem la fina nova per treballar amb ella
+					// seleccionem la fila nova per treballar amb ella
 
 					var fila_ultima_el = taula_tbody_el.find("tr[data-tipus=nova]:first");
 
 					fila_ultima_el
-						.attr("data-id", files_num+1);
+						.attr({ "data-id": files_num+1 });
+
+					if (taulaParentesc === "pare") {
+
+						fila_ultima_el
+							.attr({ "data-pare-id": files_num+1 });
+						
+					} else if (taulaParentesc === "filla") {
+
+						fila_ultima_el
+							.attr({ "data-pare-enllas": fila_pare_id });
+						
+					}
 
 					var fila_json = { "elemento": fila_valors };
 
 					fila_ultima_el
 						.attr("data-dades", JSON.stringify(fila_json));
-
+					
 					$("<td>")
 						.append( $("<input>").attr({ type: "radio", name: element_id, id: element_id + "_" + (files_num+1) }) )
 						.appendTo( fila_ultima_el );
@@ -1917,7 +2080,7 @@ $.fn.appFormsLlistaElementsFilesRevisa = function(options) {
 	this.each(function(){
 		var element = $(this)
 			,filesMax = settings.filesMax
-			,element_id = element.attr("data-id")
+			//,element_id = element.attr("data-id")
 			,inicia = function() {
 
 				// botó afegir

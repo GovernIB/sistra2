@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.component;
 import org.fundaciobit.pluginsib.core.IPlugin;
 
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 
 /**
  * Componente para acceder a configuracion.
@@ -48,5 +49,15 @@ public interface ConfiguracionComponent {
 	 * @return valor propiedad
 	 */
 	String replacePlaceholders(String valor);
+
+	/**
+	 * Obtiene propiedad configuración.
+	 *
+	 * @param propiedad
+	 *            Propiedad configuración
+	 *
+	 * @return configuración
+	 */
+	String obtenerPropiedadConfiguracion(TypePropiedadConfiguracion propiedad);
 
 }

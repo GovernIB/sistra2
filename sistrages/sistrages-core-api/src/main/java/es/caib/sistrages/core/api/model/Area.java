@@ -15,6 +15,7 @@ public class Area extends ModelApi {
 
 	/** Codigo. */
 	private Long codigo;
+	private String codigoStr;
 
 	/** Identificador. */
 	private String identificador;
@@ -132,6 +133,15 @@ public class Area extends ModelApi {
 		this.tienePermiso = tienePermiso;
 	}
 
+	/** Se utiliza simplemente para el selector en viewTramites **/
+	public String getCodigoStr() {
+		return codigo.toString();
+	}
+
+	public void setCodigoStr(String codigoStr) {
+		//this.codigoStr = codigoStr;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -220,5 +230,7 @@ public class Area extends ModelApi {
            texto.append(tabulacion +"\t CodiDIR3Entitat:" + codigoDIR3Entidad + "\n");
            return texto.toString();
      }
+
+
 
 }

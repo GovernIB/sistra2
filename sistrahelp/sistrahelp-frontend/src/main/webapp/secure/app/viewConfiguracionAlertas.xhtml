@@ -20,6 +20,28 @@
     <p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeEvento" var="TypeEvento"/>
 
     <h:form id="form" style="height:91%;">
+
+        <script type="text/javascript">
+            function setHeight(){
+                // Altura de la pantalla
+                var altura = window.innerHeight - 50;
+                // Altura de la tabla
+                var alturaDatatable = altura - 250;
+                // Altura del scrollable body
+                var alturaScrollableBody = alturaDatatable - 57;
+
+                $('#form\\:dataTable').height(alturaDatatable);
+                $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+            }
+
+            jQuery(document).ready(function() {
+                $(window).resize(function() {
+                    setTimeout(function(){  setHeight(); }, 100);
+                });
+
+                setTimeout(function(){  setHeight(); }, 1000);
+            });
+        </script>
       <h:outputScript>
 
         var arrayCm = [];
@@ -172,28 +194,26 @@
       <!-- Toolbar -->
 
 
-          <!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-          <p:panelGrid id="panelFiltro" style="border-color:#f0f0f0;" columnClasses="w50,w25,w25" styleClass="noBackground w100 h10">
-        <p:row style="border-color:#f0f0f0">
-
-
-        <p:column>
-            <h:panelGrid id="panelBotones" columns="6" cellspacing="5" styleClass="table-rightaligned">
-            <p:commandButton value="#{msg['viewConfiguracionAlertas.probarAlerta']}" id="btnProbarAlerta" actionListener="#{viewConfiguracionAlertas.probarAlerta()}" process="@this" update="growl"/>
-			<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewConfiguracionAlertas.nuevo()}" process="@this" update="growl">
-    			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
-    		</p:commandButton>
-    		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConfiguracionAlertas.editar()}" process="@this" update="growl">
-    			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
-    		</p:commandButton>
-    		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewConfiguracionAlertas.eliminar()}" process="@this" update="growl dataTable">
-    			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-    		</p:commandButton>
-                <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewConfiguracionAlertas.ayuda}"/>
-        	</h:panelGrid>
-        </p:column>
-        </p:row>
-            </p:panelGrid>
+        <!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+        <p:panelGrid id="panelFiltro" style="border-color:#f0f0f0;" columnClasses="w50,w25,w25" styleClass="noBackground w100 h10">
+            <p:row style="justify-content: flex-end;">
+                <p:column>
+                    <h:panelGrid id="panelBotones" columns="6" cellspacing="5" styleClass="table-rightaligned">
+                    <p:commandButton value="#{msg['viewConfiguracionAlertas.probarAlerta']}" id="btnProbarAlerta" actionListener="#{viewConfiguracionAlertas.probarAlerta()}" process="@this" update="growl"/>
+                    <p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewConfiguracionAlertas.nuevo()}" process="@this" update="growl">
+                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
+                    </p:commandButton>
+                    <p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConfiguracionAlertas.editar()}" process="@this" update="growl">
+                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
+                    </p:commandButton>
+                    <p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewConfiguracionAlertas.eliminar()}" process="@this" update="growl dataTable">
+                        <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+                    </p:commandButton>
+                    <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConfiguracionAlertas.ayuda}"/>
+                    </h:panelGrid>
+                </p:column>
+            </p:row>
+        </p:panelGrid>
 
 
       <!-- Data table -->
@@ -210,7 +230,7 @@
 
         <!-- Necesario para actualizar en controlador la fila seleccionada -->
         <p:ajax event="rowSelect" global="false"/>
-        <p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+        <p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
         <p:ajax event="page" update=":form:dataTable"/>
         <p:ajax event="contextMenu" global="false" process="@this" update="form:panelBotones" oncomplete="opcVista();"/>
 
@@ -235,7 +255,7 @@
               $('#form\\:btnEditarHidden').click();
           }
         </h:outputScript>
-        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConfiguracionAlertas.rcDobleClick()}" process="@this" update=":form:growl" style="display:none">
+        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConfiguracionAlertas.rcDobleClick()}" process="@this" update=":form:growl" style="display:none">
            <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
         </p:commandButton>
         <h:outputScript >
@@ -252,7 +272,7 @@
       <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 	      <p:contextMenu for=":work">
@@ -269,8 +289,8 @@
 			<p:separator/>
 			<p:menuitem id="mnuProbarAlerta" value="#{msg['viewConfiguracionAlertas.probarAlerta']}" onclick="document.getElementById('form:btnProbarAlerta').click();" process="@this" style="display:none;"/>
 	      	<p:menuitem id="mnuNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" style="display:none;"/>
-	      	<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this"  style="display:none;"/>
-	      	<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" style="display:none;"/>
+	      	<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this"  style="display:none;"/>
+	      	<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" style="display:none;"/>
 	    </p:contextMenu>
 	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar">
 			<p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>

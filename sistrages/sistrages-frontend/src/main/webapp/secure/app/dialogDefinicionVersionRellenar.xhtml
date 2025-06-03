@@ -17,6 +17,9 @@
 
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   </f:facet>
 </h:head>
 
@@ -34,7 +37,7 @@
   				<!-- Growl mensajes -->
 				<p:growl id="growldialogDefinicionRellenar" widgetVar="growldialogDefinicionRellenar" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="codigo" value="#{msg['dialogDefinicionVersionRellenar.headerIdentificador']}" />
 					<p:inputText  id="codigo"  value="#{dialogDefinicionVersionRellenar.data.identificador}" size="25" required="true" onblur="this.value = this.value.toUpperCase().trim();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -45,7 +48,7 @@
 					<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionRellenar.headerDescripcion']}" />
 					<p:column>
 						<p:inputText id="inputDescripcion" onblur="this.value = this.value.trim();" value="#{dialogDefinicionVersionRellenar.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRellenar.idiomas)}" readonly="true" size="40" styleClass="margin-right-10" required="true" />
-						<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionRellenar.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" styleClass="margin-right-3">
+						<p:commandButton id="btnDescripcion" icon="fa fa-globe" actionListener="#{dialogDefinicionVersionRellenar.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" styleClass="margin-right-3">
 		            		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRellenar.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
 		        		</p:commandButton>
 					</p:column>
@@ -61,7 +64,7 @@
 							<f:facet name="right">
 				        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionRellenar.aceptar()}" process="@form" update="@form growldialogDefinicionRellenar" styleClass="boton-azul" />
 								<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionRellenar.cancelar()}" process="@this"/>
-								<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionRellenar.ayuda()}" process="@this"/>
+								<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogDefinicionVersionRellenar.ayuda()}" process="@this"/>
 							</f:facet>
 					  </p:toolbar>
 			    </p:outputPanel>

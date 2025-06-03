@@ -46,15 +46,15 @@
 								<p:ajax event="contextMenu" global="false" process="@this" update="@form:botonesValores"/>
 
 								<!-- Columnas -->
-							    <p:column headerText="#{msg['dialogParametrosDominioCIN.parametro']}" class="ui-panelgrid-cell w55">
+							    <p:column headerText="#{msg['dialogParametrosDominioCIN.parametro']}" class="ui-panelgrid-cell w55" sortBy="#{td.parametro}">
 							        <h:outputText value="#{td.parametro}" />
 							    </p:column>
 
-								<p:column headerText="#{msg['dialogParametrosDominioCIN.valor']}" class="ui-panelgrid-cell w30">
+								<p:column headerText="#{msg['dialogParametrosDominioCIN.valor']}" class="ui-panelgrid-cell w30" sortBy="#{td.valor}">
 									<h:outputText value="#{td.valor}" />
 							    </p:column>
 
-							    <p:column headerText="#{msg['dialogParametrosDominioCIN.tipo']}" class="ui-panelgrid-cell w15">
+							    <p:column headerText="#{msg['dialogParametrosDominioCIN.tipo']}" class="ui-panelgrid-cell w15" sortBy="#{msg['typeParametroDominio.' += td.tipo]}">
 									<h:outputText value="#{msg['typeParametroDominio.' += td.tipo]}" />
 							    </p:column>
 
@@ -68,7 +68,7 @@
         					</p:commandButton>
         				</p>
         				<p>
-        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogParametrosDominioCIN.editarValor}" process="@this" update="growldialogParametrosDominioCIN"  >
+        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogParametrosDominioCIN.editarValor}" process="@this" update="growldialogParametrosDominioCIN"  >
         						<p:ajax event="dialogReturn" listener="#{dialogParametrosDominioCIN.returnDialogo}" update="growldialogParametrosDominioCIN datalistValores"/>
         					</p:commandButton>
         				</p>
@@ -88,7 +88,7 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogParametrosDominioCIN.aceptar}" process="@form" update="@form growldialogParametrosDominioCIN" styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogParametrosDominioCIN.cancelar}" process="@this"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogParametrosDominioCIN.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogParametrosDominioCIN.ayuda()}" process="@this"/>
 
 					</f:facet>
 				</p:toolbar>
@@ -98,14 +98,14 @@
             <p:confirmDialog global="true" >
                 <p:outputPanel styleClass="confirmar_botonera">
                     <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
                 </p:outputPanel>
             </p:confirmDialog>
 
             <h:outputScript >
 
 	             var arrayCm = [];
-					
+
 				  window.onload=function(){
 	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 	                onVisible(contextMenu, () => eliminarResaltar());
@@ -235,8 +235,8 @@
                 <p:menuitem id="mnuCopyValor" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogCampo:auxCopiar" update="growldialogParametrosDominioCIN" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevoValor" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogCampo:btnNuevoValor').click();" />
-				<p:menuitem id="mnuEditarValor" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogCampo:btnEditarValor').click();"/>
-				<p:menuitem id="mnuEliminarValor" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('dialogCampo:btnEliminarValor').click();" />
+				<p:menuitem id="mnuEditarValor" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('dialogCampo:btnEditarValor').click();"/>
+				<p:menuitem id="mnuEliminarValor" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('dialogCampo:btnEliminarValor').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyValores" trigger="mnuCopyValor" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogParametrosDominioCIN.copiadoCorr}" process="@this" update="@this growldialogParametrosDominioCIN"/>

@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -19,7 +19,6 @@ import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.SecurityService;
-import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.service.VariablesAreaService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -102,9 +101,12 @@ public class ViewVariablesArea extends ViewControllerBase {
 
 		DefaultMenuItem item = null;
 
-		item = new DefaultMenuItem(tramiteService.getArea(Long.parseLong(idArea)).getIdentificador());
-		item.setUrl("/secure/app/viewTramites.xhtml?area=" + idArea);
-		breadCrumb.addElement(item);
+		item = new DefaultMenuItem();
+		String area = tramiteService.getArea(Long.parseLong(idArea)).getIdentificador();
+		item.setAriaLabel(area);
+		item.setValue(area);
+		item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + idArea);
+		breadCrumb.getElements().add(item);
 
 	}
 
@@ -204,12 +206,11 @@ public class ViewVariablesArea extends ViewControllerBase {
 			return;
 		}
 
-		final RequestContext contextReq = RequestContext.getCurrentInstance();
 
 		this.msg = UtilJSF.getLiteral("confirm.borrado");
-		contextReq.update("form:dlgConfirmar");
+		PrimeFaces.current().ajax().update("form:dlgConfirmar");
 
-		contextReq.execute("PF('confirmationButton').jq.click();");
+		PrimeFaces.current().executeScript("PF('confirmationButton').jq.click();");
 	}
 
 	public boolean eliminarOk() {
@@ -522,7 +523,7 @@ public class ViewVariablesArea extends ViewControllerBase {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param idArea the id to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;

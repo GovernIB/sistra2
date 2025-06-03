@@ -18,7 +18,6 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +86,7 @@ public final class UtilJSF {
 	/**
 	 * Abre pantalla de dialogo
 	 *
-	 * @param dialog     Clase dialogo
+	 * @param clase     Clase dialogo
 	 * @param modoAcceso Modo de acceso
 	 * @param params     parametros
 	 * @param modal      si se abre en forma modal
@@ -98,6 +97,7 @@ public final class UtilJSF {
 			final Map<String, String> params, final boolean modal, final int width, final int heigth) {
 		openDialog(UtilJSF.getViewNameFromClass(clase), modoAcceso, params, modal, width, heigth);
 	}
+
 
 	/**
 	 * Abre pantalla de dialogo
@@ -115,7 +115,7 @@ public final class UtilJSF {
 		final Map<String, Object> options = new HashMap<>();
 		options.put("modal", modal);
 		options.put("width", width);
-		options.put("height", heigth);
+		options.put("height", heigth == 0 ? "auto" : heigth );
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("headerElement", "customheader");
@@ -140,13 +140,13 @@ public final class UtilJSF {
 		getSessionBean().getMochilaDatos().put(SEC_OPEN_DIALOG, secOpenDialog);
 
 		// Abre dialogo
-		RequestContext.getCurrentInstance().openDialog(dialog, options, paramsDialog);
+		PrimeFaces.current().dialog().openDynamic(dialog, options, paramsDialog);
 	}
 
 	/**
 	 * Abre pantalla de dialogo (siempre al 95% de width)
 	 *
-	 * @param dialog     Clase dialogo
+	 * @param clase     Clase dialogo
 	 * @param modoAcceso Modo de acceso
 	 * @param params     parametros
 	 * @param modal      si se abre en forma modal
@@ -165,7 +165,6 @@ public final class UtilJSF {
 	 * @param modoAcceso Modo de acceso
 	 * @param params     parametros
 	 * @param modal      si se abre en forma modal
-	 * @param width      anchura
 	 * @param height     altura
 	 */
 	public static void openDialog(final String dialog, final TypeModoAcceso modoAcceso,
@@ -198,7 +197,7 @@ public final class UtilJSF {
 		getSessionBean().getMochilaDatos().put(SEC_OPEN_DIALOG, secOpenDialog);
 
 		// Abre dialogo
-		RequestContext.getCurrentInstance().openDialog(dialog, options, paramsDialog);
+		PrimeFaces.current().dialog().openDynamic(dialog, options, paramsDialog);
 	}
 
 	/**
@@ -236,7 +235,7 @@ public final class UtilJSF {
 	 * @param result
 	 */
 	public static void closeDialog(final DialogResult result) {
-		RequestContext.getCurrentInstance().closeDialog(result);
+		PrimeFaces.current().dialog().closeDynamic(result);
 	}
 
 	/**
@@ -652,7 +651,6 @@ public final class UtilJSF {
 	/**
 	 * Devuelve opcion por defecto super administrador.
 	 *
-	 * @param opcion opcion
 	 * @return opcion
 	 */
 	public static TypeOpcionMenuAdmOper getDefaultOpcionAdmOper() {
@@ -662,7 +660,6 @@ public final class UtilJSF {
 	/**
 	 * Devuelve opcion por defecto administrador entidad/desarrollador.
 	 *
-	 * @param opcion opcion
 	 * @return opcion
 	 */
 	public static TypeOpcionMenuSuperAdministrador getDefaultOpcionSuperadministrador() {
@@ -701,7 +698,8 @@ public final class UtilJSF {
 	/**
 	 * Redirige pagina JSF por defecto para role.
 	 *
-	 * @param jsfPage path JSF page
+	 * @param role El rol
+	 * @param idEntidad id de la entidad
 	 */
 	public static void redirectJsfDefaultPageRole(final TypeRoleAcceso role, final Long idEntidad) {
 		redirectJsfPage(getDefaultUrlRole(role, idEntidad));
@@ -791,7 +789,7 @@ public final class UtilJSF {
 	 * @param pIdComponente identificador del componente
 	 */
 	public static void doUpdateComponent(final String pIdComponente) {
-		RequestContext.getCurrentInstance().update(pIdComponente);
+		PrimeFaces.current().ajax().update(pIdComponente);
 	}
 
 	/**

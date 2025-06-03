@@ -31,6 +31,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	/** Información autenticación. */
 	private UsuarioAutenticadoInfo infoAutenticacion;
 
+	/** Indica si es tramitado por FH. */
+	private boolean funcionarioHabilitado;
+
 	/** Id tramite. */
 	private String idTramite;
 
@@ -430,5 +433,6 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	public void setTituloTramite(final String tituloTramite) {
 		this.tituloTramite = tituloTramite;
 	}
+
 
 }

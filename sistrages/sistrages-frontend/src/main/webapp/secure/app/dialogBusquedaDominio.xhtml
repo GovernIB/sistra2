@@ -12,6 +12,9 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogBusquedaDominio.titulo']}"/></title>
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -56,15 +59,15 @@
 						<p:ajax event="rowUnselect" />
 
 						<!-- Columnas -->
-						<p:column headerText="#{msg['dialogBusquedaDominio.codigo']}" class="ui-panelgrid-cell w30">
+						<p:column headerText="#{msg['dialogBusquedaDominio.codigo']}" class="ui-panelgrid-cell w30" sortBy="#{td.identificador}">
 							<h:outputText value="#{td.identificador}" />
 					    </p:column>
 
-					    <p:column headerText="#{msg['dialogBusquedaDominio.descripcion']}" class="ui-panelgrid-cell w55">
+					    <p:column headerText="#{msg['dialogBusquedaDominio.descripcion']}" class="ui-panelgrid-cell w55" sortBy="#{td.descripcion}">
 					        <h:outputText value="#{td.descripcion}" />
 					    </p:column>
 
-					    <p:column headerText="#{msg['dialogBusquedaDominio.ambito']}" class="ui-panelgrid-cell w15">
+					    <p:column headerText="#{msg['dialogBusquedaDominio.ambito']}" class="ui-panelgrid-cell w15" sortBy="#{msg['typeAmbito.' += td.ambito]}">
 					        <h:outputText value="#{msg['typeAmbito.' += td.ambito]}" />
 					    </p:column>
 

@@ -2,6 +2,7 @@ package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -183,7 +184,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				return serviciosRolsac;
 			} catch (final Exception e) {
 				// No hacemos nada
-				log.warn(getWarning(intentos) + ": " + e.getMessage());
+				log.warn(getWarning(intentos) + ": " + e.getMessage(), e);
 			}
 			intentos++;
 		}

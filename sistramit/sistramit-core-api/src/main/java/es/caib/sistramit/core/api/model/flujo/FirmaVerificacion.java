@@ -25,6 +25,9 @@ public final class FirmaVerificacion {
 	/** Sesión de firma. */
 	private String sesionFirma;
 
+	/** En caso correcto, indica metodo de firma (proporcionado por el plugin de firma). */
+	private String metodoFirma;
+
 	/**
 	 * Método de acceso a realizada.
 	 *
@@ -113,5 +116,19 @@ public final class FirmaVerificacion {
 	 */
 	public void setSesionFirma(final String sesionFirma) {
 		this.sesionFirma = sesionFirma;
+	}
+
+	/**
+	 * Método de acceso a metodoFirma.
+	 */
+	public String getMetodoFirma() {
+		return metodoFirma;
+	}
+
+	/**
+	 * Método para establecer metodoFirma.
+	 */
+	public void setMetodoFirma(final String metodoFirma) {
+		this.metodoFirma = metodoFirma;
 	}
 }

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistrages</artifactId>
-		<version>1.7.5</version>
+		<version>1.8.0</version>
 	</parent>
 	<artifactId>sistrages-frontend</artifactId>
 	<packaging>war</packaging>
@@ -97,7 +97,7 @@
 			<dependency>
 					<groupId>org.primefaces.extensions</groupId>
 					<artifactId>resources-codemirror</artifactId>
-					<version>${primefacesExtensions.version}</version>
+					<version>${primefacesResourcesCodemirror.version}</version>
 			</dependency>
 
 		<dependency>
@@ -119,6 +119,19 @@
 			<version>${slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Font Awesome -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>font-awesome</artifactId>
+			<version>5.9.0</version>
+		</dependency>
 
 	</dependencies>
 
@@ -139,6 +152,9 @@
 							<files>
 								<file>${project.basedir}/../../sistra.properties</file>
 								<file>${project.basedir}/../../target/sistra-commit.properties</file>
+								<!--<file>/app/caib/des/sistra2/sistrages/sistrages.properties</file>
+								<file>/app/caib/des/sistra2/sistrages/sistrages.system.properties</file>-->
+
 							</files>
 						</configuration>
 					</execution>
@@ -151,6 +167,7 @@
 				<version>${maven.war.version}</version>
 				<configuration>
 					<warName>sistrages-frontend</warName>
+					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 					<webResources>
 						<webResource>
 							<directory>${basedir}/src/main/webapp/WEB-INF</directory>

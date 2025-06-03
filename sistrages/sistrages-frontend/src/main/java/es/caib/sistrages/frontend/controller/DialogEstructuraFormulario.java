@@ -114,7 +114,8 @@ public class DialogEstructuraFormulario extends DialogControllerBase {
 	 */
 	private void setExpandedRecursively(final TreeNode node, final boolean expanded) {
 		if (node != null) {
-			for (final TreeNode child : node.getChildren()) {
+			for (final Object object : node.getChildren()) {
+				TreeNode child = (TreeNode) object;
 				setExpandedRecursively(child, expanded);
 			}
 			node.setExpanded(expanded);

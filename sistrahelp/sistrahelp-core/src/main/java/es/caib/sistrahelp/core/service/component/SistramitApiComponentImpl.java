@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistrahelp.core.api.model.*;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,31 +23,6 @@ import org.springframework.web.client.RestTemplate;
 import es.caib.sistra2.commons.utils.JSONUtil;
 import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistrahelp.core.api.exception.ErrorJsonException;
-import es.caib.sistrahelp.core.api.model.DatosSesionPago;
-import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
-import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.EventoCM;
-import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
-import es.caib.sistrahelp.core.api.model.FicheroPersistenciaAuditoria;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
-import es.caib.sistrahelp.core.api.model.FiltroPerdidaClave;
-import es.caib.sistrahelp.core.api.model.FiltroPersistenciaAuditoria;
-import es.caib.sistrahelp.core.api.model.PagoAuditoria;
-import es.caib.sistrahelp.core.api.model.PerdidaClave;
-import es.caib.sistrahelp.core.api.model.PersistenciaAuditoria;
-import es.caib.sistrahelp.core.api.model.Persona;
-import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
-import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaPago;
-import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaPersistencia;
-import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
-import es.caib.sistrahelp.core.api.model.ResultadoEventoAuditoria;
-import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
-import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
-import es.caib.sistrahelp.core.api.model.ResultadoSoporte;
-import es.caib.sistrahelp.core.api.model.Soporte;
-import es.caib.sistrahelp.core.api.model.VerificacionPago;
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
 import es.caib.sistrahelp.core.api.model.types.TypeDocumentoPersistencia;
 import es.caib.sistrahelp.core.api.model.types.TypeEstadoTramite;
@@ -841,6 +817,10 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 				rFiltro.setEvento(pFiltro.getEvento().name());
 			}
 
+			if(pFiltro.getIniciadoPor() != null){
+				rFiltro.setIniciadoPor(pFiltro.getIniciadoPor().name());
+			}
+
 			rFiltro.setIdTramite(pFiltro.getIdTramite());
 			rFiltro.setVersionTramite(pFiltro.getVersionTramite());
 			rFiltro.setIdProcedimientoCP(pFiltro.getIdProcedimientoCP());
@@ -899,6 +879,18 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 				} catch (final JSONUtilException e) {
 					throw new ErrorJsonException(e);
 				}
+			}
+
+			if(pREventoAuditoria.getFuncionarioHabilitado() != null) {
+
+				FuncionarioHabilitado fh = new FuncionarioHabilitado();
+				fh.setNif(pREventoAuditoria.getFuncionarioHabilitado().getNif());
+				fh.setNombre(pREventoAuditoria.getFuncionarioHabilitado().getNombre());
+
+				fh.setApellido1(pREventoAuditoria.getFuncionarioHabilitado().getApellido1());
+				fh.setApellido2(pREventoAuditoria.getFuncionarioHabilitado().getApellido2());
+
+				evento.setFuncionarioHabilitado(fh);
 			}
 		}
 

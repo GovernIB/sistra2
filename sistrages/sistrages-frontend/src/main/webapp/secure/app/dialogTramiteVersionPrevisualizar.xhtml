@@ -41,6 +41,9 @@
 
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -58,7 +61,7 @@
 				<p:commandButton id="getProcedimientosEnd" style="display:none;" process="@this" actionListener="#{dialogTramiteVersionPrevisualizar.cargaInicial()}"/>
 				<p:commandButton id="getProcedimientosRecargar" style="display:none;" process="@this" actionListener="#{dialogTramiteVersionPrevisualizar.cargaRecarga()}"/>
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w15, w75, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w15, w75, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 18px !important;">
 
 					<p:outputLabel   for="idioma" value="#{msg['dialogTramiteVersionPrevisualizar.idioma']}" />
                 	<p:selectOneMenu id="idioma"  value="#{dialogTramiteVersionPrevisualizar.idioma}" disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}">
@@ -138,11 +141,11 @@
 								<p:ajax event="contextMenu" global="false" process="@this" update="@form:botonesTabla"/>
 
 								<!-- Columnas -->
-								<p:column headerText="#{msg['dialogTramiteVersionPrevisualizar.headerParametros.codigo']}" class="ui-panelgrid-cell">
+								<p:column headerText="#{msg['dialogTramiteVersionPrevisualizar.headerParametros.codigo']}" class="ui-panelgrid-cell" sortBy="#{td.codigo}">
 									<h:outputText value="#{td.codigo}" />
 							    </p:column>
 
-							    <p:column headerText="#{msg['dialogTramiteVersionPrevisualizar.headerParametros.valor']}" class="ui-panelgrid-cell">
+							    <p:column headerText="#{msg['dialogTramiteVersionPrevisualizar.headerParametros.valor']}" class="ui-panelgrid-cell" sortBy="#{td.valor}">
 							        <h:outputText value="#{td.valor}" />
 							    </p:column>
 				 			</p:dataTable>
@@ -154,7 +157,7 @@
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogTramiteVersionPrevisualizar.editarValor()}" process="@this" update="growlDialog"  disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}">
+		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogTramiteVersionPrevisualizar.editarValor()}" process="@this" update="growlDialog"  disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}">
 		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores dialogTramite:txtCopy"/>
 		        					</p:commandButton>
 		        				</p>
@@ -183,10 +186,11 @@
 						<p:commandButton id="hiddenCommandGrowl" styleClass="button" process="@this"  action="#{dialogTramiteVersionPrevisualizar.avisarGrowl()}"  style="display:none" />
 		     		</f:facet>
 					<f:facet name="right">
+						<p:commandButton id="btnModoFH" value="#{msg['botones.previsualizarModoFH']}" actionListener="#{dialogTramiteVersionPrevisualizar.openDialogPrevisualizarFH}" process="@this" update="growlDialog" rendered="#{dialogTramiteVersionPrevisualizar.modoFH}"/>
 						<p:commandButton value="#{msg['botones.previsualizarTramite']}" actionListener="#{dialogTramiteVersionPrevisualizar.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}"/>
 		        		<p:commandButton value="#{msg['botones.validarVersion']}" actionListener="#{dialogTramiteVersionPrevisualizar.validar}" process="@this" update="growlDialog"/>
 						<p:commandButton id="btnCancelar" value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionPrevisualizar.cancelar}" process="@this"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteVersionPrevisualizar.ayuda()}" process="@this" />
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogTramiteVersionPrevisualizar.ayuda()}" process="@this" />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
@@ -195,7 +199,7 @@
             <p:confirmDialog global="true" >
                 <p:outputPanel styleClass="confirmar_botonera">
                     <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
                 </p:outputPanel>
             </p:confirmDialog>
 
@@ -376,8 +380,8 @@
                 <p:menuitem id="mnuCopyValores" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogTramite:auxCopiar" update="growlDialog" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevoValores" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogTramite:btnNuevoValor').click();" />
-				<p:menuitem id="mnuEditarValores" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogTramite:btnEditarValor').click();"/>
-				<p:menuitem id="mnuEliminarValores" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('dialogTramite:btnEliminarValor').click();" />
+				<p:menuitem id="mnuEditarValores" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('dialogTramite:btnEditarValor').click();"/>
+				<p:menuitem id="mnuEliminarValores" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('dialogTramite:btnEliminarValor').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyPropiedades" trigger="mnuCopyValores" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogTramiteVersionPrevisualizar.copiadoCorr}" process="@this" update="@this growlDialog"/>

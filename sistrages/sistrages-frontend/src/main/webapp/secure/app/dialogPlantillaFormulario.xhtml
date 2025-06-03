@@ -30,7 +30,7 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0">
 
 					<h:column><p:outputLabel value="#{msg['dialogPlantillaFormulario.identificador']}" for="identificador"/></h:column>
 					<h:column>
@@ -66,7 +66,7 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaFormulario.aceptar()}" process="@form" update="@form growlDialog" rendered="#{dialogPlantillaFormulario.alta or dialogPlantillaFormulario.edicion}"  />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlantillaFormulario.cancelar()}" process="@this"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPlantillaFormulario.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogPlantillaFormulario.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

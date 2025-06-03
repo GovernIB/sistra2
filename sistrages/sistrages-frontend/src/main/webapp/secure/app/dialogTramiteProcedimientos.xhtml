@@ -151,7 +151,7 @@
 
 		    <p:inputText id="auxCopiar" value="#{dialogTramiteProcedimientos.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
-			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid styleClass="h100" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:dataTable  id="dataTableDatos"
 						  var="td"
@@ -172,36 +172,36 @@
 				<p:ajax event="rowSelect" global="false" />
 				<p:ajax event="rowUnselect" />
 
-				<p:column headerText="#{msg['dialogTramiteProcedimientos.headerTipo']}">
+				<p:column headerText="#{msg['dialogTramiteProcedimientos.headerTipo']}" sortBy="#{td.procedimiento.isProcedimiento()}?#{msg['dialogTramiteProcedimientos.tramite']}:#{msg['dialogTramiteProcedimientos.servicio']}">
 			       	<h:outputText value="#{msg['dialogTramiteProcedimientos.tramite']}"  rendered="#{td.procedimiento.isProcedimiento()}" 	/>
 			       	<h:outputText value="#{msg['dialogTramiteProcedimientos.servicio']}" rendered="#{td.procedimiento.isServicio()}" 		/>
 			    </p:column>
 
-			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerIdentificador']}">
-			        <h:outputText value="${td.procedimiento.identificador}" />
+			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerIdentificador']}" sortBy="#{td.procedimiento.identificador}">
+			        <h:outputText value="#{td.procedimiento.identificador}" />
 			    </p:column>
 
-				 <p:column headerText="#{msg['dialogTramiteProcedimientos.headerDescripcion']}">
-			        <h:outputText value="${td.procedimiento.descripcion}" />
+				 <p:column headerText="#{msg['dialogTramiteProcedimientos.headerDescripcion']}" sortBy="#{td.procedimiento.descripcion}">
+			        <h:outputText value="#{td.procedimiento.descripcion}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerProcedimientoSIA']}">
-			        <h:outputText value="${td.procedimiento.idProcedimientoSIA}" />
+			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerProcedimientoSIA']}" sortBy="#{td.procedimiento.idProcedimientoSIA}">
+			        <h:outputText value="#{td.procedimiento.idProcedimientoSIA}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerOrgano']}">
-			        <h:outputText value="${td.procedimiento.organoResponsableDir3}" />
+			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerOrgano']}" sortBy="#{td.procedimiento.organoResponsableDir3}">
+			        <h:outputText value="#{td.procedimiento.organoResponsableDir3}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerIdentificadorTRAM']}">
-			        <h:outputText value="${td.identificador}" />
+			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerIdentificadorTRAM']}" sortBy="#{td.identificador}">
+			        <h:outputText value="#{td.identificador}" />
 			    </p:column>
 
-				 <p:column headerText="#{msg['dialogTramiteProcedimientos.headerDescripcionTRAM']}">
-			        <h:outputText value="${td.descripcion}" />
+				 <p:column headerText="#{msg['dialogTramiteProcedimientos.headerDescripcionTRAM']}" sortBy="#{td.descripcion}">
+			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogTramiteProcedimientos.headerVigente']}" styleClass="grid-center">
+			     <p:column headerText="#{msg['dialogTramiteProcedimientos.headerVigente']}" styleClass="grid-center" sortBy="#{td.vigente}">
 			        <p:selectBooleanCheckbox value="#{td.vigente}" disabled="true" />
 			    </p:column>
 

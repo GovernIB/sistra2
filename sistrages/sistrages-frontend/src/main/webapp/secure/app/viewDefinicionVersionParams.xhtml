@@ -18,39 +18,69 @@
 
 	<ui:define name="content">
 
+		<style>
+			html, body, #mainLayout, #work, #formArbol {
+				height: 100% !important;
+			}
+
+			#panel {
+				height: 90% !important;
+			}
+
+			#mainDefinicionVersion {
+				height: 98% !important;
+			}
+
+			#work {
+				overflow: hidden !important;
+			}
+
+			#footer {
+				display: none !important;
+			}
+
+			.ui-md-1 {
+				width: auto !important;
+			}
+		</style>
+
 		<p:outputPanel id="panel" styleClass="h100">
 
 				<!-- Growl mensajes -->
 				<p:growl id="growl" widgetVar="growl" showDetail="false" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-				<p:layout id="mainDefinicionVersion" styleClass="h100">
+			<div id="mainDefinicionVersion" class="d-flex">
+				<!-- Side panel (previously indexDefinicionVersion) -->
+				<div id="indexDefinicionVersion" class="d-flex flex-column" style="width: 250px;margin-right: 10px !important;">
+					<h:form id="formArbol" class="w-100">
+						<p:tree id="arbol" value="#{viewDefinicionVersionParams.root}" var="node"
+								selectionMode="single" selection="#{viewDefinicionVersionParams.selectedNode}"
+								styleClass="h100 w100 arbolTramites" style="overflow:hidden; border: 1px solid #c9c9c9 !important; background-color: white; border-radius: 2%;"
+								onNodeClick="javascript:triggerDblClickTree();">
+							<p:treeNode>
+								<h:outputText value="#{node}" />
+							</p:treeNode>
+							<p:ajax event="select" listener="#{viewDefinicionVersionParams.onNodeSelect}"
+									update=":workDefinicionVersion" delay="500" />
+						</p:tree>
 
+						<p:commandButton process="@this" id="hiddenCommandEditar"
+										 styleClass="button no-display" action="#{viewDefinicionVersionParams.rcDobleClickTree()}">
+							<p:ajax event="dialogReturn"
+									listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}"
+									update="@parent :workDefinicionVersion" />
+						</p:commandButton>
+					</h:form>
+				</div>
 
-					<p:layoutUnit id="indexDefinicionVersion" position="west" size="250">
-						<h:form id="formArbol">
-							<p:tree id="arbol" value="#{viewDefinicionVersionParams.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersionParams.selectedNode}"  styleClass="sin-bordes h100 w100 arbolTramites" style="overflow:hidden" onNodeClick="javascript:triggerDblClickTree();">
-								<p:treeNode>
-									<h:outputText value="#{node}" />
-								</p:treeNode>
+				<!-- Main content area (previously center) -->
+				<div class="flex-grow-1 h100 update" style="overflow: auto !important; width: 100% !important; border: 0.2px solid #c9c9c9; border-radius: 1%;">
+					<p:outputPanel id="workDefinicionVersion">
+						<ui:include src="#{viewDefinicionVersionParams.opcionUrl}" />
+					</p:outputPanel>
+				</div>
+			</div>
 
-								<p:ajax event="select" listener="#{viewDefinicionVersionParams.onNodeSelect}" update=":workDefinicionVersion" delay="500"/>
-							</p:tree>
-
-							<p:commandButton process="@this" id="hiddenCommandEditar" styleClass="button no-display"  action="#{viewDefinicionVersionParams.rcDobleClickTree()}">
-				      			   <p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="@parent :workDefinicionVersion"  />
-					        </p:commandButton>
-
-
-						</h:form>
-					</p:layoutUnit>
-
-					<p:layoutUnit position="center">
-						<p:outputPanel id="workDefinicionVersion" styleClass="h100 update">
-						   <ui:include src="#{viewDefinicionVersionParams.opcionUrl}" />
-						 </p:outputPanel>
-					</p:layoutUnit>
-
-				</p:layout>
 
 		</p:outputPanel>
 
@@ -88,7 +118,7 @@
 							<p:confirmDialog global="true" >
 								<p:outputPanel styleClass="confirmar_botonera">
 						        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form" />
-						        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+						        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 								</p:outputPanel>
 						    </p:confirmDialog>
 

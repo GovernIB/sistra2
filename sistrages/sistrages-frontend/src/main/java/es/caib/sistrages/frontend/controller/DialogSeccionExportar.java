@@ -148,7 +148,7 @@ public class DialogSeccionExportar extends DialogControllerBase {
 
 		// 5. Descargar.
 		final InputStream myInputStream = new ByteArrayInputStream(content);
-		return new DefaultStreamedContent(myInputStream, "application/zip", getNombreFichero() + ".zip");
+		return DefaultStreamedContent.builder().contentType("application/zip").name(getNombreFichero() + ".zip").stream(() -> myInputStream).build();
 
 	}
 
@@ -173,6 +173,17 @@ public class DialogSeccionExportar extends DialogControllerBase {
 	}
 
 	/**
+	 * Para obtener el patch de la configuracion global.
+	 *
+	 * @return
+	 */
+	private String getPatch() {
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService
+				.getConfiguracionGlobal(TypePropiedadConfiguracion.VERSION_PATCH);
+		return confGlobal.getValor();
+	}
+
+	/**
 	 * Perpara el fichero de properties.
 	 *
 	 * @return
@@ -183,6 +194,7 @@ public class DialogSeccionExportar extends DialogControllerBase {
 		final Properties prop = new Properties();
 		prop.setProperty("entorno", UtilJSF.getEntorno());
 		prop.setProperty("version", getVersion());
+		prop.setProperty("patch", getPatch());
 		prop.setProperty("fecha", Calendar.getInstance().getTime().toString());
 		prop.setProperty("usuario", UtilJSF.getSessionBean().getUserName());
 		prop.setProperty("tipo", TypeImportarTipo.SECCION_REUTILIZABLE.toString());

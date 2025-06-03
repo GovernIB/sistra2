@@ -87,8 +87,8 @@ public class Tramite extends ModelApi {
 	 * @param identificador
 	 *            the identificador to set
 	 */
-	public void setIdentificador(final String codigo) {
-		this.identificador = codigo;
+	public void setIdentificador(final String identificador) {
+		this.identificador = identificador;
 	}
 
 	/**

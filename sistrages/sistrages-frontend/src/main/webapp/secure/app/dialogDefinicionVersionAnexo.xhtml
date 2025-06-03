@@ -27,6 +27,9 @@
 
 	 	<f:facet name="last">
     		<h:outputStylesheet library="css" name="style.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   		</f:facet>
 
 	</h:head>
@@ -162,7 +165,7 @@
  			<p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionAnexo.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="descripcion" readonly="true" required="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexo.idiomas)}" onblur="this.value = this.value.trim();"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexo.editarDescripcion()}"
+           		<p:commandButton icon="fa fa-globe" actionListener="#{dialogDefinicionVersionAnexo.editarDescripcion()}"
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoDescripcion}" update="growl descripcion" />
 		        </p:commandButton>
@@ -199,7 +202,7 @@
 		           		<p:spacer width="20" height="1"/>
 		           		<p:commandButton id="btnFichero" icon="fa fa-cog" process="@this" update="growl" actionListener="#{dialogDefinicionVersionAnexo.subirFichero()}" disabled="#{!dialogDefinicionVersionAnexo.permiteEditar}">
 		           			<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFichero}" update="formDialogDefinicionVersionAnexo ficheroVacio ficheroLink growl "/>
-		           			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.uploadDoc']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		           			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.uploadDoc']}" icon="fa fa-question-circle pi-3x confirmar_icono"/>
 		           		</p:commandButton>
 					</p:column>
 
@@ -211,7 +214,7 @@
 					<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.ayuda.mensaje']}" />
 					<p:outputPanel styleClass="ui-inputgroup">
 	           			<p:inputText id="mensaje_input" readonly="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.ayudaTexto.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexo.idiomas)}" onblur="this.value = this.value.trim();"/>
-	           			<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexo.editarAyudaTexto()}"
+	           			<p:commandButton icon="fa fa-globe" actionListener="#{dialogDefinicionVersionAnexo.editarAyudaTexto()}"
 							process="@this" update="growl">
 							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoAyudaTexto}" update="growl mensaje_input" />
 		        		</p:commandButton>
@@ -221,6 +224,7 @@
 			</p:outputPanel>
 
          	<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion']}" />
+
         	<p:outputPanel>
 	        	<p:selectOneRadio id="tipopresentacion" value="#{dialogDefinicionVersionAnexo.data.tipoPresentacion}" layout="custom">
 		        	<f:selectItems value="#{TypePresentacion.ALL_VALUES}" var="tipo" itemLabel="#{msg['typePresentacion.' += tipo]}" />
@@ -234,64 +238,68 @@
 					</p:outputPanel>
 
 
-					<h:panelGrid columns="2" columnClasses="wpx120 grid-right, padding-left-4" styleClass="panel_izq w100">
+					<h:panelGrid columns="2" columnClasses="wpx120 grid-right margin-top-10, padding-left-4 d-flex" styleClass="panel_izq w100 tableConEspacio-3">
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.numinstancias']}" for="numinstancias"/>
 						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
 							<p:inputText id="numinstancias" size="3" value="#{dialogDefinicionVersionAnexo.data.numeroInstancia}" maxlength="2" onblur="this.value = this.value.trim();">
-								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambiosNumeroInstancia}" process="@this" update="@this :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
+								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambiosNumeroInstancia}" process="@this" update="@this
+								:formDialogDefinicionVersionAnexo:requiereFirma :formDialogDefinicionVersionAnexo:debeValidarFirmantes :formDialogDefinicionVersionAnexo:btnScriptFirma"/>
 							</p:inputText>
 						</p:panelGrid>
 
-						<p:panelGrid columns="1" columnClasses="grid-right noPadding-right" styleClass="w100 noBorders">
+
 							<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones']}" />
-							<p:spacer width="8" height="1"/>
-						</p:panelGrid>
-						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,noPadding-left">
-							<p:panelGrid columns="1">
+
+						<p:column>
 								<p:selectOneRadio id="extensiones" value="#{dialogDefinicionVersionAnexo.data.extensionSeleccion}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}">
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="#{TypeExtension.TODAS}"/>
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="#{TypeExtension.PERSONALIZADAS}"/>
 									<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:personalizadas_input"/>
 					        	</p:selectOneRadio>
-					        	<p:spacer width="8" height="1"/>
-				        	</p:panelGrid>
-				        	<p:panelGrid columns="1">
-				        		<p:inputText id="personalizadas_input" size="15" value="#{dialogDefinicionVersionAnexo.data.extensiones}" readonly="#{(dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente)  or (dialogDefinicionVersionAnexo.data.extensionSeleccion eq TypeExtension.TODAS)}">
-				        			<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambiosExtensionesPersonalizadas}" process="@this" update="@this" />
+				        		<p:inputText id="personalizadas_input" size="15" value="#{dialogDefinicionVersionAnexo.data.extensiones}" readonly="#{(dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente)  or (dialogDefinicionVersionAnexo.data.extensionSeleccion eq TypeExtension.TODAS)}"
+											 style="height: fit-content; margin-top: 3px !important;">
+				        			<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambiosExtensionesPersonalizadas}" process="@this" update="@this"
+									/>
 				        		</p:inputText>
-				        		<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.formato']}" escape="true"/>
-				        	</p:panelGrid>
-						</p:panelGrid>
+				        		<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.formato']}" escape="true" style="margin-left:8px;margin-top:5px"/>
+				        </p:column>
 
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.tammaximo']}" for="tammaximo" />
-						<p:panelGrid styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
-							<p:inputText id="tammaximo" size="3" onblur="this.value = this.value.trim();" value="#{dialogDefinicionVersionAnexo.data.tamanyoMaximo}" maxlength="4" >
+
+						<p:column>
+							<p:inputText styleClass="w35" id="tammaximo" size="3" onblur="this.value = this.value.trim();" value="#{dialogDefinicionVersionAnexo.data.tamanyoMaximo}" maxlength="4" style="display: inline; margin-top: 3px !important; height: fit-content;">
 								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
 							</p:inputText>
-							<p:selectOneRadio id="tipotam" columns="1" value="#{dialogDefinicionVersionAnexo.data.tipoTamanyo}">
+							<p:selectOneRadio id="tipotam" columns="1" value="#{dialogDefinicionVersionAnexo.data.tipoTamanyo}" style="display: inline" styleClass="margin-left-10">
 						        	<f:selectItems value="#{TypeTamanyo.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeTamanyo.' += tipo]}" />
 									<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
 					        </p:selectOneRadio>
 
 
-							<p:spacer width="8" height="1"/>
-							<p:selectBooleanCheckbox id="convertirpdf" value="#{dialogDefinicionVersionAnexo.data.debeConvertirPDF}" itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}">
+
+
+							<p:selectBooleanCheckbox id="convertirpdf" value="#{dialogDefinicionVersionAnexo.data.debeConvertirPDF}"
+													 itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}"
+													rendered="#{dialogDefinicionVersionAnexo.mostrarConvertirPDF}"
+													 style="display: inline; margin-top: 6px !important;">
 								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
 							</p:selectBooleanCheckbox>
-						</p:panelGrid>
+						</p:column>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
-						<p:panelGrid id="panelChecksFirma" styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
+						<p:column>
 
 							<p:selectBooleanCheckbox id="requiereFirma" value="#{dialogDefinicionVersionAnexo.requiereFirma}"
 													 itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.requiereFirma']}"
-													 disabled="#{dialogDefinicionVersionAnexo.data.numeroInstancia != 1}">
+													 disabled="#{dialogDefinicionVersionAnexo.data.numeroInstancia != 1}"
+													 style="margin-top: 6px !important;">
 								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this"
 											update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input
-																:formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
+																:formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:debeValidarFirmantes :formDialogDefinicionVersionAnexo:btnScriptFirma"/>
 							</p:selectBooleanCheckbox>
-							<p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes" value="#{dialogDefinicionVersionAnexo.data.debeValidarFirmantes}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado ? false : true}">
-								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
+							<p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes" value="#{dialogDefinicionVersionAnexo.data.debeValidarFirmantes}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado ? false : true}"
+													 style="margin-top: 6px !important;">
+								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:btnScriptFirma"/>
 							</p:selectBooleanCheckbox>
 
 							<p:commandButton id="btnScriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
@@ -299,7 +307,7 @@
 									process="@this" update="growl" disabled="#{!dialogDefinicionVersionAnexo.data.debeValidarFirmantes}">
 										<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFirmarDigitalmente}" update="growl btnScriptFirma" />
 							</p:commandButton>
-						</p:panelGrid>
+						</p:column>
 
 						<p:outputLabel value="#{msg['script.SCRIPT_VALIDAR_ANEXO.titulo']}" />
 						<p:commandButton id="btnScriptValidacion" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO.name(), dialogDefinicionVersionAnexo.data.scriptValidacion)}"

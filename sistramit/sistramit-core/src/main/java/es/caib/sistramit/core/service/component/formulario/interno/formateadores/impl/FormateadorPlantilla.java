@@ -38,7 +38,8 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 	@Override
 	public byte[] formatear(final byte[] ixml, final List<String> paginasRellenadas, final byte[] plantilla,
 			final String idioma, final RFormularioInterno defFormInterno, final String tituloProcedimiento,
-			final String tituloTramite, final String siaProcedimiento, final String codigoDir3Responsable) {
+			final String tituloTramite, final String siaProcedimiento, final String codigoDir3Responsable,
+			final boolean funcionarioHabilitado) {
 
 		try {
 

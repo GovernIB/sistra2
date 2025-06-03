@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.system.types.TypeTicketAcceso;
 
 /**
  * Información ticket acceso.
@@ -14,8 +15,8 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 @SuppressWarnings("serial")
 public class InfoTicketAcceso implements Serializable {
 
-	/** Id sesión tramitación. */
-	private String idSesionTramitacion;
+	/** Tipo ticket acceso. */
+	private TypeTicketAcceso tipoTicketAcceso;
 
 	/** Info usuario autenticado. */
 	private UsuarioAutenticadoInfo usuarioAutenticadoInfo;
@@ -28,6 +29,28 @@ public class InfoTicketAcceso implements Serializable {
 
 	/** Indica url callback error si no se puede acceder. */
 	private String urlCallbackError;
+
+	/** Para acceso carpeta indica id sesión tramitación a recuperar. */
+	private String idSesionTramitacion;
+
+	/** Para acceso FH indica los datos de representación. */
+	private InfoAccesoFH infoAccesoFH;
+
+	public TypeTicketAcceso getTipoTicketAcceso() {
+		return tipoTicketAcceso;
+	}
+
+	public void setTipoTicketAcceso(TypeTicketAcceso tipoTicketAcceso) {
+		this.tipoTicketAcceso = tipoTicketAcceso;
+	}
+
+	public InfoAccesoFH getInfoAccesoFH() {
+		return infoAccesoFH;
+	}
+
+	public void setInfoAccesoFH(InfoAccesoFH infoAccesoFH) {
+		this.infoAccesoFH = infoAccesoFH;
+	}
 
 	/**
 	 * Método de acceso a idSesionTramitacion.

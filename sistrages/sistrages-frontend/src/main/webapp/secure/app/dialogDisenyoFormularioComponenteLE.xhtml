@@ -5,6 +5,10 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
+
 	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.maximoElementosComponenteListaElementos']}" /></h:column>
    	<h:column>
  		   	<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroMaximoElementos}" decimalPlaces="0" minValue="0" maxValue="99" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
@@ -16,7 +20,7 @@
 
 	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.detalleComponenteListaElementos']}" /></h:column>
    	<h:column>
-   		<p:commandButton id="btnAbrirDisenyoListaElementos" value="#{msg['dialogDisenyoFormulario.componente.irApantallaDetalleComponente']}" icon="fa fa-edit ui-btn-icon-bottom"  process="@this" oncomplete="document.getElementById('dialogDisenyoFormulario:btnAbrirLE').click();"    />
+   		<p:commandButton id="btnAbrirDisenyoListaElementos" value="#{msg['dialogDisenyoFormulario.componente.irApantallaDetalleComponente']}" icon="fa fa-pencil ui-btn-icon-bottom"  process="@this" oncomplete="document.getElementById('dialogDisenyoFormulario:btnAbrirLE').click();"    />
    	</h:column>
 </ui:composition>
 

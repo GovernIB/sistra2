@@ -29,25 +29,24 @@
     <h:outputStylesheet library="css" name="style.css" />
   </f:facet>
 
-  <p:layout fullPage="true" >
+	<p:outputPanel id="mainLayout" styleClass="h100 d-flex flex-column">
+		<c:choose>
+			<c:when test="#{msg[sessionBean.literalTituloPantalla] != null}">
+				<p:outputPanel id="work" style="flex-grow: 1; overflow: auto;">
+					<h2>#{msg[sessionBean.literalTituloPantalla]}</h2>
+					<ui:insert name="content" />
+				</p:outputPanel>
+			</c:when>
+			<c:otherwise>
+				<p:outputPanel id="work" style="flex-grow: 1; overflow: auto;">
+					<ui:insert name="content" />
+				</p:outputPanel>
+			</c:otherwise>
+		</c:choose>
+	</p:outputPanel>
 
-	<c:choose>
-	    <c:when test="#{msg[sessionBean.literalTituloPantalla] != null}">
-	        <p:layoutUnit id="work" position="center" header="#{msg[sessionBean.literalTituloPantalla]}" >
-	        	<ui:insert name="content" />
-    		</p:layoutUnit>
-	    </c:when>
-	    <c:otherwise>
-	    	<p:layoutUnit id="work" position="center" >
-	    		<ui:insert name="content" />
-    		</p:layoutUnit>
-	    </c:otherwise>
-	</c:choose>
 
-  </p:layout>
-
-
-  <!-- Para que elementos con global=true mostraran icono cargando (commandbutton, events, ...) -->
+	<!-- Para que elementos con global=true mostraran icono cargando (commandbutton, events, ...) -->
   <p:ajaxStatus id="startAjax" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"  />
 
 

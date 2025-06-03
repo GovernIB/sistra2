@@ -74,7 +74,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	 * Crea nueva propiedad.
 	 */
 	public void nuevoFormulario() {
-		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.ALTA, null, true, 600, 270);
+		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.ALTA, null, true, 600, 310);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.EDICION, params, true, 600, 270);
+		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.EDICION, params, true, 600, 310);
 	}
 
 	/**

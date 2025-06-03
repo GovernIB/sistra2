@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
@@ -39,6 +40,14 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 			dato = (EventoAuditoriaTramitacion) UtilJSF.getSessionBean().getMochilaDatos()
 					.get(Constantes.CLAVE_MOCHILA_EVENTO);
 			UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_EVENTO);
+
+			if(TypeEvento.INICIAR_TRAMITE.equals(dato.getTipoEvento()) && dato.getFuncionarioHabilitado() != null) {
+				if(dato.getPropiedadesEvento() == null){
+					dato.setPropiedadesEvento(new ListaPropiedades());
+				}
+				dato.getPropiedadesEvento().addPropiedades(dato.getFuncionarioHabilitado().toPropiedades());
+			}
+
 		}
 	}
 
@@ -52,9 +61,9 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 
 	public void sistrages() {
 		final Map<String, String> params = new HashMap<>();
-		params.put("TRAMITE", dato.getIdTramite());
+		params.put("viewAuditoriaTramites", dato.getIdTramite());
 		params.put("VERSION", dato.getVersionTramite().toString());
-		UtilJSF.openDialog(DialogDefinicionVersion.class, TypeModoAcceso.CONSULTA, params, true, 1300, 550);
+		UtilJSF.openDialog(DialogDefinicionVersion.class, TypeModoAcceso.CONSULTA, params, true, 1350, 550);
 	}
 
 	public void returnDialogo(final SelectEvent event) {

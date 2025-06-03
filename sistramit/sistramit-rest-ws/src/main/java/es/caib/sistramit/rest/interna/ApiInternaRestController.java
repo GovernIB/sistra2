@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.system.rest.interno.*;
+import es.caib.sistramit.core.api.model.system.types.TypeIniciadoPor;
+import es.caib.sistramit.rest.api.externa.v1.RFuncionarioHabilitadoInfo;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,23 +20,6 @@ import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistramit.core.api.exception.ErrorJsonException;
 import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
-import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.ErroresPorTramiteCM;
-import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.rest.interno.EventoCM;
-import es.caib.sistramit.core.api.model.system.rest.interno.FicheroAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.FormularioSoporte;
-import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
-import es.caib.sistramit.core.api.model.system.rest.interno.OUTPerdidaClave;
-import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.PerdidaClave;
-import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeTramitePersistencia;
@@ -564,6 +550,10 @@ public class ApiInternaRestController {
 				filtro.setEvento(TypeEvento.valueOf(pRFiltro.getEvento()));
 			}
 
+			if(pRFiltro.getIniciadoPor() != null) {
+				filtro.setIniciadoPor(TypeIniciadoPor.valueOf(pRFiltro.getIniciadoPor()));
+			}
+
 			filtro.setIdTramite(pRFiltro.getIdTramite());
 			filtro.setVersionTramite(pRFiltro.getVersionTramite());
 			filtro.setIdProcedimientoCP(pRFiltro.getIdProcedimientoCP());
@@ -647,6 +637,19 @@ public class ApiInternaRestController {
 				} catch (final JSONUtilException e) {
 					throw new ErrorJsonException(e);
 				}
+			}
+
+			if(pEventoAuditoria.getFuncionarioHabilitado() != null){
+
+				RFuncionarioHabilitadoInfo funcionarioHabilitado = new RFuncionarioHabilitadoInfo();
+
+				FuncionarioHabilitado fh = pEventoAuditoria.getFuncionarioHabilitado();
+				funcionarioHabilitado.setNif(fh.getNif());
+				funcionarioHabilitado.setNombre(fh.getNombre());
+				funcionarioHabilitado.setApellido1(fh.getApellido1());
+				funcionarioHabilitado.setApellido2(fh.getApellido2());
+
+				rEvento.setFuncionarioHabilitado(funcionarioHabilitado);
 			}
 		}
 

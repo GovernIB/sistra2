@@ -9,7 +9,6 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.MenuModel;
 
@@ -136,8 +135,8 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 
 		PrimeFaces.current().ajax().update("dataTable");
 		PrimeFaces.current().ajax().update("form:dataTable");
-		RequestContext.getCurrentInstance().update("dataTable");
-		RequestContext.getCurrentInstance().update("form:dataTable");
+		PrimeFaces.current().ajax().update("dataTable");
+		PrimeFaces.current().ajax().update("form:dataTable");
 	}
 
 	/**
@@ -593,7 +592,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
 
 		returnAlta = (modoAccesoDlg == TypeModoAcceso.ALTA);
-		UtilJSF.openDialog(DialogSeccionReutilizable.class, modoAccesoDlg, params, true, 550, 240);
+		UtilJSF.openDialog(DialogSeccionReutilizable.class, modoAccesoDlg, params, true, 550, 270);
 	}
 
 	/**

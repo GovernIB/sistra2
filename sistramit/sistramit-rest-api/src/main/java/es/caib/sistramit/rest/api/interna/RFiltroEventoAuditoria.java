@@ -42,6 +42,9 @@ public class RFiltroEventoAuditoria {
 	@ApiModelProperty(value = "Tipo Evento")
 	private String evento;
 
+	@ApiModelProperty(value = "Iniciado Por")
+	private String iniciadoPor;
+
 	@ApiModelProperty(value = "Excepcion")
 	private String excepcion;
 
@@ -134,6 +137,14 @@ public class RFiltroEventoAuditoria {
 
 	public void setEvento(final String evento) {
 		this.evento = evento;
+	}
+
+	public String getIniciadoPor() {
+		return iniciadoPor;
+	}
+
+	public void setIniciadoPor(String iniciadoPor) {
+		this.iniciadoPor = iniciadoPor;
 	}
 
 	public String getIdTramite() {

@@ -1,7 +1,9 @@
 package es.caib.sistramit.core.service.test;
 
 import java.io.File;
+import java.sql.Connection;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -59,5 +61,19 @@ public class BaseDbUnit extends AbstractTransactionalJUnit4SpringContextTests {
     public void setEntityManagerFactory(
             EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
+    }
+
+    @PostConstruct
+    public void init() {
+        try {
+            // Aumentamos tamaños columnas que son CLOB ya que las mapean a VARCHAR(255)
+            Connection conn = dataSource.getConnection();
+            conn.createStatement().execute("ALTER TABLE STT_TCKCDC MODIFY COLUMN TCC_INFFH VARCHAR(4000)");
+            conn.createStatement().execute("ALTER TABLE STT_TCKCDC MODIFY COLUMN TCC_INFAUT VARCHAR(4000)");
+            conn.close();
+            System.out.println("BaseDbUnit.init()");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

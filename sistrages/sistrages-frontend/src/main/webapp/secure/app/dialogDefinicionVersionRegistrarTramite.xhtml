@@ -34,6 +34,10 @@
     	}
     </script>
   </f:facet>
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -156,39 +160,32 @@
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growldialogDefinicionRellenar" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+		<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino']}" />
 			<p:panelGrid styleClass="noBorders" columnClasses="noPadding-left,">
-				<p:row rendered="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado}">
-					<p:column>
-						<p:outputLabel for="oficina"
-							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
-					</p:column>
-					<p:column>
-						<p:selectOneMenu id="oficina" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" required="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado and dialogDefinicionVersionRegistrarTramite.data.destino!='E'}" >
-						    <f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
-						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
-							<p:ajax listener="#{dialogDefinicionVersionRegistrarTramite.onChangeOficina}" update="@form" />
-							<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
-						</p:selectOneMenu>
-					</p:column>
+				<p:row rendered="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado}"  style="margin-bottom:10px;">
+					<p:outputLabel for="oficina" value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.oficina']}"
+								   style="white-space: nowrap;" />
+					<p:spacer width="10"  />
+					<p:selectOneMenu id="oficina" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" required="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado and dialogDefinicionVersionRegistrarTramite.data.destino!='E'}" >
+						<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
+						<f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
+						<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.onChangeOficina}"  process="@this" update="@form:libro" />
+					</p:selectOneMenu>
 				</p:row>
 				<p:row rendered="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado}">
-					<p:column>
-						<p:outputLabel for="libro"
-							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
-					</p:column>
-					<p:column>
-						<p:selectOneMenu id="libro" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" required="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado and dialogDefinicionVersionRegistrarTramite.data.destino!='E'}">
-						    <f:selectItem  itemLabel="" noSelectionOption="true"></f:selectItem>
-						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.libros}"  itemLabel="#{libro.nombre}" itemValue="#{libro.codigo}" var="libro" />
-						    <p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
-						</p:selectOneMenu>
-					</p:column>
+					<p:outputLabel for="libro" value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.libro']}"
+								   style="white-space: nowrap;" />
+					<p:spacer width="20"  />
+					<p:selectOneMenu id="libro" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" required="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado and dialogDefinicionVersionRegistrarTramite.data.destino!='E'}">
+						<f:selectItem  itemLabel="" noSelectionOption="true"></f:selectItem>
+						<f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.libros}"  itemLabel="#{libro.nombre}" itemValue="#{libro.codigo}" var="libro" />
+						<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
+					</p:selectOneMenu>
 				</p:row>
 				<p:row>
-					<p:column colspan="4">
+					<p:column colspan="4" style="width: auto">
 
 				        <p:outputPanel id="customPanel" style="margin-bottom:10px">
 				            <p:selectOneRadio id="customRadio" value="#{dialogDefinicionVersionRegistrarTramite.data.destino}" layout="custom">
@@ -227,7 +224,7 @@
            		<p:inputText id="tramitacion" required="true" readonly="true" onblur="this.value = this.value.trim();" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}"  styleClass="w85">
            			<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
            		</p:inputText>
-           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstTramitacion()}"
+           		<p:commandButton icon="fa fa-globe" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstTramitacion()}"
 						process="@this" update="growl">
 					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoInstrucciones}" update="growl tramitacion"/>
 				</p:commandButton>
@@ -301,7 +298,7 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionRegistrarTramite.aceptar()}" process="@form" update="@form growl"  styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionRegistrarTramite.cancelar()}" process="@this" />
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionRegistrarTramite.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogDefinicionVersionRegistrarTramite.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

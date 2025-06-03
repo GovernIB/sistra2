@@ -27,16 +27,19 @@
 
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
+      <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+      <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+      <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   </f:facet>
 
-  <p:layout fullPage="true" >
-   	<p:layoutUnit id="work" position="center" >
-   		<ui:insert name="content" />
-  	</p:layoutUnit>
-  </p:layout>
+    <div id="mainLayout" class="d-flex flex-column h-100">
+        <div id="work" class="flex-grow-1 margin-top-10" style="overflow: auto;">
+            <h2>#{msg[sessionBean.literalTituloPantalla]}</h2>
+            <ui:insert name="content" />
+        </div>
+    </div>
 
-
-  <!-- Para que elementos con global=true mostraran icono cargando (commandbutton, events, ...) -->
+    <!-- Para que elementos con global=true mostraran icono cargando (commandbutton, events, ...) -->
   <p:ajaxStatus id="startAjax" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"  />
 
 

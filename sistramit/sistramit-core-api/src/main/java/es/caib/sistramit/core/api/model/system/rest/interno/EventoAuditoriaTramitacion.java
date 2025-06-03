@@ -8,6 +8,7 @@ import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistramit.core.api.exception.ErrorJsonException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * La clase EventoAuditoriaTramitacion (RestApiInternaService).
@@ -32,7 +33,8 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 			final Date fecha, final String nif, final String nombre, final String apellido1, final String apellido2,
 			final String idTramite, final Integer versionTramite, final String idProcedimientoCP,
 			final String idProcedimientoSIA, final String codigoError, final String descripcion, final String resultado,
-			final String trazaError, final String descripcionTramite, final String detalle) {
+			final String trazaError, final String descripcionTramite, final String detalle, final String nifFH,
+			final String nombreFH, final String apellido1FH, final String apellido2FH) {
 		super();
 		this.id = id;
 		this.idSesionTramitacion = idSesionTramitacion;
@@ -55,6 +57,16 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 			this.propiedadesEvento = (ListaPropiedades) JSONUtil.fromJSON(detalle, ListaPropiedades.class);
 		} catch (final JSONUtilException e) {
 			throw new ErrorJsonException(e);
+		}
+
+		if(StringUtils.isNotBlank(nifFH)){
+
+			this.funcionarioHabilitado = new FuncionarioHabilitado();
+
+			this.funcionarioHabilitado.setNif(nifFH);
+			this.funcionarioHabilitado.setNombre(nombreFH);
+			this.funcionarioHabilitado.setApellido1(apellido1FH);
+			this.funcionarioHabilitado.setApellido2(apellido2FH);
 		}
 	}
 
@@ -179,6 +191,9 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	 * id procedimiento SIA.
 	 */
 	private String idProcedimientoSIA;
+
+	private FuncionarioHabilitado funcionarioHabilitado;
+
 
 	/**
 	 * Obtiene el valor de tipoEvento.
@@ -487,4 +502,11 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 		this.descripcionTramite = descripcionTramite;
 	}
 
+	public FuncionarioHabilitado getFuncionarioHabilitado() {
+		return funcionarioHabilitado;
+	}
+
+	public void setFuncionarioHabilitado(FuncionarioHabilitado funcionarioHabilitado) {
+		this.funcionarioHabilitado = funcionarioHabilitado;
+	}
 }

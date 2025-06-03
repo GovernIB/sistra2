@@ -140,7 +140,7 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid styleClass="h100" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:dataTable  id="dataTableDatos"
 						  var="td"
@@ -165,16 +165,16 @@
 				<p:ajax event="rowSelect" global="false" />
 				<p:ajax event="rowUnselect" />
 
-			    <p:column headerText="#{msg['botones.envioRemoto']}" style="width:25%">
-			        <h:outputText value="${td.identificadorCompuesto}"/>
+			    <p:column headerText="#{msg['botones.envioRemoto']}" style="width:25%" sortBy="#{td.identificadorCompuesto}">
+			        <h:outputText value="#{td.identificadorCompuesto}"/>
 			    </p:column>
 
-				<p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}">
-			        <h:outputText value="${td.descripcion}" />
+				<p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}" sortBy="#{td.descripcion">
+			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}">
-			        <h:outputText value="${td.area.getIdentificador()}" />
+			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}" sortBy="#{td.area.getIdentificador()}">
+			        <h:outputText value="#{td.area.getIdentificador()}" />
 			    </p:column>
 
 			</p:dataTable>

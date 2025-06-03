@@ -52,13 +52,21 @@
     <h:outputStylesheet library="css" name="style.css" />
   </f:facet>
 
-  <p:layout fullPage="true" >
+    <div id="mainLayout" class="d-flex flex-column h-100">
+        <div id="header" class="noPadding sin-bordes" style="height: 95px;">
+            <ui:include src="./header.xhtml" />
+        </div>
 
-    <p:layoutUnit id="work" position="center" header="#{msg[sessionBean.literalTituloPantalla]}" styleClass="margin-top-10">
-      <ui:insert name="content" />
-    </p:layoutUnit>
+        <div id="work" class="flex-grow-1 margin-top-10" style="overflow: auto;">
+            <h2>#{msg[sessionBean.literalTituloPantalla]}</h2>
+            <ui:insert name="content" />
+        </div>
 
-  </p:layout>
+        <div id="footer" style="height: 60px;">
+            <ui:include src="./footer.xhtml" />
+        </div>
+    </div>
+
 
 
   <!-- Para que elementos con global=true mostraran icono cargando (commandbutton, events, ...) -->

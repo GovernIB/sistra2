@@ -33,6 +33,10 @@ public final class HTicketCDC implements IModelApi {
 	@Column(name = "TCC_TICKET")
 	private String ticket;
 
+	/** Tipo ticket. */
+	@Column(name = "TCC_TIPO")
+	private String tipo;
+
 	/** Atributo fecha inicio. */
 	@Column(name = "TCC_FECINI")
 	private Date fechaInicio;
@@ -41,10 +45,13 @@ public final class HTicketCDC implements IModelApi {
 	@Column(name = "TCC_IDESTR")
 	private String idSesionTramitacion;
 
-	/** Informacion de autenticacion serializada (para vuelta de login). */
-	@Lob
+	/** Informacion de autenticacion serializada. */
 	@Column(name = "TCC_INFAUT")
-	private byte[] infoAutenticacion;
+	private String infoAutenticacion;
+
+	/** Informacion de FH serializada. */
+	@Column(name = "TCC_INFFH")
+	private String infoFH;
 
 	/** Atributo fecha fin. */
 	@Column(name = "TCC_FECFIN")
@@ -154,25 +161,6 @@ public final class HTicketCDC implements IModelApi {
 	}
 
 	/**
-	 * Método de acceso a infoAutenticacion.
-	 *
-	 * @return infoAutenticacion
-	 */
-	public byte[] getInfoAutenticacion() {
-		return infoAutenticacion;
-	}
-
-	/**
-	 * Método para establecer infoAutenticacion.
-	 *
-	 * @param pInfoAutenticacion
-	 *                               infoAutenticacion a establecer
-	 */
-	public void setInfoAutenticacion(final byte[] pInfoAutenticacion) {
-		infoAutenticacion = pInfoAutenticacion;
-	}
-
-	/**
 	 * Método de acceso a usadoRetorno.
 	 *
 	 * @return usadoRetorno
@@ -210,4 +198,27 @@ public final class HTicketCDC implements IModelApi {
 		this.urlCallbackError = urlCallbackError;
 	}
 
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getInfoAutenticacion() {
+		return infoAutenticacion;
+	}
+
+	public void setInfoAutenticacion(String infoAutenticacion) {
+		this.infoAutenticacion = infoAutenticacion;
+	}
+
+	public String getInfoFH() {
+		return infoFH;
+	}
+
+	public void setInfoFH(String infoFH) {
+		this.infoFH = infoFH;
+	}
 }

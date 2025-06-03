@@ -201,6 +201,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 */
 	public void onChangeOficina() {
 		try {
+			setCambios();
 			libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(), this.data.getCodigoOficinaRegistro(),
 					TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final RegistroPluginException e) {

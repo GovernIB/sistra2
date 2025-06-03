@@ -78,7 +78,20 @@ public class TestPdfCaib {
 		formularioPdf.setPie(pie);
 
 		Linea linea = new Linea();
-		Seccion seccion = new Seccion("", "Datos de la persona solicitante");
+		Seccion seccion = new Seccion("", "TRAMITADO POR FUNCIONARIO HABILITADO");
+		linea.getObjetosLinea().add(seccion);
+		lineas.add(linea);
+
+		/*
+		linea = new Linea();
+		lineas.add(linea);
+		final PersonalizacionTexto personalizacicionTextoFH = new PersonalizacionTexto(false, true, TypeFuente.NOTOSANS, 10);
+		final Texto textoFH = new Texto(personalizacicionTextoFH, "TRAMITADO POR FUNCIONARIO HABILITADO", 6);
+		linea.getObjetosLinea().add(textoFH);
+		 */
+
+		linea = new Linea();
+		seccion = new Seccion("", "Datos de la persona solicitante");
 		linea.getObjetosLinea().add(seccion);
 		lineas.add(linea);
 		linea = new Linea();

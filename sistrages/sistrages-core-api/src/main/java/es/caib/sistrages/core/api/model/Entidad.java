@@ -68,6 +68,9 @@ public class Entidad extends ModelApi {
 	/** formulario incidencias habilitado. */
 	private boolean formularioIncidenciasHabilitado;
 
+	/** ayudaContextFormHabilitada. */
+	private boolean ayudaContextFormHabilitada;
+
 	/** url carpeta ciudadana. */
 	private Literal urlCarpetaCiudadana;
 
@@ -142,6 +145,8 @@ public class Entidad extends ModelApi {
 
 	/** Plantillas **/
 	private List<PlantillaEntidad> plantillasMailFinRegistro;
+
+	private boolean modoFuncionarioHabilitado;
 
 	/**
 	 * Obtiene el valor de codigo.
@@ -461,6 +466,24 @@ public class Entidad extends ModelApi {
 	 */
 	public void setFormularioIncidenciasHabilitado(final boolean formularioIncidenciasHabilitado) {
 		this.formularioIncidenciasHabilitado = formularioIncidenciasHabilitado;
+	}
+
+	/**
+	 * Verifica si es ayudaContextFormHabilitada.
+	 *
+	 * @return true, si es ayudaContextFormHabilitada
+	 */
+	public boolean isAyudaContextFormHabilitada() {
+		return ayudaContextFormHabilitada;
+	}
+
+	/**
+	 * Establece el valor de ayudaContextFormHabilitada.
+	 *
+	 * @param ayudaContextFormHabilitada el nuevo valor de ayudaContextFormHabilitada
+	 */
+	public void setAyudaContextFormHabilitada(boolean ayudaContextFormHabilitada) {
+		this.ayudaContextFormHabilitada = ayudaContextFormHabilitada;
 	}
 
 	/**
@@ -785,6 +808,14 @@ public class Entidad extends ModelApi {
 	 */
 	public final void setIconoAsistenteTramitacion(Fichero iconoAsistenteTramitacion) {
 		this.iconoAsistenteTramitacion = iconoAsistenteTramitacion;
+	}
+
+	public void setModoFuncionarioHabilitado(boolean modoFuncionarioHabilitado) {
+		this.modoFuncionarioHabilitado = modoFuncionarioHabilitado;
+	}
+
+	public boolean isModoFuncionarioHabilitado() {
+		return modoFuncionarioHabilitado;
 	}
 
 	@Override

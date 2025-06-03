@@ -135,7 +135,7 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialogTramiteDesbl" widgetVar="growlDialogTramiteDesbl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel value="#{msg['dialogSeccionDesbloquear.headerRelease']}" />
 				 	<p:outputLabel value="#{dialogSeccionDesbloquear.data.release}" />

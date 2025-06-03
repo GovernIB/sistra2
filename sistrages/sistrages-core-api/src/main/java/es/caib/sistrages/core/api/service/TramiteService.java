@@ -2,25 +2,7 @@ package es.caib.sistrages.core.api.service;
 
 import java.util.List;
 
-import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.AvisoEntidad;
-import es.caib.sistrages.core.api.model.DisenyoFormulario;
-import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.DominioTramite;
-import es.caib.sistrages.core.api.model.Fichero;
-import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.GestorExternoFormularios;
-import es.caib.sistrages.core.api.model.HistorialVersion;
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Script;
-import es.caib.sistrages.core.api.model.SeccionReutilizable;
-import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
-import es.caib.sistrages.core.api.model.Tasa;
-import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.*;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
@@ -713,6 +695,17 @@ public interface TramiteService {
 	 */
 	public List<Tramite> listTramite(Long idEntidad, List<Long> areas, String filtro);
 
+	/**
+	 * Busca los trámites según el id entidad, las areas y el filtro.
+	 *
+	 * @param idEntidad
+	 * @param areas
+	 * @param filtro
+	 * @return Devuelve los datos simplificados
+	 */
+	public List<Tramite> listTramiteSimple(Long idEntidad, List<Long> areas, String filtro);
+
+
 	public int listTramiteTotal(Long idEntidad, List<Long> areas, String filtro);
 
 	/**
@@ -725,6 +718,7 @@ public interface TramiteService {
 	 */
 	public List<Tramite> listTramite(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
 			List<Long> areas, String filtro);
+
 
 	/**
 	 * Si algún identificador no está agregado, mira de añadirlo.
@@ -765,7 +759,7 @@ public interface TramiteService {
 	/**
 	 * Devueve los tramites que utilizan la seccion reutilizable
 	 *
-	 * @param valueOf
+	 * @param idSeccionReutilizable
 	 * @return
 	 */
 	public List<SeccionReutilizableTramite> getTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable);
@@ -793,4 +787,14 @@ public interface TramiteService {
 	 */
 	public List<Long> getDisenyosLEByTramite(Long codigo);
 
+	/**
+	 * Devuelve todo simplificado
+	 * @param idEntidad Id de entidad
+	 * @param idAreas Ids de areas
+	 * @param filtro Filtro de viewTramites
+	 * @param sortField Campo por el que ordenar
+	 * @param sortAscending Orden ascendente
+	 * @return Lista simplificada de tramites y tramitesVersion
+	 */
+	List<TramiteFrontal> listTramiteVersionesSimplicada(Long idEntidad, List<Long> idAreas, String filtro, Integer first , Integer pageSize, String sortField, Boolean sortAscending);
 }

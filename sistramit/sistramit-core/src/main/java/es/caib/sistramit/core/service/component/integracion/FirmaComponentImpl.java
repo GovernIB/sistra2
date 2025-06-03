@@ -56,9 +56,9 @@ public final class FirmaComponentImpl implements FirmaComponent {
 
 	@Override
 	public RedireccionFirma redireccionFirmaExterna(final String idEntidad, final UsuarioAutenticadoInfo usuarioAutenticado,
-													final Persona firmante, final Persona representante,
+													final Persona firmante,	final Persona representante,
 													final String fileId, final byte[] fileContent, final String fileName,
-			final String tipoDocumental, final String urlCallBack, final String idioma) {
+													final String tipoDocumental, final String urlCallBack, final String idioma) {
 
 		// Obtiene plugin
 		final IFirmaPlugin plgFirma = getPluginFirmaExterna(idEntidad);
@@ -171,6 +171,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 						resFirma.setFinalizada(true);
 						resFirma.setFirmaContenido(fic.getFirmaFichero());
 						resFirma.setFirmaTipo(tipoFirma);
+						resFirma.setMetodoFirma(fic.getMetodoFirma());
 						resFirma.setValida(true);
 						resFirma.setVerificar(plgFirma.isVerificarFirma());
 					} else {

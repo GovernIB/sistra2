@@ -282,7 +282,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 
 			final byte[] contents = CsvUtil.exportar(csv);
 			final ByteArrayInputStream bis = new ByteArrayInputStream(contents);
-			file = new DefaultStreamedContent(bis, "csv", "Fichero.csv");
+			file = DefaultStreamedContent.builder().contentType("csv").name("Fichero.csv").stream(() -> bis).build();
 
 		} catch (final Exception ex) {
 			UtilJSF.loggearErrorFront("No se puede generar el csv", ex);

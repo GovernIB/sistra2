@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.flujo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +21,8 @@ import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
-import es.caib.sistramit.core.api.exception.TicketCarpetaCiudadanaException;
+import es.caib.sistramit.core.api.exception.TicketAccesoException;
 import es.caib.sistramit.core.api.exception.TicketFormularioException;
-import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
-import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
-import es.caib.sistramit.core.api.model.flujo.RetornoPago;
-import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
@@ -96,8 +93,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite, final int versionTramite,
-			final String idTramiteCatalogo, final boolean servicioCatalogo, final String idioma,
-			final String urlInicioTramite) {
+			final String idTramiteCatalogo, final boolean servicioCatalogo, final String idioma) {
 		return generarInfoLoginTramite(codigoTramite, versionTramite, idTramiteCatalogo, servicioCatalogo, idioma);
 	}
 
@@ -130,7 +126,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	@NegocioInterceptor
-	public UsuarioAutenticadoInfo validarTicketAutenticacion(final SesionInfo sesionInfo, final String ticket) {
+	public UsuarioAutenticadoInfo validarTicketAutenticacionClave(final SesionInfo sesionInfo, final String ticket) {
 
 		final DatosAutenticacionUsuario usuario = autenticacionComponent.validarTicketAutenticacion(ticket);
 
@@ -276,60 +272,62 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public UsuarioAutenticadoInfo validarTicketCarpetaCiudadana(final SesionInfo sesionInfo, final String ticket) {
-
-		// Recuperamos info ticket
-		final InfoTicketAcceso infoTicket = ticketCDCDao.obtieneTicketAcceso(ticket);
-
-		// Verificamos que no ha sido usado y que no se ha cumplido timeout
-		if (infoTicket.isUsado()) {
-			throw new TicketCarpetaCiudadanaException("Ticket ja ha estat utilitzat: " + ticket);
-		}
-		int secsTimeout = TIMEOUT_TICKET_DEFAULT;
-		final String secsTimeoutStr = configuracionComponent
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.TIMEOUT_TICKET);
-		if (StringUtils.isBlank(secsTimeoutStr)) {
-			log.warn("No está configurada la propiedad " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString());
-		}
-		try {
-			secsTimeout = Integer.parseInt(secsTimeoutStr);
-			if (secsTimeout <= 0) {
-				log.warn("La propiedad " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString()
-						+ " no tiene un valor válido: " + secsTimeoutStr);
-				secsTimeout = TIMEOUT_TICKET_DEFAULT;
-			}
-		} catch (final NumberFormatException e) {
-			log.warn("La propietat " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString() + " no té un valor vàlid: "
-					+ secsTimeoutStr);
-			secsTimeout = TIMEOUT_TICKET_DEFAULT;
-		}
-		final Date dateNow = new Date();
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(dateNow);
-		cal.add(Calendar.SECOND, secsTimeout);
-		final Date dateMax = cal.getTime();
-		if (dateNow.after(dateMax)) {
-			throw new TicketCarpetaCiudadanaException("Ticket ha expirat: " + ticket);
-		}
-
+		// Valida ticket
+		final InfoTicketAcceso infoTicket = validarTicketAcceso(ticket);
 		// Devolvemos usuario autenticado
 		final UsuarioAutenticadoInfo usu = infoTicket.getUsuarioAutenticadoInfo();
 		usu.setSesionInfo(sesionInfo);
 		return usu;
-
 	}
 
 	@Override
 	@NegocioInterceptor
-	public InfoTicketAcceso obtenerTicketAccesoCDC(final String ticket) {
+	public UsuarioAutenticadoInfo validarTicketFH(final SesionInfo sesionInfo, final String ticket) {
+		// Valida ticket
+		final InfoTicketAcceso infoTicket = validarTicketAcceso(ticket);
+		// FH
+		UsuarioAutenticadoInfo fh = infoTicket.getUsuarioAutenticadoInfo();
+		// Interesado
+		PersonaDesglosado interesado = infoTicket.getInfoAccesoFH().getInteresado();
+		// Representante
+		PersonaDesglosado representante = infoTicket.getInfoAccesoFH().getRepresentante();
+		// Devolvemos como usuario autenticado el interesado
+		UsuarioAutenticadoInfo usu = new UsuarioAutenticadoInfo();
+		usu.setSesionInfo(sesionInfo);
+		usu.setNif(interesado.getNif());
+		usu.setUsername(interesado.getNif());
+		usu.setNombre(interesado.getNombre());
+		usu.setApellido1(interesado.getApellido1());
+		usu.setApellido2(interesado.getApellido2());
+		usu.setAutenticacion(fh.getAutenticacion());
+		usu.setMetodoAutenticacion(fh.getMetodoAutenticacion());
+		usu.setQaa(fh.getQaa());
+		if (representante != null) {
+			UsuarioAutenticadoRepresentante rep = new UsuarioAutenticadoRepresentante();
+			rep.setNif(representante.getNif());
+			rep.setNombre(representante.getNombre());
+			rep.setApellido1(representante.getApellido1());
+			rep.setApellido2(representante.getApellido2());
+			usu.setRepresentante(rep);
+		}
+		// FH
+		usu.setFuncionarioHabilitado(new FuncionarioHabilitado(fh.getUsername(), fh.getNif(), fh.getNombre(), fh.getApellido1(), fh.getApellido2(), infoTicket.getInfoAccesoFH().getDir3FH()));
+		return usu;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public InfoTicketAcceso obtenerTicketAcceso(final String ticket) {
 		return ticketCDCDao.obtieneTicketAcceso(ticket);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public List<TramiteIniciado> obtenerTramitacionesIniciadas(final String nif, final String tramite,
-			final int version, final String idTramiteCatalogo, final boolean servicioCatalogo) {
+															   final int version, final String idTramiteCatalogo,
+															   final boolean servicioCatalogo, String nifFH) {
 		return flujoTramiteDao.obtenerTramitacionesIniciadas(nif, tramite, version, idTramiteCatalogo,
-				servicioCatalogo);
+				servicioCatalogo, nifFH);
 	}
 
 	// ------------------------------------------------------------------------
@@ -387,5 +385,49 @@ public class SecurityServiceImpl implements SecurityService {
 		res.setDebug(UtilsSTG.isDebugEnabled(defTramite));
 		return res;
 	}
+
+	/**
+	 * Valida ticket acceso
+	 * @param ticket Ticket
+	 * @return Info ticket acceso
+	 */
+	private InfoTicketAcceso validarTicketAcceso(String ticket) {
+		// Recuperamos info ticket
+		final InfoTicketAcceso infoTicket = ticketCDCDao.obtieneTicketAcceso(ticket);
+		// Verificamos que no ha sido usado y que no se ha cumplido timeout
+		if (infoTicket.isUsado()) {
+			throw new TicketAccesoException("Ticket ja ha estat utilitzat: " + ticket);
+		}
+		int secsTimeout = TIMEOUT_TICKET_DEFAULT;
+		final String secsTimeoutStr = configuracionComponent
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.TIMEOUT_TICKET);
+		if (StringUtils.isBlank(secsTimeoutStr)) {
+			log.warn("No está configurada la propiedad " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString());
+		}
+		try {
+			secsTimeout = Integer.parseInt(secsTimeoutStr);
+			if (secsTimeout <= 0) {
+				log.warn("La propiedad " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString()
+						+ " no tiene un valor válido: " + secsTimeoutStr);
+				secsTimeout = TIMEOUT_TICKET_DEFAULT;
+			}
+		} catch (final NumberFormatException e) {
+			log.warn("La propietat " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString() + " no té un valor vàlid: "
+					+ secsTimeoutStr);
+			secsTimeout = TIMEOUT_TICKET_DEFAULT;
+		}
+		final Date dateNow = new Date();
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(dateNow);
+		cal.add(Calendar.SECOND, secsTimeout);
+		final Date dateMax = cal.getTime();
+		if (dateNow.after(dateMax)) {
+			throw new TicketAccesoException("Ticket ha expirat: " + ticket);
+		}
+		// Marcamos ticket como usado
+		ticketCDCDao.consumirTicketAcceso(ticket);
+		return infoTicket;
+	}
+
 
 }

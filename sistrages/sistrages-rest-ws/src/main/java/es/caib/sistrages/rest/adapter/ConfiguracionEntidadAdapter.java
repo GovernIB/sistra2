@@ -87,6 +87,7 @@ public class ConfiguracionEntidadAdapter {
 		if (entidad.isFormularioIncidenciasHabilitado()) {
 			rConfiguracionEntidad.setAyudaFormulario(generaFormularios(formSoporte));
 		}
+		rConfiguracionEntidad.setAyudaContextual(entidad.isAyudaContextFormHabilitada());
 		rConfiguracionEntidad.setPlugins(
 				AdapterUtils.crearPlugins(restApiService.listPlugin(TypeAmbito.ENTIDAD, entidad.getCodigo(), null)));
 		rConfiguracionEntidad.setDescripcion(AdapterUtils.generarLiteral(entidad.getNombre()));
@@ -100,6 +101,7 @@ public class ConfiguracionEntidadAdapter {
 		rConfiguracionEntidad.setUrlTwitter(entidad.getUrlTwitter());
 		rConfiguracionEntidad.setUrlYoutube(entidad.getUrlYoutube());
 		rConfiguracionEntidad.setDiasTramitesPresenciales(entidad.getDiasTramitesPresenciales());
+		rConfiguracionEntidad.setModoFuncionarioHabilitado(entidad.isModoFuncionarioHabilitado());
 		rConfiguracionEntidad.setPermiteSubsanarAnexar(entidad.isPermiteSubsanarAnexar());
 		rConfiguracionEntidad.setPermiteSubsanarPagar(entidad.isPermiteSubsanarPagar());
 		rConfiguracionEntidad.setPermiteSubsanarRegistrar(entidad.isPermiteSubsanarRegistrar());

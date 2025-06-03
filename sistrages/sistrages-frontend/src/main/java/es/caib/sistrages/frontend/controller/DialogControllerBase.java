@@ -3,7 +3,7 @@ package es.caib.sistrages.frontend.controller;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -338,8 +338,8 @@ public abstract class DialogControllerBase {
 		if (title != null) {
 			UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_ERRORES_TLE, title);
 		}
-		final RequestContext context = RequestContext.getCurrentInstance();
+
 		final String evento = "window.parent.document.getElementById('formHeader:hiddenGrowl').click()";
-		context.execute(evento);
+		PrimeFaces.current().executeScript(evento);
 	}
 }

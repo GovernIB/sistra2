@@ -8,8 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.model.formulario.*;
-import es.caib.sistramit.core.api.service.EntregaService;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
+import es.caib.sistramit.core.api.model.system.rest.externo.InfoAccesoFH;
+import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
+import es.caib.sistramit.core.api.model.system.rest.externo.InfoTramiteFH;
+import es.caib.sistramit.core.api.model.system.types.TypeTicketAcceso;
+import es.caib.sistramit.core.api.service.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
@@ -20,23 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.AbrirFormulario;
-import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
-import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
-import es.caib.sistramit.core.api.model.flujo.DetallePasoGuardar;
-import es.caib.sistramit.core.api.model.flujo.DetallePasoPagar;
-import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
-import es.caib.sistramit.core.api.model.flujo.DetallePasoRellenar;
-import es.caib.sistramit.core.api.model.flujo.DetallePasos;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
-import es.caib.sistramit.core.api.model.flujo.FirmaVerificacion;
-import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
-import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoGuardar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
@@ -51,9 +40,6 @@ import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
-import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
-import es.caib.sistramit.core.api.service.FlujoTramitacionService;
-import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
@@ -86,6 +72,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	/** Entrega service. */
 	@Autowired
 	private EntregaService entregaService;
+
+	/** Api externa service. */
+	@Autowired
+	private RestApiExternaService restApiExternaService;
 
 	/** Url inicio. */
 	private static final String URL_INICIO = "localhost:8080/sistramitfront/asistente/iniciarTramite.html?tramite="
@@ -201,7 +191,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 */
 	@Test
 	public void test6_flujoTramitacionElectronico() throws Exception {
-		test_flujoTramitacionElectronico(true);
+		test_flujoTramitacionElectronico(true, false);
 	}
 
 	/**
@@ -209,12 +199,29 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 */
 	@Test
 	public void test7_flujoTramitacionTramiteServicio() throws Exception {
-		test_flujoTramitacionElectronico(false);
+		test_flujoTramitacionElectronico(false, false);
 	}
 
-	protected void test_flujoTramitacionElectronico(final boolean registro)
-			throws UnsupportedEncodingException, IOException {
-		final String idTramite;
+	/**
+	 * Verificación flujo tramitación en modo FH adaptando definición del trámite para que sea compatible con FH (quitar pagos y anexo xml)
+	 */
+	@Test
+	public void test8_flujoTramitacionElectronicoFH() throws Exception {
+		test_flujoTramitacionElectronico(true, true);
+	}
+
+	/**
+	 * Verificación flujo tramitación de tipo servicio en modo FH adaptando definición del trámite para que sea compatible con FH
+	 */
+	@Test
+	public void test9_flujoTramitacionTramiteServicioFH() throws Exception {
+		test_flujoTramitacionElectronico(false, true);
+	}
+
+	protected void test_flujoTramitacionElectronico(final boolean registro, final boolean modoFH)
+			throws IOException {
+
+		String idTramite;
 
 		if (registro) {
 			idTramite = SistragesMock.ID_TRAMITE;
@@ -222,10 +229,22 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 			idTramite = SistragesMock.ID_TRAMITE_SERVICIO;
 		}
 
-		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.AUTENTICADO);
+		if (modoFH) {
+			idTramite += SistragesMock.SUFIJO_TRAMITE_FH;
+		}
+
+
+		// Inicia tramite
+		UsuarioAutenticadoInfo usuarioAutenticadoInfo;
+		PersonaDesglosado fh = null;
+		if (!modoFH) {
+			usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.AUTENTICADO);
+		} else {
+			usuarioAutenticadoInfo = loginSimuladoFH(idTramite, !registro);
+		}
 
 		// Iniciar trámite
-		final String idSesionTramitacion = flujoTramitacion_iniciarTramite(usuarioAutenticadoInfo, idTramite);
+		final String idSesionTramitacion = flujoTramitacion_iniciarTramite(idTramite, usuarioAutenticadoInfo);
 
 		// Detalle paso actual: Debe saber
 		flujoTramitacion_debeSaber(idSesionTramitacion);
@@ -234,19 +253,199 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		flujoTramitacion_rellenar(idSesionTramitacion, registro);
 
 		if (registro) {
-			// Pasamos a paso siguiente: anexar
-			flujoTramitacion_anexar_electronico(idSesionTramitacion);
-
-			// Pasamos a paso siguiente: pagar
-			flujoTramitacion_pagar_electronico(idSesionTramitacion, usuarioAutenticadoInfo);
+			if (!modoFH) {
+				// Pasamos a paso siguiente: anexar
+				flujoTramitacion_anexar_electronico(idSesionTramitacion);
+				// Pasamos a paso siguiente: pagar
+				flujoTramitacion_pagar_electronico(idSesionTramitacion, usuarioAutenticadoInfo);
+			} else {
+				// Pasamos a paso siguiente: anexar
+				flujoTramitacion_anexar_electronico_FH(idSesionTramitacion);
+			}
 		}
 
 		// Pasamos a paso siguiente: registrar
-		flujoTramitacion_registro_electronico(idSesionTramitacion, usuarioAutenticadoInfo, registro);
+		flujoTramitacion_registro_electronico(idSesionTramitacion, usuarioAutenticadoInfo, fh, registro, modoFH);
 
 		// Entrega CES2 -- no se xq no guarda los datos en tabla entregas al finalizar tx
 		// entregaService.procesarEntregaFinalizadosInmediatos();
 
+	}
+
+	private void flujoTramitacion_anexar_electronico_FH(String idSesionTramitacion) throws IOException {
+		DetallePasos dp;
+		ResultadoIrAPaso rp;
+		ResultadoAccionPaso ra;
+		ParametrosAccionPaso params;
+		RedireccionDigitalizacion rd;
+		DigitalizacionResultado dr;
+
+		String idPasoAnexar;
+
+		// - Pasamos a paso anexar
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		rp = flujoTramitacionService.irAPaso(idSesionTramitacion, dp.getSiguiente());
+		Assert.isTrue(StringUtils.equals(rp.getIdPasoActual(), dp.getSiguiente()),
+				"No se ha podido pasar a siguiente paso");
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.ANEXAR, "Paso actual no es anexar");
+		idPasoAnexar = dp.getActual().getId();
+		this.logger.info("Detalle paso: " + dp.print());
+
+		// - Anexamos primer anexo
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(0).getId());
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.INICIAR_DIGITALIZACION_ANEXO, params);
+		rd = (RedireccionDigitalizacion) ra.getParametroRetorno("redireccion");
+		Assert.isTrue(rd != null && StringUtils.isNotBlank(rd.getUrl()), "No se devuelve url redireccion");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.FINALIZAR_DIGITALIZACION_ANEXO, params);
+		dr = (DigitalizacionResultado) ra.getParametroRetorno("resultado");
+		Assert.isTrue(dr != null && dr.getDigitalizado() == TypeSiNo.SI, "No se ha digitalizado");
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		this.logger.info("Detalle paso: " + dp.print());
+
+		// - Descargar anexo
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(0).getId());
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar, TypeAccionPasoAnexar.DESCARGAR_ANEXO,
+				params);
+		Assert.isTrue(StringUtils.isNotBlank((String) ra.getParametroRetorno("nombreFichero")),
+				"No se devuelve nombre fichero");
+		Assert.isTrue(ra.getParametroRetorno("datosFichero") != null, "No se devuelve datos fichero");
+
+		// - Anexamos segundo anexo: genérico primera instancia
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1).getId());
+		params.addParametroEntrada("instancia", "1");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.INICIAR_DIGITALIZACION_ANEXO, params);
+		rd = (RedireccionDigitalizacion) ra.getParametroRetorno("redireccion");
+		Assert.isTrue(rd != null && StringUtils.isNotBlank(rd.getUrl()), "No se devuelve url redireccion");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.FINALIZAR_DIGITALIZACION_ANEXO, params);
+		dr = (DigitalizacionResultado) ra.getParametroRetorno("resultado");
+		Assert.isTrue(dr != null && dr.getDigitalizado() == TypeSiNo.SI, "No se ha digitalizado");
+
+		// - Anexamos segundo anexo: genérico segunda instancia
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1).getId());
+		params.addParametroEntrada("instancia", "2");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.INICIAR_DIGITALIZACION_ANEXO, params);
+		rd = (RedireccionDigitalizacion) ra.getParametroRetorno("redireccion");
+		Assert.isTrue(rd != null && StringUtils.isNotBlank(rd.getUrl()), "No se devuelve url redireccion");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.FINALIZAR_DIGITALIZACION_ANEXO, params);
+		dr = (DigitalizacionResultado) ra.getParametroRetorno("resultado");
+		Assert.isTrue(dr != null && dr.getDigitalizado() == TypeSiNo.SI, "No se ha digitalizado");
+
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		this.logger.info("Detalle paso: " + dp.print());
+
+		// - Anexamos anexo PDF con validación datos (no se ejecutará validación al ser digitalizado)
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(2).getId());
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.INICIAR_DIGITALIZACION_ANEXO, params);
+		rd = (RedireccionDigitalizacion) ra.getParametroRetorno("redireccion");
+		Assert.isTrue(rd != null && StringUtils.isNotBlank(rd.getUrl()), "No se devuelve url redireccion");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.FINALIZAR_DIGITALIZACION_ANEXO, params);
+		dr = (DigitalizacionResultado) ra.getParametroRetorno("resultado");
+		Assert.isTrue(dr != null && dr.getDigitalizado() == TypeSiNo.SI, "No se ha digitalizado");
+
+		// - Anexamos anexo PDF marcado para que se firme en definición trámite
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(3).getId());
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.INICIAR_DIGITALIZACION_ANEXO, params);
+		rd = (RedireccionDigitalizacion) ra.getParametroRetorno("redireccion");
+		Assert.isTrue(rd != null && StringUtils.isNotBlank(rd.getUrl()), "No se devuelve url redireccion");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.FINALIZAR_DIGITALIZACION_ANEXO, params);
+		dr = (DigitalizacionResultado) ra.getParametroRetorno("resultado");
+		Assert.isTrue(dr != null && dr.getDigitalizado() == TypeSiNo.SI, "No se ha digitalizado");
+
+		// - Anexamos anexo DINAMICO (primera instancia)
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", "DIN1");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.INICIAR_DIGITALIZACION_ANEXO, params);
+		rd = (RedireccionDigitalizacion) ra.getParametroRetorno("redireccion");
+		Assert.isTrue(rd != null && StringUtils.isNotBlank(rd.getUrl()), "No se devuelve url redireccion");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.FINALIZAR_DIGITALIZACION_ANEXO, params);
+		dr = (DigitalizacionResultado) ra.getParametroRetorno("resultado");
+		Assert.isTrue(dr != null && dr.getDigitalizado() == TypeSiNo.SI, "No se ha digitalizado");
+
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		this.logger.info("Detalle paso: " + dp.print());
+
+		// - Anexamos anexo DINAMICO (segunda instancia)
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", "DIN1");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.INICIAR_DIGITALIZACION_ANEXO, params);
+		rd = (RedireccionDigitalizacion) ra.getParametroRetorno("redireccion");
+		Assert.isTrue(rd != null && StringUtils.isNotBlank(rd.getUrl()), "No se devuelve url redireccion");
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.FINALIZAR_DIGITALIZACION_ANEXO, params);
+		dr = (DigitalizacionResultado) ra.getParametroRetorno("resultado");
+		Assert.isTrue(dr != null && dr.getDigitalizado() == TypeSiNo.SI, "No se ha digitalizado");
+
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		this.logger.info("Detalle paso: " + dp.print());
+
+		// -- Paso terminado
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.ANEXAR, "No esta en paso anexar");
+		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso anexar no esta completado");
+		this.logger.info("Detalle paso: " + dp.print());
+	}
+
+	/**
+	 * Simula login autenticado con FH
+	 * @return usuario autenticado
+	 */
+	private UsuarioAutenticadoInfo loginSimuladoFH(String idTramite, boolean servicio) {
+
+		PersonaDesglosado fh = new PersonaDesglosado("00000000T", "Nombre FH", "Apellido1 FH", "Apellido2 FH");
+		PersonaDesglosado interesado = new PersonaDesglosado("11111111H", "José", "García", "Pérez");
+
+		InfoTicketAcceso infoTicketAcceso = new InfoTicketAcceso();
+		infoTicketAcceso.setTipoTicketAcceso(TypeTicketAcceso.FUNCIONARIO_HABILITADO);
+		UsuarioAutenticadoInfo usuarioAutenticado = new UsuarioAutenticadoInfo();
+		usuarioAutenticado.setUsername(fh.getNif());
+		usuarioAutenticado.setNif(fh.getNif());
+		usuarioAutenticado.setNombre(fh.getNombre());
+		usuarioAutenticado.setApellido1(fh.getApellido1());
+		usuarioAutenticado.setApellido2(fh.getApellido2());
+		usuarioAutenticado.setAutenticacion(TypeAutenticacion.AUTENTICADO);
+		usuarioAutenticado.setMetodoAutenticacion(TypeMetodoAutenticacion.CLAVE_CERTIFICADO);
+		usuarioAutenticado.setQaa(TypeQAA.MEDIO);
+		infoTicketAcceso.setUsuarioAutenticadoInfo(usuarioAutenticado);
+		InfoAccesoFH infoFH = new InfoAccesoFH();
+		infoFH.setDir3FH("ES07000000");
+		infoFH.setInteresado(interesado);
+		InfoTramiteFH tramiteFH = new InfoTramiteFH();
+		tramiteFH.setTramite(idTramite);
+		tramiteFH.setVersion(1);
+		tramiteFH.setIdTramiteCatalogo(SistragesMock.ID_TRAMITE_CP);
+		tramiteFH.setServicioCatalogo(false);
+		tramiteFH.setIdioma(SistragesMock.IDIOMA);
+		infoFH.setTramiteFH(tramiteFH);
+		infoTicketAcceso.setInfoAccesoFH(infoFH);
+		// Obtiene url acceso:  http://localhost:8080/sistramitfront/asistente/retornoFH.html?ticket=G5VQW6M4-ERX5MJT8-T8OYGYGT-lang:es
+		String urlAcceso = restApiExternaService.obtenerTicketAcceso(infoTicketAcceso);
+		String ticketFH = urlAcceso.substring(urlAcceso.indexOf("ticket=") + 7);
+
+		final SesionInfo sesionInfo = new SesionInfo();
+		sesionInfo.setIdioma(SistragesMock.IDIOMA);
+		sesionInfo.setUserAgent("");
+		UsuarioAutenticadoInfo usuAutenticadoTramite = securityService.validarTicketFH(sesionInfo, ticketFH);
+		return usuAutenticadoTramite;
 	}
 
 	/**
@@ -1049,8 +1248,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * @param usuarioAutenticadoInfo
 	 *                                   id sesión tramitación
 	 */
-	private String flujoTramitacion_iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticadoInfo,
-			final String idTramite) {
+	private String flujoTramitacion_iniciarTramite(final String idTramite,
+												   final UsuarioAutenticadoInfo usuarioAutenticadoInfo) {
 		final Map<String, String> parametrosInicio = new HashMap<>();
 
 		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo, idTramite,
@@ -1062,7 +1261,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		// Detalle tramite
 		final DetalleTramite dt = flujoTramitacionService.obtenerDetalleTramite(idSesionTramitacion);
 		Assert.isTrue(idSesionTramitacion.equals(dt.getTramite().getIdSesion()), "No coincide id sesion tramitacion");
+		Assert.isTrue(dt.getFuncionarioHabilitado() == TypeSiNo.fromBoolean( usuarioAutenticadoInfo.getFuncionarioHabilitado() != null), "No coincide modo FH");
 		this.logger.info("Detalle Tramite: " + dt.print());
+
 
 		return idSesionTramitacion;
 	}
@@ -1105,7 +1306,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		// Recuperacion info login
 		final InfoLoginTramite infoLogin = securityService.obtenerInfoLoginTramite(SistragesMock.ID_TRAMITE,
-				SistragesMock.VERSION_TRAMITE, SistragesMock.ID_TRAMITE_CP, false, SistragesMock.IDIOMA, URL_INICIO);
+				SistragesMock.VERSION_TRAMITE, SistragesMock.ID_TRAMITE_CP, false, SistragesMock.IDIOMA);
 
 		// Inicio sesion hacia redireccion
 		// - Como se usa plugin mock, ponemos primero el metodo con el que se autentica
@@ -1124,7 +1325,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		final SesionInfo sesionInfo = new SesionInfo();
 		sesionInfo.setIdioma(SistragesMock.IDIOMA);
 		sesionInfo.setUserAgent("");
-		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = securityService.validarTicketAutenticacion(sesionInfo,
+		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = securityService.validarTicketAutenticacionClave(sesionInfo,
 				auth.toString() + "123");
 		return usuarioAutenticadoInfo;
 	}
@@ -1147,12 +1348,13 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	/**
 	 * Test paso registro.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesión
+	 * @param idSesionTramitacion id sesión
+	 * @param fh
+	 * @param modoFH
 	 * @throws IOException
 	 */
 	private void flujoTramitacion_registro_electronico(final String idSesionTramitacion,
-			final UsuarioAutenticadoInfo usuarioAutenticadoInfo, final boolean registro) throws IOException {
+													   final UsuarioAutenticadoInfo usuarioAutenticadoInfo, PersonaDesglosado fh, final boolean registro, boolean modoFH) throws IOException {
 
 		DetallePasos dp;
 		ResultadoIrAPaso rp;
@@ -1194,7 +1396,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		}
 
 		// -- Descargamos pago
-		if (registro) {
+		if (registro && !modoFH) {
 			final DocumentoRegistro pago = ((DetallePasoRegistrar) dp.getActual()).getPagos().get(0);
 			parametros = new ParametrosAccionPaso();
 			parametros.addParametroEntrada("idDocumento", pago.getId());
@@ -1211,11 +1413,17 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 			parametros = new ParametrosAccionPaso();
 			parametros.addParametroEntrada("idDocumento", formulario.getId());
 			parametros.addParametroEntrada("instancia", "1");
-			parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			// En FH no hay que especificar firmante, ya que se pone auto en el flujo el FH
+			if (!modoFH) {
+				parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			}
 			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 					TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO, parametros);
 			Assert.isTrue(resPaso.getParametroRetorno("url") != null, "No se ha retornado url inicio firma");
-
+			// En FH vendrá como firmante el FH en el retorno de veriticar, ya que se pone auto en el flujo
+			if (modoFH) {
+				parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			}
 			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 					TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO, parametros);
 			final FirmaVerificacion firmaVerificacion = (FirmaVerificacion) resPaso.getParametroRetorno("resultado");
@@ -1230,7 +1438,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 			parametros = new ParametrosAccionPaso();
 			parametros.addParametroEntrada("idDocumento", formulario.getId());
 			parametros.addParametroEntrada("instancia", "1");
-			parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			// Si es FH, no hay que pasar firmante se configura automáticamente
+			if (!modoFH) {
+				parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			}
 			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 					TypeAccionPasoRegistrar.DESCARGAR_FIRMA, parametros);
 			Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null
@@ -1269,7 +1480,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 			parametros = new ParametrosAccionPaso();
 			parametros.addParametroEntrada("idDocumento", formulario.getId());
 			parametros.addParametroEntrada("instancia", "1");
-			parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			// Si es FH, no hay que pasar firmante se configura automáticamente
+			if (!modoFH) {
+				parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			}
 			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 					TypeAccionPasoGuardar.DESCARGAR_FIRMA, parametros);
 			Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null

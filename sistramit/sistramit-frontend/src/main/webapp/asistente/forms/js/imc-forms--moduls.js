@@ -1,217 +1,6 @@
 ﻿// mòduls
 
 
-// appFormsAjuda
-
-$.fn.appFormsAjuda = function(opcions) {
-	var settings = $.extend({
-		element: ""
-	}, opcions);
-	this.each(function(){
-		var element = $(this),
-			ajuda_inicial = imc_forms_ajuda.hasClass("imc--desactivada") ? "off" : "on",
-			bt_ajuda = element.find("button:first"),
-			txtAjudaInfo = false,
-			txtAjudaBoto = false,
-			ajuda_data = false,
-			inicia = function() {
-
-				// verifica
-				if (!imc_forms_ajuda.hasClass("imc--desactivada")) {
-
-					imc_forms_contenidor
-						.appFormsAjudaCamp({ referent: imc_forms_finestra.find(".imc--contingut:first") })
-						.attr("ajuda-activada", "si");
-
-					imc_forms_ajuda
-						.data("ajuda", "on");
-
-				}
-
-				// inicia
-				imc_forms_ajuda
-					.data("ajuda", ajuda_inicial);
-
-				bt_ajuda
-					.off('.appFormsAjuda')
-					.on('click.appFormsAjuda', activa);
-
-			},
-			activa = function() {
-
-				if (imc_forms_ajuda.data("ajuda") === "off") {
-
-					imc_forms_ajuda
-						.removeClass("imc--desactivada");
-
-					imc_forms_contenidor
-						.appFormsAjudaCamp({ referent: imc_forms_finestra.find(".imc--contingut:first") })
-						.attr("ajuda-activada", "si");
-
-					txtAjudaInfo = txtFormDinAjuda + " " + txtFormDinActivada;
-					txtAjudaBoto = txtFormDinDesactiva;
-					ajuda_data = "on";
-
-				} else {
-
-					imc_forms_ajuda
-						.addClass("imc--desactivada");
-
-					imc_forms_contenidor
-						.off('.appFormsAjudaCamp')
-						.attr("ajuda-activada", "no");
-
-					txtAjudaInfo = txtFormDinAjuda + " " + txtFormDinDesctivada;
-					txtAjudaBoto = txtFormDinActiva;
-					ajuda_data = "off";
-
-				}
-
-
-				imc_forms_ajuda
-					.fadeOut(200, function() {
-
-						canvia();
-
-						imc_forms_ajuda
-							.fadeIn(200);
-
-					});
-
-			},
-			canvia = function() {
-
-				imc_forms_ajuda
-					.find("strong")
-						.text(txtAjudaInfo)
-						.end()
-					.find("button")
-						.text(txtAjudaBoto)
-						.end()
-					.data("ajuda", ajuda_data);
-
-			};
-
-		// inicia
-		inicia();
-
-	});
-	return this;
-}
-// /ajuda
-
-
-// appFormsAjudaCamp
-/*
-
-$.fn.appFormsAjudaCamp = function(options) {
-	var settings = $.extend({
-		referent: $(window)
-	}, options);
-	this.each(function(){
-		var element = $(this),
-			referent = settings.referent,
-			ajuda_elm = false,
-			ajuda_anterior_elm = false,
-			onMouseEnter = function() {
-				var elm = $(this);
-				ajuda_elm = elm.find(".imc-el-ajuda:first");
-				if (ajuda_elm.length && ajuda_elm.html() !== "") {
-
-					onMouseLeave();
-
-					ajuda_anterior_elm = ajuda_elm;
-
-					var window_W = referent.width(),
-						window_H = referent.height(),
-						window_scroll_T = referent.scrollTop(),
-						elm_T = elm.position().top,
-						elm_L = elm.position().left,
-						elm_H = elm.outerHeight(true),
-						elm_label = elm.find(".imc-el-etiqueta:first, legend:first"),
-						elm_label_W = elm_label.outerWidth(),
-						elm_label_H = elm_label.outerHeight(),
-						elm_control = elm.find(".imc-el-control:first, ul:first"),
-						elm_control_W = elm_control.outerWidth(),
-						elm_control_H = elm_control.outerHeight(),
-						ajuda_W = ajuda_elm.outerWidth(),
-						ajuda_H = ajuda_elm.outerHeight();
-
-					var ajuda_T = elm_T-ajuda_H-5+window_scroll_T,
-						ajuda_L = elm_L;
-
-					if ((elm_L+ajuda_W) > window_W) {
-
-						ajuda_L = elm_L - ajuda_W + elm_control_W;
-
-						ajuda_elm
-							.addClass("imc--dreta");
-
-					} else {
-
-						ajuda_elm
-							.removeClass("imc--dreta");
-
-					}
-
-					var ajuda_T_inici = ajuda_T+5;
-
-					if (window_scroll_T > ajuda_T) {
-
-						ajuda_T = elm_T + window_scroll_T + elm_H;
-						ajuda_T_inici = ajuda_T-5;
-
-						ajuda_elm
-							.addClass("imc--dalt");
-
-					} else {
-
-						ajuda_elm
-							.removeClass("imc--dalt");
-
-					}
-
-					ajuda_elm
-						.css({ top: ajuda_T_inici+"px", left: ajuda_L+"px", opacity: 0 })
-						.addClass("imc-el-ajuda-on")
-						.animate({ top: ajuda_T+"px", opacity:1 }, 200)
-						.off(".appFormsAjudaCamp")
-						.on("mouseenter.appFormsAjudaCamp", onMouseLeave);
-
-				}
-			},
-			onMouseLeave = function() {
-
-				if (ajuda_elm) {
-
-					ajuda_elm
-						.stop();
-
-					if (ajuda_anterior_elm) {
-
-						ajuda_anterior_elm
-							.removeClass("imc-el-ajuda-on")
-							.removeAttr("style");
-
-					}
-				}
-
-			};
-
-		// inicia
-		element
-			.off('.appFormsAjudaCamp')
-			.on('mouseenter.appFormsAjudaCamp', ".imc-element", onMouseEnter)
-			.on('focus.appFormsAjudaCamp', ".imc-element", onMouseEnter)
-			.on('mouseleave.appFormsAjudaCamp', ".imc-element", onMouseLeave)
-			.on('blur.appFormsAjudaCamp', ".imc-element", onMouseLeave);
-	});
-	return this;
-}
-*/
-// /appFormsAjudaCamp
-
-
 // appFormsErrors
 $.fn.appFormsErrors = function(options) {
 	var settings = $.extend({
@@ -448,9 +237,17 @@ $.fn.appFormsConfiguracio = function(options) {
 			json_accions = forms_json.datos.acciones,
 			json_recursos = forms_json.datos.recursos,
 			json_mayuscules = forms_json.datos.forzarMayusculas || false,
+			json_desplasarOcults = forms_json.datos.desplazarocultos || false,
 			inicia = function() {
 
 				if (desDe === "inicia") {
+
+					// desplaçar ocults
+
+					var desplasarOcults = json_desplasarOcults || "n";
+
+					element
+						.attr("data-desplasarocults", desplasarOcults);
 
 					// poder desar
 
@@ -737,7 +534,8 @@ $.fn.appFormsConfiguracio = function(options) {
 								if (conf_opcions.tamanyo && conf_opcions.tamanyo !== null) {
 
 									elm_input
-										.attr({ "maxlength": conf_opcions.tamanyo, "data-amplaria": conf_opcions.tamanyo });
+										.attr({ "maxlength": conf_opcions.tamanyo, "data-amplaria": conf_opcions.tamanyo })
+										.appTextareaAmplaria();
 
 								}
 
@@ -745,8 +543,8 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								if (conf_opcions.lineas && conf_opcions.lineas !== null) {
 
-									elm_input
-										.attr({ "data-linies": conf_opcions.lineas });
+									//elm_input
+									//	.attr({ "data-linies": conf_opcions.lineas }); // controla cuantos saltos de línea hay
 
 									elm
 										.addClass("imc-el-files-"+conf_opcions.lineas);
@@ -958,7 +756,8 @@ $.fn.appFormsConfiguracio = function(options) {
 
 							if (conf_tipus === "listaElementos") {
 
-								var enllasId = (conf_opcions.enlace) ? conf_opcions.enlace.idLista : false
+								var titolTaula = elm.find("legend").text()
+									,enllasId = (conf_opcions.enlace) ? conf_opcions.enlace.idLista : false
 									,enllasColumnaPare = (conf_opcions.enlace) ? conf_opcions.enlace.columnaListaPadre : false
 									,enllasColumnaFilla = (conf_opcions.enlace) ? conf_opcions.enlace.columnaListaHija : false
 									,enllasIndex = (conf_opcions.enlace) ? conf_opcions.enlace.indiceSeleccionadoLista : false;
@@ -977,6 +776,7 @@ $.fn.appFormsConfiguracio = function(options) {
 										, enllasColumnaFilla: enllasColumnaFilla
 										, enllasIndex: enllasIndex
 										, desDe: desDe
+										, titolTaula: titolTaula
 									});
 
 							}
@@ -1029,7 +829,6 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								elm
 									.attr({ "data-telefon-internacional": "s", "data-validacio-precisa": conf_opcions.validacionPrecisa });
-									//.appFormsTelefonInternacional();
 
 							}
 
@@ -1346,6 +1145,13 @@ $.fn.appFormsConfiguracio = function(options) {
 									elm
 										.appFormsLlistaElements({ dades: val_valor, desDe: desDe });
 
+								} else if (elm_input_tipus === "label") {
+
+									var div_ = $("<div>").addClass("imc--label-co").html( val_valor );
+
+									elm
+										.html( div_ );
+
 								}
 
 							} else {
@@ -1475,6 +1281,13 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									}
 
+								} else if (elm_input_tipus === "label") {
+
+									var p_ = $("<p>").html( "" );
+
+									elm
+										.html( p_ );
+
 								}
 
 							}
@@ -1559,7 +1372,7 @@ $.fn.appFormsConfiguracio = function(options) {
 
 				}
 
-				// configuració (només lectura i modificable)
+				// configuració (només lectura, modificable, separador, bloc, ocult)
 
 				if (json_config && json_config.length) {
 
@@ -1573,7 +1386,8 @@ $.fn.appFormsConfiguracio = function(options) {
 								,conf_tipus = conf.tipo || false
 								,conf_ocult = conf.oculto || false
 								,conf_modificable = conf.modificable || false
-								,conf_contingut = conf.contenido || false;
+								,conf_contingut = conf.contenido || false
+								,conf_opcions = conf.opciones || false;
 
 							var elm = element.find("*[data-id="+conf_id+"]")
 								,elm_input = elm.find("input:first")
@@ -1606,11 +1420,20 @@ $.fn.appFormsConfiguracio = function(options) {
 							}
 
 
+							// bloc acordió
+
+							if (conf_tipus === "bloque" && (conf_opcions.tipo === "acordeon" || elm.attr("data-bloc-tipus") === "acordio")) {
+
+								elm
+									.attr("data-bloc-tipus", "acordio")
+									.appFormsBloc({ desDe: desDe, tipus: conf_opcions.tipo, titol: conf_opcions.descripcion, estat: conf_opcions.estado, ocult: conf_ocult });
+
+							}
+
+
 							// bloc i ocult
 
 							if (conf_tipus === "bloque" && conf_ocult) {
-
-								//alert(conf_id)
 
 								var bloc_ultim = element.find("*[data-bloc="+conf_id+"]:last")
 
@@ -1811,7 +1634,6 @@ $.fn.appFormsConfiguracio = function(options) {
 
 				}
 
-
 				// events
 
 				setTimeout(
@@ -1831,6 +1653,8 @@ $.fn.appFormsConfiguracio = function(options) {
 								.appFormsAjuda();
 
 						}
+
+						
 
 						// errors
 
@@ -4143,6 +3967,3 @@ $.fn.appFormsIBAN = function(options) {
 	return this;
 
 }
-
-
-

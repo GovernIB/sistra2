@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +20,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.swing.SortOrder;
 
+import es.caib.sistrahelp.core.api.model.Entidad;
+import es.caib.sistrahelp.core.api.model.types.TypeIniciadoPor;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
@@ -70,12 +73,16 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	private EventoAuditoriaTramitacion datoSeleccionado;
 
+	private Entidad entidad;
+
 	/**
 	 * filtros.
 	 */
 	private FiltroAuditoriaTramitacion filtros;
 
 	private List<TypeEvento> tiposEventos;
+
+	private List<TypeIniciadoPor> tiposIniciadoPor = Arrays.asList(TypeIniciadoPor.values());
 
 	private String filtroArea;
 
@@ -106,6 +113,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	private Boolean esDialogParams;
 
 	private String idSesionCorreoIncidencia;
+
+	private boolean comboIniciado;
 
 	/**
 	 * Inicializa.
@@ -388,6 +397,18 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		consultar();
 	}
 
+	public void cambioTipoEvento(){
+
+		if( TypeEvento.INICIAR_TRAMITE.equals(this.filtros.getEvento()) && entidad.isModoFuncionarioHabilitado()){
+			comboIniciado = true;
+
+		} else {
+			comboIniciado = false;
+			filtros.setIniciadoPor(null);
+		}
+
+	}
+
 	/**
 	 * Ayuda.
 	 */
@@ -447,6 +468,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		List<String> resultado = null;
 
 		final List<Area> lista = UtilJSF.getSessionBean().getListaAreasEntidad();
+
+		entidad = UtilJSF.getSessionBean().getEntidad();
 
 		if (lista != null && !lista.isEmpty()) {
 			resultado = new ArrayList<>();
@@ -519,6 +542,14 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	public void setTiposEventos(final List<TypeEvento> tiposEventos) {
 		this.tiposEventos = tiposEventos;
+	}
+
+	public List<TypeIniciadoPor> getTiposIniciadoPor() {
+		return tiposIniciadoPor;
+	}
+
+	public void setTiposIniciadoPor(List<TypeIniciadoPor> tiposIniciadoPor) {
+		this.tiposIniciadoPor = tiposIniciadoPor;
 	}
 
 	/**
@@ -720,4 +751,11 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		this.idSesionCorreoIncidencia = idSesionCorreoIncidencia;
 	}
 
+	public boolean isComboIniciado() {
+		return comboIniciado;
+	}
+
+	public void setComboIniciado(boolean comboIniciado) {
+		this.comboIniciado = comboIniciado;
+	}
 }

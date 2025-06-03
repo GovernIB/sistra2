@@ -29,7 +29,7 @@
 			 	<p>
 					<p:outputLabel value="#{dialogCuadernoCargaTR.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
 				</p>
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 , padding-left-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 , padding-left-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogCuadernoCargaTR.headerDescripcion']}:" />
 					<p:inputTextarea value="#{dialogCuadernoCargaTR.data.tramiteResultado}" onblur="this.value = this.value.trim();" required="true" rows="5" cols="70" style="background:white" requiredMessage="#{msg['error.obligatorio']}"  />

@@ -5,7 +5,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<h:form id="formViewDefinicionVersionPagarTasas" styleClass="h100">
+		<h:outputStylesheet>
 
+			body {
+				background-color: #FFF !important;
+			}
+		</h:outputStylesheet>
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
@@ -25,7 +30,7 @@
 										<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasaAlta}" update="growl formArbol:arbol @form" oncomplete="$('#formViewDefinicionVersionPagarTasas\\:btnEditarHidden').click();" />
 									</p:commandButton>
 
-									<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
+									<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil"
 										actionListener="#{viewDefinicionVersion.editarTasa()}" process="@this"
 										rendered="#{viewDefinicionVersion.permiteEditar()}"
 										update="growl">
@@ -33,7 +38,7 @@
 									</p:commandButton>
 
 									<p:commandButton id="btnEliminar"
-										value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
+										value="#{msg['botones.eliminar']}" icon="fa fa-trash"
 										actionListener="#{viewDefinicionVersion.eliminarTasa()}"
 										rendered="#{viewDefinicionVersion.permiteEditar()}"
 										process="@this" update="growl formArbol:arbol @form" >
@@ -53,7 +58,7 @@
 										process="@this" update="growl formArbol:arbol @form" />
 
 									<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
-										icon="fa fa-question-circle-o"
+										icon="fa fa-question-circle"
 										actionListener="#{viewDefinicionVersion.ayudaTasas()}" process="@this"
 										update="growl formArbol:arbol @form" />
 								</h:panelGrid>
@@ -99,12 +104,12 @@
 			<p:confirmDialog global="true" >
 					<p:outputPanel styleClass="confirmar_botonera">
 			        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 					</p:outputPanel>
 			</p:confirmDialog>
 
 
-			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil"
 						actionListener="#{viewDefinicionVersion.editarTasaAlta()}" process="@this"
 						update="growl" style="display:none">
 					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
@@ -117,7 +122,7 @@
 			</h:outputScript>
 
 			<p:commandButton id="btnEditarDblClickHidden"
-					 	value="#{msg['botones.editar']}" icon="fa fa-edit"
+					 	value="#{msg['botones.editar']}" icon="fa fa-pencil"
 						actionListener="#{viewDefinicionVersion.editarTasaDblClick()}" process="@this"
 						update="growl" style="display:none">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />

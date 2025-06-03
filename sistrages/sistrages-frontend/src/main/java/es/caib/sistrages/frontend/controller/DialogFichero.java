@@ -8,7 +8,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import es.caib.sistrages.core.api.exception.FuenteDatosCSVNoExisteCampoException;
 import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
@@ -210,7 +210,7 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				entidadService.uploadLogoGestorEntidad(entidad.getCodigo(), fichero, file.getContents());
+				entidadService.uploadLogoGestorEntidad(entidad.getCodigo(), fichero, file.getContent());
 				break;
 			case LOGO_ASISTENTE_ENTIDAD:
 				fichero = entidad.getLogoAsistente();
@@ -220,7 +220,7 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				entidadService.uploadLogoAsistenteEntidad(entidad.getCodigo(), fichero, file.getContents());
+				entidadService.uploadLogoAsistenteEntidad(entidad.getCodigo(), fichero, file.getContent());
 				break;
 			case ICONO_ASISTENTE_ENTIDAD:
 				fichero = entidad.getIconoAsistenteTramitacion();
@@ -230,7 +230,7 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				entidadService.uploadIconoAsistenteEntidad(entidad.getCodigo(), fichero, file.getContents());
+				entidadService.uploadIconoAsistenteEntidad(entidad.getCodigo(), fichero, file.getContent());
 				break;
 			case CSS_ENTIDAD:
 				fichero = entidad.getCss();
@@ -240,10 +240,10 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				entidadService.uploadCssEntidad(entidad.getCodigo(), fichero, file.getContents());
+				entidadService.uploadCssEntidad(entidad.getCodigo(), fichero, file.getContent());
 				break;
 			case FUENTE_ENTIDAD_CSV:
-				final byte csvContent[] = file.getContents();
+				final byte csvContent[] = file.getContent();
 				final ByteArrayInputStream bis = new ByteArrayInputStream(csvContent);
 				try {
 					final CsvDocumento csv = CsvUtil.importar(bis);
@@ -269,7 +269,7 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				tramiteService.uploadDocAnexo(documento.getCodigo(), fichero, file.getContents(),
+				tramiteService.uploadDocAnexo(documento.getCodigo(), fichero, file.getContent(),
 						Long.valueOf(idEntidad));
 				break;
 			case PLANTILLA_IDIOMA_FORM:
@@ -282,7 +282,7 @@ public class DialogFichero extends DialogControllerBase {
 				fichero.setNombre(file.getFileName());
 
 				plantillaIdiomaFormulario = formIntService.uploadPlantillaIdiomaFormulario(UtilJSF.getIdEntidad(),
-						idPlantillaFormulario, plantillaIdiomaFormulario, file.getContents());
+						idPlantillaFormulario, plantillaIdiomaFormulario, file.getContent());
 				break;
 			case PLANTILLA_FORMATEADOR:
 				fichero = plantillaFormateador.getFichero();
@@ -294,7 +294,7 @@ public class DialogFichero extends DialogControllerBase {
 				fichero.setNombre(file.getFileName());
 
 				plantillaFormateador = formIntService.uploadPlantillaFormateador(UtilJSF.getIdEntidad(),
-						idPlantillaFormateador, plantillaFormateador, file.getContents());
+						idPlantillaFormateador, plantillaFormateador, file.getContent());
 				break;
 			case PLANTILLA_ENTIDAD:
 				fichero = plantillaEntidad.getFichero();
@@ -306,7 +306,7 @@ public class DialogFichero extends DialogControllerBase {
 				fichero.setNombre(file.getFileName());
 
 				plantillaEntidad = entidadService.uploadPlantillasEmailFin(UtilJSF.getIdEntidad(), idPlantillaEntidad,
-						plantillaEntidad, file.getContents());
+						plantillaEntidad, file.getContent());
 				break;
 			default:
 				break;

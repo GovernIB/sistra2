@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
 
@@ -1342,8 +1342,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			codigoObjFormularioDestino = idComponente;
 			// Invocamos a boton para que dispare ventana de confirmacion
 			this.cambios = false;
-			final RequestContext contextReq = RequestContext.getCurrentInstance();
-			contextReq.execute("PF('confirmationButton').jq.click();");
+			PrimeFaces.current().executeScript("PF('confirmationButton').jq.click();");
 			UtilJSF.doValidationFailed();
 			return true;
 		}
@@ -1706,7 +1705,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		cut = false;
 
 		// Actualizar el formulario
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:formulario-panel");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:formulario-panel");
 	}
 
 	/**
@@ -1740,11 +1739,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/** Actualizar la interfaz tras moverse en una pagina. **/
 	private void actualizarInterfazMoverPagina() {
 		// Actualizar el formulario y los botones de mover
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:formulario-panel");
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:componente-panel");
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:bh-mover");
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:botonera");
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:bh-herramientas");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:formulario-panel");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:componente-panel");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:bh-mover");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:botonera");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:bh-herramientas");
 	}
 
 	/**
@@ -2066,8 +2065,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void validarEliminarObjetoFormulario() {
 		if (objetoFormularioEdit != null) {
-			final RequestContext contextReq = RequestContext.getCurrentInstance();
-			contextReq.execute("PF('confirmarEliminar').jq.click();");
+			PrimeFaces.current().executeScript("PF('confirmarEliminar').jq.click();");
 		} else {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"));
 		}
@@ -2278,9 +2276,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/** Actualizar interfaz mover componente. **/
 	private void actualizarInterfazMoverComponente() {
 		// Actualizar el formulario y los botones de mover
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:formulario-panel");
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:componente-panel");
-		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:bh-mover");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:formulario-panel");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:componente-panel");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:bh-mover");
 	}
 
 	/**
@@ -3539,21 +3537,21 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void alertarSinEspacio (String metodo) {
 		//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
 		metodoAlertaSinEspacio = metodo;
-		RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
+		PrimeFaces.current().executeScript("PF('avisoDlg').show();");
 	}
 
 	private TypeObjetoFormulario objetoPdt;
 	public void alertarSinEspacio (String metodo, TypeObjetoFormulario objeto) {
 		metodoAlertaSinEspacio = metodo;
 		objetoPdt = objeto;
-		RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
+		PrimeFaces.current().executeScript("PF('avisoDlg').show();");
 	}
 
 	String componentePdt;
 	public void alertarSinEspacio (String metodo, String objeto) {
 		metodoAlertaSinEspacio = metodo;
 		componentePdt = objeto;
-		RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
+		PrimeFaces.current().executeScript("PF('avisoDlg').show();");
 	}
 
 	public void aceptarAlertaSinEspacio () {

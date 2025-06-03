@@ -231,6 +231,7 @@
 						<p:commandButton value="#{msg['botones.borrar']}" actionListener="#{dialogTraduccionHTML.borrar()}" process="@this" update="formTraduccion growlDialogTraduccion" styleClass="boton-rojo" rendered="#{dialogTraduccionHTML.isBorrable()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccionHTML.cancelar()}" process="@this"  rendered="#{dialogTraduccionHTML.isAlta() or dialogTraduccionHTML.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTraduccionHTML.cancelar()}" process="@this"  rendered="#{dialogTraduccionHTML.isConsulta()}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogTraduccionHTML.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

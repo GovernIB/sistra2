@@ -5,7 +5,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<h:form id="formViewDefinicionVersionPasos" styleClass="h100">
-
+		<h:outputStylesheet>
+			.ui-widget-content {
+				border: none;
+				background: none;
+			}
+		</h:outputStylesheet>
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 

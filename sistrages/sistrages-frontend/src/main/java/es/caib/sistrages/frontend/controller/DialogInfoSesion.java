@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Rol;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -56,7 +57,11 @@ public class DialogInfoSesion extends DialogControllerBase {
 		if (securityService != null) {
 			usr = securityService.getUsername();
 			roles = securityService.getRoles().toString().replace("[", "").replace("]", "");
-			List<Area> listaAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(), null);
+
+			Long codigoEntidad = (UtilJSF.getSessionBean().getActiveRole().equals(TypeRoleAcceso.SUPER_ADMIN) && UtilJSF.getSessionBean().getCodigoEntidadSeleccionada() != null)
+									? UtilJSF.getSessionBean().getCodigoEntidadSeleccionada() : UtilJSF.getSessionBean().getEntidad().getCodigo();
+			List<Area> listaAreas = tramiteService.listArea(codigoEntidad, null);
+
 			Rol rol;
 			String permisosStr;
 			listaRoles = new ArrayList<>();
@@ -75,7 +80,7 @@ public class DialogInfoSesion extends DialogControllerBase {
 						}
 					}
 				}
-				if (securityService.isAdministradorEntidad(UtilJSF.getSessionBean().getEntidad().getCodigo())) {
+				if (securityService.isAdministradorEntidad(codigoEntidad)) {
 					permisosStr = UtilJSF.getLiteral("typeRolePermisos.A") + ", "
 							+ UtilJSF.getLiteral("typeRolePermisos.H");
 				}

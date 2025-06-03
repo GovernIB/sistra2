@@ -16,6 +16,9 @@
 <h:body>
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -27,7 +30,7 @@
 		<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -148,11 +151,11 @@
 
 
 						<!-- Columnas -->
-						<p:column headerText="#{msg['dialogValoraciones.headerIdentificador']}">
+						<p:column headerText="#{msg['dialogValoraciones.headerIdentificador']}" sortBy="#{td.identificador}">
 							<h:outputText value="#{td.identificador}" />
 						</p:column>
 
-						<p:column headerText="#{msg['dialogValoraciones.headerDescripcion']}">
+						<p:column headerText="#{msg['dialogValoraciones.headerDescripcion']}" sortBy="#{td.descripcion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}">
 							<h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
 						</p:column>
 
@@ -163,8 +166,8 @@
 		       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogValoraciones:auxCopiar" update="growlDialog" />
 		       			<p:separator/>
 		       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogValoraciones:btnNuevaValoracion').click();" process="@this"  rendered="#{!dialogValoraciones.consulta}"/>
-		        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogValoraciones:btnEditarValoracion').click();" process="@this" rendered="#{!dialogValoraciones.consulta}"/>
-		        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogValoraciones:btnEliminarValoracion').click();" process="@this" rendered="#{!dialogValoraciones.consulta}"/>
+		        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('dialogValoraciones:btnEditarValoracion').click();" process="@this" rendered="#{!dialogValoraciones.consulta}"/>
+		        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('dialogValoraciones:btnEliminarValoracion').click();" process="@this" rendered="#{!dialogValoraciones.consulta}"/>
 				    </p:contextMenu>
 				    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 						<p:ajax event="success" listener="#{dialogValoraciones.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -179,7 +182,7 @@
 							</p:commandButton>
 						</p>
 						<p>
-							<p:commandButton id="btnEditarValoracion" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogValoraciones.editarValoracion}" process="@this" update="growlDialog" rendered="#{!dialogValoraciones.consulta}">
+							<p:commandButton id="btnEditarValoracion" icon="fa fa-pencil" title="#{msg['botones.editar']}" actionListener="#{dialogValoraciones.editarValoracion}" process="@this" update="growlDialog" rendered="#{!dialogValoraciones.consulta}">
 								<p:ajax event="dialogReturn" listener="#{dialogValoraciones.returnDialogo}" update="growlDialog dataTableValoraciones" />
 							</p:commandButton>
 						</p>
@@ -201,7 +204,7 @@
 			<p:toolbar>
 				<f:facet name="right">
 					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogValoraciones.cerrar}" process="@form" update="@form growlDialog" />
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogValoraciones.ayuda()}" process="@this" update="growlDialog"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogValoraciones.ayuda()}" process="@this" update="growlDialog"/>
 				</f:facet>
 			</p:toolbar>
 		</p:outputPanel>
@@ -210,7 +213,7 @@
         <p:confirmDialog global="true" >
             <p:outputPanel styleClass="confirmar_botonera">
                 <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-                <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
             </p:outputPanel>
         </p:confirmDialog>
 

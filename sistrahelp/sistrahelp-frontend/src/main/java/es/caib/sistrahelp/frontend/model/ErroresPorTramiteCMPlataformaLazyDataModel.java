@@ -3,13 +3,12 @@ package es.caib.sistrahelp.frontend.model;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistrahelp.core.api.model.*;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
-import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
-import es.caib.sistrahelp.core.api.model.EventoCM;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 
 public class ErroresPorTramiteCMPlataformaLazyDataModel extends LazyDataModel<EventoCM> {
@@ -30,11 +29,27 @@ public class ErroresPorTramiteCMPlataformaLazyDataModel extends LazyDataModel<Ev
 
 	private List<EventoCM> lista;
 
+	public int count(Map<String, FilterMeta> filterBy) {
+		//TODO Implementar
+		//return 20;
+		//return helpDeskService.countSoporte(filtros).intValue();
+		filtros.setSoloContar(true);
+		Long numElementos = helpDeskService.obtenerErroresPlataformaCM(filtros, null).getNumElementos();
+		return numElementos == null ? 0 : numElementos.intValue();
+	}
+
 	@Override
-	public List<EventoCM> load(final int first, final int pageSize, final String sortField, final SortOrder sortOrder,
-			final Map<String, Object> filters) {
-		filtros.setSortField(sortField);
-		filtros.setSortOrder(sortOrder.name());
+	public List<EventoCM> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+		filtros.setSoloContar(false);
+
+		if (sortBy != null && !sortBy.isEmpty()) {
+			SortMeta sortMeta = sortBy.values().iterator().next();
+			SortOrder sortOrder = sortMeta.getOrder();
+			if (sortOrder != null) {
+				filtros.setSortOrder(sortOrder.name());
+			}
+			filtros.setSortField(sortMeta.getField());
+		}
 		setLista(helpDeskService.obtenerErroresPlataformaCM(filtros, new FiltroPaginacion(first, pageSize))
 				.getListaEventosCM());
 
@@ -53,7 +68,7 @@ public class ErroresPorTramiteCMPlataformaLazyDataModel extends LazyDataModel<Ev
 	}
 
 	@Override
-	public Object getRowKey(final EventoCM evento) {
+	public String getRowKey(final EventoCM evento) {
 		return evento.getTipoEvento();
 	}
 

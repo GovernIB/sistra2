@@ -30,7 +30,7 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w25, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<p:outputLabel value="#{msg['dialogFuente.headerCodigo']}" />
 			   	<p:inputText   value="#{dialogTramiteImportarFDE.data.identificador}" onblur="this.value = this.value.trim();" readonly="true" styleClass="w95" >
@@ -57,7 +57,7 @@
 								<p:selectBooleanCheckbox id="clavePrimaria" value="#{td.clavePrimaria}" disabled="true" />
 							</p:column>
 
-							<p:column headerText="#{msg['dialogFuente.headerCampos.nombreCampo']}" class="ui-panelgrid-cell">
+							<p:column headerText="#{msg['dialogFuente.headerCampos.nombreCampo']}" class="ui-panelgrid-cell" sortBy="#{td.identificador}">
 							     <h:outputText value="#{td.identificador}" />
 							</p:column>
 

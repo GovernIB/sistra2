@@ -175,7 +175,10 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	@Override
 	public byte[] formatear(final byte[] ixml, final List<String> paginasRellenadas, final byte[] plantilla,
 			final String idioma, final RFormularioInterno defFormInterno, final String tituloProcedimiento,
-			final String tituloTramite, final String siaProcedimiento, final String codigoDir3Responsable) {
+			final String tituloTramite, final String siaProcedimiento, final String codigoDir3Responsable, final boolean funcionarioHabilitado) {
+
+
+		// TODO FH --- VER QUE MARCA SE PONE PARA INDICAR QUE SE HA TRAMITADO POR FH
 
 		final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
 
@@ -235,6 +238,20 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		// Recorremos las paginas
 		final List<Linea> lineas = new ArrayList<Linea>();
 		formularioPdf.setLineas(lineas);
+
+		// Si es FH añadimos marca
+		if (funcionarioHabilitado) {
+			Linea linea = new Linea();
+			String textoMarca = "TRAMITADO POR FUNCIONARIO HABILITADO";
+			if ("en".equals(idioma)) {
+				textoMarca = "PROCESSED BY ENABLED OFFICER";
+			} else if ("ca".equals(idioma)) {
+				textoMarca = "TRAMITAT PER FUNCIONARI HABILITAT";
+			}
+			Seccion seccion = new Seccion("", textoMarca);
+			linea.getObjetosLinea().add(seccion);
+			lineas.add(linea);
+		}
 
 		for (final RPaginaFormulario pagina : defFormInterno.getPaginas()) {
 
@@ -584,10 +601,10 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Busca un valor y lo añade.
 	 *
-	 * @param componente
-	 * @param linea
-	 * @param xml
-	 * @throws Exception
+	 * @param componente componente
+	 * @param linea 	linea
+	 * @param valor 	valor
+	 * @throws Exception excepción
 	 */
 	private void anyadirDato(final RComponente componente, final Linea linea, final ValorCampo valor) {
 		if (mostrarCamposOcultos || (!mostrarCamposOcultos && !componente.getTipo().equals("OC"))) {
@@ -615,9 +632,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Objeto valor para ValorCampoIndexado
 	 *
-	 * @param etiqueta
-	 * @param valor
-	 * @return
+	 * @param valor valor
+	 * @return valor presentación
 	 */
 	private String obtenerValorPresentacionCampoIndexado(final ValorCampoIndexado valor) {
 		String valorCampoIndexado = "";
@@ -634,9 +650,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Objeto propiedad para ValorCampoListaIndexados.
 	 *
-	 * @param etiqueta
-	 * @param valor
-	 * @return
+	 * @param valor valor
+	 * @return valor presentación
 	 */
 	private String obtenerValorPresentacionCampoListaIndexados(final ValorCampoListaIndexados valor) {
 		final ValorCampoListaIndexados valorLista = valor;
@@ -656,8 +671,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Valor de campo indexado.
 	 *
-	 * @param valor
-	 * @return
+	 * @param valorElemento valor elemento
+	 * @return valor campo indexado
 	 */
 	private String getValorCampoIndexado(final ValorIndexado valorElemento) {
 		final StringBuilder valorListaSimple = new StringBuilder("");

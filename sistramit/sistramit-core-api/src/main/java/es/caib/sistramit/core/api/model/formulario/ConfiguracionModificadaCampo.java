@@ -20,6 +20,14 @@ public final class ConfiguracionModificadaCampo implements Serializable {
      * Indica si el campo es solo lectura.
      */
     private TypeSiNo soloLectura = TypeSiNo.NO;
+    /**
+     * Indica si el campo es visible.
+     */
+    private TypeSiNo oculto = TypeSiNo.NO;
+    /**
+     * Indica si el campo es obligatorio.
+     */
+    private TypeSiNo obligatorio = TypeSiNo.NO;
 
     /**
      * Método de acceso a id.
@@ -50,6 +58,15 @@ public final class ConfiguracionModificadaCampo implements Serializable {
     }
 
     /**
+     * Crea ConfiguracionModificadaCampo.
+     *
+     * @return ConfiguracionModificadaCampo
+     */
+    public static ConfiguracionModificadaCampo createNewConfiguracionModificadaCampo() {
+        return new ConfiguracionModificadaCampo();
+    }
+
+    /**
      * Método para establecer soloLectura.
      *
      * @param pSoloLectura
@@ -60,12 +77,28 @@ public final class ConfiguracionModificadaCampo implements Serializable {
     }
 
     /**
-     * Crea ConfiguracionModificadaCampo.
-     *
-     * @return ConfiguracionModificadaCampo
+     * Obtiene obligatorio.
+     * @return obligatorio
      */
-    public static ConfiguracionModificadaCampo createNewConfiguracionModificadaCampo() {
-        return new ConfiguracionModificadaCampo();
-    }
+    public TypeSiNo getObligatorio() { return obligatorio; }
+
+    /**
+     * Establece obligatorio.
+     * @param obligatorio obligatorio
+     */
+    public void setObligatorio(TypeSiNo obligatorio) { this.obligatorio = obligatorio; }
+
+    /**
+     * Obtiene visible.
+     * @return visible
+     */
+    public TypeSiNo getOculto() { return oculto; }
+
+    /**
+     * Establece visible.
+     * @param visible visible
+     */
+    public void setOculto(TypeSiNo visible) { this.oculto = visible; }
+
 
 }

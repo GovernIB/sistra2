@@ -302,7 +302,7 @@ public class DialogEnvioRemoto extends DialogControllerBase {
 			}
 			params.put(TypeParametroVentana.ID.toString(),
 					this.data.getConfiguracionAutenticacion().getCodigo().toString());
-			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
+			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 265);
 		}
 	}
 

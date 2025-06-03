@@ -159,9 +159,14 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 				hTramiteFin.setNifPresentador(hTramiteFin.getNifIniciador());
 				hTramiteFin.setNombrePresentador(hTramiteFin.getNombreIniciador());
 			}
-
+			// FH
+			hTramiteFin.setFuncionarioHabilitadoUsername(hTramite.getFuncionarioHabilitadoUsername());
+			hTramiteFin.setFuncionarioHabilitadoNif(hTramite.getFuncionarioHabilitadoNif());
+			hTramiteFin.setFuncionarioHabilitadoNombre(hTramite.getFuncionarioHabilitadoNombre());
+			hTramiteFin.setFuncionarioHabilitadoApellido1(hTramite.getFuncionarioHabilitadoApellido1());
+			hTramiteFin.setFuncionarioHabilitadoApellido2(hTramite.getFuncionarioHabilitadoApellido2());
+			// Persistimos
 			entityManager.persist(hTramiteFin);
-
 		}
 
 	}
@@ -304,7 +309,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 
 	@Override
 	public List<TramiteIniciado> obtenerTramitacionesIniciadas(final String nif, final String idTramite,
-			final int versionTramite, final String idTramiteCatalogo, final boolean servicioCatalogo) {
+                                                               final int versionTramite, final String idTramiteCatalogo,
+															   final boolean servicioCatalogo, String nifFH) {
 		final String hql = "SELECT t FROM HTramite t "
 		 		+ " WHERE t.nifIniciador = :nif AND t.autenticacion = '" + TypeAutenticacion.AUTENTICADO + "' "
 				+ " AND t.idTramite = :idTramite AND t.versionTramite = :versionTramite "
@@ -312,6 +318,10 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 				+ " AND t.cancelado is false AND t.estado <> '" + TypeEstadoTramite.FINALIZADO.toString() + "' "
 				+ " AND (t.fechaCaducidad is null OR t.fechaCaducidad > CURRENT_DATE) "
 				+ " AND t.purgar is false AND t.purgaPendientePorPagoRealizado is false AND t.purgado is false "
+				// Si es FH, filtramos por nif FH
+				+  (StringUtils.isNotBlank(nifFH) ? " AND t.funcionarioHabilitadoNif = :nifFH " : "")
+				// Si no es FH, no puede recuperar tramitaciones de FH
+				+  (StringUtils.isBlank(nifFH) ? " AND t.funcionarioHabilitadoNif is null " : "")
 				+ " ORDER BY t.fechaUltimoAcceso DESC ";
 		final Query query = entityManager.createQuery(hql);
 		query.setParameter("nif", nif);
@@ -319,6 +329,9 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		query.setParameter("versionTramite", versionTramite);
 		query.setParameter("idTramiteCatalogo", idTramiteCatalogo);
 		query.setParameter("servicioCatalogo", servicioCatalogo);
+		if (StringUtils.isNotBlank(nifFH)) {
+			query.setParameter("nifFH", nifFH);
+		}
 		final List<HTramite> tramitesIniciados = query.getResultList();
 
 		final List<TramiteIniciado> res = new ArrayList<>();

@@ -50,13 +50,13 @@ A continuació s'indica la manera de referenciar els diferents camps del formula
 		<li><span class="nombreCampo">Camps simples:</span> aquests camps, entre els quals es troben els camps de text, avisos i <i>checkbox</i>, s'han de referenciar directament amb l'identificador establert en el formulari.</li>
 		<li><span class="nombreCampo">Camps indexats:</span> aquests camps es corresponen amb els selectors de tipus "Llista desplegable" i "Selecció única". Atès que aquests camps sempre disposaran d'un codi i una descripció, la manera de plasmar els diferents valors serà la següent:</li>
 		<ul class="detalle">
-		<li><span class="boton">Identificador:</span> si es referència l'identificador del camp establert en el formulari, per exemple CAMPO1, es plasmarà la descripció del valor seleccionat.</li>
-		<li><span class="boton">Identificador.DESCRIPCION:</span> si és referència l'identificador seguit d'un punt i el literal "DESCRIPCION", per exemple CAMPO1.DESCRIPCION, es plasmarà igualment la descripció del valor seleccionat.</li>
-		<li><span class="boton">Identificador.CODIGO:</span> si es referència l'identificador seguit d'un punt i el literal "CODIGO", per exemple CAMPO1.CODIGO, es plasmarà el codi del valor seleccionat.</li>
+		<li><span class="boton">Identificador:</span> si es referencia l'identificador del camp establert en el formulari, per exemple CAMPO1, es plasmarà la descripció del valor seleccionat.</li>
+		<li><span class="boton">Identificador.DESCRIPCION:</span> si és referencia l'identificador seguit d'un punt i el literal "DESCRIPCION", per exemple CAMPO1.DESCRIPCION, es plasmarà igualment la descripció del valor seleccionat.</li>
+		<li><span class="boton">Identificador.CODIGO:</span> si es referencia l'identificador seguit d'un punt i el literal "CODIGO", per exemple CAMPO1.CODIGO, es plasmarà el codi del valor seleccionat.</li>
 		</ul>
 		<li><span class="nombreCampo">Camps de selecció múltiple: aquests camps es corresponen amb els selectors de tipus "Selecció múltiple". Aquests camps, igual que els indexats, disposaran de codi i descripció, però a més podran incloure més d'un valor seleccionat. Per això, es permeten les referències següents:</span></li>
 		<ul class="detalle">
-		<li><span class="boton">Identificador:</span> si és referència l'identificador del camp establert en el formulari, per exemple CAMPO1, es plasmaran les descripcions de tots els valors seleccionats separades per comes.</li>
+		<li><span class="boton">Identificador:</span> si és referencia l'identificador del camp establert en el formulari, per exemple CAMPO1, es plasmaran les descripcions de tots els valors seleccionats separades per comes.</li>
 		<li><span class="boton">Identificador.ELEMENTOS:</span> si es referencia l'identificador seguit d'un punt i el literal "NUMELEMENTOS", per exemple CAMPO1.NUMELEMENTOS, es recuperarà el nombre d'elements seleccionats en el camp.</li>
 		<li><span class="boton">Identificador[i].DESCRIPCION:</span> si es referencia l'identificador seguit del número d'element (i) entre claudàtors i un punt al costat del literal "DESCRIPCION", es retornarà la descripció de l'element "i" seleccionat (p. ex: CAMPO1[1].DESCRIPCION).</li>
 		<li><span class="boton">Identificador[i].CODIGO:</span> si es referencia l'identificador seguit del número d'element (i) entre claudàtors i un punt al costat del literal "CODIGO", es retornarà el codi de l'element "i" seleccionat (p. ex: CAMPO1[1].CODIGO).</li>

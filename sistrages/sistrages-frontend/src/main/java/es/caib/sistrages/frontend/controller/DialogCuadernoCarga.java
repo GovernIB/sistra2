@@ -19,10 +19,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -301,23 +301,45 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		todoCorrecto = false;
 	}
 
+	UploadedFile file;
+
+	public UploadedFile getFile() {
+		return file;
+	}
+
+	public void setFile(UploadedFile file) {
+		this.file = file;
+		if (file != null) {
+			contenido = file.getContent();
+
+			try {
+				prepararImportacion(contenido);
+			} catch (final IOException e) {
+				UtilJSF.loggearErrorFront("Error al cargar el fichero", e);
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.error.fichero"));
+			}
+		} else {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
+		}
+	}
+
 	/**
 	 * carga de fichero.
 	 *
 	 * @param event el evento
 	 * @throws IOException
 	 *
-	 */
+
 	public void upload(final FileUploadEvent event) throws IOException {
 
 		if (event != null && event.getFile() != null) {
-			final UploadedFile file = event.getFile();
-			contenido = file.getContents();
+			UploadedFile file = event.getFile();
+			contenido = file.getContent();
 			prepararImportacion(contenido);
 		} else {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
 		}
-	}
+	} */
 
 	/**
 	 * Método privado que prepara toda la importación. Pasos a realizar: <br />
@@ -441,7 +463,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		checkTodoCorrecto();
 
 		if (!dominios.isEmpty() || !gestores.isEmpty()) {
-			RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
+			PrimeFaces.current().executeScript("PF('avisoDlg').show();");
 		}
 	}
 

@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import es.caib.sistrages.rest.api.interna.*;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
 import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -633,6 +635,30 @@ public class UtilsFormularioInterno {
 		}
 		return res;
 	}
+
+
+	/**
+	 * Calcula configuración modificada.
+	 * @param estado
+	 * @param confCampo
+	 * @param campoDef
+	 * @return
+	 */
+	public static ConfiguracionModificadaCampo calcularConfiguracionModificadaCampo(ResEstadoCampo estado, ConfiguracionCampo confCampo, RComponente campoDef) {
+		RPropiedadesCampo propiedadesCampo = UtilsFormularioInterno.obtenerPropiedadesCampo(campoDef);
+		final ConfiguracionModificadaCampo config = ConfiguracionModificadaCampo
+				.createNewConfiguracionModificadaCampo();
+		config.setId(confCampo.getId());
+		config.setSoloLectura(TypeSiNo.fromBoolean(confCampo.getForzarSoloLectura().toBoolean() || estado.getEstadoCampo().getSoloLectura().toBoolean()));
+		config.setOculto(estado.getEstadoCampo().getOculto());
+		config.setObligatorio(TypeSiNo.fromBoolean (
+						confCampo.getTipo() != TypeCampo.VERIFICACION &&
+								( propiedadesCampo.isObligatorio() ||  estado.getEstadoCampo().getObligatorio().toBoolean())
+				)
+		);
+		return config;
+	}
+
 
 	/**
 	 * Obtiene definición página elemento.

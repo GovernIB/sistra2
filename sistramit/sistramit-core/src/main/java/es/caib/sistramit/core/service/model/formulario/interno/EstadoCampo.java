@@ -21,21 +21,17 @@ public final class EstadoCampo implements Serializable {
 	/**
 	 * Indica si el campo esta como solo lectura.
 	 */
-	private TypeSiNo soloLectura;
+	private TypeSiNo soloLectura = TypeSiNo.NO;;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param pIdCampo
-	 *            Id campo
-	 * @param pSoloLectura
-	 *            Solo lectura
+	 * Indica si el campo es visible.
 	 */
-	public EstadoCampo(final String pIdCampo, final TypeSiNo pSoloLectura) {
-		super();
-		idCampo = pIdCampo;
-		soloLectura = pSoloLectura;
-	}
+	private TypeSiNo oculto = TypeSiNo.NO;
+
+	/**
+	 * Indica si el campo es obligatorio.
+	 */
+	private TypeSiNo obligatorio = TypeSiNo.NO;
 
 	/**
 	 * Constructor.
@@ -82,17 +78,29 @@ public final class EstadoCampo implements Serializable {
 		soloLectura = pSoloLectura;
 	}
 
+
 	/**
-	 * Crea nueva instancia.
-	 *
-	 * @param pIdCampo
-	 *            Id campo
-	 * @param pSoloLectura
-	 *            Solo lectura
-	 * @return Estado campo
+	 * Obtiene visible.
+	 * @return visible
 	 */
-	public static EstadoCampo createNewEstadoCampo(final String pIdCampo, final TypeSiNo pSoloLectura) {
-		return new EstadoCampo(pIdCampo, pSoloLectura);
-	}
+	public TypeSiNo getOculto() {return oculto;}
+
+	/**
+	 * Establece visible.
+	 * @param visible visible
+	 */
+	public void setOculto(TypeSiNo visible) {this.oculto = visible;}
+
+	/**
+	 * Obtiene obligatorio.
+	 * @return obligatorio
+	 */
+	public TypeSiNo getObligatorio() {return obligatorio;}
+
+	/**
+	 * Establece obligatorio.
+	 * @param obligatorio obligatorio
+	 */
+	public void setObligatorio(TypeSiNo obligatorio) {this.obligatorio = obligatorio;}
 
 }

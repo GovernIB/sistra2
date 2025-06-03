@@ -11,7 +11,7 @@ var intlTelInput_idioma = {
   ao: "Angola",
   aq: "Antàrtida",
   ar: "Argentina",
-  as: "Samoa americana",
+  as: "Samoa Americana",
   at: "Àustria",
   au: "Austràlia",
   aw: "Aruba",

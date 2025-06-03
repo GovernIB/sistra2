@@ -89,18 +89,17 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 
 		final List<ConfiguracionModificadaCampo> resultado = new ArrayList<>();
 
-		// Obtenemos definicion pagina actual
+		// Obtenemos pagina actual
 		final RPaginaFormulario paginaDef = pDatosSesion.obtenerDefinicionPaginaActual(
 				elemento);
+		PaginaData paginaData = pDatosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
 
 		// Evaluamos estado dinamico de los campos
 		for (final RComponente campoDef : UtilsFormularioInterno.devuelveListaCampos(paginaDef)) {
 			final ResEstadoCampo estado = evaluarEstadoCampo(pDatosSesion, campoDef, elemento);
 			if (estado != null) {
-				final ConfiguracionModificadaCampo config = ConfiguracionModificadaCampo
-						.createNewConfiguracionModificadaCampo();
-				config.setId(campoDef.getIdentificador());
-				config.setSoloLectura(estado.getEstadoCampo().getSoloLectura());
+				ConfiguracionCampo confCampo = paginaData.getConfiguracionCampo(campoDef.getIdentificador());
+				final ConfiguracionModificadaCampo config = UtilsFormularioInterno.calcularConfiguracionModificadaCampo(estado, confCampo, campoDef);
 				resultado.add(config);
 			}
 		}
@@ -108,17 +107,15 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		return resultado;
 	}
 
+
 	@Override
 	public ResEstadoCampo evaluarEstadoCampo(final DatosSesionFormularioInterno pDatosSesion,
 			final RComponente pCampoDef, final boolean elemento) {
-
 		final RPropiedadesCampo propsCampo = UtilsFormularioInterno.obtenerPropiedadesCampo(pCampoDef);
-
 		ResEstadoCampo rse = null;
-		if (!propsCampo.isSoloLectura() && UtilsSTG.existeScript(propsCampo.getScriptEstado())) {
+		if (UtilsSTG.existeScript(propsCampo.getScriptEstado())) {
 			final VariablesFormulario variablesFormulario = pDatosSesion.generarVariablesFormulario(pCampoDef.getIdentificador(), elemento);
-			final Map<String, String> codigosError = UtilsSTG
-					.convertLiteralesToMap(propsCampo.getScriptEstado().getLiterales());
+			final Map<String, String> codigosError = UtilsSTG.convertLiteralesToMap(propsCampo.getScriptEstado().getLiterales());
 			final RespuestaScript rs = scriptFormulario.executeScriptFormulario(TypeScriptFormulario.SCRIPT_ESTADO,
 					pCampoDef.getIdentificador(), propsCampo.getScriptEstado().getScript(), variablesFormulario,
 					codigosError, pDatosSesion.getDefinicionTramite());
@@ -483,6 +480,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		final ConfiguracionCampoTextoExpReg confCampoExp = new ConfiguracionCampoTextoExpReg();
 		confCampoExp.getOpciones().setRegexp(pCampoDef.getTextoExpRegular().getExpresionRegular());
 		confCampoExp.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoExpRegular().isPrevenirPegar()));
+		confCampoExp.getOpciones().setTamanyo(pCampoDef.getTextoExpRegular().getTamanyoMax());
 		return confCampoExp;
 	}
 
@@ -605,21 +603,10 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		confCampo.setAyuda(pCampoDef.getAyuda());
 		final RPropiedadesCampo propsGenerales = UtilsFormularioInterno.obtenerPropiedadesCampo(pCampoDef);
 		confCampo.setId(pCampoDef.getIdentificador());
-		if (propsGenerales.isObligatorio()) {
-			confCampo.setObligatorio(TypeSiNo.SI);
-		} else {
-			confCampo.setObligatorio(TypeSiNo.NO);
-		}
-		if (propsGenerales.isSoloLectura()) {
-			confCampo.setSoloLectura(TypeSiNo.SI);
-		} else {
-			confCampo.setSoloLectura(TypeSiNo.NO);
-		}
-		if (propsGenerales.isNoModificable()) {
-			confCampo.setModificable(TypeSiNo.NO);
-		} else {
-			confCampo.setModificable(TypeSiNo.SI);
-		}
+		confCampo.setObligatorio(TypeSiNo.fromBoolean(propsGenerales.isObligatorio() && confCampo.getTipo() != TypeCampo.VERIFICACION) );
+		confCampo.setForzarSoloLectura(TypeSiNo.fromBoolean(propsGenerales.isSoloLectura()));
+		confCampo.setSoloLectura(TypeSiNo.fromBoolean(propsGenerales.isSoloLectura()));
+		confCampo.setModificable(TypeSiNo.fromBoolean(!propsGenerales.isNoModificable()));
 		confCampo.setEvaluar(TypeSiNo.fromBoolean(UtilsSTG.existeScript(propsGenerales.getScriptValidacion())));
 	}
 

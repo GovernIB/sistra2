@@ -137,7 +137,7 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialogFuenteDatosCampo" widgetVar="growlDialogFuenteDatosCampo" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogFuenteCampo.headerCodigo']}" />
 				 	<p:inputText id="codigo" value="#{dialogFuenteCampo.data.identificador}" required="true" maxlength="20" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">

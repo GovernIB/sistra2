@@ -10,7 +10,12 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAutenticacion" var="TypeAutenticacion"/>
-
+	<h:outputStylesheet>
+		.ui-widget-content {
+			border: none;
+			background: none;
+		}
+	</h:outputStylesheet>
 	<h:head>
 		<title>
 			<h:outputText value="#{msg['dialogDefinicionVersionPropiedades.titulo']}" />
@@ -27,6 +32,10 @@
 				margin-right: 0px !important;
 			}
 		</style>
+
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</h:head>
 
 	<h:body>
@@ -163,11 +172,11 @@
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 			<!-- Contenido dialogo -->
-			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="30" cellspacing="0">
+			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses="ui-datatable-even, ui-datatable-odd" styleClass="w100 h100" cellpadding="30" cellspacing="0">
 
 				<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
 				<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left">
-					<p:inputText value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion}" size="90" maxlength="255"   >
+					<p:inputText value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion}" styleClass="w90" maxlength="255"   >
 						<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambiosTrim()}" process="@this" update="@this"/>
 					</p:inputText>
 				</p:panelGrid>
@@ -186,27 +195,32 @@
 
 				<p:panelGrid styleClass="noBorders">
 					<p:row>
-						<p:column styleClass="noPadding-left">
+						<p:column styleClass="col-md-3 noPadding-left">
 							<p:selectBooleanCheckbox id="autenticado"  value="#{dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true" onChange="desmarcar(this);">
 							 		<p:ajax event="change" update="tipoCER tipoPER tipoMOV nivelQAA" listener="#{dialogDefinicionVersionPropiedades.check}"/>
 							 		<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 							</p:selectBooleanCheckbox>
 						</p:column>
 
-						<p:column>
-							<h:panelGrid columns="2" columnClasses="w55 grid-left, w45 grid-left" styleClass="w100 h100" cellpadding="3">
+						<p:column styleClass="col-md-3" >
+<!--							<h:panelGrid columns="2" columnClasses="w55 grid-left, w45 grid-left" styleClass="w100 h100" cellpadding="0" cellspacing="1">-->
 								<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
 
-						        <p:selectOneMenu id="nivelQAA" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.nivelQAA}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}"    >
+								<p:spacer width="8" height="1"/>
+
+						        <p:selectOneMenu id="nivelQAA" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.nivelQAA}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}"   style="margin-top: -5px;" >
 						            <f:selectItem itemLabel="#{msg['typeQAA.1']}" itemValue="1" />
 						            <f:selectItem itemLabel="#{msg['typeQAA.2']}" itemValue="2" />
 						            <f:selectItem itemLabel="#{msg['typeQAA.3']}" itemValue="3" />
 						            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 						        </p:selectOneMenu>
 
+								<p:spacer width="16" height="1"/>
 
-					        </h:panelGrid>
- 								<p:column>
+<!--					        </h:panelGrid>-->
+						</p:column>
+
+ 						<p:column styleClass="col-md-3">
 									<p:selectBooleanCheckbox id="tipoCER" itemLabel="#{msg['tiposAutenticacion.CER']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionCER}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
 										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 									</p:selectBooleanCheckbox>
@@ -219,7 +233,6 @@
 									<p:selectBooleanCheckbox id="tipoMOV" itemLabel="#{msg['tiposAutenticacion.MOV']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionMOV}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
 										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 									</p:selectBooleanCheckbox>
-								</p:column>
 						</p:column>
 					</p:row>
 
@@ -272,7 +285,7 @@
 							update="growlDialog @form" />
 						<p:commandButton value="#{msg['botones.cancelar']}"
 							actionListener="#{dialogDefinicionVersionPropiedades.cancelar()}" process="@this" />
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle"
 							actionListener="#{dialogDefinicionVersionPropiedades.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>

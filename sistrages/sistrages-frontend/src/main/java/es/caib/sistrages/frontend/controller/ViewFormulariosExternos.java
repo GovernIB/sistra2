@@ -133,9 +133,11 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 
 			DefaultMenuItem item = null;
 
-			item = new DefaultMenuItem(area);
-			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
-			breadCrumb.addElement(item);
+			item = new DefaultMenuItem();
+			item.setAriaLabel(area);
+			item.setValue(area);
+			item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.getElements().add(item);
 
 		} else {
 			mostrarBreadcrumb = false;
@@ -428,7 +430,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 		params.put(TypeParametroVentana.AREA.toString(), this.id);
-		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 550, 250);
+		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 700, 310);
 	}
 
 	/**

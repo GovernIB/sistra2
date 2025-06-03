@@ -1,6 +1,7 @@
 // SERIALITZA
 
-var ERROR_TEXT = false;
+var ERROR_TEXT = false
+	,ERROR_ACORDIO_OCULT = false;
 
 
 $.fn.appSerialitza = function(opcions) {
@@ -32,7 +33,10 @@ $.fn.appSerialitza = function(opcions) {
 					,esObligatori = (el.attr("data-obligatori") === "s") ? true : false
 					,enMayuscules = (el.attr("data-mayuscules") === "s") ? true : false
 					,estaOcult = (el.attr("data-ocult") === "s") ? true : false
-					,estaBlocOcult = (el.attr("data-ocult-bloc") === "s") ? true : false;
+					,estaBlocOcult = (el.attr("data-ocult-bloc") === "s") ? true : false
+					,estaAcordioOcult = (el.attr("data-ocult-acordio") === "s") ? true : false;
+
+				ERROR_ACORDIO_OCULT = (estaAcordioOcult) ? true : false;
 
 				// serialitza
 
@@ -81,7 +85,7 @@ $.fn.appSerialitza = function(opcions) {
 
 						var bt_title = el.find("button:first").attr("title")
 							,prefix = bt_title.substr( bt_title.indexOf("+") )
-							,input_val = $.trim( input_val.replace(/ /g, "") );
+							,input_val = $.trim( input_val.replace(/[-\s]/g, "") );
 
 						if ( input_val.indexOf(prefix) === -1 ) {
 
@@ -516,6 +520,13 @@ $.fn.appSerialitza = function(opcions) {
 
 						el
 							.addClass("imc-el-error");
+
+						if (el.revisaAcordioOcult) {
+
+							el
+								.revisaAcordioOcult();
+
+						}
 
 						return false;
 

@@ -3,6 +3,7 @@ package es.caib.sistramit.core.api.model.system.rest.externo;
 import java.io.Serializable;
 import java.util.Date;
 
+import es.caib.sistramit.core.api.model.flujo.FuncionarioHabilitado;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 
@@ -45,6 +46,16 @@ public final class TramiteFinalizado implements Serializable {
 	private Date fechaRegistro;
 	/** Número entrega (si modo CES2). */
 	private String numeroEntrega;
+	/** Funcionario habilitado: USERNAME. */
+	private String funcionarioHabilitadoUsername;
+	/** Funcionario habilitado: NIF. */
+	private String funcionarioHabilitadoNif;
+	/** Funcionario habilitado: Nombre. */
+	private String funcionarioHabilitadoNombre;
+	/** Funcionario habilitado: Apellido 1. */
+	private String funcionarioHabilitadoApellido1;
+	/** Funcionario habilitado: Apellido 2. */
+	private String funcionarioHabilitadoApellido2;
 
 
 	/**
@@ -330,4 +341,101 @@ public final class TramiteFinalizado implements Serializable {
 	public void setFechaRegistro(Date fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
 	}
+
+	/**
+	 * Método de acceso a funcionarioHabilitadoNif.
+	 *
+	 * @return funcionarioHabilitadoNif
+	 */
+	public String getFuncionarioHabilitadoNif() {
+		return funcionarioHabilitadoNif;
+	}
+
+	/**
+	 * Método para establecer funcionarioHabilitadoNif.
+	 *
+	 * @param funcionarioHabilitadoNif
+	 *                                funcionarioHabilitadoNif a establecer
+	 */
+	public void setFuncionarioHabilitadoNif(final String funcionarioHabilitadoNif) {
+		this.funcionarioHabilitadoNif = funcionarioHabilitadoNif;
+	}
+
+	/**
+	 * Método de acceso a funcionarioHabilitadoNombre.
+	 *
+	 * @return funcionarioHabilitadoNombre
+	 */
+	public String getFuncionarioHabilitadoNombre() {
+		return funcionarioHabilitadoNombre;
+	}
+
+	/**
+	 * Método para establecer funcionarioHabilitadoNombre.
+	 *
+	 * @param funcionarioHabilitadoNombre
+	 *                                    funcionarioHabilitadoNombre a establecer
+	 */
+	public void setFuncionarioHabilitadoNombre(final String funcionarioHabilitadoNombre) {
+		this.funcionarioHabilitadoNombre = funcionarioHabilitadoNombre;
+	}
+
+	/**
+	 * Método de acceso a funcionarioHabilitadoApellido1.
+	 *
+	 * @return funcionarioHabilitadoApellido1
+	 */
+	public String getFuncionarioHabilitadoApellido1() {
+		return funcionarioHabilitadoApellido1;
+	}
+
+	/**
+	 * Método para establecer funcionarioHabilitadoApellido1.
+	 *
+	 * @param funcionarioHabilitadoApellido1
+	 *                                       funcionarioHabilitadoApellido1 a establecer
+	 */
+	public void setFuncionarioHabilitadoApellido1(final String funcionarioHabilitadoApellido1) {
+		this.funcionarioHabilitadoApellido1 = funcionarioHabilitadoApellido1;
+	}
+
+	/**
+	 * Método de acceso a funcionarioHabilitadoApellido2.
+	 *
+	 * @return funcionarioHabilitadoApellido2
+	 */
+	public String getFuncionarioHabilitadoApellido2() {
+		return funcionarioHabilitadoApellido2;
+	}
+
+	/**
+	 * Método para establecer funcionarioHabilitadoApellido2.
+	 *
+	 * @param funcionarioHabilitadoApellido2
+	 *                                       funcionarioHabilitadoApellido2 a establecer
+	 */
+	public void setFuncionarioHabilitadoApellido2(final String funcionarioHabilitadoApellido2) {
+		this.funcionarioHabilitadoApellido2 = funcionarioHabilitadoApellido2;
+	}
+
+	/**
+	 * Método de acceso a funcionarioHabilitadoUsername.
+	 *
+	 * @return funcionarioHabilitadoUsername
+	 */
+	public String getFuncionarioHabilitadoUsername() {
+		return funcionarioHabilitadoUsername;
+	}
+
+	/**
+	 * Método para establecer funcionarioHabilitadoUsername.
+	 *
+	 * @param funcionarioHabilitadoUsername
+	 *                                       funcionarioHabilitadoUsername a establecer
+	 */
+	public void setFuncionarioHabilitadoUsername(final String funcionarioHabilitadoUsername) {
+		this.funcionarioHabilitadoUsername = funcionarioHabilitadoUsername;
+	}
+
+
 }

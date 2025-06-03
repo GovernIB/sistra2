@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,8 +127,8 @@ public class DialogSeccionImportar extends DialogControllerBase {
 
 		if (event != null && event.getFile() != null) {
 			mostrarBotonImportar = false;
-			final UploadedFile file = event.getFile();
-			contenido = file.getContents();
+			UploadedFile file = event.getFile();
+			contenido = file.getContent();
 			prepararImportacion(contenido);
 		} else {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));

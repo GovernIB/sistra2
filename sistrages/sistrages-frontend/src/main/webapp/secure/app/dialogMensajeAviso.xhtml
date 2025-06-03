@@ -13,6 +13,10 @@
 	<title><h:outputText value="#{msg['dialogMensajeAviso.titulo']}"/></title>
 	<h:outputScript library="primefaces-custom" name="calendar_es.js" />
 	<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -141,13 +145,13 @@
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 				<p:outputLabel value="" style="margin-top:10px" />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="mensajeHidden" value="#{msg['dialogMensajeAviso.headerDescripcion']}*" />
 					<p:column>
 						<p:inputTextarea id="mensaje" value="#{dialogMensajeAviso.literal}" readonly="true" style="width:90%;" onblur="this.value = this.value.trim();" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}" rows="4" cols="60" />
 						<p:inputText id="mensajeHidden" onblur="this.value = this.value.trim();" value="#{dialogMensajeAviso.literal}" type="hidden" binding="#{mensajesComponent}"/>
-						<p:commandButton id="btnMensaje" icon="fa fa-language" actionListener="#{dialogMensajeAviso.editarMensaje()}" process="@this" update="growlDialog" style="margin-bottom: 15px;" >
+						<p:commandButton id="btnMensaje" icon="fa fa-globe" actionListener="#{dialogMensajeAviso.editarMensaje()}" process="@this" update="growlDialog" style="margin-bottom: 15px;" >
 	            			<p:ajax event="dialogReturn" listener="#{dialogMensajeAviso.returnDialogo}" update="growlDialog mensaje mensajeHidden" />
 	        			</p:commandButton>
 					</p:column>
@@ -211,19 +215,19 @@
 										>
 
 										<!-- Columnas -->
-										<p:column headerText="#{msg['dialogMensajeAviso.headerArea']}" class="ui-panelgrid-cell" width="40%">
+										<p:column headerText="#{msg['dialogMensajeAviso.headerArea']}" class="ui-panelgrid-cell" width="40%" sortBy="#{td.areaTramite}">
 											<h:outputText value="#{td.areaTramite}" />
 									    </p:column>
-										<p:column headerText="#{msg['dialogMensajeAviso.headerTramite']}" class="ui-panelgrid-cell" width="40%">
+										<p:column headerText="#{msg['dialogMensajeAviso.headerTramite']}" class="ui-panelgrid-cell" width="40%" sortBy="#{td.identificador}">
 											<h:outputText value="#{td.identificador}" />
 									    </p:column>
 
-									    <p:column headerText="#{msg['dialogMensajeAviso.headerNumVersion']}" class="ui-panelgrid-cell" width="20%">
+									    <p:column headerText="#{msg['dialogMensajeAviso.headerNumVersion']}" class="ui-panelgrid-cell" width="20%" sortBy="#{td.versionTramite}">
 											<h:outputText value="#{td.versionTramite}" />
 									    </p:column>
 
 										<p:column width="10%" style="text-align:center" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}" >
-									    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash-o" actionListener="#{dialogMensajeAviso.borrarTramite(td)}" process="@this" update="listaTramites" style="width:32px;height:25px"></p:commandButton>
+									    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash" actionListener="#{dialogMensajeAviso.borrarTramite(td)}" process="@this" update="listaTramites" style="width:32px;height:25px"></p:commandButton>
 										</p:column>
 
 				 				</p:dataTable>
@@ -247,7 +251,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogMensajeAviso.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this"  rendered="#{dialogMensajeAviso.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogMensajeAviso.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogMensajeAviso.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

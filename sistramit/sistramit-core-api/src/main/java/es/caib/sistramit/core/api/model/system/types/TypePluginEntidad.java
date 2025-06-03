@@ -8,34 +8,22 @@ package es.caib.sistramit.core.api.model.system.types;
  */
 public enum TypePluginEntidad {
 
-	/**
-	 * Catálogo procedimientos (Entidad).
-	 */
+	/** Catálogo procedimientos (Entidad). */
 	CATALOGO_PROCEDIMIENTOS("C"),
-	/**
-	 * Plugin de firma (Entidad).
-	 */
+	/** Plugin de firma (Entidad). */
 	FIRMA("F"),
-	/**
-	 * Plugin de pagos (Entidad).
-	 */
+	/** Plugin de pagos (Entidad). */
 	PAGOS("P"),
-	/**
-	 * Plugin de formularios externo (Entidad).
-	 */
+	/** Plugin de formularios externo (Entidad). */
 	FORMULARIOS_EXTERNOS("G"),
-	/**
-	 * Plugin de registro (Entidad).
-	 */
+	/** Plugin de registro (Entidad). */
 	REGISTRO("E"),
-	/**
-	 * Plugin de envio remoto (Entidad).
-	 */
+	/** Plugin de envio remoto (Entidad). */
 	ENVIO_REMOTO("B"),
-	/**
-	 * Plugin de validación de firma (Entidad).
-	 */
-	VALIDACION_FIRMA_SERVIDOR("S");
+	/** Plugin de validación de firma (Entidad). */
+	VALIDACION_FIRMA_SERVIDOR("S"),
+	/** Plugin de digitalización (Entidad). */
+	DIGITALIZACION("X");
 
 	/**
 	 * Valor como string.

@@ -36,7 +36,7 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" styleClass="w100"  columns = "2" cellpadding = "5" cellspacing = "0">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" styleClass="w100"  columns = "2" cellpadding = "5" cellspacing = "0">
 					<p:outputLabel for="seccion" value="#{msg['dialogDisenyoSeccionReutilizable.secciones']}:"  />
 					 <p:selectOneMenu id="seccion" layout="pageDirection" value="#{dialogDisenyoSeccionReutilizable.seccion}"  style="width:40em" height="8em" converter="#{seccionReutilizableConverter}">
 						 	<f:selectItems value="#{dialogDisenyoSeccionReutilizable.secciones}" var="seccion" itemValue="#{seccion}" itemLabel="#{seccion.identificador} - #{fn:substring(seccion.descripcion,0,80)}" />
@@ -50,7 +50,7 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDisenyoSeccionReutilizable.aceptar()}" process="@form" update="@form growlDialog" rendered="#{dialogDisenyoSeccionReutilizable.alta or dialogDisenyoSeccionReutilizable.edicion}" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDisenyoSeccionReutilizable.cancelar()}" process="@this"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDisenyoSeccionReutilizable.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogDisenyoSeccionReutilizable.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

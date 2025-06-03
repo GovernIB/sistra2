@@ -101,6 +101,26 @@ public final class HTramiteFinalizado implements IModelApi {
 	@Column(name = "TRF_NUMENV")
 	private String numeroEntrega;
 
+	/** Funcionario habilitado: USERNAME. */
+	@Column(name = "TRF_FHUSER")
+	private String funcionarioHabilitadoUsername;
+
+	/** Funcionario habilitado: NIF. */
+	@Column(name = "TRF_FHNIF")
+	private String funcionarioHabilitadoNif;
+
+	/** Funcionario habilitado: Nombre. */
+	@Column(name = "TRF_FHNOM")
+	private String funcionarioHabilitadoNombre;
+
+	/** Funcionario habilitado: Apellido 1. */
+	@Column(name = "TRF_FHAPE1")
+	private String funcionarioHabilitadoApellido1;
+
+	/** Funcionario habilitado: Apellido 2. */
+	@Column(name = "TRF_FHAPE2")
+	private String funcionarioHabilitadoApellido2;
+
 	/**
 	 * Método de acceso a codigo.
 	 *
@@ -444,6 +464,102 @@ public final class HTramiteFinalizado implements IModelApi {
 	}
 
 	/**
+	 * Método de acceso a fhNif.
+	 *
+	 * @return fhNif
+	 */
+	public String getFuncionarioHabilitadoNif() {
+		return funcionarioHabilitadoNif;
+	}
+
+	/**
+	 * Método para establecer fhNif.
+	 *
+	 * @param fhNif
+	 *                   fhNif a establecer
+	 */
+	public void setFuncionarioHabilitadoNif(final String fhNif) {
+		this.funcionarioHabilitadoNif = fhNif;
+	}
+
+	/**
+	 * Método de acceso a fhNombre.
+	 *
+	 * @return fhNombre
+	 */
+	public String getFuncionarioHabilitadoNombre() {
+		return funcionarioHabilitadoNombre;
+	}
+
+	/**
+	 * Método para establecer fhNombre.
+	 *
+	 * @param fhNombre
+	 *                   fhNombre a establecer
+	 */
+	public void setFuncionarioHabilitadoNombre(final String fhNombre) {
+		this.funcionarioHabilitadoNombre = fhNombre;
+	}
+
+	/**
+	 * Método de acceso a fhApellido1.
+	 *
+	 * @return fhApellido1
+	 */
+	public String getFuncionarioHabilitadoApellido1() {
+		return funcionarioHabilitadoApellido1;
+	}
+
+	/**
+	 * Método para establecer fhApellido1.
+	 *
+	 * @param fhApellido1
+	 *                   fhApellido1 a establecer
+	 */
+	public void setFuncionarioHabilitadoApellido1(final String fhApellido1) {
+		this.funcionarioHabilitadoApellido1 = fhApellido1;
+	}
+
+	/**
+	 * Método de acceso a fhApellido2.
+	 *
+	 * @return fhApellido2
+	 */
+	public String getFuncionarioHabilitadoApellido2() {
+		return funcionarioHabilitadoApellido2;
+	}
+
+	/**
+	 * Método para establecer fhApellido2.
+	 *
+	 * @param fhApellido2
+	 *                   fhApellido2 a establecer
+	 */
+	public void setFuncionarioHabilitadoApellido2(final String fhApellido2) {
+		this.funcionarioHabilitadoApellido2 = fhApellido2;
+	}
+
+	/**
+	 * Método de acceso a funcionarioUsername.
+	 *
+	 * @return funcionarioUsername
+	 */
+	public String getFuncionarioHabilitadoUsername() {
+		return funcionarioHabilitadoUsername;
+	}
+
+	/**
+	 * Método para establecer funcionarioUsername.
+	 *
+	 * @param funcionarioUsername
+	 *                   funcionarioUsername a establecer
+	 */
+	public void setFuncionarioHabilitadoUsername(final String funcionarioUsername) {
+		this.funcionarioHabilitadoUsername = funcionarioUsername;
+	}
+
+
+	/**
 	 * Convierte a model.
 	 * 
 	 * @param h
@@ -469,6 +585,11 @@ public final class HTramiteFinalizado implements IModelApi {
 			m.setNumeroRegistro(h.getNumeroRegistro());
 			m.setFechaRegistro(h.getFechaRegistro());
 			m.setNumeroEntrega(h.getNumeroEntrega());
+			m.setFuncionarioHabilitadoUsername(h.getFuncionarioHabilitadoUsername());
+			m.setFuncionarioHabilitadoNif(h.getFuncionarioHabilitadoNif());
+			m.setFuncionarioHabilitadoNombre(h.getFuncionarioHabilitadoNombre());
+			m.setFuncionarioHabilitadoApellido1(h.getFuncionarioHabilitadoApellido1());
+			m.setFuncionarioHabilitadoApellido2(h.getFuncionarioHabilitadoApellido2());
 		}
 		return m;
 	}

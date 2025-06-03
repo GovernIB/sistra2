@@ -17,8 +17,8 @@
 		</p:selectOneMenu>
 	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tamanyo']}" /></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail}">
+   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail or dialogDisenyoFormulario.campoExprRegular}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tamanyo']}" /></h:column>
+   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail or dialogDisenyoFormulario.campoExprRegular}">
    		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalTamanyo}" decimalPlaces="0" minValue="0" maxValue="9999" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
    			<p:ajax event="blur" process="@this" />
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
@@ -73,7 +73,6 @@
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputTextarea>
    	</h:column>
-
 
    	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numPrecision']}" /></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">

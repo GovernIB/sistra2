@@ -28,6 +28,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import es.caib.sistramit.core.api.model.system.types.TypeIniciadoPor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -756,7 +757,16 @@ public final class RestApiDaoImpl implements RestApiDao {
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNombre())) {
 			predicate = builder.and(predicate,
-					builder.like(tableT.get("nombreIniciador"), "%" + pFiltroBusqueda.getNombre() + "%"));
+					builder.like(
+							builder.concat(
+									builder.concat(
+											tableT.get("nombreIniciador"),
+											builder.concat(" ", tableT.get("apellido1Iniciador"))
+									),
+									builder.concat(" ", tableT.get("apellido2Iniciador"))
+							),
+							"%" + pFiltroBusqueda.getNombre() + "%"
+					));
 		}
 
 		if (pFiltroBusqueda.getEvento() != null) {
@@ -764,10 +774,19 @@ public final class RestApiDaoImpl implements RestApiDao {
 					builder.equal(tableE.get("tipo"), pFiltroBusqueda.getEvento().toString()));
 		}
 
+		if(pFiltroBusqueda.getIniciadoPor() != null) {
+			if(TypeIniciadoPor.FUNCIONARIO_HABILITADO.equals(pFiltroBusqueda.getIniciadoPor()) ) {
+				predicate = builder.and(predicate, tableT.get("funcionarioHabilitadoNif").isNotNull());
+			}else{
+				predicate = builder.and(predicate, tableT.get("funcionarioHabilitadoNif").isNull());
+			}
+		}
+
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getExcepcion())) {
 			predicate = builder.and(predicate,
 					builder.like(tableE.get("codigoError"), "%" + pFiltroBusqueda.getExcepcion() + "%"));
 		}
+
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdTramite())) {
 			predicate = builder.and(predicate,
@@ -856,12 +875,69 @@ public final class RestApiDaoImpl implements RestApiDao {
 
 			}
 
+            // Extrae los primeros 500 caracteres del campo "detalle" de la tabla,
+            // que contiene un JSON almacenado como texto.
+            Expression<String> detalleSubstr = builder.function(
+                    "DBMS_LOB.SUBSTR",
+                    String.class,
+                    tableE.get("detalle"),
+                    builder.literal(500)
+            );
+
+            // Busca la posición inicial de la cadena "\"FIRERROR\"" dentro del texto extraído.
+            // Esto identifica si la propiedad "FIRERROR" existe en el JSON.
+            Expression<Integer> firErrorIndex = builder.function(
+                    "INSTR",
+                    Integer.class,
+                    detalleSubstr,
+                    builder.literal("\"FIRERROR\"")
+            );
+
+            // Calcula el inicio del valor asociado a la propiedad "FIRERROR" en el JSON.
+            // Esto se hace sumando 12 a la posición encontrada, que corresponde a la longitud
+            // de la cadena "\"FIRERROR\": ".
+            Expression<Integer> firErrorStart = builder.sum(firErrorIndex, builder.literal(12));
+
+            // Busca la posición del siguiente carácter de comillas dobles ("\"") después de
+            // la posición inicial del valor. Esto marca el final del valor de la propiedad "FIRERROR".
+            Expression<Integer> firErrorEnd = builder.function(
+                    "INSTR",
+                    Integer.class,
+                    detalleSubstr,
+                    builder.literal("\""),
+                    firErrorStart
+            );
+
+			// Calcula la longitud del valor de "FIRERROR" restando la posición de inicio
+			Expression<Integer> firErrorLength = builder.diff(firErrorEnd, firErrorStart);
+
+            // Extrae el valor de la propiedad "FIRERROR" del JSON utilizando las posiciones calculadas
+            // (inicio y fin). Esto devuelve el valor como una subcadena.
+            Expression<String> firErrorSubstring = builder.function(
+                    "SUBSTR",
+                    String.class,
+                    detalleSubstr,
+                    firErrorStart,
+					firErrorLength
+            );
+
 			query.multiselect(tableE.get("id"), p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"),
 					tableT.get("nifIniciador"), tableT.get("nombreIniciador"), tableT.get("apellido1Iniciador"),
 					tableT.get("apellido2Iniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
 					tableT.get("idProcedimientoCP"), tableT.get("idProcedimientoSIA"), tableE.get("codigoError"),
-					tableE.get("descripcion"), tableE.get("resultado"), tableE.get("trazaError"),
-					tableT.get("descripcionTramite"), tableE.get("detalle"));
+					builder.selectCase()
+							.when(builder.equal(tableE.get("tipo"), "TR_SGX"), // Comprueba si "tipo" es "TR_SGX".
+									builder.selectCase()
+											.when(builder.isNotNull(tableE.get("detalle")), // Comprueba si "detalle" no es nulo.
+													builder.selectCase()
+															.when(builder.greaterThan(firErrorIndex, 0), firErrorSubstring) // Comprueba si "FIRERROR" está presente y devuelve su valor.
+															.otherwise(tableE.get("descripcion")))
+											.otherwise(tableE.get("descripcion")))
+							.otherwise(tableE.get("descripcion")),
+					tableE.get("resultado"), tableE.get("trazaError"),
+					tableT.get("descripcionTramite"), tableE.get("detalle"), tableT.get("funcionarioHabilitadoNif"),
+					tableT.get("funcionarioHabilitadoNombre"), tableT.get("funcionarioHabilitadoApellido1"),
+					tableT.get("funcionarioHabilitadoApellido1"));
 
 		}
 		return query;
@@ -956,6 +1032,11 @@ public final class RestApiDaoImpl implements RestApiDao {
 				predicate = builder.and(predicate,
 						builder.lessThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaHasta()));
 			}
+		}
+
+		// Filtro excluir tramitaciones de FH
+		if (!pFiltro.isIncluirFH()) {
+			predicate = builder.and(predicate, builder.isNull(tableT.get("funcionarioHabilitadoNif")));
 		}
 
 		// Filtro de tramite persistente no finalizado
@@ -1208,7 +1289,11 @@ public final class RestApiDaoImpl implements RestApiDao {
 		}
 
 		if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
-			sql.append(" order by e.TRP_IDETRA DESC ");
+			if(pFiltroBusqueda.isErrorPlataforma()) {
+				sql.append(" order by eventoerror DESC, resta DESC, e.TRP_IDETRA ASC ");
+			} else {
+				sql.append(" order by resta DESC, e.TRP_IDETRA ASC ");
+			}
 		} else {
 			if ("idTramite".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
@@ -1612,7 +1697,7 @@ public final class RestApiDaoImpl implements RestApiDao {
 		query.multiselect(tableE.get("codigoError"), builder.count(tableE.get("id")), prod);
 
 		if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
-			query.orderBy(builder.asc(tableE.get("codigoError")));
+			query.orderBy(builder.desc(builder.count(tableE.get("id"))), builder.asc(tableE.get("codigoError")));
 		} else {
 			if ("tipoEvento".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
@@ -1761,7 +1846,7 @@ public final class RestApiDaoImpl implements RestApiDao {
 		query.multiselect(tableE.get("codigoError"), builder.count(tableE.get("id")), prod);
 
 		if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
-			query.orderBy(builder.asc(tableE.get("codigoError")));
+			query.orderBy(builder.desc(builder.count(tableE.get("id"))), builder.asc(tableE.get("codigoError")));
 		} else {
 			if ("tipoEvento".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
@@ -1919,7 +2004,7 @@ public final class RestApiDaoImpl implements RestApiDao {
 		}
 
 		if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
-			sql.append(" order by e.TRP_IDETRA DESC ");
+			sql.append(" order by eventoerror DESC, resta DESC, e.TRP_IDETRA ASC ");
 		} else {
 			if ("idTramite".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
@@ -2120,7 +2205,7 @@ public final class RestApiDaoImpl implements RestApiDao {
 		query.multiselect(tableE.get("codigoError"), builder.count(tableE.get("id")), prod);
 
 		if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
-			query.orderBy(builder.asc(tableE.get("codigoError")));
+			query.orderBy(builder.desc(builder.count(tableE.get("id"))), builder.asc(tableE.get("codigoError")));
 		} else {
 			if ("tipoEvento".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {

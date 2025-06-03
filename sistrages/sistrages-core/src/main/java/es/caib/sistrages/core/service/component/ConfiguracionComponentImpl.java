@@ -77,6 +77,11 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 		return res;
 	}
 
+	@Override
+	public String obtenerPropiedadConfiguracion(final TypePropiedadConfiguracion propiedad) {
+		return readPropiedad(propiedad.toString(), true);
+	}
+
 	// ----------------------------------------------------------------------
 	// FUNCIONES PRIVADAS
 	// ----------------------------------------------------------------------

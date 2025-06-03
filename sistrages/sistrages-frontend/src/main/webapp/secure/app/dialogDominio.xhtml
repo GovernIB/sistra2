@@ -37,6 +37,10 @@
 		}
 
 	</style>
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -166,7 +170,7 @@
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w30 padding-left-18, w65" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="w30 padding-left-18, w65" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
 				<p:inputText id="codigo" value="#{dialogDominio.data.identificador}" readonly="#{dialogDominio.isConsulta()}"  required="true" maxlength="50"  onblur="this.value = this.value.toUpperCase().trim();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -202,7 +206,7 @@
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" readonly="#{dialogDominio.isConsulta()}" onblur="this.value = this.value.trim();" size="43" maxlength="500" >
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" readonly="#{dialogDominio.isConsulta()}" onblur="this.value = this.value.trim();" styleClass="w70" maxlength="500" >
 								<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 							</p:inputText>
 						</p:column>
@@ -213,16 +217,16 @@
 
 							<c:choose>
 							<c:when test="#{dialogDominio.isConsulta()}">
-								<textarea disabled="disabled" id="sqlDecoded" cols="49" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
+								<textarea disabled="disabled" id="sqlDecoded" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled w90" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
 							</c:when>
 							<c:otherwise>
-								<p:inputTextarea id="sqlDecoded" value="#{dialogDominio.data.sqlDecoded}" onblur="this.value = this.value.trim();" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
+								<p:inputTextarea id="sqlDecoded" value="#{dialogDominio.data.sqlDecoded}" onblur="this.value = this.value.trim();" autoResize="false" rows="8" maxlength="2000" styleClass="w90 va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
 									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 								</p:inputTextarea>
 							</c:otherwise>
 							</c:choose>
 
-							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" onblur="this.value = this.value.trim();" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="no-display" />
+							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" onblur="this.value = this.value.trim();" autoResize="false" rows="8" maxlength="2000" styleClass="w90 no-display" />
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
@@ -261,8 +265,8 @@
 				       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogDominio:auxCopiar" update="growlDialog" />
 				       			<p:separator/>
 				       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogDominio:btnNuevoValor').click();" process="@this"   rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}"/>
-				        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogDominio:btnEditarValor').click();" process="@this"  rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}"/>
-				        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogDominio:btnEliminarValor').click();" process="@this"  rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}"/>
+				        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('dialogDominio:btnEditarValor').click();" process="@this"  rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}"/>
+				        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('dialogDominio:btnEliminarValor').click();" process="@this"  rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}"/>
 						    </p:contextMenu>
 						    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 								<p:ajax event="success" listener="#{dialogDominio.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -276,7 +280,7 @@
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  >
+		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  >
 		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog datalistValores"/>
 		        					</p:commandButton>
 		        				</p>
@@ -292,7 +296,7 @@
 						    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogDominio.bajarValor()}" process="@this" update="growlDialog datalistValores" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton id="btnEditarHiddenValores" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  style="display:none" >
+						    		<p:commandButton id="btnEditarHiddenValores" title="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  style="display:none" >
 		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog datalistValores"/>
        								</p:commandButton>
 						    	</p>
@@ -359,11 +363,11 @@
 							<p:outputLabel for="fuenteQuery" value="#{msg['dialogDominio.headerTipo.fuente.query']}" styleClass="margin-right-20 center-vertical"   />
 							<c:choose>
 							<c:when test="#{dialogDominio.isConsulta()}">
-								<textarea disabled="disabled" id="fuenteQueryDecoded" cols="40" rows="4" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" data-autosize-on="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
+								<textarea disabled="disabled" id="fuenteQueryDecoded" rows="4" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled w90" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" data-autosize-on="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
 							</c:when>
 							<c:otherwise>
 
-								<p:inputTextarea id="fuenteQueryDecoded" onblur="this.value = this.value.trim();" value="#{dialogDominio.data.sqlDecoded}" autoResize="false" rows="4" cols="40" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
+								<p:inputTextarea id="fuenteQueryDecoded" onblur="this.value = this.value.trim();" value="#{dialogDominio.data.sqlDecoded}" autoResize="false" rows="4" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable w90" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
 									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 								</p:inputTextarea>
 							</c:otherwise>
@@ -412,7 +416,7 @@
 		       					</p:commandButton>
 		       				</p>
 		       				<p>
-					    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
+					    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
 		       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
 		       					</p:commandButton>
 		       				</p>
@@ -428,7 +432,7 @@
 					    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogDominio.bajarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
 					    	</p>
 					    	<p>
-					    		<p:commandButton id="btnEditarHiddenParametros" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}"  process="@this" update="growlDialog" style="display:none">
+					    		<p:commandButton id="btnEditarHiddenParametros" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogDominio.editarPropiedad()}"  process="@this" update="growlDialog" style="display:none">
 			       					<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
 		       					</p:commandButton>
 		       				</p>
@@ -441,8 +445,8 @@
 				       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyProp"  process="@this :dialogDominio:auxCopiar" update="growlDialog" />
 				       			<p:separator/>
 				       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogDominio:btnNuevaPropiedad').click();" process="@this"  rendered="#{!dialogDominio.consulta}"/>
-				        		<p:menuitem id="mnuEditarProp" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogDominio:btnEditarPropiedad').click();" process="@this"  rendered="#{!dialogDominio.consulta}"/>
-				        		<p:menuitem id="mnuEliminarProp" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogDominio:btnEliminarPropiedad').click();" process="@this" rendered="#{!dialogDominio.consulta}" />
+				        		<p:menuitem id="mnuEditarProp" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('dialogDominio:btnEditarPropiedad').click();" process="@this"  rendered="#{!dialogDominio.consulta}"/>
+				        		<p:menuitem id="mnuEliminarProp" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('dialogDominio:btnEliminarPropiedad').click();" process="@this" rendered="#{!dialogDominio.consulta}" />
 						    </p:contextMenu>
 						    <pe:clipboard id="clipContextCopyProp" trigger="mnuCopyProp" action="copy" target="auxCopiar">
 								<p:ajax event="success" listener="#{dialogDominio.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -451,7 +455,7 @@
 	  	<p:outputPanel styleClass="botonera">
 	     	<p:toolbar>
 	     		<f:facet name="left">
-	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogDominio.tramites()}" process="@this" rendered="#{dialogDominio.data.codigo ne null}" />
+	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-download" actionListener="#{dialogDominio.tramites()}" process="@this" rendered="#{dialogDominio.data.codigo ne null}" />
 	     			<p:remoteCommand name="actualizar" update="@form"/>
 					<p:commandButton id="btnPing" value="#{msg['botones.ping']}" process="@form" update="@form" icon="fa fa-arrow-up" oncomplete="cambioValorPingB64('confirmDialogPing');" />
 	     		</f:facet>
@@ -466,7 +470,7 @@
 							<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.permiteGuardar() == false}"/>
 					    </c:otherwise>
 					</c:choose>
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDominio.ayuda}" process="@this"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogDominio.ayuda}" process="@this"/>
 				</f:facet>
 			</p:toolbar>
 	    </p:outputPanel>
@@ -485,21 +489,21 @@
 	    <p:confirmDialog global="true" >
 	    	<p:outputPanel styleClass="confirmar_botonera">
 	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 			</p:outputPanel>
 	    </p:confirmDialog>
 
 	     <p:confirmDialog widgetVar="confirmDialogPing" id="confirmDialogPing"  header="#{msg['confirm.titulo']}" message="#{msg['confirm.guardar']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
 				<p:outputPanel styleClass="confirmar_botonera">
 				  	 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogDominio.ping()}" oncomplete="PF('confirmDialogPing').hide();"  process="@form" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check" update="@form" />
-     				 <p:commandButton value="#{msg['botones.no']}" type="button"  onclick="PF('confirmDialogPing').hide();"    styleClass="ui-confirmdialog-no" icon="fa fa-close" />
+     				 <p:commandButton value="#{msg['botones.no']}" type="button"  onclick="PF('confirmDialogPing').hide();"    styleClass="ui-confirmdialog-no" icon="fa fa-times" />
 				</p:outputPanel>
 		    </p:confirmDialog>
 
 	    <p:confirmDialog id="confirmDialogGuardar" widgetVar="confirmDialogGuardar"  header="#{msg['confirm.titulo']}" message="#{msg['confirm.dominioactualizar']}" icon="fa fa-question-circle fa-3x confirmar_icono"    >
 	    	<p:outputPanel styleClass="confirmar_botonera">
 	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" 	icon="fa fa-check" process="@this" onclick="PF('confirmDialogGuardar').hide();" actionListener="#{dialogDominio.aceptar()}" />
-	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" 				icon="fa fa-close" process="@this" onclick="PF('confirmDialogGuardar').hide();" />
+	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" 				icon="fa fa-times" process="@this" onclick="PF('confirmDialogGuardar').hide();" />
 	        </p:outputPanel>
 	    </p:confirmDialog>
 

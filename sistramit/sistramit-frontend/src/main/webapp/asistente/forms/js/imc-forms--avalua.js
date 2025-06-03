@@ -399,12 +399,12 @@ $.fn.appFormsAvalua = function(options) {
 					if (camp_id && camp_id !== "" && camp_id !== null) {
 
 						imc_forms_missatge
-							.appFormsMissatge({ accio: "error", titol: validacio_missatge, text: txtFormDinErrorText, amagaDesdeFons: false, alTancar: function() { remarca(camp_id); enfocaAlSeguent(); } });
+							.appFormsMissatge({ accio: "error", titol: validacio_missatge, titolHTML: true, text: txtFormDinErrorText, amagaDesdeFons: false, alTancar: function() { remarca(camp_id); enfocaAlSeguent(); } });
 
 					} else {
 
 						imc_forms_missatge
-							.appFormsMissatge({ accio: "error", titol: validacio_missatge, text: "", amagaDesdeFons: false, alTancar: function() { enfocaAlSeguent(); } });
+							.appFormsMissatge({ accio: "error", titol: validacio_missatge, titolHTML: true, text: "", amagaDesdeFons: false, alTancar: function() { enfocaAlSeguent(); } });
 
 					}
 
@@ -428,7 +428,7 @@ $.fn.appFormsAvalua = function(options) {
 						};
 
 					imc_forms_missatge
-						.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", alTancar: function() { destacaCamp(); }, alAcceptar: function() { destacaCamp(); imc_forms_missatge.appFormsMissatge({ araAmaga: true }); enfocaAlSeguent(); } });
+						.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, titolHTML: true, text: "", alTancar: function() { destacaCamp(); }, alAcceptar: function() { destacaCamp(); imc_forms_missatge.appFormsMissatge({ araAmaga: true }); enfocaAlSeguent(); } });
 
 				} else {
 

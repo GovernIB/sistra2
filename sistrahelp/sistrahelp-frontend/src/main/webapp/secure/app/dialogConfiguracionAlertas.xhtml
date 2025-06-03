@@ -18,6 +18,9 @@
 <h:body>
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -146,7 +149,7 @@
 				<p:growl id="growlDialog" widgetVar="growlDialog" />
 
 				<p:outputLabel value="" style="margin-top:10px" />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-5 w15," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-5 w15," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="check" value="#{msg['dialogConfiguracionAlertas.checkResumen']}" rendered="#{dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.noExisteResumen()}"/>
 					<p:outputLabel value="" rendered="#{!(dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.noExisteResumen())}"/>
@@ -237,7 +240,7 @@
  					<p:outputLabel id="condicion" value="#{dialogConfiguracionAlertas.condicion}" maxlength="255" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" style="width:100px" ></p:outputLabel>
 
 				</h:panelGrid>
-				<h:panelGrid id="columnaListaDisparadores" rowClasses=", ui-datatable-odd" columnClasses="padding-left-5 w15," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid id="columnaListaDisparadores" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-5 w15," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 					<p:outputLabel value="#{msg['dialogConfiguracionAlertas.expresion.evaluacion']}" />
 					<h:panelGrid columns="13" cellspacing="0" width="100%">
 						<p:outputLabel for="comboAND_OR" value="#{msg['dialogConfiguracionAlertas.opLogicoAND_OR']}:" styleClass="margin-right-10" ></p:outputLabel>
@@ -259,7 +262,7 @@
 						<p:outputLabel for="comboEventos" value="#{msg['dialogConfiguracionAlertas.evento']}:" styleClass="margin-right-10" ></p:outputLabel>
 						<p:selectOneMenu id="comboEventos" value="#{dialogConfiguracionAlertas.evSeleccionado}" styleClass="margin-right-10" filter="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filterMatchMode="contains" style="width:100px">
 								<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
-						     	<f:selectItems value="#{dialogConfiguracionAlertas.eventosFiltrados()}" var="evento" itemLabel="#{msg['typeEvento.'+=evento]}" itemValue="#{evento}"  />
+						     	<f:selectItems value="#{dialogConfiguracionAlertas.eventos}" var="evento" itemLabel="#{msg['typeEvento.'+=evento]}" itemValue="#{evento}"  />
 						</p:selectOneMenu>
 
 						<p:outputLabel for="comboOperador" value="#{msg['dialogConfiguracionAlertas.operador']}:" styleClass="margin-right-10" ></p:outputLabel>
@@ -311,8 +314,8 @@
 							<h:outputText value="#{td.concurrencias}" />
 					    </p:column>
 						<p:column style="text-align:center" rendered="#{(dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion())}" class="ui-panelgrid-cell" width="15%">
-					    	<p:commandButton id="btnEditar" value=" " icon="fa fa-edit" actionListener="#{dialogConfiguracionAlertas.clickEditarDisparador(td)}" process="@this" update="@form:columnaListaDisparadores @form:listaDisparadores @form:condicion @form:botonAnyadir" style="width:32px;height:25px"></p:commandButton>
-					    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash-o" actionListener="#{dialogConfiguracionAlertas.clickBorrarDisparador(td)}" process="@this" update="@form:listaDisparadores @form:condicion" style="width:32px;height:25px"></p:commandButton>
+					    	<p:commandButton id="btnEditar" value=" " icon="fa fa-pencil" actionListener="#{dialogConfiguracionAlertas.clickEditarDisparador(td)}" process="@this" update="@form:columnaListaDisparadores @form:listaDisparadores @form:condicion @form:botonAnyadir" style="width:32px;height:25px"></p:commandButton>
+					    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash" actionListener="#{dialogConfiguracionAlertas.clickBorrarDisparador(td)}" process="@this" update="@form:listaDisparadores @form:condicion" style="width:32px;height:25px"></p:commandButton>
 					    </p:column>
 
 	 				</p:dataTable>
@@ -324,8 +327,10 @@
 		            	<p:ajax event="error" listener="#{dialogConfiguracionAlertas.copiadoErr}" update="@this growlDialog"/>
 		        	</pe:clipboard>
 
-				    <p:inputText id="auxCopiar" value="#{dialogConfiguracionAlertas.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
 				</h:panelGrid>
+
+				<p:inputText id="auxCopiar" value="#{dialogConfiguracionAlertas.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
 			</p:outputPanel>
 			<p:outputPanel styleClass="botonera">
@@ -338,7 +343,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAlertas.aceptar()}" process="@form" update="@form"  styleClass="boton-azul" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this"  rendered="#{dialogConfiguracionAlertas.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogConfiguracionAlertas.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogConfiguracionAlertas.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

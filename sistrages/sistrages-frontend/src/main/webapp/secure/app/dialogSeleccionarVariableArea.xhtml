@@ -32,10 +32,10 @@
 		jQuery(document).ready(function() {
 
 	      $(window).resize(function() {
-              setTimeout(function(){  setHeight(); }, 100);
-  			});
+			  setTimeout(function(){  setHeight(); }, 100);
+		  });
 
-	      setHeight();
+		  setTimeout(function(){  setHeight(); }, 10);
 	  });
   	</script>
 
@@ -187,20 +187,20 @@
 				<p:ajax event="rowUnselect" />
 				<p:ajax event="rowDblselect" oncomplete="document.getElementById('dialogFuenteDatos:btnAceptar').click();" process="@form" update="@form @form:growlDialog"/>
 
-			    <p:column headerText="#{msg['botones.variablesArea']}" style="width:25%">
-			        <h:outputText value="${td.identificador}"/>
+			    <p:column headerText="#{msg['botones.variablesArea']}" style="width:25%" sortBy="#{td.identificador}">
+			        <h:outputText value="#{td.identificador}"/>
 			    </p:column>
 
-				<p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}">
-			        <h:outputText value="${td.descripcion}" />
+				<p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}" sortBy="#{td.descripcion}">
+			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}">
-			        <h:outputText value="${td.area.getIdentificador()}" />
+			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}" sortBy="#{td.area.getIdentificador()}">
+			        <h:outputText value="#{td.area.getIdentificador()}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominio.headerTipo.consultaRemota.url']}">
-			        <h:outputText value="${td.url}" />
+			     <p:column headerText="#{msg['dialogDominio.headerTipo.consultaRemota.url']}" sortBy="#{td.url}">
+			        <h:outputText value="#{td.url}" />
 			    </p:column>
 
 			</p:dataTable>

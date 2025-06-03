@@ -103,7 +103,11 @@ public enum TypeParametroEvento {
 	/**
 	 * FIRMA SESION.
 	 */
-	FIRMA_SESION("FIRSESION");
+	FIRMA_SESION("FIRSESION"),
+	/**
+	 * FIRMA METODO.
+	 */
+	FIRMA_METODO("FIRMETODO");
 
 
 	/**

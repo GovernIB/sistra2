@@ -1,4 +1,95 @@
-﻿// appFormsAjudaCamp
+﻿// appFormsAjuda
+
+$.fn.appFormsAjuda = function(opcions) {
+	var settings = $.extend({
+		element: ""
+	}, opcions);
+	this.each(function(){
+		var element = $(this),
+			ajuda_inicial = (APP_FORMS_AJUDA_ACTIVADA === "S") ? "off" : "on",
+			bt_ajuda = element.find("button:first"),
+			txtAjudaInfo = false,
+			txtAjudaBoto = false,
+			ajuda_data = false,
+			inicia = function() {
+
+				imc_forms_ajuda
+					.data("ajuda", ajuda_inicial);
+
+				activa();
+
+				bt_ajuda
+					.off('.appFormsAjuda')
+					.on('click.appFormsAjuda', activa);
+
+			},
+			activa = function() {
+
+				if (imc_forms_ajuda.data("ajuda") === "off") {
+
+					imc_forms_ajuda
+						.removeClass("imc--desactivada");
+
+					imc_forms_contenidor
+						.appFormsAjudaCamp({ referent: imc_forms_finestra.find(".imc--contingut:first") })
+						.attr("ajuda-activada", "si");
+
+					txtAjudaInfo = txtFormDinAjuda + " " + txtFormDinActivada;
+					txtAjudaBoto = txtFormDinDesactiva;
+					ajuda_data = "on";
+
+				} else {
+
+					imc_forms_ajuda
+						.addClass("imc--desactivada");
+
+					imc_forms_contenidor
+						.off('.appFormsAjudaCamp')
+						.attr("ajuda-activada", "no");
+
+					txtAjudaInfo = txtFormDinAjuda + " " + txtFormDinDesctivada;
+					txtAjudaBoto = txtFormDinActiva;
+					ajuda_data = "off";
+
+				}
+
+
+				imc_forms_ajuda
+					.fadeOut(200, function() {
+
+						canvia();
+
+						imc_forms_ajuda
+							.fadeIn(200);
+
+					});
+
+			},
+			canvia = function() {
+
+				imc_forms_ajuda
+					.find("strong")
+						.text(txtAjudaInfo)
+						.end()
+					.find("button")
+						.text(txtAjudaBoto)
+						.end()
+					.data("ajuda", ajuda_data);
+
+			};
+
+		// inicia
+
+		inicia();
+
+	});
+	return this;
+}
+// /ajuda
+
+
+
+// appFormsAjudaCamp
 
 $.fn.appFormsAjudaCamp = function(options) {
 
@@ -10,19 +101,14 @@ $.fn.appFormsAjudaCamp = function(options) {
 
 		var element = $(this)
 			,referent = settings.referent
-			,ajuda_elm = false
-			,ajuda_anterior_elm = false
-			,onMouseEnter = function() {
+			,elementEntra = function(e) {
 
 				if (element.attr("ajuda-activada") !== "si") {
 					return;
 				}
 
-				var elm = $(this);
-
-				revisa(elm);
-
-				ajuda_elm = elm.find(".imc-el-ajuda:first");
+				var elm = $(this)
+					,ajuda_elm = elm.find(".imc-el-ajuda:first");
 
 				if (!ajuda_elm.length || ajuda_elm.html() === "") {
 					return;
@@ -30,34 +116,21 @@ $.fn.appFormsAjudaCamp = function(options) {
 
 				// acció!
 
-				ajuda_anterior_elm = ajuda_elm;
-
 				var window_W = referent.width(),
 					window_H = referent.height(),
 					window_scroll_T = referent.scrollTop(),
 					elm_T = elm.position().top,
 					elm_L = elm.position().left,
 					elm_H = elm.outerHeight(true),
-					elm_control = elm.find(".imc-el-control:first, ul:first"),
-					elm_control_W = elm_control.outerWidth(),
-					elm_control_H = elm_control.outerHeight(),
 					ajuda_W = ajuda_elm.outerWidth(),
 					ajuda_H = ajuda_elm.outerHeight();
 
 				var ajuda_T = elm_T-ajuda_H-5+window_scroll_T;
 
 				ajuda_elm
-					.removeClass("imc--dreta")
 					.removeClass("imc--dalt");
 
-				if ((elm_L+ajuda_W) > window_W) {
-
-					ajuda_elm
-						.addClass("imc--dreta");
-
-				}
-
-				var ajuda_T_inici = ajuda_T+5;
+				var ajuda_T_inici = ajuda_T + 5;
 
 				if (window_scroll_T > ajuda_T) {
 
@@ -66,41 +139,51 @@ $.fn.appFormsAjudaCamp = function(options) {
 
 				}
 
+				console
+					.log("elementEntra");
+				
 				ajuda_elm
 					.addClass("imc-el-ajuda-on")
 					.off(".appFormsAjudaCamp")
-					.on("mouseenter.appFormsAjudaCamp", onMouseLeave);
+					.on("mouseover.appFormsAjudaCamp, mouseenter.appFormsAjudaCamp", ajudaEntra)
+					.on("mouseleave.appFormsAjudaCamp, mouseout.appFormsAjudaCamp", ajudaIx);
 
 			}
-			,onMouseLeave = function() {
+			,elementSurt = function(e) {
 
 				if (element.attr("ajuda-activada") !== "si") {
 					return;
 				}
 
-				var elm = $(this);
+				var elm = $(this)
+					,ajuda_elm = elm.find(".imc-el-ajuda:first");
 
-				ajuda_elm = elm.find(".imc-el-ajuda:first");
-
-				if (!ajuda_elm.length || ajuda_elm.html() === "") {
-					return;
-				}
+				console
+					.log("elementSurt");
 
 				ajuda_elm
+					.removeClass("imc-el-ajuda-on")
+					.off(".appFormsAjudaCamp");
+
+			}
+			,ajudaEntra = function(e) {
+
+				var ajuda_ = $(this);
+
+				console
+					.log("ajudaEntra");
+
+				ajuda_
+					.addClass("imc-ajuda-over")
 					.removeClass("imc-el-ajuda-on");
 
 			}
-			,enfocat = function(elm) {
+			,ajudaIx = function(e) {
 
-				return elm.find("input:first, textarea:first, a.imc-select:first").is(":focus");
+				var ajuda_ = $(this);
 
-			}
-			,revisa = function(elm) {
-
-				elm
-					.closest(".imc-form-contingut")
-						.find(".imc-el-ajuda-on")
-							.removeClass("imc-el-ajuda-on");
+				ajuda_
+					.removeClass("imc-ajuda-over");
 
 			}
 			,inicia = function() {
@@ -114,10 +197,10 @@ $.fn.appFormsAjudaCamp = function(options) {
 						.each(function() {
 
 							var el_ajuda_ = $(this)
-								,el_ajuda_L = el_ajuda_.closest(".imc-element").position().left
+								,el_L = el_ajuda_.closest(".imc-element").position().left
 								,el_ajuda_W = el_ajuda_.outerWidth();
 
-							if ((el_ajuda_L + el_ajuda_W) > window_W) {
+							if ((el_L + el_ajuda_W) > window_W) {
 
 								el_ajuda_
 									.addClass("imc--dreta");
@@ -130,9 +213,8 @@ $.fn.appFormsAjudaCamp = function(options) {
 
 				element
 					.off('.appFormsAjudaCamp')
-					.on('mouseenter.appFormsAjudaCamp, focus.appFormsAjudaCamp', ".imc-element", onMouseEnter)
-					.on('mouseleave.appFormsAjudaCamp, blur.appFormsAjudaCamp', ".imc-element", onMouseLeave);
-
+					.on('mouseenter.appFormsAjudaCamp, focus.appFormsAjudaCamp', ".imc-element", elementEntra)
+					.on('mouseleave.appFormsAjudaCamp, blur.appFormsAjudaCamp', ".imc-element", elementSurt);
 
 			};
 
@@ -144,4 +226,5 @@ $.fn.appFormsAjudaCamp = function(options) {
 
 	return this;
 }
+
 // /appFormsAjudaCamp

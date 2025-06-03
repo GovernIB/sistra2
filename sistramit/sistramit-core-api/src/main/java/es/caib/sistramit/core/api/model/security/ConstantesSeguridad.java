@@ -11,6 +11,10 @@ public final class ConstantesSeguridad {
 	 */
 	public static final String PUNTOENTRADA_INICIAR_TRAMITE = "/asistente/iniciarTramite.html";
 	/**
+	 * Punto de entrada para iniciar un tramite desde pantalla persistencia.
+	 */
+	public static final String PUNTOENTRADA_INICIAR_TRAMITE_DESDE_PERSISTENCIA = "/asistente/iniciarTramiteDesdePersistencia.html";
+	/**
 	 * Punto de entrada para cargar un tramite desde el asistente.
 	 */
 	public static final String PUNTOENTRADA_CARGAR_TRAMITE = "/asistente/cargarTramite.html";
@@ -41,12 +45,18 @@ public final class ConstantesSeguridad {
 	 * Punto de entrada para retornar desde firma (no funciona a través de ticket).
 	 */
 	public static final String PUNTOENTRADA_RETORNO_FIRMA_EXTERNO = "/asistente/retornoFirmaExterno.html";
-
 	/**
 	 * Punto de entrada para retornar desde carpeta ciudadano.
 	 */
 	public static final String PUNTOENTRADA_RETORNO_CARPETA = "/asistente/retornoCarpetaCiudadano.html";
-
+	/**
+	 * Punto de entrada para retornar para acceso FH.
+	 */
+	public static final String PUNTOENTRADA_RETORNO_FH = "/asistente/retornoFH.html";
+	/**
+	 * Punto de entrada para retornar para digitalización.
+	 */
+	public static final String PUNTOENTRADA_RETORNO_DIGITALIZACION = "/asistente/retornoDigitalizacionExterno.html";
 	/**
 	 * Atributo que indica que la sesion no se debe invalidar en el autologout.
 	 */
@@ -67,6 +77,11 @@ public final class ConstantesSeguridad {
 	public static final String TICKET_USER_CARPETA = "ticket-user-carpeta";
 	/**
 	 * Usuario usado en pagina de login para indicar que es autenticación por ticket
+	 * por FH.
+	 */
+	public static final String TICKET_USER_FH = "ticket-user-fh";
+	/**
+	 * Usuario usado en pagina de login para indicar que es autenticación por ticket
 	 * por Gestor Formularios.
 	 */
 	public static final String TICKET_USER_GF = "ticket-user-gf";
@@ -76,7 +91,7 @@ public final class ConstantesSeguridad {
 	 */
 	public static final String TICKET_USER_PAGO = "ticket-user-pago";
 	/**
-	 * Parámetro para autenticación con ticket.
+	 * Parámetro para autenticación con ticket desde capeta.
 	 */
 	public static final String PARAM_TICKETAUTH = "ticket";
 	/**

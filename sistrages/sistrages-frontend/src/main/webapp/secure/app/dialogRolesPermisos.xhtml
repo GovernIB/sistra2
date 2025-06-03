@@ -139,7 +139,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogRolesPermisos.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:90%" required="true" disabled="#{dialogRolesPermisos.consulta}">
@@ -184,7 +184,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogRolesPermisos.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogRolesPermisos.isAlta() or dialogRolesPermisos.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogRolesPermisos.cancelar()}" process="@this" rendered="#{dialogRolesPermisos.isAlta() or dialogRolesPermisos.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogRolesPermisos.cancelar()}" process="@this"  rendered="#{dialogRolesPermisos.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogRolesPermisos.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogRolesPermisos.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

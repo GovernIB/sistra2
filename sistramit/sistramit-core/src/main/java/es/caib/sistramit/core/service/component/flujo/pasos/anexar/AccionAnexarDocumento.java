@@ -4,9 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import es.caib.sistra2.commons.pdf.UtilPDF;
@@ -28,10 +26,8 @@ import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.Anexo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
-import es.caib.sistramit.core.api.model.flujo.Fichero;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -43,14 +39,11 @@ import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoAnexar;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
-import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
-import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.TransformacionAnexo;
 import es.caib.sistramit.core.service.model.flujo.ValidacionAnexo;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
-import es.caib.sistramit.core.service.model.flujo.types.TypeDocumentoPersistencia;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.integracion.ValidacionFirmante;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
@@ -66,14 +59,11 @@ import es.caib.sistramit.core.service.util.UtilsSTG;
 @Component("accionAdAnexarDocumento")
 public final class AccionAnexarDocumento implements AccionPaso {
 
-	/**
-	 * Atributo dao.
-	 */
+	/** DAO flujo paso. */
 	@Autowired
 	private FlujoPasoDao dao;
-	/**
-	 * Motor de ejecución de scritps.
-	 */
+
+	/** Motor de ejecución de scritps. */
 	@Autowired
 	private ScriptExec scriptFlujo;
 
@@ -83,6 +73,11 @@ public final class AccionAnexarDocumento implements AccionPaso {
 
 	@Autowired
 	private ConfiguracionComponent configuracionComponent;
+
+
+	/** Componente con lógica común de anexar. */
+	@Autowired
+	private AnexarDocumentoComponent anexarDocumentoComponent;
 
 	@Override
 	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
@@ -97,6 +92,11 @@ public final class AccionAnexarDocumento implements AccionPaso {
 		byte[] datosFichero = (byte[]) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "datosFichero", false);
 		String tituloInstancia = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "titulo", false); // titulo
 		// genericos
+
+		// No permitido en modo FH
+		if (pVariablesFlujo.isFuncionarioHabilitado()) {
+			throw new AccionPasoNoPermitidaException("No se permite acción anexar en modo FH");
+		}
 
 		// TODO LIMITAR TAMBIEN EN HTML
 		if (StringUtils.isNotBlank(tituloInstancia) && StringUtils.length(tituloInstancia) > 100) {
@@ -115,8 +115,8 @@ public final class AccionAnexarDocumento implements AccionPaso {
 		final Anexo anexoDetalle = ((DetallePasoAnexar) dipa.getDetallePaso()).getAnexo(idAnexo);
 
 		// Realizamos validaciones
-		final ValidacionAnexo resValidacion = validarAnexo(dipa, anexoDetalle, presentacion, nombreFichero,
-				datosFichero, tituloInstancia, pDefinicionTramite, pVariablesFlujo);
+		final ValidacionAnexo resValidacion = anexarDocumentoComponent.validarAnexo(dipa, anexoDetalle, presentacion, nombreFichero,
+				datosFichero, tituloInstancia, pDefinicionTramite, pVariablesFlujo, false);
 
 		// Verificamos si el anexo se debe transformar el anexo (a PDF)
 		boolean conversionPDF = false;
@@ -129,10 +129,10 @@ public final class AccionAnexarDocumento implements AccionPaso {
 		}
 
 		// Actualizamos detalle
-		actualizarDetalleAnexo(anexoDetalle, nombreFichero, tituloInstancia, resValidacion);
+		anexarDocumentoComponent.actualizarAnexoDetalle(anexoDetalle, nombreFichero, tituloInstancia, TypeSiNo.fromBoolean(resValidacion.isAnexadoFirmado()));
 
 		// Actualizamos persistencia
-		actualizarPersistencia(dipa, pDpp, anexoDetalle, nombreFichero, datosFichero, tituloInstancia, pVariablesFlujo);
+		anexarDocumentoComponent.actualizarPersistenciaAnexar(dipa, pDpp, anexoDetalle, nombreFichero, datosFichero, tituloInstancia, pVariablesFlujo);
 
 		// Devolvemos respuesta vacia
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
@@ -188,416 +188,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
 		return res;
 	}
 
-	/**
-	 * Actualiza el detalle del anexo.
-	 *
-	 * @param anexoDetalle
-	 *                          Detalle anexo
-	 * @param nombreFichero
-	 *                          Nombre fichero
-	 * @param titulo
-	 *                          Título (para genericos)
-	 * @param resValidacion
-	 *                          Resultado validación
-	 */
-	private void actualizarDetalleAnexo(final Anexo anexoDetalle, final String nombreFichero, final String titulo,
-			final ValidacionAnexo resValidacion) {
-		// Marcamos como rellenado
-		anexoDetalle.setRellenado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
-		// Si es electronico indicamos fichero
-		if (anexoDetalle.getPresentacion() == TypePresentacion.ELECTRONICA) {
-			// - Creamos fichero
-			final Fichero fic = new Fichero();
-			fic.setFichero(nombreFichero);
-			fic.setTitulo(titulo);
-			// - Añadimos / reemplazamos fichero segun sea generico o no
-			if (anexoDetalle.getMaxInstancias() > ConstantesNumero.N1) {
-				// Es generico, añadimos
-				anexoDetalle.getFicheros().add(fic);
-			} else {
-				// No es generico, reemplazamos
-				if (!anexoDetalle.getFicheros().isEmpty()) {
-					anexoDetalle.borrarFichero(ConstantesNumero.N1);
-				}
-				anexoDetalle.getFicheros().add(fic);
-			}
-			// - Indicamos si se ha anexado firmado
-			anexoDetalle.setAnexadofirmado(TypeSiNo.fromBoolean(resValidacion.isAnexadoFirmado()));
-		}
-	}
-
-	/**
-	 * Realiza las validaciones al subir el anexo.
-	 *
-	 * @param dipa
-	 *                               Datos internos paso
-	 * @param anexoDetalle
-	 *                               Detalle anexo
-	 * @param presentacion
-	 * @param nombreFichero
-	 *                               Nombre fichero
-	 * @param datosFichero
-	 *                               Datos fichero
-	 * @param tituloInstancia
-	 *                               Título (para genericos)
-	 * @param pDefinicionTramite
-	 *                               Definicion tramite
-	 * @param pVariablesFlujo
-	 *                               Variables de flujo
-	 * @param presentacion
-	 *                               presentacion
-	 * @return
-	 */
-	private ValidacionAnexo validarAnexo(final DatosInternosPasoAnexar dipa, final Anexo anexoDetalle,
-			final TypePresentacion presentacion, final String nombreFichero, final byte[] datosFichero,
-			final String tituloInstancia, final DefinicionTramiteSTG pDefinicionTramite,
-			final VariablesFlujo pVariablesFlujo) {
-
-		final ValidacionAnexo resultadoValidacion = new ValidacionAnexo();
-
-		// Verificamos que coincide el tipo de presentacion
-		if (anexoDetalle.getPresentacion() != presentacion) {
-			throw new ParametrosEntradaIncorrectosException("No coincideix el tipus de presentació");
-		}
-
-		// Validaciones anexo electronico
-		if (presentacion == TypePresentacion.ELECTRONICA) {
-
-			// - Validaciones anexo generico
-			validacionesAnexoGenerico(anexoDetalle, tituloInstancia);
-
-			// - Validar extensiones y tamaño
-			validarExtensionTamanyo(dipa, pVariablesFlujo, anexoDetalle, datosFichero, nombreFichero);
-
-			// Solo si se requiere firma (firma asistente o anexar firmado)
-			if (anexoDetalle.getFirmar() == TypeSiNo.SI || anexoDetalle. getAnexarfirmado() == TypeSiNo. SI) {
-				// - Validacion protegido con contraseña
-				validarProteccionPassword(anexoDetalle, datosFichero, nombreFichero);
-
-				// - Validaciones de anexo firmado
-				final boolean anexadoFirmado = validacionAnexoFirmado(pDefinicionTramite, pVariablesFlujo, anexoDetalle,
-						datosFichero, nombreFichero);
-				resultadoValidacion.setAnexadoFirmado(anexadoFirmado);
-			}
-
-			// - Validacion script
-			validacionScriptValidacion(pDefinicionTramite, pVariablesFlujo, dipa, anexoDetalle, datosFichero,
-					nombreFichero);
-
-		}
-
-		return resultadoValidacion;
-
-	}
-
-	/**
-	 * Valida si se puede anexar un PDF protegido por contraseña
-	 *
-	 * @param anexoDetalle
-	 * @param datosFichero
-	 * @param nombreFichero
-	 */
-	private void validarProteccionPassword(Anexo anexoDetalle, byte[] datosFichero, String nombreFichero) {
-		if (FilenameUtils.getExtension(nombreFichero).equalsIgnoreCase("PDF")) {
-			try {
-				if (UtilPDF.esProtegidoPwd(datosFichero)) {
-					throw new AnexarPdfProtegidoException();
-				}
-			} catch (Exception e) {
-				throw new AnexarPdfNoVerificadoProtegidoException(e);
-			}
-		}
-	}
-
-	/**
-	 * Validaciones para anexo genérico.
-	 *
-	 * @param anexoDetalle
-	 *                            Anexo
-	 * @param tituloInstancia
-	 *                            titulo instancia
-	 */
-	protected void validacionesAnexoGenerico(final Anexo anexoDetalle, final String tituloInstancia) {
-		// - Parametro nombreFichero obligatorio para genericos
-		if (anexoDetalle.getMaxInstancias() > ConstantesNumero.N1) {
-			if (StringUtils.isEmpty(tituloInstancia)) {
-				throw new ParametrosEntradaIncorrectosException("Falta especificar el títol del document");
-			}
-			if (!XssFilter.filtroXss(tituloInstancia)) {
-				throw new ParametrosEntradaIncorrectosException("Títol instancia conté caràcters no permesos");
-			}
-		}
-		// - Verificamos si es generico y ha llegado al maximo de instancias
-		if (anexoDetalle.getMaxInstancias() > ConstantesNumero.N1
-				&& anexoDetalle.getFicheros().size() == (anexoDetalle.getMaxInstancias())) {
-			throw new AccionPasoNoPermitidaException("El límit d'instancies per l'annex " + anexoDetalle.getId()
-					+ " es " + anexoDetalle.getMaxInstancias());
-		}
-	}
-
-	/**
-	 * Valida extensiones y tamaño
-	 *
-	 * @param pVariablesFlujo
-	 *                            Variables flujo
-	 * @param anexoDetalle
-	 *                            Anexo
-	 * @param datosFichero
-	 *                            Datos fichero
-	 *
-	 * @param dipa
-	 *                            Datos internos paso
-	 * @param anexoDetalle
-	 *                            Anexo
-	 * @param nombreFichero
-	 *                            Nombre fichero
-	 */
-	protected void validarExtensionTamanyo(final DatosInternosPasoAnexar dipa, final VariablesFlujo pVariablesFlujo,
-			final Anexo anexoDetalle, final byte[] datosFichero, final String nombreFichero) {
-
-		// Comprobamos si el fichero anexado está vacío
-		if (datosFichero.length == 0) {
-			throw new AnexoVacioException("El fitxer a anexar està buit");
-		}
-
-		// - Verificar extensiones
-		final String extensionFichero = FilenameUtils.getExtension(nombreFichero);
-		if (anexoDetalle.getExtensiones() != null && (anexoDetalle.getExtensiones().toLowerCase() + ",")
-				.indexOf(extensionFichero.toLowerCase() + ",") == ConstantesNumero.N_1) {
-			throw new ExtensionAnexoNoValidaException(
-					"Extensió '" + extensionFichero + "' no permesa per annex " + anexoDetalle.getId());
-		} else {
-			if (StringUtils.isBlank(extensionFichero)) {
-				throw new ExtensionAnexoNoValidaException(
-						"El fitxer ha de tenir extensió per a annex " + anexoDetalle.getId());
-			}
-		}
-		// - Verificar tamaño maximo individual anexo
-		if (StringUtils.isBlank(anexoDetalle.getTamMax())) {
-			throw new ErrorConfiguracionException(
-					"No s'ha configurat la mida màxima per l'annex: " + anexoDetalle.getId());
-		}
-		UtilsFlujo.verificarTamanyoMaximo(anexoDetalle.getTamMax(), datosFichero.length);
-
-		// - Verificar tamaño máximo total anexos
-		final String tamanyoTotalAnexosPropStr = configuracionComponent
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL);
-		int tamanyoTotalAnexosPropBytes = 0;
-		try {
-			tamanyoTotalAnexosPropBytes = ValidacionesTipo.getInstance()
-					.convertirTamanyoBytes(tamanyoTotalAnexosPropStr);
-		} catch (final ValidacionTipoException e) {
-			throw new ErrorConfiguracionException(
-					"Error al interpretar propietat " + TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL.toString());
-		}
-
-		if (tamanyoTotalAnexosPropBytes > 0) {
-			final long tamanyo = dao.calcularTamañoFicherosPaso(pVariablesFlujo.getIdSesionTramitacion(),
-					dipa.getIdPaso(), false);
-			final long tamanyoTotal = tamanyo + datosFichero.length;
-			if (tamanyoTotal > tamanyoTotalAnexosPropBytes) {
-				throw new TamanyoMaximoAnexosAlcanzadoException(tamanyoTotalAnexosPropStr);
-			}
-		}
-	}
-
-	/**
-	 * Ejecuta script validación anexo
-	 *
-	 *
-	 * @param pDefinicionTramite
-	 *                               Definición trámite
-	 *
-	 * @param pVariablesFlujo
-	 *                               Variables flujo
-	 * @param anexoDetalle
-	 *                               Anexo
-	 * @param datosFichero
-	 *                               Datos fichero
-	 *
-	 * @param dipa
-	 *                               Datos internos paso
-	 * @param anexoDetalle
-	 *                               Anexo
-	 * @param nombreFichero
-	 *                               Nombre fichero
-	 */
-	protected void validacionScriptValidacion(final DefinicionTramiteSTG pDefinicionTramite,
-			final VariablesFlujo pVariablesFlujo, final DatosInternosPasoAnexar dipa, final Anexo anexoDetalle,
-			final byte[] datosFichero, final String nombreFichero) {
-		// Ejecutamos script de validacion de anexo (solo para no dinamicos)
-		if (anexoDetalle.getDinamico() == TypeSiNo.NO) {
-			final RPasoTramitacionAnexar defPaso = (RPasoTramitacionAnexar) UtilsSTG
-					.devuelveDefinicionPaso(dipa.getIdPaso(), pDefinicionTramite);
-			final RAnexoTramite defAnexo = UtilsSTG.devuelveDefinicionAnexo(defPaso, anexoDetalle.getId());
-			if (defAnexo != null
-					&& UtilsSTG.existeScript(defAnexo.getPresentacionElectronica().getScriptValidacion())) {
-				final RScript script = defAnexo.getPresentacionElectronica().getScriptValidacion();
-				final Map<String, String> codigosError = UtilsSTG.convertLiteralesToMap(script.getLiterales());
-				final Map<String, Object> variablesScript = new HashMap<String, Object>();
-				variablesScript.put("nombreFichero", nombreFichero);
-				variablesScript.put("datosFichero", datosFichero);
-				final RespuestaScript rs = this.scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO,
-						anexoDetalle.getId(), script.getScript(), pVariablesFlujo, variablesScript, null, codigosError,
-						pDefinicionTramite);
-			}
-		}
-	}
-
-	/**
-	 * Realiza validaciones anexo firmado: en caso de que se haya anexado firmado se verifica firma.
-	 *
-	 * @param pDefinicionTramite
-	 *                               Definición trámite
-	 * @param pVariablesFlujo
-	 *                               Variables flujo
-	 * @param anexoDetalle
-	 *                               Anexo
-	 * @param datosFichero
-	 *                               Datos fichero
-	 * @param nombreFichero
-	 *                               Nombre fichero
-	 * @return true si se ha anexado firmado y se ha podido validar firma
-	 */
-	protected boolean validacionAnexoFirmado(final DefinicionTramiteSTG pDefinicionTramite,
-			final VariablesFlujo pVariablesFlujo, final Anexo anexoDetalle, final byte[] datosFichero,
-			final String nombreFichero) {
-		// Indicará si se ha anexado firmado
-		boolean anexadoFirmado = false;
-
-		// Extensión
-		final String extensionFichero = FilenameUtils.getExtension(nombreFichero);
-
-		// En caso de que se permite anexar firmado validamos si se ha anexado firmado
-		if (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
-			// Id entidad
-			final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
-			// Si es un anexo firmado, debe ser un PDF PADES
-			anexadoFirmado = extensionFichero.equalsIgnoreCase("PDF") && esPades(datosFichero);
-			// Verificamos si se debe anexar obligatoriamente firmado (no permite firma mediante asistente)
-			if (!anexadoFirmado && anexoDetalle.getFirmar() == TypeSiNo.NO) {
-				throw new AnexarFirmadoFirmaNoFirmadoException("Es obligatorio anexar firmado el anexo");
-			}
-			// Verificamos firma (y firmantes en caso necesario)
-			if (anexadoFirmado) {
-				final ValidacionFirmante vf = firmaComponent.validarFirmante(idEntidad, pVariablesFlujo.getIdioma(),
-						datosFichero, datosFichero, anexoDetalle.getFirmantes());
-				if (!vf.isCorrecto()) {
-					throw new AnexarFirmadoFirmaIncorrectaException(
-							"La firma no es correcta o no ha sido firmada por todos los firmantes: "
-									+ vf.getDetalleError());
-				}
-			}
-		}
-
-		// En caso de que no se permita anexar firmado no puede ser un PADES
-		if (anexoDetalle.getAnexarfirmado() == TypeSiNo.NO && extensionFichero.equalsIgnoreCase("PDF") && esPades(datosFichero) ) {
-			throw new AnexarFirmadoFirmaNoPermitidaException("No se permite anexar firmado");
-		}
-
-		return anexadoFirmado;
-	}
-
-	/**
-	 * Verifica si es un PDF PADES.
-	 * @param datosFichero Datos del fichero
-	 * @return true si es un PDF PADES
-	 */
-	private boolean esPades(byte[] datosFichero) {
-		// Verificamos si es un PDF PADES
-		try {
-			final boolean padesLTV = BooleanUtils.toBoolean(configuracionComponent
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXOS_ANEXOFIRMADO_LTV));
-			return UtilPDF.esPades(datosFichero, padesLTV);
-		} catch (Exception e) {
-			throw new AnexarVerificarPadesException(e);
-		}
-	}
 
 
-	/**
-	 * Actualiza persistencia.
-	 *
-	 * @param pDipa
-	 *                             Datos internos paso
-	 * @param pDpp
-	 *                             Datos persistencia
-	 * @param pAnexoDetalle
-	 *                             Detalle anexo
-	 * @param pNombreFichero
-	 *                             Nombre fichero
-	 * @param pDatosFichero
-	 *                             Datos fichero
-	 * @param ptituloInstancia
-	 *                             titulo (para genericos)
-	 * @param pVariablesFlujo
-	 *                             Variables flujo
-	 */
-	private void actualizarPersistencia(final DatosInternosPasoAnexar pDipa, final DatosPersistenciaPaso pDpp,
-			final Anexo pAnexoDetalle, final String pNombreFichero, final byte[] pDatosFichero,
-			final String ptituloInstancia, final VariablesFlujo pVariablesFlujo) {
-
-		DocumentoPasoPersistencia doc;
-
-		// Si es genérico y hay más de una instancia añadimos nuevo documento
-		if (pAnexoDetalle.getMaxInstancias() > ConstantesNumero.N1
-				&& pAnexoDetalle.getFicheros().size() > ConstantesNumero.N1) {
-			doc = new DocumentoPasoPersistencia();
-			doc.setId(pAnexoDetalle.getId());
-			doc.setTipo(TypeDocumentoPersistencia.ANEXO);
-			doc.setInstancia(pAnexoDetalle.getFicheros().size());
-			// Añadimos a datos persistencia (insertamos detras de la ultima
-			// instancia)
-			int index = 0;
-			boolean enc = false;
-			boolean medio = false;
-			for (final DocumentoPasoPersistencia d : pDpp.getDocumentos()) {
-				if (d.getId().equals(pAnexoDetalle.getId())) {
-					enc = true;
-				}
-				if (enc && !d.getId().equals(pAnexoDetalle.getId())) {
-					medio = true;
-					break;
-				}
-				index++;
-			}
-			if (!medio) {
-				pDpp.getDocumentos().add(doc);
-			} else {
-				pDpp.getDocumentos().add(index, doc);
-			}
-
-		} else {
-			// Si no, actualizamos la existente
-			doc = pDpp.getDocumentoPasoPersistencia(pAnexoDetalle.getId(), ConstantesNumero.N1);
-		}
-
-		// Marcamos para borrar el fichero y firmas
-		final List<ReferenciaFichero> ficherosBorrar = new ArrayList<>();
-		ficherosBorrar.addAll(doc.obtenerReferenciasFicherosAnexo(true, true));
-
-		// Insertamos nuevo fichero
-		if (pAnexoDetalle.getPresentacion() == TypePresentacion.ELECTRONICA) {
-			final ReferenciaFichero rfp = dao.insertarFicheroPersistencia(pNombreFichero, pDatosFichero,
-					pVariablesFlujo.getIdSesionTramitacion());
-			doc.setFichero(rfp);
-		}
-		// Actualizamos el estado
-		doc.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
-		// Actualizamos el nombre del fichero
-		doc.setAnexoNombreFichero(pNombreFichero);
-		// Actualizamos titulo instancia
-		doc.setAnexoDescripcionInstancia(ptituloInstancia);
-		// Indicamos si se ha anexado firmado
-		doc.setAnexoAnexadoFirmado(pAnexoDetalle.getAnexadofirmado());
-		// Guardamos datos documento persistencia
-		dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), doc);
-		// Eliminamos ficheros marcados para borrar (despues de actualizar
-		// datos documento)
-		for (final ReferenciaFichero ref : ficherosBorrar) {
-			dao.eliminarFicheroPersistencia(ref);
-		}
-
-	}
 
 }

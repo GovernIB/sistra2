@@ -149,10 +149,10 @@ public class OpcionArbol {
 		if (tipo != null) {
 			switch (tipo) {
 			case CAMPO_TEXTO:
-				src = "fa fa-pencil-square-o";
+				src = "fa fa-pencil";
 				break;
 			case SELECTOR:
-				src = "fa fa-caret-square-o-down";
+				src = "fa fa-caret-down";
 				break;
 			case CHECKBOX:
 				src = "fa fa-check-square";

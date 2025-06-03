@@ -182,4 +182,22 @@ public final class OpcionesCampoTextoNumero implements Serializable {
 		rangoMax = pRangoMax;
 	}
 
+	/**
+	 * Calcula tamaño campo de forma automática en función parte entera, decimal, separador y signo
+	 * @return
+	 */
+	public int getTamanyo() {
+		int tamMax = this.getEnteros(); // Enteros
+		if (this.getSeparador() != null) {
+			tamMax++; // Separador
+		}
+		if (this.getDecimales() > 0) {
+			tamMax += this.getDecimales(); // Decimales
+		}
+		if (this.getNegativo() == TypeSiNo.SI) {
+			tamMax++; // Signo
+		}
+		return tamMax;
+	}
+
 }

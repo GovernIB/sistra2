@@ -9,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.exception.FrontException;
@@ -170,8 +170,7 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 				if (tramites.isEmpty()) {
 					seccionService.updateSeccionReutilizable(data, scripts);
 				} else {
-					final RequestContext contextReq = RequestContext.getCurrentInstance();
-					contextReq.execute("PF('confirmationButton').jq.click();");
+					PrimeFaces.current().executeScript("PF('confirmationButton').jq.click();");
 					UtilJSF.doValidationFailed();
 					return;
 				}
@@ -269,7 +268,7 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 					TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
 
 			Integer width = UtilJSF.getSessionBean().getWidth();
-			Integer height = UtilJSF.getSessionBean().getHeight() - 60;
+			Integer height = UtilJSF.getSessionBean().getHeight() - 40;
 			UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
 		}
 	}

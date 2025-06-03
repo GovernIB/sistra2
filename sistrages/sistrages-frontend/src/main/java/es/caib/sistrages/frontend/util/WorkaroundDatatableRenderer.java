@@ -18,9 +18,10 @@ import org.primefaces.component.datatable.DataTableRenderer;
  */
 public class WorkaroundDatatableRenderer extends DataTableRenderer {
 
-	@Override
+	//@Override
 	protected void encodeCell(final FacesContext context, final DataTable table, final UIColumn column,
 			final String clientId, final boolean selected) throws IOException {
+		/* TODO Primafaces 14
 		if (!column.isRendered()) {
 			return;
 		}
@@ -77,5 +78,7 @@ public class WorkaroundDatatableRenderer extends DataTableRenderer {
 		}
 
 		writer.endElement("td");
+
+		 */
 	}
 }

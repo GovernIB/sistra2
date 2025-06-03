@@ -1175,6 +1175,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
                 	jCampoTexto.setTelefonoInternacionalValidacionPrecisa(campoTexto.isTelefonoInternacionalValidacionPrecisa());
                 case EXPRESION:
                     jCampoTexto.setNormalExpresionRegular(campoTexto.getExpresionRegular());
+                    jCampoTexto.setNormalTamanyo(campoTexto.getNormalTamanyo());
                     break;
                 case EMAIL:
                     jCampoTexto.setNormalTamanyo(campoTexto.getNormalTamanyo());

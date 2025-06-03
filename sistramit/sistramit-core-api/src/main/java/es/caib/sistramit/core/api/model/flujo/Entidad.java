@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.api.model.flujo;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+
 /**
  * Entidad.
  *
@@ -58,6 +60,9 @@ public final class Entidad implements ModelApi {
 
 	/** Redes sociales. */
 	private EntidadRedesSociales redes;
+
+	/** Ayuda contextual por defecto. */
+	private TypeSiNo ayudaContextual;
 
 	/**
 	 * Método de acceso a logo.
@@ -380,6 +385,14 @@ public final class Entidad implements ModelApi {
 	 */
 	public void setCodigo(final String codigo) {
 		this.codigo = codigo;
+	}
+
+	public void setAyudaContextual(TypeSiNo ayudaContextual) {
+		this.ayudaContextual = ayudaContextual;
+	}
+
+	public TypeSiNo getAyudaContextual() {
+		return ayudaContextual;
 	}
 
 }

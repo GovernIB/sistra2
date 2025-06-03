@@ -19,6 +19,9 @@
 <h:body>
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -139,22 +142,22 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,,wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="ui-g-3 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18, ui-g-7 ui-sm-7 ui-md-7	 ui-lg-7, ui-g-2 ui-sm-2 ui-md-2 ui-lg-2 " columns = "3" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 28px !important;">
 
 
 					<p:outputLabel for="identificador" value="#{msg['dialogFormularioExterno.headerIdentificador']}" />
-					<p:inputText id="identificador" value="#{dialogFormularioExterno.data.identificador}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogFormularioExterno.data.identificador}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" styleClass="w90" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 				   	<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogFormularioExterno.headerDescripcion']}" />
-					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogFormularioExterno.data.descripcion}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" maxlength="255"/>
+					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogFormularioExterno.data.descripcion}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" styleClass="w90"  maxlength="255"/>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="url" value="#{msg['dialogFormularioExterno.headerURL']}" />
-					<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" readonly="#{dialogFormularioExterno.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="40" maxlength="100">
+					<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" readonly="#{dialogFormularioExterno.isConsulta()}" onblur="this.value = this.value.trim();" required="true" styleClass="w90" maxlength="100">
 						<p:ajax event="keyup" process="@this"/>
 					</p:inputText>
 					<p:commandButton icon="fa fa-arrow-down" value="#{msg['dialogSeleccionVariableArea.titulo']}" disabled="#{dialogFormularioExterno.isConsulta()}" actionListener="#{dialogFormularioExterno.seleccionarVariableArea()}" process="@this" update="growlDialog" >
@@ -162,7 +165,7 @@
 					</p:commandButton>
 
 					<p:outputLabel for="configAut" value="#{msg['dialogFormularioExterno.headerConfigAutenticacion']}"  style="margin-right:5px" />
-			 	 	<p:selectOneMenu id="configAut" value="#{dialogFormularioExterno.data.configuracionAutenticacion}"  style="width:285px" disabled="#{dialogFormularioExterno.isConsulta()}" converter="#{configuracionConverter}"   >
+			 	 	<p:selectOneMenu id="configAut" value="#{dialogFormularioExterno.data.configuracionAutenticacion}"  styleClass="w90"  disabled="#{dialogFormularioExterno.isConsulta()}" converter="#{configuracionConverter}"   >
 						    <f:selectItems value="#{dialogFormularioExterno.configuraciones}" var="confAut" itemValue="#{confAut}" itemLabel="#{confAut.identificador}" />
 							<p:ajax event="change" listener="#{dialogFormularioExterno.actualizarConf()}" update="btnConsultarConf"/>
 					</p:selectOneMenu >
@@ -186,14 +189,14 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 		     	<f:facet name="left">
-	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" rendered="#{!dialogFormularioExterno.isAlta()}" actionListener="#{dialogFormularioExterno.tramites()}" process="@this" update="growlDialog"  />
+	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-download" rendered="#{!dialogFormularioExterno.isAlta()}" actionListener="#{dialogFormularioExterno.tramites()}" process="@this" update="growlDialog"  />
 
 	     		</f:facet>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogFormularioExterno.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogFormularioExterno.isAlta() or dialogFormularioExterno.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormularioExterno.cancelar()}" process="@this"  rendered="#{dialogFormularioExterno.isAlta() or dialogFormularioExterno.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFormularioExterno.cancelar()}" process="@this"  rendered="#{dialogFormularioExterno.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogFormularioExterno.ayuda}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogFormularioExterno.ayuda}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

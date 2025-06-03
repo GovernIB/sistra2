@@ -509,7 +509,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 			modo = TypeModoAcceso.EDICION;
 			params.put(TypeParametroVentana.ID.toString(), er.getCodigo().toString());
 		}
-		UtilJSF.openDialog(DialogEnvioRemoto.class, modo, params, true, 730, 300);
+		UtilJSF.openDialog(DialogEnvioRemoto.class, modo, params, true, 740, 345);
 	}
 
 	/**

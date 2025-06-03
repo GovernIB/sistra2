@@ -90,8 +90,13 @@
 									<li class="imc--signat" data-nif="{{firmante.nif}}">
 
 										<strong>
+											{{if firmante}}
 											{{firmante.nombre}} ({{firmante.nif}})
+											{{else}}
+											&nbsp;
+											{{/if}}
 										</strong>
+
 										<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
 										{{if descargable|equals>s}}
 										<button type="button" class="imc-bt imc--ico imc--descarrega" title="{{txtDescarrega}} {{txtSignatura}}" data-tipus="formulari" data-es="signatura"><span>{{txtDescarrega}} {{txtSignatura|downcase}}</span></button>

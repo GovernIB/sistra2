@@ -9,36 +9,36 @@
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 	<h:form id="formViewDefinicionVersionRegistrarTramite" styleClass="h100">
-
+		<h:outputStylesheet>
+			.ui-widget-content {
+				border: none;
+				background: none;
+			}
+		</h:outputStylesheet>
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" styleClass="w100 h100" cellpadding="9" cellspacing="9">
+        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses="ui-datatable-even, ui-datatable-odd" styleClass="w100 h100" cellpadding="9" cellspacing="0">
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino']}" />
-			<p:panelGrid styleClass="noBorders" columnClasses="noPadding-left,,,">
-				<p:row  rendered="#{!viewDefinicionVersion.entidad.registroCentralizado}">
-					<p:column>
-						<p:outputLabel for="oficina"
-							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
-					</p:column>
-					<p:column style="display:flex" >
-						<p:inputText id="oficina" readonly="true" size="7"
-							value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoOficinaRegistro}" onblur="this.value = this.value.trim();"/>
-						<p:inputText id="oficinaTexto" readonly="true" size="15"
-							value="#{viewDefinicionVersion.textoOficinaRegistro}" style="margin-left:4px" onblur="this.value = this.value.trim();"/>
-					</p:column>
-					<p:column>
-						<p:outputLabel for="libro"
-							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
-					</p:column>
-					<p:column>
-						<p:inputText id="libro" readonly="true" size="7" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoLibroRegistro}" onblur="this.value = this.value.trim();"/>
-						<p:inputText id="libroTexto" readonly="true" size="15" value="#{viewDefinicionVersion.textoLibroRegistro}"  style="margin-left:4px" onblur="this.value = this.value.trim();"/>
-					</p:column>
-				</p:row>
+			<p:panelGrid styleClass="noBorders" columnClasses="noPadding-left,,,," rowClasses="ui-datatable-even, ui-datatable-odd">
+				<p:outputPanel styleClass="ui-inputgroup"  rendered="#{!viewDefinicionVersion.entidad.registroCentralizado}">
+					<p:outputLabel for="oficina" value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.oficina']}" style="white-space: nowrap;padding-top: 4px;" />
+					<p:outputLabel id="oficina" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoOficinaRegistro}"
+								   styleClass="labelDisabled" style="margin-left:12px;"  onblur="this.value = this.value.trim();" />
+					<p:outputLabel id="oficinaTexto" value="#{viewDefinicionVersion.textoOficinaRegistro}"
+								   styleClass="labelDisabled" style="margin-left:5px;margin-right:30px;" onblur="this.value = this.value.trim();" />
+
+					<p:outputLabel for="libro" value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.libro']}" style="white-space: nowrap;padding-top: 4px;" />
+					<p:outputLabel id="libro" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoLibroRegistro}"
+								   styleClass="labelDisabled" style="margin-left:5px;" onblur="this.value = this.value.trim();" />
+					<p:outputLabel id="libroTexto" value="#{viewDefinicionVersion.textoLibroRegistro}"
+								   styleClass="labelDisabled" style="margin-left:5px;" onblur="this.value = this.value.trim();" />
+
+				</p:outputPanel>
+
 				<p:row>
-					<p:column colspan="4">
+					<p:column colspan="4" style="width: auto">
 
 				        <p:outputPanel id="customPanel" style="margin-bottom:10px">
 				            <p:selectOneRadio id="customRadio" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.destino}" layout="custom" readonly="true">
@@ -70,7 +70,7 @@
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesTramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="tramitacion" onblur="this.value = this.value.trim();" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}"  />
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
+           		<p:commandButton icon="fa fa-globe" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
 						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
 
@@ -127,7 +127,7 @@
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramiteRegistro}" update="growl formArbol:arbol formViewDefinicionVersionRegistrarTramite"/>
 		        </p:commandButton>
-           		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+           		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle"
 						actionListener="#{viewDefinicionVersion.ayudaRegistrar()}"
 						process="@this" update="growl" iconPos="top"/>
 				</p:outputPanel>

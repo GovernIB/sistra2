@@ -60,12 +60,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 // Validamos ticket
                 usuarioAutenticadoInfo = securityService
                         .validarTicketCarpetaCiudadana(sesionInfo, passwd);
+            } else if (ConstantesSeguridad.TICKET_USER_FH
+                    .equals(usuario)) {
+                // Autenticacion por ticket
+                debug("Autenticacion desde FH: " + passwd);
+                // Validamos ticket
+                usuarioAutenticadoInfo = securityService
+                        .validarTicketFH(sesionInfo, passwd);
             } else if (ConstantesSeguridad.TICKET_USER_CLAVE.equals(usuario)) {
                 // Autenticacion por ticket
                 debug("Autenticacion por Clave: " + passwd);
                 // Validamos ticket
                 usuarioAutenticadoInfo = securityService
-                        .validarTicketAutenticacion(sesionInfo, passwd);
+                        .validarTicketAutenticacionClave(sesionInfo, passwd);
             } else if (ConstantesSeguridad.TICKET_USER_GF.equals(usuario)) {
                 // Autenticacion por ticket
                 debug("Autenticacion desde Gestor Formularios: " + passwd);

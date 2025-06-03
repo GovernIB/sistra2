@@ -14,6 +14,10 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominioExportar.titulo']}"/></title>
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -146,7 +150,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growldialog" widgetVar="growldialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogDominioExportar.identificador']}" styleClass="titulo-color" style="color:#000" />
                 	<p:outputLabel value="#{dialogDominioExportar.data.identificador}" />

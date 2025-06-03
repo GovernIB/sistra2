@@ -87,7 +87,7 @@ public class DialogVariablesAreaDominios extends DialogControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.valorSeleccionado.getIdentificador()));
 
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
-		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 450);
 
 	}
 

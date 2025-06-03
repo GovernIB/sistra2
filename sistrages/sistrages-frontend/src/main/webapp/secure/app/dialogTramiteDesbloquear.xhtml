@@ -16,6 +16,9 @@
 <h:body>
     <f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
     </f:facet>
 
 	<!-- Parametros dialogo -->
@@ -149,7 +152,7 @@
 	        	</pe:clipboard>
 
 			    <p:inputText id="auxCopiar" value="#{dialogTramiteDesbloquear.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel value="#{msg['dialogTramiteDesbloquear.headerRelease']}" />
 				 	<p:outputLabel value="#{dialogTramiteDesbloquear.data.release}" />

@@ -136,9 +136,11 @@ public class ViewFuentes extends ViewControllerBase {
 
 			DefaultMenuItem item = null;
 
-			item = new DefaultMenuItem(area);
-			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
-			breadCrumb.addElement(item);
+			item = new DefaultMenuItem();
+			item.setAriaLabel(area);
+			item.setValue(area);
+			item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.getElements().add(item);
 
 		} else {
 			mostrarBreadcrumb = false;

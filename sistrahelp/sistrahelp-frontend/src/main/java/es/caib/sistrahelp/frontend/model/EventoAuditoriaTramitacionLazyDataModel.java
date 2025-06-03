@@ -3,7 +3,9 @@ package es.caib.sistrahelp.frontend.model;
 import java.util.List;
 import java.util.Map;
 
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
@@ -29,15 +31,20 @@ public class EventoAuditoriaTramitacionLazyDataModel extends LazyDataModel<Event
 
 	private List<EventoAuditoriaTramitacion> lista;
 
-	@Override
-	public List<EventoAuditoriaTramitacion> load(final int first, final int pageSize, final String sortField,
-			final SortOrder sortOrder, final Map<String, Object> filters) {
-		if (sortField != null) {
-			filtros.setSortField(sortField);
+	public int count(Map<String, FilterMeta> filterBy) {
+		return helpDeskService.countAuditoriaEvento(filtros).intValue();
+	}
 
-		}
-		if (sortOrder != null) {
-			filtros.setSortOrder(sortOrder.name());
+	@Override
+	public List<EventoAuditoriaTramitacion> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+
+		if (sortBy != null && !sortBy.isEmpty()) {
+			SortMeta sortMeta = sortBy.values().iterator().next();
+			SortOrder sortOrder = sortMeta.getOrder();
+			if (sortOrder != null) {
+				filtros.setSortOrder(sortOrder.name());
+			}
+			filtros.setSortField(sortMeta.getField());
 		}
 		setLista(helpDeskService.obtenerAuditoriaEvento(filtros, new FiltroPaginacion(first, pageSize)));
 
@@ -56,8 +63,8 @@ public class EventoAuditoriaTramitacionLazyDataModel extends LazyDataModel<Event
 	}
 
 	@Override
-	public Object getRowKey(final EventoAuditoriaTramitacion evento) {
-		return evento.getId();
+	public String getRowKey(final EventoAuditoriaTramitacion evento) {
+		return evento.getId().toString();
 	}
 
 	public List<EventoAuditoriaTramitacion> getLista() {

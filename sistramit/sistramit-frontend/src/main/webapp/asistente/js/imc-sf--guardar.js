@@ -330,7 +330,7 @@ $.fn.appSiganuraDescarrega = function(options) {
 					,url = APP_SIGNATURA_GUARDAR_DESCARREGA
 					,id = "idDocumento";
 
-				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia + "&firmante=" + elm_signant;
+				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia + "&firmante=" + (elm_signant !== "null" ? elm_signant : "");
 
 			};
 		

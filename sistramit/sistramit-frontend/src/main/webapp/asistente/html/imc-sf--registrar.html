@@ -79,8 +79,13 @@
 							<li class="imc--signant" data-signat="{{estadoFirma}}" data-nif="{{firmante.nif}}" data-obligatorietat="{{obligatoriedad}}" aria-label="{{if obligatoriedad|equals>s}}{{txtSignaturaOgligatoria}}{{else}}{{txtSignaturaOpcional}}{{/if}}">
 
 								<strong>
+									{{if firmante}}
 									{{firmante.nombre}} ({{firmante.nif}})
+									{{else}}
+									{{txtSignarSenseVerificar}}
+									{{/if}}
 								</strong>
+
 								<button type="button" class="imc-bt imc--ico imc--signa" data-tipus="formulari"><span>{{txtSignar}}</span></button>
 
 							</li>
@@ -88,8 +93,13 @@
 							<li class="imc--signant" data-signat="{{estadoFirma}}" data-nif="{{firmante.nif}}" data-obligatorietat="{{obligatoriedad}}" aria-label="{{if obligatoriedad|equals>s}}{{txtSignaturaOgligatoria}}{{else}}{{txtSignaturaOpcional}}{{/if}}">
 
 								<strong>
+									{{if firmante}}
 									{{firmante.nombre}} ({{firmante.nif}})
+									{{else}}
+									&nbsp;
+									{{/if}}
 								</strong>
+
 								<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
 								{{if descargable|equals>s}}
 								<button type="button" class="imc-bt imc--ico imc--descarrega" title="{{txtDescarrega}} {{txtSignatura}}" data-tipus="formulari" data-es="signatura"><span>{{txtDescarrega}} {{txtSignatura|downcase}}</span></button>

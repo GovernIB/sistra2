@@ -8,25 +8,15 @@ package es.caib.sistramit.core.api.model.system.types;
  */
 public enum TypePluginGlobal {
 
-    /**
-     * Plugin de login (Global).
-     */
+    /** Plugin de login (Global). */
     LOGIN("L"),
-    /**
-     * Plugin de email (Global).
-     */
+    /** Plugin de email (Global). */
     EMAIL("M"),
-    /**
-     * Plugin de representacion (Global).
-     */
+    /** Plugin de representacion (Global). */
     REPRESENTACION("R"),
-    /**
-     * Plugin de dominio remoto (Global).
-     */
+    /** Plugin de dominio remoto (Global). */
     DOMINIO_REMOTO("D"),
-    /**
-     * Plugin de conversión PDF (Global).
-     */
+    /** Plugin de conversión PDF (Global). */
     CONVERSION_PDF("V");
 
     /**

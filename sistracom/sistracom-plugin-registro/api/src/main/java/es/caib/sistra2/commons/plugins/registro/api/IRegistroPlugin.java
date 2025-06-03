@@ -7,6 +7,9 @@ import org.fundaciobit.pluginsib.core.IPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 
+
+// TODO FH -- AJUSTAR PARA FH (PENDIENTE QUE RW3 PASE NUEVA API)
+
 /**
  * Interface registro.
  *

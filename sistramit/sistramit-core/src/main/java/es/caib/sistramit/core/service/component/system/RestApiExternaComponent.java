@@ -2,13 +2,7 @@ package es.caib.sistramit.core.service.component.system;
 
 import java.util.List;
 
-import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
-import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
+import es.caib.sistramit.core.api.model.system.rest.externo.*;
 
 /**
  * Componente para generar rest externo.
@@ -39,11 +33,11 @@ public interface RestApiExternaComponent {
 	/**
 	 * Obtener ticket acceso.
 	 *
-	 * @param pFiltro
+	 * @param infoTicketAcceso
 	 *                    filtro
 	 * @return url con ticket de acceso
 	 */
-	public String obtenerTicketAcceso(InfoTicketAcceso pFiltro);
+	public String obtenerTicketAcceso(InfoTicketAcceso infoTicketAcceso);
 
 	/**
 	 * Obtiene lista trámites finalizados.
@@ -53,5 +47,6 @@ public interface RestApiExternaComponent {
 	 * @return lista trámites finalizados
 	 */
 	public List<TramiteFinalizado> recuperarTramitesFinalizados(FiltroTramiteFinalizado filtroBusqueda);
+
 
 }

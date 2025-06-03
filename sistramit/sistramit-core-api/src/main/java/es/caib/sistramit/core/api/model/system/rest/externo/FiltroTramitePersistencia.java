@@ -18,6 +18,7 @@ public class FiltroTramitePersistencia implements Serializable {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private String idSesionTramitacion;
+	private boolean incluirFH;
 
 	public FiltroTramitePersistencia() {
 		super();
@@ -46,6 +47,10 @@ public class FiltroTramitePersistencia implements Serializable {
 	public void setFechaHasta(final Date fechaHasta) {
 		this.fechaHasta = fechaHasta;
 	}
+
+	public boolean isIncluirFH() { return incluirFH;}
+
+	public void setIncluirFH(final boolean incluirFH) { this.incluirFH = incluirFH; }
 
 	/**
 	 * Método de acceso a idSesionTramitacion.

@@ -2,6 +2,14 @@ package es.caib.sistramit.core.service.component.system;
 
 import java.util.List;
 
+import es.caib.sistra2.commons.utils.NifUtils;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
+import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
+import es.caib.sistramit.core.api.model.system.rest.externo.*;
+import es.caib.sistramit.core.api.model.system.types.TypeTicketAcceso;
+import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -10,13 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistramit.core.api.exception.ErrorParametroObligatorioException;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
-import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
-import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.repository.dao.RestApiDao;
 import es.caib.sistramit.core.service.repository.dao.TicketCDCDao;
@@ -53,17 +54,67 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 	@Override
 	public String obtenerTicketAcceso(final InfoTicketAcceso pInfoTicketAcceso) {
 
-		if (pInfoTicketAcceso.getIdSesionTramitacion() == null) {
+		// Obligatorio para carpeta
+		if (pInfoTicketAcceso.getTipoTicketAcceso() == TypeTicketAcceso.CARPETA && pInfoTicketAcceso.getIdSesionTramitacion() == null) {
 			throw new ErrorParametroObligatorioException("El paràmetre <Identificador de la sesión> és obligatori");
 		}
+
+		// Obligatorio para FH
+		if (pInfoTicketAcceso.getTipoTicketAcceso() == TypeTicketAcceso.FUNCIONARIO_HABILITADO) {
+			// - Interesado
+			if (pInfoTicketAcceso.getInfoAccesoFH() == null || pInfoTicketAcceso.getInfoAccesoFH().getInteresado() == null ){
+				throw new ErrorParametroObligatorioException("El paràmetre <Info acceso FH> és obligatori i ha de contindre el interesat");
+			}
+			if (pInfoTicketAcceso.getInfoAccesoFH().getInteresado().getNif() == null) {
+				throw new ErrorParametroObligatorioException("El paràmetre <Nif interesado> és obligatori");
+			}
+			if (!NifUtils.esIdentificacion(pInfoTicketAcceso.getInfoAccesoFH().getInteresado().getNif(), true,true,true, true, false)) {
+				throw new ErrorParametroObligatorioException("El paràmetre <Nif interesado> no és vàlid");
+			}
+			if (pInfoTicketAcceso.getInfoAccesoFH().getInteresado().getNombre() == null) {
+				throw new ErrorParametroObligatorioException("El paràmetre <Nombre interesado> és obligatori");
+			}
+			// - Representante
+			if (pInfoTicketAcceso.getInfoAccesoFH().getRepresentante() != null) {
+				if (pInfoTicketAcceso.getInfoAccesoFH().getRepresentante().getNif() == null) {
+					throw new ErrorParametroObligatorioException("El paràmetre <Nif representante> és obligatori");
+				}
+				if (!NifUtils.esIdentificacion(pInfoTicketAcceso.getInfoAccesoFH().getRepresentante().getNif(), true,true,true, true, false)) {
+					throw new ErrorParametroObligatorioException("El paràmetre <Nif representante> no és vàlid");
+				}
+				if (pInfoTicketAcceso.getInfoAccesoFH().getRepresentante().getNombre() == null) {
+					throw new ErrorParametroObligatorioException("El paràmetre <Nombre representante> és obligatori");
+				}
+			}
+			// - Validamos que esté habilitado en la entidad el acceso por FH
+			// 		* Obtenemos definicion trámite
+			final DefinicionTramiteSTG defTramite = configuracionComponent.recuperarDefinicionTramite(
+					pInfoTicketAcceso.getInfoAccesoFH().getTramiteFH().getTramite(),
+					pInfoTicketAcceso.getInfoAccesoFH().getTramiteFH().getVersion(),
+					pInfoTicketAcceso.getInfoAccesoFH().getTramiteFH().getIdioma());
+			// 		* Obtenemos conf entidad
+			final RConfiguracionEntidad confEntidad = configuracionComponent
+					.obtenerConfiguracionEntidad(defTramite.getDefinicionVersion().getIdEntidad());
+			// 		* Comprobamos que la entidad tiene habilitado el acceso por FH
+			if (!confEntidad.isModoFuncionarioHabilitado()) {
+				throw new ErrorConfiguracionException("L'accés per FH no està habilitat a l'entitat: "
+						+ defTramite.getDefinicionVersion().getIdEntidad());
+			}
+		}
+
 
 		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getMetodoAutenticacion() == null) {
 			throw new ErrorParametroObligatorioException("El paràmetre <Metodo Autenticacion> és obligatori");
 		}
 
 		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
+
 			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNif() == null) {
 				throw new ErrorParametroObligatorioException("El paràmetre <Nif usuario> és obligatori");
+			}
+
+			if (!NifUtils.esIdentificacion(pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNif(), true,true,true, true, false)) {
+				throw new ErrorParametroObligatorioException("El paràmetre <Nif usuario> no és vàlid");
 			}
 
 			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNombre() == null) {
@@ -82,12 +133,26 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 		final String ticket = ticketCDCDao.generarTicketAcceso(pInfoTicketAcceso);
 
 		// - Construimos url
+		String puntoentradaRetorno = null;
+		switch (pInfoTicketAcceso.getTipoTicketAcceso()) {
+			case CARPETA:
+				puntoentradaRetorno = ConstantesSeguridad.PUNTOENTRADA_RETORNO_CARPETA;
+				break;
+			case FUNCIONARIO_HABILITADO:
+				puntoentradaRetorno = ConstantesSeguridad.PUNTOENTRADA_RETORNO_FH;
+				break;
+			default:
+				throw new ErrorParametroObligatorioException("El paràmetre <Tipo ticket acceso> no té un valor correcte: " + pInfoTicketAcceso.getTipoTicketAcceso().toString());
+		}
 		final String urlCallback = configuracionComponent.obtenerPropiedadConfiguracion(
-				TypePropiedadConfiguracion.SISTRAMIT_URL) + ConstantesSeguridad.PUNTOENTRADA_RETORNO_CARPETA + "?"
+				TypePropiedadConfiguracion.SISTRAMIT_URL) + puntoentradaRetorno + "?"
 				+ ConstantesSeguridad.PARAM_TICKETAUTH + "=" + ticket;
 
 		return urlCallback;
 	}
+
+
+
 
 	@Override
 	public List<TramiteFinalizado> recuperarTramitesFinalizados(final FiltroTramiteFinalizado pFiltro) {
@@ -96,5 +161,7 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 		}
 		return flujoTramiteDao.recuperarTramitesFinalizados(pFiltro);
 	}
+
+
 
 }

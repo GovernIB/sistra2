@@ -151,7 +151,7 @@
 
   				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-				 <h:panelGrid  style="width: 100%;" styleClass="hide-table-header" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 padding-right-18 wpx25,padding-right-18" columns="2" >
+				 <h:panelGrid  style="width: 100%;" styleClass="hide-table-header" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 padding-right-18 wpx25,padding-right-18" columns="2" >
 
 		  			<p:outputLabel   for="traduccion_ca" id="labelCa" value="#{msg['ca']}" rendered="#{dialogTraduccion.visibleCa}" />
 		  			<p:inputTextarea id="traduccion_ca" onblur="this.value = this.value.trim();" value="#{dialogTraduccion.textoCa}" style="width:98%;" required="#{dialogTraduccion.requiredCa}" rendered="#{dialogTraduccion.visibleCa}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false" maxlength="4000"  />

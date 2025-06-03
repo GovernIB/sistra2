@@ -135,11 +135,11 @@
 			<p:growl id="growlDialogImportar" widgetVar="growlDialogImportar" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 			<p:outputPanel id="panelUpload" styleClass="padding-right-8 padding-left-8" rendered="#{!dialogSeccionImportar.mostrarPanelInfo}">
-				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogSeccionImportar.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
+				<p:fileUpload id="fichero" mode="advanced" listener="#{dialogSeccionImportar.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
 					update="formTramite growlDialogImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
 			</p:outputPanel>
 
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "4" cellpadding = "5" cellspacing = "0"  width="100%" rendered="#{dialogSeccionImportar.mostrarPanelInfo}">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18," columns = "4" cellpadding = "5" cellspacing = "0"  width="100%" rendered="#{dialogSeccionImportar.mostrarPanelInfo}">
 
 					<p:outputLabel value="#{msg['dialogSeccionImportar.identificador']}" style="font-weight: bold" />
 					<p:outputLabel value="#{msg['dialogSeccionImportar.existe']}" style="font-weight: bold" />

@@ -16,11 +16,11 @@
         <p:commandButton id="hiddenGrowl" widgetVar="hiddenGrowl" styleClass="button" process="@this" update="growlHeader"  action="#{sessionBean.showError()}"  style="display:none">
         </p:commandButton>
 
-  		<p:panelGrid columns="4" styleClass="ui-noborder w100 h100"
+  		<p:panelGrid id="panelCabecera" columns="4" styleClass="panelCabecera ui-noborder w100 h100"
   		columnClasses="logo-color grid-center noPadding-bottom noPadding-top h100 wpx120 ,
   					   header-color grid-left wpx200,
   					   header-color wpx270,
-  					   header-color">
+  					   header-color opcionesFull">
 
 
 			<h:graphicImage url="#{sessionBean.logo}" height="65" styleClass="va-middle"/>
@@ -36,10 +36,10 @@
 				<h:outputText value="#{msg['cabecera.titulo']}" styleClass="titulo-color va-middle" />
 			</p:outputPanel>
 
-			<p:panelGrid columns="1" styleClass="ui-noborder botonera-menu" columnClasses="header-color">
+			<p:panelGrid id="headerLateralDer" columns="1" styleClass="ui-noborder botonera-menu" columnClasses="header-color">
 				<p:row>
 					<p:column>
-	 		    		<p:menubar styleClass="header-color" model="#{sessionBean.menuModel}" autoDisplay="false" process="@this" update="growlHeader"/>
+	 		    		<p:menubar  id="menuOpcionesSuperior"  styleClass="header-color" model="#{sessionBean.menuModel}" autoDisplay="false" process="@this" update="growlHeader"/>
 	 		    	</p:column>
 	 		    </p:row>
 	 		    <p:row>
@@ -47,16 +47,10 @@
 			 		    <f:facet name="left">
 			           	</f:facet>
 			           	<f:facet name="right">
-			           		<p:panelGrid columns="2" columnClasses="header-color" style="margin-right:0;">
-									<p:row>
-						 		    	<p:column>
-						 		    		<p:commandButton id="refrescarCache" style ="margin-right:5px" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewTramites.refrescarCache}" process="@this" update="growlHeader"/>
-						 		    	</p:column>
-						 		    	<p:column>
-						 		    		<p:menuButton value="#{msg['cabecera.opciones']}" model="#{sessionBean.menuModelOpciones}" iconPos="right" menuStyleClass="menuOpciones"/>
-						 		    	</p:column>
-			 		    			</p:row>
-			 		    	</p:panelGrid>
+							<div class="header-color">
+								<p:commandButton id="refrescarCache" style ="margin-right:15px; width: auto;" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramites.refrescarCache}" process="@this" update="growlHeader"/>
+							    <p:menuButton id="menuOpciones"  value="#{msg['cabecera.opciones']}" model="#{sessionBean.menuModelOpciones}" iconPos="right" menuStyleClass="menuOpciones"/>
+							</div>
 						</f:facet>
 	 		    	</p:toolbar>
 	 		    </p:row>

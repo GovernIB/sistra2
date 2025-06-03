@@ -58,7 +58,6 @@ public final class FormularioDaoImpl implements FormularioDao {
 		hFormulario.setCodigoSiaProcedimiento(dis.getCodigoSiaProcedimiento());
 		hFormulario.setDir3ResponsableProcedimiento(dis.getDir3ResponsableProcedimiento());
 		hFormulario.setIdGestorFormulariosExterno(dis.getIdGestorFormulariosExterno());
-
 		try {
 			hFormulario.setInfoAutenticacion(Serializador.serializeJSON(dis.getInfoAutenticacion()));
 			hFormulario.setParametrosFormulario(Serializador.serializeJSON(dis.getParametros()));
@@ -104,7 +103,6 @@ public final class FormularioDaoImpl implements FormularioDao {
 		} catch (final JSONUtilException e) {
 			throw new SerializacionException("Error serialitzant dades inici formulari", e);
 		}
-
 		return dis;
 	}
 

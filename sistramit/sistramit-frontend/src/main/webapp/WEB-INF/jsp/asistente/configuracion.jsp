@@ -56,9 +56,13 @@ var APP_FORM_URL = APP_SERVIDOR + "rf/abrirFormulario.json"
 /* pas annexar */
 
 var APP_ANNEXE_ANNEXA = APP_SERVIDOR + "ad/anexarDocumento.json"
+	,APP_ANNEXE_URL = APP_SERVIDOR + "ad/digitalizarAnexo.json"
 	,APP_ANNEXE_ESBORRA = APP_SERVIDOR + "ad/borrarDocumento.json"
 	,APP_ANNEXE_DESCARREGA = APP_SERVIDOR + "ad/descargarDocumento.html"
 	,APP_PLANTILLA_DESCARREGA = APP_SERVIDOR + "ad/descargarPlantilla.html";
+
+var APP_DIGIT_IFRAME_WIDTH = ${configuracion.iframeDigitalizacionWidth}
+	,APP_DIGIT_IFRAME_HEIGHT = ${configuracion.iframeDigitalizacionHeight};
 
 
 /* pas taxa */
@@ -90,7 +94,8 @@ var APP_TRAMIT_JUSTIFICANT = APP_SERVIDOR + "gj/descargarJustificante.html",
 
 
 /* formulario */
-var APP_FORMS_URL_DINAMICA = "s"
+var APP_FORMS_AJUDA_ACTIVADA = "${configuracion.formularioAyudaActivada}"
+	,APP_FORMS_URL_DINAMICA = "s"
 	,APP_FORM_DATA_FORMAT = "es"
 	,APP_FORM_CARREGA = APP_SERVIDOR + "fm/cargarFormulario.json"
 	,APP_FORM_GUARDA = APP_SERVIDOR + "fm/guardarPagina.json"

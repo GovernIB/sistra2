@@ -41,6 +41,9 @@ import es.caib.sistramit.core.service.util.UtilsFlujo;
 @Component("auditorEventosFlujoTramitacionComponent")
 public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosFlujoTramitacion {
 
+	// TODO FH -- VER SI ES NECESARIO REALIZAR ALGUN AJUSTE PARA FH
+
+
 	@Override
 	public List<EventoAuditoria> interceptaInvocacion(final String idSesionTramitacion, final String pMetodo,
 			final Object[] pArgumentos, final boolean debugEnabled) {
@@ -351,6 +354,9 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 					}
 					propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_SESION.toString(), fv.getSesionFirma());
 					typeEvento = resultadoFirma ? TypeEvento.FIRMA_FIN_OK : TypeEvento.FIRMA_FIN_KO;
+					if (StringUtils.isNotBlank(fv.getMetodoFirma())) {
+						propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_METODO.toString(), fv.getMetodoFirma());
+					}
 					break;
 				}
 

@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.core.service.component;
 
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,8 @@ import es.caib.sistrahelp.core.api.model.Traduccion;
 import es.caib.sistrahelp.core.api.model.types.TypePluginGlobal;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 
+import javax.net.ssl.*;
+
 /**
  * Implementación acceso SISTRAGES.
  *
@@ -48,6 +51,34 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 
 	@Override
 	public List<RPermisoHelpDesk> obtenerPermisosHelpdesk() {
+
+		TrustManager[] trustAllCerts = new TrustManager[]{
+				new X509TrustManager() {
+					public X509Certificate[] getAcceptedIssuers() {
+						return null;
+					}
+
+					public void checkClientTrusted(X509Certificate[] certs, String authType) {
+					}
+
+					public void checkServerTrusted(X509Certificate[] certs, String authType) {
+					}
+				}
+		};
+
+		try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+			// Disable hostname verification
+			HostnameVerifier allHostsValid = (hostname, session) -> true;
+			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		} catch (Exception e) {
+			//TODO QUITAR ESTO
+			e.printStackTrace();
+		}
+
 		List<RPermisoHelpDesk> resultado = null;
 		final RestTemplate restTemplate = new RestTemplate();
 
@@ -90,6 +121,8 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 			}
 
 			entidad.setLogoGestor(configuracionEntidad.getLogoGestor());
+
+			entidad.setModoFuncionarioHabilitado( configuracionEntidad.isModoFuncionarioHabilitado() );
 
 		}
 		return entidad;

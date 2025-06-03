@@ -14,6 +14,10 @@
 
   	<f:facet name="last">
 	    <h:outputStylesheet library="css" name="style.css" />
+
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   	</f:facet>
 
   	<script type="text/javascript">
@@ -140,7 +144,7 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid styleClass="h100" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:dataTable  id="dataTableDatos"
 						  var="td"
@@ -164,24 +168,24 @@
 				<p:ajax event="rowSelect" global="false" />
 				<p:ajax event="rowUnselect" />
 
-			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}" style="width:25%">
-			        <h:outputText value="${dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}"/>
+			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}" style="width:25%" sortBy="#{dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}">
+			        <h:outputText value="#{dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}"/>
 			    </p:column>
 
-			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}">
-			        <h:outputText value="${td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
+			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}" sortBy="#{td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}">
+			        <h:outputText value="#{td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}">
-			        <h:outputText value="${td.area}" />
+			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}" sortBy="#{td.area}">
+			        <h:outputText value="#{td.area}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerNumVersion']}" style="width:7%">
-			        <h:outputText value="${td.numVersion}" />
+			     <p:column headerText="#{msg['dialogDominioTramites.headerNumVersion']}" style="width:7%" sortBy="#{td.numVersion}">
+			        <h:outputText value="#{td.numVersion}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerRelease']}"  style="width:7%">
-			        <h:outputText value="${td.release}" />
+			     <p:column headerText="#{msg['dialogDominioTramites.headerRelease']}" style="width:7%" sortBy="#{td.release}">
+			        <h:outputText value="#{td.release}" />
 			    </p:column>
 
 			</p:dataTable>

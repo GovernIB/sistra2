@@ -16,6 +16,9 @@
 
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
   </f:facet>
 	<style type="text/css">
 
@@ -156,7 +159,7 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30, w65" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w30, w65" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<p:outputLabel for="codigo" value="#{msg['dialogFuente.headerCodigo']}" />
 			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" readonly="#{dialogFuente.isConsulta()}" style="width:98%;" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -205,7 +208,7 @@
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-						    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogFuente.editarFuenteDatosCampo()}" process="@this" update="growlDialog" rendered="#{dialogFuente.permiteEdicion}">
+						    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogFuente.editarFuenteDatosCampo()}" process="@this" update="growlDialog" rendered="#{dialogFuente.permiteEdicion}">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuente.returnDialogo}" update="growlDialog dataTableParametros"/>
 		        					</p:commandButton>
 		        				</p>
@@ -227,8 +230,8 @@
 	       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" />
 	       			<p:separator/>
 	       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFuenteDatos:btnNuevaPropiedad').click();" process="@this"  rendered="#{!dialogFuente.consulta}"/>
-	        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFuenteDatos:btnEditarPropiedad').click();" process="@this" rendered="#{!dialogFuente.consulta}"/>
-	        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFuenteDatos:btnEliminarPropiedad').click();" process="@this" rendered="#{!dialogFuente.consulta}"/>
+	        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('dialogFuenteDatos:btnEditarPropiedad').click();" process="@this" rendered="#{!dialogFuente.consulta}"/>
+	        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('dialogFuenteDatos:btnEliminarPropiedad').click();" process="@this" rendered="#{!dialogFuente.consulta}"/>
 			    </p:contextMenu>
 			    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 					<p:ajax event="success" listener="#{dialogFuente.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -249,13 +252,13 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 		     		<f:facet name="left">
-	     				<p:commandButton id="btnTramites" value="#{msg['botones.dominios']}" icon="fa fa-level-down" actionListener="#{dialogFuente.dominios()}" process="@this" rendered="#{dialogFuente.data.codigo ne null}" />
+	     				<p:commandButton id="btnTramites" value="#{msg['botones.dominios']}" icon="fa fa-download" actionListener="#{dialogFuente.dominios()}" process="@this" rendered="#{dialogFuente.data.codigo ne null}" />
 	     			</f:facet>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" process="@form" styleClass="boton-azul" rendered="#{dialogFuente.permiteEdicion}" actionListener="#{dialogFuente.aceptar()}" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFuente.cancelar()}" process="@this" rendered="#{dialogFuente.alta or dialogFuente.edicion}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFuente.cancelar()}" process="@this"  rendered="#{dialogFuente.consulta}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogFuente.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogFuente.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
@@ -264,7 +267,7 @@
             <p:confirmDialog global="true" >
                 <p:outputPanel styleClass="confirmar_botonera">
                     <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
                 </p:outputPanel>
             </p:confirmDialog>
 

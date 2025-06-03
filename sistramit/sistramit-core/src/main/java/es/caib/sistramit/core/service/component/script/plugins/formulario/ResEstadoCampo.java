@@ -22,23 +22,15 @@ public final class ResEstadoCampo implements ResEstadoCampoInt {
 	/**
 	 * Constructor.
 	 */
-	public ResEstadoCampo() {
+	public ResEstadoCampo(String pIdElemento) {
 		super();
 		estadoCampo = new EstadoCampo();
+		estadoCampo.setIdCampo(pIdElemento);
 	}
 
 	@Override
 	public String getPluginId() {
 		return ID;
-	}
-
-	@Override
-	public void setSoloLectura(final boolean readOnly) {
-		if (readOnly) {
-			estadoCampo.setSoloLectura(TypeSiNo.SI);
-		} else {
-			estadoCampo.setSoloLectura(TypeSiNo.NO);
-		}
 	}
 
 	/**
@@ -50,4 +42,18 @@ public final class ResEstadoCampo implements ResEstadoCampoInt {
 		return estadoCampo;
 	}
 
+	@Override
+	public void setSoloLectura(final boolean readOnly) {
+		estadoCampo.setSoloLectura(TypeSiNo.fromBoolean(readOnly));
+	}
+
+	@Override
+	public void setVisible(final boolean visible) {
+		estadoCampo.setOculto(TypeSiNo.fromBoolean(!visible));
+	}
+
+	@Override
+	public void setObligatorio(boolean obligatorio) {
+		estadoCampo.setObligatorio(TypeSiNo.fromBoolean(obligatorio));
+	}
 }

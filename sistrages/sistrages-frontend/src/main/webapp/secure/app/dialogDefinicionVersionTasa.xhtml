@@ -15,6 +15,10 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDefinicionVersionTasa.titulo']}"/></title>
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -142,10 +146,10 @@
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionTasa.identificador']}" />
-	          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.identificador}" required="true" styleClass="w35" onblur="this.value = this.value.toUpperCase().trim();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
+	          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.identificador}" required="true" styleClass="w90" onblur="this.value = this.value.toUpperCase().trim();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 					<p:ajax event="change" listener="#{dialogDefinicionVersionTasa.setCambios}" process="@this" update="@this"/>
@@ -154,18 +158,15 @@
 	            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionTasa.descripcion']}" />
 	            <p:outputPanel styleClass="ui-inputgroup">
 	           		<p:inputText id="descripcion" value="#{dialogDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionTasa.idiomas)}" required="true" onblur="this.value = this.value.trim();" readonly="true" styleClass="w85"/>
-	           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionTasa.editarDescripcion()}"
+	           		<p:commandButton icon="fa fa-globe" actionListener="#{dialogDefinicionVersionTasa.editarDescripcion()}"
 							process="@this" update="growl">
 								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoDescripcion}" update="growl descripcion" />
 					</p:commandButton>
 	       		</p:outputPanel>
 
 	         	<p:outputLabel for="obligatoriedad" value="#{msg['dialogDefinicionVersionTasa.obligatoriedad']}" />
-	         	<p:panelGrid styleClass="noBorders">
-	       	  		<p:row>
-		       	  		<p:column styleClass="noPadding-left">
-
-
+	         	<p:panelGrid styleClass="noBorders" columns="2">
+	       	  			<p:column styleClass="noPadding-left">
 		       	  			 <p:selectOneRadio id="obligatoriedad" value="#{dialogDefinicionVersionTasa.data.obligatoriedad}" update="growl">
 							    <f:selectItems value="#{tipoFormularioObligatoriedad.ALL_VALUES}"  itemLabel="#{msg['typeFormularioObligatoriedad.'+=tipo]}" var="tipo" />
 							    <p:ajax event="change" listener="#{dialogDefinicionVersionTasa.setCambios}" process="@this" update="@this"/>
@@ -177,7 +178,6 @@
 								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoObligatoriedad}" update="growl scriptObligatoriedad" />
 							</p:commandButton>
 						</p:column>
-					</p:row>
 	         	</p:panelGrid>
 
 	            <p:outputLabel for="scriptdepago" value="#{msg['dialogDefinicionVersionTasa.scriptdepago']}" />
@@ -199,7 +199,7 @@
 				<f:facet name="right">
 	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionTasa.aceptar()}" process="@form" update="@form growl"  styleClass="boton-azul"/>
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionTasa.cancelar()}" process="@this" />
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionTasa.ayuda()}" process="@this"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogDefinicionVersionTasa.ayuda()}" process="@this"/>
 				</f:facet>
 			</p:toolbar>
 	    </p:outputPanel>

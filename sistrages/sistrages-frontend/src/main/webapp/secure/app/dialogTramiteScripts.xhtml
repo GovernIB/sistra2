@@ -145,12 +145,12 @@
 				        	 >
 
 					<!-- Columnas -->
-					<p:column headerText="#{msg['dialogTramiteScripts.headerPaso']}">
+					<p:column headerText="#{msg['dialogTramiteScripts.headerPaso']}" sortBy="#{not empty td.paso}?#{msg['typePaso.' += td.paso.toString()]}:#{msg['dialogTramiteScripts.version']}">
 				        <h:outputText value="#{msg['typePaso.' += td.paso.toString()]}" rendered="#{not empty td.paso}" />
 				        <h:outputText value="#{msg['dialogTramiteScripts.version']}" rendered="#{empty td.paso}" />
 				    </p:column>
 
-				    <p:column headerText="#{msg['dialogTramiteScripts.headerElemento']}">
+				    <p:column headerText="#{msg['dialogTramiteScripts.headerElemento']}" sortBy="#{td.elemento}">
 				        <h:outputText value="#{td.elemento}" />
 				    </p:column>
 
@@ -160,7 +160,7 @@
 				        <h:outputText value="#{td.componente}" rendered="#{empty td.componente}" />
 				    </p:column>
 
-				    <p:column headerText="#{msg['dialogTramiteScripts.headerTipoScript']}">
+				    <p:column headerText="#{msg['dialogTramiteScripts.headerTipoScript']}" sortBy="#{not empty td.tipoScript}?#{msg['script.' += td.tipoScript += '.titulo']}:#{td.tipoScript}">
 				    	<h:outputText value="#{msg['script.' += td.tipoScript += '.titulo']}"  rendered="#{not empty td.tipoScript}" />
 				        <h:outputText value="#{td.tipoScript}"  rendered="#{empty td.tipoScript}" />
 				    </p:column>
@@ -178,7 +178,7 @@
 		        			<p:fileDownload value="#{dialogTramiteScripts.fichero}"></p:fileDownload>
 		        		</p:commandButton>
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteScripts.cancelar}" process="@this" />
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteScripts.ayuda()}" process="@this"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogTramiteScripts.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

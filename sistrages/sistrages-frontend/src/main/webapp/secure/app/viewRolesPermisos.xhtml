@@ -12,23 +12,30 @@
 
 	<ui:define name="icerick">
 		<script type="text/javascript">
-		function setHeight(){
-	    	var altura = window.innerHeight - 50;
-	    	var alturaRoles = altura - 250;
-            var alturaRolesBody = altura - 278;
+			function setHeight(){
+				// Altura de la pantalla
+				var altura = window.innerHeight - 50;
+				// Altura de la tabla
+				var alturaDatatable = altura - 186 - 40;
+				// Altura del scrollable body
+				var alturaScrollableBody = alturaDatatable - 57;
 
-            $('#form\\:dataTable').height(alturaRoles);
-            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaRolesBody);
-	    }
+				if(#{viewDominios.mostrarBreadcrumb} == true){
+					alturaScrollableBody -= 15;
+				}
 
-		jQuery(document).ready(function() {
+				$('#form\\:dataTable').height(alturaDatatable);
+				$('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+			}
 
-	      $(window).resize(function() {
-              setTimeout(function(){  setHeight(); }, 100);
-  			});
+			jQuery(document).ready(function() {
 
-	      setHeight();
-	  });
+				$(window).resize(function() {
+					setTimeout(function(){  setHeight(); }, 100);
+				});
+
+				setTimeout(function(){  setHeight(); }, 10);
+			});
 
 		function cerrarDialog(){
 	      var iconX = parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')
@@ -171,15 +178,15 @@
 		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewRolesPermisos.editar()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteEditar or viewRolesPermisos.permiteAlta}" oncomplete="cerrarDialog()">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewRolesPermisos.editar()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteEditar or viewRolesPermisos.permiteAlta}" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" actionListener="#{viewRolesPermisos.eliminar()}" icon="fa fa-trash-o"  update="growl dataTable" rendered="#{viewRolesPermisos.permiteAlta}" process="@this" oncomplete="setHeight()">
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" actionListener="#{viewRolesPermisos.eliminar()}" icon="fa fa-trash"  update="growl dataTable" rendered="#{viewRolesPermisos.permiteAlta}" process="@this" oncomplete="setHeight()">
 							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" />
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewRolesPermisos.ayuda()}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewRolesPermisos.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 		    </p:toolbar>
@@ -199,17 +206,16 @@
 				<p:ajax event="rowSelect" global="false"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
 		                        />
 		        <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 				<p:ajax event="contextMenu" global="false" process="@this"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewRolesPermisos.headerCodigo']}" styleClass="w25">
+			    <p:column headerText="#{msg['viewRolesPermisos.headerCodigo']}" styleClass="w25" sortBy="#{td.valor}">
 			        <h:outputText value="#{td.valor}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewRolesPermisos.headerDescripcion']}" styleClass="w25">
+			    <p:column headerText="#{msg['viewRolesPermisos.headerDescripcion']}" styleClass="w25" sortBy="#{td.descripcion}">
 			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
@@ -234,9 +240,9 @@
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewRolesPermisos.permiteAlta}"/>
-        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
+        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
         		<p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{not viewRolesPermisos.permiteEditar and not viewRolesPermisos.permiteAlta}" />
-        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
+        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewRolesPermisos.copiadoCorr}" process="@this" update="@this growl"/>
@@ -249,7 +255,7 @@
 		    }
 		    </h:outputScript>
 
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewRolesPermisos.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewRolesPermisos.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
         			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
@@ -258,16 +264,16 @@
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 			<p:contextMenu for=":work">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
-        		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
+        		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
         		<p:menuitem id="mnuConsultarMain" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{not viewRolesPermisos.permiteEditar and not viewRolesPermisos.permiteAlta}" />
-        		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
+        		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewRolesPermisos.copiadoCorr}" process="@this" update="@this growl"/>

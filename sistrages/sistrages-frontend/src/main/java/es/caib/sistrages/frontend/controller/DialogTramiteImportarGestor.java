@@ -94,7 +94,7 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 			params.put(TypeParametroVentana.ID.toString(),
 					data.getConfiguracionAutenticacionActual().getCodigo().toString());
 
-			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
+			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 265);
 		}
 	}
 
@@ -157,7 +157,7 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 					UtilJSON.toJSON(this.data.getConfiguracionAutenticacionActual()));
 			modo = TypeModoAcceso.EDICION;
 		}
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modo, params, true, 550, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modo, params, true, 550, 265);
 	}
 
 	/**

@@ -151,7 +151,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growldialogTramiteData" widgetVar="growldialogTramiteData" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="version" value="#{msg['dialogTramiteVersion.version']}" />
                 	<p:inputNumber id="version" value="#{dialogTramiteVersion.dataVersion.numeroVersion}" decimalPlaces="0" readonly="#{!dialogTramiteVersion.alta}" required="true" size="35" maxValue="99" minValue="0" />

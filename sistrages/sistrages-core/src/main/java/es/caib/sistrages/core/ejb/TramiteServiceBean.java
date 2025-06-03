@@ -8,28 +8,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import es.caib.sistrages.core.api.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.AvisoEntidad;
-import es.caib.sistrages.core.api.model.DisenyoFormulario;
-import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.DominioTramite;
-import es.caib.sistrages.core.api.model.Fichero;
-import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.GestorExternoFormularios;
-import es.caib.sistrages.core.api.model.HistorialVersion;
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Script;
-import es.caib.sistrages.core.api.model.SeccionReutilizable;
-import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
-import es.caib.sistrages.core.api.model.Tasa;
-import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
@@ -609,6 +591,12 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Tramite> listTramiteSimple(Long idEntidad, List<Long> areas, String filtro) {
+		return tramiteService.listTramiteSimple(idEntidad, areas, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Tramite> listTramite(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
 			List<Long> areas, String filtro) {
 		return tramiteService.listTramite(first, pageSize, sortField, asc, idEntidad, areas, filtro);
@@ -666,5 +654,11 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Long> getDisenyosLEByTramite(Long codigo) {
 		return tramiteService.getDisenyosLEByTramite(codigo);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<TramiteFrontal> listTramiteVersionesSimplicada(Long idEntidad, List<Long> idAreas, String filtro, Integer first, Integer pageSize, String sortField, Boolean sortAscending) {
+		return tramiteService.listTramiteVersionesSimplicada(idEntidad, idAreas, filtro, first, pageSize, sortField, sortAscending);
 	}
 }

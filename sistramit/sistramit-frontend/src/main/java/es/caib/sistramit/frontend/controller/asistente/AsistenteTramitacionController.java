@@ -1,6 +1,8 @@
 package es.caib.sistramit.frontend.controller.asistente;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +12,14 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
+import es.caib.sistramit.core.api.model.flujo.*;
+import es.caib.sistramit.core.api.model.flujo.types.*;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
+import es.caib.sistramit.core.api.model.system.rest.externo.InfoTramiteFH;
+import es.caib.sistramit.frontend.model.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,22 +34,6 @@ import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.WarningFrontException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
-import es.caib.sistramit.core.api.model.flujo.DetallePasos;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.FirmaVerificacion;
-import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
-import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
-import es.caib.sistramit.core.api.model.flujo.RetornoPago;
-import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
-import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
@@ -53,11 +45,6 @@ import es.caib.sistramit.frontend.ApplicationContextProvider;
 import es.caib.sistramit.frontend.ModuleConfig;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
-import es.caib.sistramit.frontend.model.AsistenteConfig;
-import es.caib.sistramit.frontend.model.AsistenteInfo;
-import es.caib.sistramit.frontend.model.MensajeAsistente;
-import es.caib.sistramit.frontend.model.MensajeUsuario;
-import es.caib.sistramit.frontend.model.RespuestaJSON;
 import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 import es.caib.sistramit.frontend.security.SecurityUtils;
 import es.caib.sistramit.frontend.security.UsuarioAutenticado;
@@ -98,7 +85,6 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 * @param request
 	 *                              request
 	 * @return Redireccion a mostrar asistente
-	 * @throws IOException
 	 */
 	@RequestMapping(value = "/iniciarTramite.html")
 	public ModelAndView iniciarTramite(@RequestParam("tramite") final String tramite,
@@ -109,92 +95,17 @@ public class AsistenteTramitacionController extends TramitacionController {
 			@RequestParam(value = "parametros", required = false) final String parametros,
 			@RequestParam(value = "forzarNuevo", required = false, defaultValue = "false") final boolean forzarNuevo,
 			final HttpServletRequest request) {
+		DatosInicioTramite datosInicioTramite = new DatosInicioTramite(tramite, version, idioma, idTramiteCatalogo, servicioCatalogo, parametros, forzarNuevo);
+		return iniciarTramiteImpl(datosInicioTramite, request);
+	}
 
-		ModelAndView mav = null;
-
-		// Url inicio
-		final String urlInicio = getUrlAsistente() + "/asistente/iniciarTramite.html?" + request.getQueryString();
-
-		// Parametros inicio (convertimos parametros a map)
-		final Map<String, String> parametrosInicio = new HashMap<>();
-		if (!StringUtils.isBlank(parametros)) {
-			String key;
-			String value;
-			final String[] params = parametros.split("-_-");
-			for (int i = 0; i < params.length; i = i + ConstantesNumero.N2) {
-				key = params[i];
-				if ((i + ConstantesNumero.N1) < params.length) {
-					value = params[i + ConstantesNumero.N1];
-				} else {
-					value = "";
-				}
-				parametrosInicio.put(key, value);
-			}
+	@RequestMapping(value = "/iniciarTramiteDesdePersistencia.html")
+	public ModelAndView iniciarTramiteDesdePersistencia(final HttpServletRequest request) {
+		DatosInicioTramite datosInicioTramite = (DatosInicioTramite) request.getSession().getAttribute("datosInicioTramite");
+		if (datosInicioTramite == null) {
+			throw new ErrorFrontException("No s'han indicat dades per iniciar tràmit");
 		}
-
-		// Obtiene usuario autenticado
-		final UsuarioAutenticado usuarioAutenticado = SecurityUtils.obtenerUsuarioAutenticado();
-
-		// Intentamos crear trámite con el idioma será con el que se ha autenticado
-		final String idiomaInicio = usuarioAutenticado.getUsuario().getSesionInfo().getIdioma();
-
-		// Verifica si tiene tramitaciones iniciadas
-		List<TramiteIniciado> tramitacionesIniciadas = new ArrayList<>();
-		if (!forzarNuevo) {
-			tramitacionesIniciadas = securityService.obtenerTramitacionesIniciadas(
-					usuarioAutenticado.getUsuario().getNif(), tramite, version, idTramiteCatalogo, servicioCatalogo);
-		}
-
-		if (!tramitacionesIniciadas.isEmpty()) {
-
-			// Obtenemos info trámite
-			final InfoLoginTramite tramiteInfo = securityService.obtenerInfoLoginTramite(tramite, version,
-					idTramiteCatalogo, servicioCatalogo, idioma, urlInicio);
-
-			// Literales pagina
-			final Map<String, String> literales = new HashMap<>();
-			final Properties literalesProps = getLiteralesFront().getLiteralesSeccion("persistencia", idioma);
-			final Set<String> keys = literalesProps.stringPropertyNames();
-			for (final String key : keys) {
-				literales.put(key, literalesProps.getProperty(key));
-			}
-
-			// Marcamos sesión para indicar que no se invalide al iniciar trámite
-			request.getSession().setAttribute(ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR,
-					ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR);
-
-			// Redirige a vista
-			final Map<String, Object> model = new HashMap<>();
-			model.put("idioma", idioma);
-			model.put("entidad", tramiteInfo.getEntidad());
-			model.put("tramite", tramiteInfo.getTitulo());
-			model.put("literales", literales);
-			model.put("usuario", usuarioAutenticado.getUsuario());
-			model.put("tramitacionesIniciadas", tramitacionesIniciadas);
-			model.put("urlIniciarTramiteNuevo", generarUrlIniciarTramiteNuevo(urlInicio));
-			model.put("urlReanudarTramiteNuevo",
-					getUrlAsistente() + "/asistente/cargarTramite.html?idSesionTramitacion=");
-			mav = new ModelAndView(URL_REDIRIGIR_PERSISTENCIA, model);
-
-		} else {
-			// Si no tiene tramitaciones iniciadas, inciamos trámite
-
-			// Inicia tramite
-			final String idSesionTramitacion = getFlujoTramitacionService().iniciarTramite(
-					usuarioAutenticado.getUsuario(), tramite, version, idiomaInicio, idTramiteCatalogo,
-					servicioCatalogo, urlInicio, parametrosInicio);
-
-			// Almacena en la sesion (si no se puede iniciar con el idioma establecido, se
-			// cambiará al del trámite)
-			final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
-			registraSesionTramitacion(dt);
-
-			// Redirigimos a asistente
-			mav = new ModelAndView(URL_REDIRIGIR_ASISTENTE);
-
-		}
-
-		return mav;
+		return iniciarTramiteImpl(datosInicioTramite, request);
 	}
 
 	/**
@@ -459,6 +370,9 @@ public class AsistenteTramitacionController extends TramitacionController {
 	@RequestMapping("/js/configuracion.js")
 	public ModelAndView obtenerConfiguracionAplicacion() {
 
+		// Detalle trámite
+		DetalleTramite tramiteInfo = this.getFlujoTramitacionService().obtenerDetalleTramite(this.getIdSesionTramitacionActiva());
+
 		// Metemos version sistra2 para cachear js/css por versión (si es SNAPSHOT
 		// metemos timestamp para forzar recuperación)
 		String version = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.VERSION);
@@ -473,6 +387,13 @@ public class AsistenteTramitacionController extends TramitacionController {
 				getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IFRAME_FIRMA_HEIGHT),
 				"200");
 
+		// Iframe digitalizacion
+		final String iframeDigitalizacionWidth = StringUtils.defaultString(
+				getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IFRAME_DIGITALIZACION_WIDTH), "200");
+		final String iframeDigitalizacionHeight = StringUtils.defaultString(
+				getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IFRAME_DIGITALIZACION_HEIGHT),
+				"200");
+
 		// Formulario: carácteres búsqueda. */
 		final String formularioNumCharsBusqueda = StringUtils.defaultString(
 				getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.FORM_NUMCHARS_BUSQUEDA),
@@ -484,8 +405,11 @@ public class AsistenteTramitacionController extends TramitacionController {
 		conf.setVersion(version);
 		conf.setIframeFirmaHeight(iframeFirmaHeight);
 		conf.setIframeFirmaWidth(iframeFirmaWidth);
+		conf.setIframeDigitalizacionHeight(iframeDigitalizacionHeight);
+		conf.setIframeDigitalizacionWidth(iframeDigitalizacionWidth);
 		conf.setFormularioNumCharsBusqueda(formularioNumCharsBusqueda);
 		conf.setIdSesion(this.getIdSesionTramitacionActiva());
+		conf.setFormularioAyudaActivada(tramiteInfo.getEntidad().getAyudaContextual() == TypeSiNo.SI ? "S" : "N");
 
 		return new ModelAndView("asistente/configuracion", "configuracion", conf);
 	}
@@ -570,6 +494,53 @@ public class AsistenteTramitacionController extends TramitacionController {
 		// Redirigimos a carga asistente
 		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
 	}
+
+
+	/**
+	 * Retorno componente de digitalización externo (no se gestiona con ticket, se presupone
+	 * dentro de la misma sesión).
+	 *
+	 * @param idPaso    id paso
+	 * @param idDocumento id documento
+	 * @param instancia  instancia
+	 * @return retorno de componente de firma externo recargando el trámite
+	 */
+	@RequestMapping(value = "/retornoDigitalizacionExterno.html")
+	public ModelAndView retornoDigitalizacionExterno(@RequestParam("idPaso") final String idPaso,
+											@RequestParam("idDocumento") final String idDocumento) {
+
+
+		debug("Retorno digitalización para documento: " + idDocumento);
+
+		// Cargamos tramite de persistencia
+		final String idSesionTramitacion = getIdSesionTramitacion();
+
+		// Tratamos documento digitalizado
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada("idAnexo", idDocumento);
+		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoAnexar.FINALIZAR_DIGITALIZACION_ANEXO, pParametros);
+
+		// Revisamos respuesta digitalizacion
+		final DigitalizacionResultado fv = (DigitalizacionResultado) rap.getParametroRetorno("resultado");
+		debug("Digitalizacion: " + fv.getDigitalizado() + "  " + fv.getDetalleError());
+		String mensaje = "digitalizacionRealizada";
+		String detalleError = null;
+		if (fv.getDigitalizado() == TypeSiNo.NO) {
+			mensaje = "digitalizacionError";
+			detalleError = fv.getDetalleError();
+		}
+
+		// En funcion del resultado, mostramos mensaje al usuario
+		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", mensaje, detalleError, TypeRespuestaJSON.SUCCESS);
+		this.setMensajeAsistente(ma);
+
+		// Redirigimos a carga asistente
+		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+
+	}
+
 
 	/**
 	 * Retorno componente de firma externo (no se gestiona con ticket, se presupone
@@ -663,7 +634,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 	public ModelAndView retornoCarpetaCiudadano(@RequestParam("ticket") final String ticket,
 			final HttpServletRequest request) {
 		// Obtenemos datos ticket
-		final InfoTicketAcceso infoTicket = securityService.obtenerTicketAccesoCDC(ticket);
+		final InfoTicketAcceso infoTicket = securityService.obtenerTicketAcceso(ticket);
 		try {
 			// Cargamos tramite de persistencia
 			final String idSesionTramitacion = infoTicket.getIdSesionTramitacion();
@@ -673,6 +644,32 @@ public class AsistenteTramitacionController extends TramitacionController {
 		} catch (final Exception ex) {
 			// Capturamos error para poder redirigir a url callback
 			return generarViewForException(ex, infoTicket.getUrlCallbackError(), request);
+		}
+	}
+
+	/**
+	 * Retorno inicio tramitación FH.
+	 *
+	 * @param ticket
+	 *                   ticket
+	 * @return carga asistente
+	 */
+	@RequestMapping(value = "/retornoFH.html")
+	public ModelAndView retornoFH(@RequestParam("ticket") final String ticket,
+												final HttpServletRequest request) {
+		// Obtenemos datos ticket
+		final InfoTicketAcceso infoTicket = securityService.obtenerTicketAcceso(ticket);
+		try {
+			// Iniciamos tramite
+			InfoTramiteFH tramiteFH = infoTicket.getInfoAccesoFH().getTramiteFH();
+			DatosInicioTramite datosInicioTramite = new DatosInicioTramite(tramiteFH.getTramite(), tramiteFH.getVersion(),
+					tramiteFH.getIdioma(), tramiteFH.getIdTramiteCatalogo(), tramiteFH.isServicioCatalogo(),
+					tramiteFH.getParametros(), false);
+			return iniciarTramiteImpl(datosInicioTramite, request);
+		} catch (final Exception ex) {
+			// Capturamos error
+			String urlCallback = null;
+			return generarViewForException(ex, urlCallback, request);
 		}
 	}
 
@@ -728,8 +725,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 				// TODO METEMOS ÑAPA PARA LIMITAR A 3000 YA QUE EN CHROME LOS TEXTAREA NO CUENTAN LOS SALTOS DE LINEA
 				getFlujoTramitacionService().envioFormularioSoporte(idSesionTramitacion, nif, nombre, telefono, email,
-						problemaTipo, StringUtils.substring(problemaDesc,0, 3000), horarioContacto, anexo);
-
+						problemaTipo, StringUtils.substring(problemaDesc,0, 4000), horarioContacto, anexo);
+;
 			} catch (final ErrorFormularioSoporteException | IOException efs) {
 				res.setEstado(TypeRespuestaJSON.ERROR);
 			}
@@ -799,15 +796,128 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Genera url inicio forzando nuevo trámite.
 	 * 
-	 * @param urlInicio
-	 *                      Url inicio
+	 * @param datosInicioTramite
+	 *                      Datos inicio trámite
 	 * @return url inicio forzando nuevo trámite.
 	 */
-	private static String generarUrlIniciarTramiteNuevo(final String urlInicio) {
-		// Quitamos parametro forzarNuevo anterior
-		String res = StringUtils.replace(urlInicio, "&forzarNuevo=false", "");
-		res = StringUtils.replace(res, "&forzarNuevo=true", "");
-		return res + "&forzarNuevo=true";
+	private String generarUrlIniciarTramiteNuevo(DatosInicioTramite datosInicioTramite) {
+        try {
+			URI uri = new URIBuilder(getUrlAsistente() + "/asistente/iniciarTramite.html")
+                    .addParameter("tramite", datosInicioTramite.getTramite())
+                    .addParameter("version", String.valueOf(datosInicioTramite.getVersion()))
+                    .addParameter("idioma", datosInicioTramite.getIdioma())
+                    .addParameter("idTramiteCatalogo", datosInicioTramite.getIdTramiteCatalogo())
+                    .addParameter("servicioCatalogo", String.valueOf(datosInicioTramite.isServicioCatalogo()))
+                    .addParameter("parametros", datosInicioTramite.getParametros())
+                    .addParameter("forzarNuevo", String.valueOf(true))
+                    .build();
+			return uri.toString();
+        } catch (URISyntaxException e) {
+            throw new ErrorConfiguracionException("Error al generar url inicio trámite: " + e.getMessage());
+        }
 	}
+
+	/**
+	 * Inicia trámite.
+	 *
+	 * @param datosInicioTramite datos inicio trámite
+	 * @param request request
+	 * @return Redireccion a mostrar asistente
+	 */
+	private ModelAndView iniciarTramiteImpl(DatosInicioTramite datosInicioTramite, HttpServletRequest request) {
+		ModelAndView mav = null;
+
+		// Obtiene usuario autenticado
+		final UsuarioAutenticado usuarioAutenticado = SecurityUtils.obtenerUsuarioAutenticado();
+
+		// Acceso por FH
+		String accesoFH = usuarioAutenticado.getUsuario().getFuncionarioHabilitado() != null ? usuarioAutenticado.getUsuario().getFuncionarioHabilitado().getNif() : null;
+
+		// Verifica si tiene tramitaciones iniciadas
+		List<TramiteIniciado> tramitacionesIniciadas = new ArrayList<>();
+		if (!datosInicioTramite.isForzarNuevo()) {
+			tramitacionesIniciadas = securityService.obtenerTramitacionesIniciadas(
+					usuarioAutenticado.getUsuario().getNif(), datosInicioTramite.getTramite(), datosInicioTramite.getVersion(),
+					datosInicioTramite.getIdTramiteCatalogo(), datosInicioTramite.isServicioCatalogo(),
+					accesoFH);
+		}
+
+		// Si tiene tramitaciones iniciadas, mostramos listado
+		if (!tramitacionesIniciadas.isEmpty()) {
+			// Obtenemos info trámite
+			final InfoLoginTramite tramiteInfo = securityService.obtenerInfoLoginTramite(datosInicioTramite.getTramite(), datosInicioTramite.getVersion(),
+					datosInicioTramite.getIdTramiteCatalogo(), datosInicioTramite.isServicioCatalogo(), datosInicioTramite.getIdioma());
+			// Literales pagina
+			final Map<String, String> literales = new HashMap<>();
+			final Properties literalesProps = getLiteralesFront().getLiteralesSeccion("persistencia", datosInicioTramite.getIdioma());
+			final Set<String> keys = literalesProps.stringPropertyNames();
+			for (final String key : keys) {
+				literales.put(key, literalesProps.getProperty(key));
+			}
+			// Marcamos sesión para indicar que no se invalide al iniciar trámite
+			request.getSession().setAttribute(ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR,
+					ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR);
+			// Guardamos en sesión datos incio trámite por si se inicia uno nuevo desde pantalla persistencia
+			datosInicioTramite.setForzarNuevo(true);
+			request.getSession().setAttribute("datosInicioTramite", datosInicioTramite);
+			// Redirige a vista
+			final Map<String, Object> model = new HashMap<>();
+			model.put("idioma", datosInicioTramite.getIdioma());
+			model.put("entidad", tramiteInfo.getEntidad());
+			model.put("tramite", tramiteInfo.getTitulo());
+			model.put("literales", literales);
+			model.put("usuario", usuarioAutenticado.getUsuario());
+			model.put("tramitacionesIniciadas", tramitacionesIniciadas);
+			String urlInicioTramitePersistencia = getUrlAsistente() + "/asistente/iniciarTramiteDesdePersistencia.html";
+			model.put("urlIniciarTramiteNuevo", urlInicioTramitePersistencia);
+			model.put("urlReanudarTramiteNuevo", getUrlAsistente() + "/asistente/cargarTramite.html?idSesionTramitacion=");
+			mav = new ModelAndView(URL_REDIRIGIR_PERSISTENCIA, model);
+		}  else {
+			// Si no tiene tramitaciones iniciadas, iniciamos trámite con el idioma será con el que se ha autenticado
+			final String idiomaInicio = usuarioAutenticado.getUsuario().getSesionInfo().getIdioma();
+			// Parametros inicio (convertimos parametros a map)
+			final Map<String, String> parametrosInicio = parametrosInicioTramiteToMap(datosInicioTramite.getParametros());
+			// Genera url inicio trámite forzando nuevo
+			final String urlInicio = generarUrlIniciarTramiteNuevo(datosInicioTramite);
+			// Inicia tramite
+			final String idSesionTramitacion = getFlujoTramitacionService().iniciarTramite(
+					usuarioAutenticado.getUsuario(), datosInicioTramite.getTramite(), datosInicioTramite.getVersion(),
+					idiomaInicio, datosInicioTramite.getIdTramiteCatalogo(), datosInicioTramite.isServicioCatalogo(),
+					urlInicio, parametrosInicio);
+			// Almacena en la sesion (si no se puede iniciar con el idioma establecido, se
+			// cambiará al del trámite)
+			final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
+			registraSesionTramitacion(dt);
+			// Redirigimos a asistente
+			mav = new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+		}
+
+		return mav;
+	}
+
+	/**
+	 * Convierte los parametros de inicio del trámite a un mapa.
+	 * @param parametros parametros de inicio del trámite
+	 * @return
+	 */
+	private Map<String, String> parametrosInicioTramiteToMap(String parametros) {
+		final Map<String, String> parametrosInicio = new HashMap<>();
+		if (!StringUtils.isBlank(parametros)) {
+			String key;
+			String value;
+			final String[] params = parametros.split("-_-");
+			for (int i = 0; i < params.length; i = i + ConstantesNumero.N2) {
+				key = params[i];
+				if ((i + ConstantesNumero.N1) < params.length) {
+					value = params[i + ConstantesNumero.N1];
+				} else {
+					value = "";
+				}
+				parametrosInicio.put(key, value);
+			}
+		}
+		return parametrosInicio;
+	}
+
 
 }

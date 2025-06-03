@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -64,13 +65,15 @@ public final class AccionDescargarFirma implements AccionPaso {
 		if (firmante != null) {
 			// Si se pide la firma de un firmante concreto, se recupera la firma de ese firmante (cuando se verifican firmantes)
 			fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmar.getId(), firmante);
-			if (fdp == null) {
-				throw new AccionPasoNoPermitidaException("No existeix firma document registre amb id: " + idDocumento + " - "
-						+ instanciaStr + " per signant " + firmante);
-			}
 		} else {
 			// Si no se recupera la primera firma (cuando no se verifican firmantes)
-			fdp = docPersistencia.obtenerFirmasFicheros().get(0);
+			if (docPersistencia.obtenerFirmasFicheros().size() > 0) {
+				fdp = docPersistencia.obtenerFirmasFicheros().get(0);
+			}
+		}
+		if (fdp == null) {
+			throw new AccionPasoNoPermitidaException("No existeix firma document registre amb id: " + idDocumento + " - "
+					+ instanciaStr + (StringUtils.isNotBlank(firmante)?" per signant " + firmante : ""));
 		}
 
 		// Recuperamos datos firma

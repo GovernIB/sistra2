@@ -13,12 +13,17 @@
 	<ui:define name="icerick">
 		<script type="text/javascript">
 		function setHeight(){
-	    	var altura = window.innerHeight - 50;
-	    	var alturaDatatable = altura - 250;
-            var alturaScrollableBody = altura - 293;
+			// Altura de la pantalla menos 50px del footer
+			var altura = window.innerHeight - 50;
+			// Altura de la tabla menos altura de la cabecera y del toolbar
+			var alturaDatatable = altura - 240;
+			// Altura del scrollable body, tabla menos cabecera y footer (de la tabla)
+			var alturaScrollableBody = alturaDatatable - 57;
 
             $('#form\\:dataTable').height(alturaDatatable);
             $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+
+			// console.log("altura: " + altura + ", alturaDatatable: " + alturaDatatable + ", alturaScrollableBody: " + alturaScrollableBody);
 	    }
 
 		jQuery(document).ready(function() {
@@ -27,7 +32,7 @@
               setTimeout(function(){  setHeight(); }, 100);
   			});
 
-	      setHeight();
+			setTimeout(function(){  setHeight(); }, 10);
 	  });
 
 		function cerrarDialog(){
@@ -87,14 +92,14 @@
 		        		<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewEntidades.nuevo()}" process="@this" update="growl" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.editar()}" process="@this" update="growl" oncomplete="cerrarDialog()">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewEntidades.editar()}" process="@this" update="growl" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEntidades.eliminar()}" process="@this" update="growl dataTable">
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewEntidades.eliminar()}" process="@this" update="growl dataTable">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewEntidades.ayuda}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewEntidades.ayuda}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 
@@ -116,35 +121,32 @@
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false"/>
-				<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
-		                        />
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 		        <p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbar"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewEntidades.headerCodigoDIR3']}">
+			    <p:column headerText="#{msg['viewEntidades.headerCodigoDIR3']}" sortBy="#{td.codigoDIR3}">
 			        <h:outputText value="#{td.codigoDIR3}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewEntidades.headerIdentificador']}">
+			    <p:column headerText="#{msg['viewEntidades.headerIdentificador']}" sortBy="#{td.identificador}">
 			        <h:outputText value="#{td.identificador}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewEntidades.headerDescripcion']}">
+			    <p:column headerText="#{msg['viewEntidades.headerDescripcion']}" sortBy="#{td.nombre.getTraduccion(sessionBean.lang,sessionBean.idiomas)}">
 			        <h:outputText value="#{td.nombre.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
 			    </p:column>
 
- 				<p:column headerText="#{msg['viewEntidades.headerActivo']}">
-			        <p:selectBooleanCheckbox value="#{td.activo}"  readonly="true" />
+ 				<p:column headerText="#{msg['viewEntidades.headerActivo']}" sortBy="#{td.activo}">
+			        <p:selectBooleanCheckbox value="#{td.activo}" readonly="true" />
 			    </p:column>
 
 
- 				<p:column headerText="#{msg['viewEntidades.headerRol']}">
+ 				<p:column headerText="#{msg['viewEntidades.headerRol']}" sortBy="#{td.rol}">
 			        <h:outputText value="#{td.rol}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewEntidades.headerRolSup']}">
+			    <p:column headerText="#{msg['viewEntidades.headerRolSup']}" sortBy="#{td.rolSup}">
 			        <h:outputText value="#{td.rolSup}" />
 			    </p:column>
 
@@ -155,7 +157,7 @@
 		        	$('#form\\:btnEditarHidden').click();
 		      }
 		    </h:outputScript>
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewEntidades.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
@@ -164,7 +166,7 @@
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 
@@ -172,8 +174,8 @@
                 <p:menuitem id="mnuCopyEntidades" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevoEntidades" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
-				<p:menuitem id="mnuEditarEntidades" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
-				<p:menuitem id="mnuEliminarEntidades" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
+				<p:menuitem id="mnuEditarEntidades" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
+				<p:menuitem id="mnuEliminarEntidades" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyEntidades" trigger="mnuCopyEntidades" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewEntidades.copiadoCorr}" process="@this" update="@this growl"/>

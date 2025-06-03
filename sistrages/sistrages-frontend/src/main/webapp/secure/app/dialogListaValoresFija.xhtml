@@ -30,7 +30,7 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0">
 					<h:column>
 						<p:outputLabel for="valor" value="#{msg['dialogListaValoresFija.valor']}"  />
 					</h:column>
@@ -42,7 +42,7 @@
 	         		</h:column>
 	         		<h:column>
 	         			<p:inputText id="descripcion" value="#{dialogListaValoresFija.data.descripcion.getTraduccion(sessionBean.lang,dialogListaValoresFija.idiomas)}" readonly="true" onblur="this.value = this.value.trim();" required="true" styleClass="margin-right-10" size="30" />
-	         			<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogListaValoresFija.editarTraducciones}" process="@this" styleClass="va-top">
+	         			<p:commandButton id="btnEtiqueta" icon="fa fa-globe" actionListener="#{dialogListaValoresFija.editarTraducciones}" process="@this" styleClass="va-top">
 	            			<p:ajax event="dialogReturn" listener="#{dialogListaValoresFija.returnDialogoTraducciones}" update="descripcion" />
 	        			</p:commandButton>
 	         		</h:column>

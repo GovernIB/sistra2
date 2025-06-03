@@ -14,11 +14,20 @@
 
 <h:head>
 	<title><h:outputText value="#{dialogDisenyoFormulario.titulo}"/></title>
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
     <f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet>
+			body {
+				background-color: #FFF;
+			}
+		</h:outputStylesheet>
     </f:facet>
 	<!-- Parametros dialogo -->
 	<f:metadata>
@@ -147,7 +156,7 @@
 			<p:toolbarGroup align="left">
 
 				<h:outputText value="&#160;" rendered="#{dialogDisenyoFormulario.isTipoSeccion()}" style="margin-left:5px" />
-				<p:commandButton id="btnFormulario" value="#{msg['dialogDisenyoFormulario.formulario']}" icon="fa fa-file-text-o" actionListener="#{dialogDisenyoFormulario.abrirPropiedadesFormulario}" process="@this" update="growlDisenyoFormulario" title="#{msg['dialogDisenyoFormulario.title.formulario']}" rendered="#{dialogDisenyoFormulario.isTipoTramite()}">
+				<p:commandButton id="btnFormulario" value="#{msg['dialogDisenyoFormulario.formulario']}" icon="fa fa-file" actionListener="#{dialogDisenyoFormulario.abrirPropiedadesFormulario}" process="@this" update="growlDisenyoFormulario" title="#{msg['dialogDisenyoFormulario.title.formulario']}" rendered="#{dialogDisenyoFormulario.isTipoTramite()}">
 					<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogo}" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
 				</p:commandButton>
 
@@ -158,14 +167,14 @@
 				<h:panelGroup id="bh-herramientas" class="barra-herramientas-disenyo" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
 					<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente']}"/>
 					<p:commandButton id="btnLinea" 		    title="#{msg['dialogDisenyoFormulario.componente.LN']}" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.insertaLinea}" 					process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnLN}"  />
-		       		<p:commandButton id="btnSeccion" 		title="#{msg['dialogDisenyoFormulario.componente.SC']}" icon="fa fa-list-ul" actionListener="#{dialogDisenyoFormulario.insertaSeccion}" 					process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnSC}"  />
-		       		<p:commandButton id="btnEtiqueta" 		title="#{msg['dialogDisenyoFormulario.componente.ET']}" icon="fa fa-commenting-o" actionListener="#{dialogDisenyoFormulario.insertaEtiqueta}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnET}"  />
-		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-pencil-square-o" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}" 			process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnCT}"  />
-					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-square-o-down" actionListener="#{dialogDisenyoFormulario.insertaSelector}" 		process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnSE}"  />
+		       		<p:commandButton id="btnSeccion" 		title="#{msg['dialogDisenyoFormulario.componente.SC']}" icon="fa fa-list" actionListener="#{dialogDisenyoFormulario.insertaSeccion}" 					process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnSC}"  />
+		       		<p:commandButton id="btnEtiqueta" 		title="#{msg['dialogDisenyoFormulario.componente.ET']}" icon="fa fa-comments" actionListener="#{dialogDisenyoFormulario.insertaEtiqueta}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnET}"  />
+		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-pencil" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}" 			process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnCT}"  />
+					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-down" actionListener="#{dialogDisenyoFormulario.insertaSelector}" 		process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnSE}"  />
 		       		<p:commandButton id="btnCampoCheckbox" 	title="#{msg['dialogDisenyoFormulario.componente.CK']}" icon="fa fa-check-square" actionListener="#{dialogDisenyoFormulario.insertaCheckBox}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnCK}"  />
 		       		<p:commandButton id="btnCampoOculto" 	title="#{msg['dialogDisenyoFormulario.componente.OC']}" icon="fa fa-eye-slash" actionListener="#{dialogDisenyoFormulario.insertaCampoOculto}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnOC}"  />
 					<p:commandButton id="btnCampoCaptcha" 	title="#{msg['dialogDisenyoFormulario.componente.CP']}" icon="captchaImg" actionListener="#{dialogDisenyoFormulario.insertaCaptcha}" 				        process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnCP}"  rendered="#{dialogDisenyoFormulario.isTipoTramite() or dialogDisenyoFormulario.isTipoSeccion()}" />
-					<p:commandButton id="btnCampoSecListE" 	title="#{msg['dialogDisenyoFormulario.componente.LE']}" icon="fa fa-list-alt" actionListener="#{dialogDisenyoFormulario.insertaListaElementos}"				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnLE}"  rendered="#{dialogDisenyoFormulario.isTipoTramite()}" />
+					<p:commandButton id="btnCampoSecListE" 	title="#{msg['dialogDisenyoFormulario.componente.LE']}" icon="listaElementosImg" actionListener="#{dialogDisenyoFormulario.insertaListaElementos}"				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnLE}"  rendered="#{dialogDisenyoFormulario.isTipoTramite()}" />
 					<p:commandButton id="btnCampoSecReut" 	title="#{msg['dialogDisenyoFormulario.componente.SR']}" icon="seccioReutilizableImg" actionListener="#{dialogDisenyoFormulario.insertaSeccionReutilizable}"	process="@form" 													   update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnSR}"  rendered="#{dialogDisenyoFormulario.isTipoTramite()}"  >
 							<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoSeccionReutilizable}" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover bh-herramientas" />
 					</p:commandButton>
@@ -193,15 +202,15 @@
 					<p:commandButton icon="fa fa-chevron-left"  id="MoverObjIzq" 	actionListener="#{dialogDisenyoFormulario.moverObjetoIzq}" 	process="@this" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjIzq}"   title="#{msg['dialogDisenyoFormulario.title.moverIzq']}"/>
 					<p:commandButton icon="fa fa-chevron-right" id="MoverObjDer" 	actionListener="#{dialogDisenyoFormulario.moverObjetoDer}" 	process="@this" update="growlDisenyoFormulario"				     disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjDer}"   title="#{msg['dialogDisenyoFormulario.title.moverDer']}"/>
 					<p:commandButton icon="fa fa-copy"  		id="btnCopy"  		actionListener="#{dialogDisenyoFormulario.copy}"  			process="@this" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjCopy}"  title="#{msg['dialogDisenyoFormulario.title.copy']}"/>
-					<p:commandButton icon="fa fa-cut"   		id="btnCut"   		actionListener="#{dialogDisenyoFormulario.cut}"   			process="@this" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjPaste}" title="#{msg['dialogDisenyoFormulario.title.cut']}"/>
-					<p:commandButton icon="fa fa-paste" 		id="btnPaste" 		actionListener="#{dialogDisenyoFormulario.paste}" 			process="@form" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjCut}"   title="#{msg['dialogDisenyoFormulario.title.paste']}"  />
+					<p:commandButton icon="fa fa-times"   		id="btnCut"   		actionListener="#{dialogDisenyoFormulario.cut}"   			process="@this" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjPaste}" title="#{msg['dialogDisenyoFormulario.title.cut']}"/>
+					<p:commandButton icon="fa fa-clone" 		id="btnPaste" 		actionListener="#{dialogDisenyoFormulario.paste}" 			process="@form" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjCut}"   title="#{msg['dialogDisenyoFormulario.title.paste']}"  />
 					<p:commandButton icon="fa fa-trash" 		id="btnBorrar"		actionListener="#{dialogDisenyoFormulario.validarEliminarObjetoFormulario}"  process="@this" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjDel}"   title="#{msg['dialogDisenyoFormulario.title.borrar']}" rendered="#{dialogDisenyoFormulario.isNotConsulta()}"  />
 
 				</h:panelGroup>
 
 			</p:toolbarGroup>
 			<p:toolbarGroup align="right">
-				<p:commandButton id="btnHelp" title="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDisenyoFormulario.ayuda}" process="@this" update="growlDisenyoFormulario"/>
+				<p:commandButton id="btnHelp" title="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogDisenyoFormulario.ayuda}" process="@this" update="growlDisenyoFormulario"/>
 			</p:toolbarGroup>
 		</p:toolbar>
 
@@ -313,7 +322,7 @@
 
 		    <p:inputText id="auxCopiar" value="#{dialogDisenyoFormulario.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
-			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDisenyoFormulario.aceptarAlertaSinEspacio()}"  process="@this" update="growlDisenyoFormulario" style="display:none" oncomplete="if (!args.validationFailed) {updateUI();}"  />
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogDisenyoFormulario.aceptarAlertaSinEspacio()}"  process="@this" update="growlDisenyoFormulario" style="display:none" oncomplete="if (!args.validationFailed) {updateUI();}"  />
 
 	</h:form>
 

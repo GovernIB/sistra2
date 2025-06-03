@@ -174,7 +174,8 @@ public class ViewMigracion extends ViewControllerBase {
 		final byte[] contentsFuenteDatosCSV = CsvUtil.exportar(csv);
 
 		final InputStream myInputStream = new ByteArrayInputStream(contentsFuenteDatosCSV);
-		return new DefaultStreamedContent(myInputStream, "text/csv", "erroresMigracion.csv");
+		return DefaultStreamedContent.builder().contentType("text/csv").name("erroresMigracion.csv").stream(() -> myInputStream).build();
+
 	}
 
 	/***

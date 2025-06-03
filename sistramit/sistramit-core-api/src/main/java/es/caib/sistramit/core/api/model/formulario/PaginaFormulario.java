@@ -43,6 +43,11 @@ public final class PaginaFormulario implements Serializable {
 	private TypeSiNo permitirGuardar = TypeSiNo.NO;
 
 	/**
+	 * Desplazar ocultos.
+	 */
+	private TypeSiNo desplazarocultos = TypeSiNo.NO;
+
+	/**
 	 * Html pagina.
 	 */
 	private String html;
@@ -308,6 +313,25 @@ public final class PaginaFormulario implements Serializable {
 	 */
 	public void setIdPagina(final String idPagina) {
 		this.idPagina = idPagina;
+	}
+
+	/**
+	 * Método de acceso a desplazarocultos.
+	 *
+	 * @return desplazarocultos
+	 */
+	public TypeSiNo getDesplazarocultos() {
+		return desplazarocultos;
+	}
+
+	/**
+	 * Método para establecer desplazarocultos.
+	 *
+	 * @param desplazarocultos
+	 *                            desplazarocultos a establecer
+	 */
+	public void setDesplazarocultos(final TypeSiNo desplazarocultos) {
+		this.desplazarocultos = desplazarocultos;
 	}
 
 }

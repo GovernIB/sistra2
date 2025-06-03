@@ -32,6 +32,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	/** En caso correcto, indica tipo firma. */
 	private TypeFirmaDigital firmaTipo;
 
+	/** En caso correcto, indica método de firma (proporcionado por plugin). */
+	private String metodoFirma;
+
 	/** En caso error, indica detalle error. */
 	private String detalleError;
 
@@ -205,6 +208,25 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 */
 	public void setSesionFirma(final String sesionFirma) {
 		this.sesionFirma = sesionFirma;
+	}
+
+	/**
+	 * Método de acceso a metodoFirma.
+	 *
+	 * @return metodoFirma
+	 */
+	public String getMetodoFirma() {
+		return metodoFirma;
+	}
+
+	/**
+	 * Método para establecer metodoFirma.
+	 *
+	 * @param metodoFirma
+	 *                      metodoFirma a establecer
+	 */
+	public void setMetodoFirma(final String metodoFirma) {
+		this.metodoFirma = metodoFirma;
 	}
 
 }

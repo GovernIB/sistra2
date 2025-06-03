@@ -3,14 +3,12 @@ package es.caib.sistrahelp.frontend.model;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistrahelp.core.api.model.*;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
-import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
-import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
-import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 
 public class ErroresPorTramiteCMLazyDataModel extends LazyDataModel<ErroresPorTramiteCM> {
@@ -31,16 +29,35 @@ public class ErroresPorTramiteCMLazyDataModel extends LazyDataModel<ErroresPorTr
 
 	private List<ErroresPorTramiteCM> lista;
 
+	public int count(Map<String, FilterMeta> filterBy) {
+		//TODO Implementar
+		//return 20;
+		//return helpDeskService.countSoporte(filtros).intValue();
+		filtros.setSoloContar(true);
+		Long numElementos = helpDeskService.obtenerErroresPorTramiteCM(filtros, null).getNumElementos();
+		return numElementos == null ? 0 : numElementos.intValue();
+	}
+
 	@Override
-	public List<ErroresPorTramiteCM> load(final int first, final int pageSize, final String sortField,
-			final SortOrder sortOrder, final Map<String, Object> filters) {
+	public List<ErroresPorTramiteCM> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+		filtros.setSoloContar(false);
+
+		if (sortBy != null && !sortBy.isEmpty()) {
+			SortMeta sortMeta = sortBy.values().iterator().next();
+			SortOrder sortOrder = sortMeta.getOrder();
+			if (sortOrder != null) {
+				filtros.setSortOrder(sortOrder.name());
+			}
+			filtros.setSortField(sortMeta.getField());
+		}
+		/** TODO Implementar
 		if (filters.get("idTramite") != null && !filters.get("idTramite").toString().isEmpty()) {
 			filtros.setIdTramite(filters.get("idTramite").toString());
 		} else {
 			filtros.setIdTramite(null);
-		}
-		filtros.setSortField(sortField);
-		filtros.setSortOrder(sortOrder.name());
+		} **/
+		//filtros.setSortField(sortField);
+		//filtros.setSortOrder(sortOrder.name());
 		setLista(helpDeskService.obtenerErroresPorTramiteCM(filtros, new FiltroPaginacion(first, pageSize))
 				.getListaErroresCM());
 
@@ -59,8 +76,8 @@ public class ErroresPorTramiteCMLazyDataModel extends LazyDataModel<ErroresPorTr
 	}
 
 	@Override
-	public Object getRowKey(final ErroresPorTramiteCM evento) {
-		return evento.getIdTramite() + evento.getVersion().toString();
+	public String getRowKey(final ErroresPorTramiteCM evento) {
+		return evento.getIdTramite() + "_" + evento.getVersion().toString();
 	}
 
 	public List<ErroresPorTramiteCM> getLista() {

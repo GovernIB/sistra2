@@ -9,7 +9,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -137,9 +136,11 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 
 			DefaultMenuItem item = null;
 
-			item = new DefaultMenuItem(area);
-			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
-			breadCrumb.addElement(item);
+			item = new DefaultMenuItem();
+			item.setAriaLabel(area);
+			item.setValue(area);
+			item.setUrl(UtilJSF.getContextPath() + "/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.getElements().add(item);
 
 		} else {
 			mostrarBreadcrumb = false;
@@ -402,8 +403,7 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 		case "S":
 			UtilJSF.redirectJsfPage("/secure/app/viewFormulariosExternos.xhtml?ambito=A&id=" + id + "&area=" + area);
 		case "C":
-			UtilJSF.redirectJsfPage(
-					"/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + id + "&area=" + area);
+			UtilJSF.redirectJsfPage("/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + id + "&area=" + area);
 		case "E":
 			break;
 		default:
@@ -579,8 +579,7 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 
 	/**
 	 * Abre dialogo de tramites.
-	 *
-	 * @param modoAccesoDlg Modo acceso
+	 * 
 	 */
 	public void tramites() {
 
@@ -628,7 +627,7 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 		if (typeAmbito == TypeAmbito.ENTIDAD) {
 			params.put("ENTIDAD", id);
 		}
-		UtilJSF.openDialog(DialogEnvioRemoto.class, modoAccesoDlg, params, true, 670, 307);
+		UtilJSF.openDialog(DialogEnvioRemoto.class, modoAccesoDlg, params, true, 740, 345);
 	}
 
 	/**

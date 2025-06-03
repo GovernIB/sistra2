@@ -17,6 +17,9 @@
 <h:body>
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -32,7 +35,7 @@
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 				<!-- Contenido dialogo -->
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="identificador" value="#{msg['dialogFormateadorFormulario.identificador']}" />
 					<p:inputText id="identificador" value="#{dialogFormateadorFormulario.data.identificador}" readonly="#{dialogFormateadorFormulario.isConsulta()}"  required="true" style="width:95%;" maxlength="20" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -51,7 +54,7 @@
 						<p:selectBooleanCheckbox id="generico" value="#{dialogFormateadorFormulario.data.generico}" >
 							<p:ajax event="change" global="false" process="@form:generico" update=":dialogFormateadorFormulario:btnPlantilla" listener="#{dialogFormateadorFormulario.checkGenerico()}" />
             			</p:selectBooleanCheckbox>
-						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" actionListener="#{dialogFormateadorFormulario.editarPlantillaGenerico()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.generico}" style="margin-left:10px" />
+						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-pencil" actionListener="#{dialogFormateadorFormulario.editarPlantillaGenerico()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.generico}" style="margin-left:10px" />
 					</p:column>
 
 					<p:outputLabel 			 for="desactivarPersonalizacion" value="#{msg['dialogFormateadorFormulario.desactivarPersonalizacion']}" />
@@ -65,7 +68,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogFormateadorFormulario.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this"  rendered="#{dialogFormateadorFormulario.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogFormateadorFormulario.ayuda()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogFormateadorFormulario.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
@@ -177,7 +180,7 @@
 			</h:outputScript>
 			<p:contextMenu>
        			<p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogFormateadorFormulario:auxCopiar" update="growlDialog" />
-                <p:menuitem id="mnuEditar" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogFormateadorFormulario:btnPlantilla').click();" style="display: none;"/>
+                <p:menuitem id="mnuEditar" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('dialogFormateadorFormulario:btnPlantilla').click();" style="display: none;"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogFormateadorFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>

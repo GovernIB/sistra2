@@ -134,7 +134,7 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w10, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w10, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel   for="oficina" value="#{msg['dialogTramiteImportarRegistro.headerOficina']}:" rendered="#{dialogTramiteImportarRegistro.mostrarOficina}" />
 					<p:selectOneMenu id ="oficina" styleClass="w40" value="#{dialogTramiteImportarRegistro.data.oficina}" required="#{dialogTramiteImportarRegistro.mostrarOficina}" rendered="#{dialogTramiteImportarRegistro.mostrarOficina}" style="background:white" requiredMessage="#{msg['error.obligatorio']}" >

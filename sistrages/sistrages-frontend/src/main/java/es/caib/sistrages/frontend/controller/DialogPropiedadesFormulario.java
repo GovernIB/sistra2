@@ -645,6 +645,9 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	}
 
 	public String getDescripcionFormateador(final Long pIdFmt) {
+		if (pIdFmt == null) {
+			return "";
+		}
 		return fmtService.getFormateadorFormulario(pIdFmt).getIdentificador();
 	}
 

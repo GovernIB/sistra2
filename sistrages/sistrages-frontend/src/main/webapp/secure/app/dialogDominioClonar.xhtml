@@ -14,6 +14,10 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominioClonar.titulo']}"/></title>
+
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 </h:head>
 
 <h:body>
@@ -138,7 +142,7 @@
 			<!-- Contenido dialogo -->
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominioClonar.headerCodigo']}" />
 				<p:inputText id="codigo" value="#{dialogDominioClonar.nuevoIdentificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" styleClass="w90"  validatorMessage="#{msg['error.validacion.identificador']}">

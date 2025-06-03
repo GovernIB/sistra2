@@ -152,7 +152,7 @@
 			</h:panelGrid>
 
 			<p:outputPanel styleClass="padding-right-8 padding-left-8">
-				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogFichero.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
+				<p:fileUpload id="fichero" mode="advanced" listener="#{dialogFichero.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
 					update="formFichero growlDialogFichero" fileLimit="1"  accept="#{dialogFichero.extensiones}" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
 			</p:outputPanel>
 

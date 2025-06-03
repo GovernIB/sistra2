@@ -173,6 +173,27 @@ public final class HTramite implements IModelApi {
 	@Column(name = "TRP_URLINI")
 	private String urlInicio;
 
+	/** Funcionario habilitado: USERNAME. */
+	@Column(name = "TRP_FHUSER")
+	private String funcionarioHabilitadoUsername;
+
+	/** Funcionario habilitado: NIF. */
+	@Column(name = "TRP_FHNIF")
+	private String funcionarioHabilitadoNif;
+
+	/** Funcionario habilitado: Nombre. */
+	@Column(name = "TRP_FHNOM")
+	private String funcionarioHabilitadoNombre;
+
+	/** Funcionario habilitado: Apellido 1. */
+	@Column(name = "TRP_FHAPE1")
+	private String funcionarioHabilitadoApellido1;
+
+	/** Funcionario habilitado: Apellido 2. */
+	@Column(name = "TRP_FHAPE2")
+	private String funcionarioHabilitadoApellido2;
+
+
 	/**
 	 * Obtiene el atributo codigo de HTramite.
 	 *
@@ -733,6 +754,141 @@ public final class HTramite implements IModelApi {
 		this.idProcedimientoSIA = idProcedimientoSIA;
 	}
 
+
+	/**
+	 * Método de acceso a idArea.
+	 *
+	 * @return idArea
+	 */
+	public String getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * Método para establecer idArea.
+	 *
+	 * @param idArea
+	 *                   idArea a establecer
+	 */
+	public void setIdArea(final String idArea) {
+		this.idArea = idArea;
+	}
+
+	/**
+	 * Método de acceso a servicioCP.
+	 *
+	 * @return servicioCP
+	 */
+	public boolean isServicioCP() {
+		return servicioCP;
+	}
+
+	/**
+	 * Método para establecer servicioCP.
+	 *
+	 * @param servicioCP
+	 *                       servicioCP a establecer
+	 */
+	public void setServicioCP(final boolean servicioCP) {
+		this.servicioCP = servicioCP;
+	}
+
+	/**
+	 * Método de acceso a fhNif.
+	 *
+	 * @return fhNif
+	 */
+	public String getFuncionarioHabilitadoNif() {
+		return funcionarioHabilitadoNif;
+	}
+
+	/**
+	 * Método para establecer fhNif.
+	 *
+	 * @param fhNif
+	 *                   fhNif a establecer
+	 */
+	public void setFuncionarioHabilitadoNif(final String fhNif) {
+		this.funcionarioHabilitadoNif = fhNif;
+	}
+
+	/**
+	 * Método de acceso a fhNombre.
+	 *
+	 * @return fhNombre
+	 */
+	public String getFuncionarioHabilitadoNombre() {
+		return funcionarioHabilitadoNombre;
+	}
+
+	/**
+	 * Método para establecer fhNombre.
+	 *
+	 * @param fhNombre
+	 *                   fhNombre a establecer
+	 */
+	public void setFuncionarioHabilitadoNombre(final String fhNombre) {
+		this.funcionarioHabilitadoNombre = fhNombre;
+	}
+
+	/**
+	 * Método de acceso a fhApellido1.
+	 *
+	 * @return fhApellido1
+	 */
+	public String getFuncionarioHabilitadoApellido1() {
+		return funcionarioHabilitadoApellido1;
+	}
+
+	/**
+	 * Método para establecer fhApellido1.
+	 *
+	 * @param fhApellido1
+	 *                   fhApellido1 a establecer
+	 */
+	public void setFuncionarioHabilitadoApellido1(final String fhApellido1) {
+		this.funcionarioHabilitadoApellido1 = fhApellido1;
+	}
+
+	/**
+	 * Método de acceso a fhApellido2.
+	 *
+	 * @return fhApellido2
+	 */
+	public String getFuncionarioHabilitadoApellido2() {
+		return funcionarioHabilitadoApellido2;
+	}
+
+	/**
+	 * Método para establecer fhApellido2.
+	 *
+	 * @param fhApellido2
+	 *                   fhApellido2 a establecer
+	 */
+	public void setFuncionarioHabilitadoApellido2(final String fhApellido2) {
+		this.funcionarioHabilitadoApellido2 = fhApellido2;
+	}
+
+
+	/**
+	 * Método de acceso a funcionarioUsername.
+	 *
+	 * @return funcionarioUsername
+	 */
+	public String getFuncionarioHabilitadoUsername() {
+		return funcionarioHabilitadoUsername;
+	}
+
+	/**
+	 * Método para establecer funcionarioUsername.
+	 *
+	 * @param funcionarioUsername
+	 *                   funcionarioUsername a establecer
+	 */
+	public void setFuncionarioHabilitadoUsername(final String funcionarioUsername) {
+		this.funcionarioHabilitadoUsername = funcionarioUsername;
+	}
+
 	/**
 	 * Convierte objeto de la capa negocio a la capa de repositorio.
 	 *
@@ -780,6 +936,12 @@ public final class HTramite implements IModelApi {
 		hTramite.setPurgado(m.isPurgado());
 		hTramite.setFechaPurgado(m.getFechaPurgado());
 		hTramite.setPurgaPendientePorPagoRealizado(m.isPurgaPendientePorPagoRealizado());
+
+		hTramite.setFuncionarioHabilitadoUsername(m.getFuncionarioHabilitadoUsername());
+		hTramite.setFuncionarioHabilitadoNif(m.getFuncionarioHabilitadoNif());
+		hTramite.setFuncionarioHabilitadoNombre(m.getFuncionarioHabilitadoNombre());
+		hTramite.setFuncionarioHabilitadoApellido1(m.getFuncionarioHabilitadoApellido1());
+		hTramite.setFuncionarioHabilitadoApellido2(m.getFuncionarioHabilitadoApellido2());
 
 		return hTramite;
 	}
@@ -841,46 +1003,16 @@ public final class HTramite implements IModelApi {
 			m.setFechaPurgado(h.getFechaPurgado());
 			m.setPurgaPendientePorPagoRealizado(h.isPurgaPendientePorPagoRealizado());
 
+			m.setFuncionarioHabilitadoUsername(h.getFuncionarioHabilitadoUsername());
+			m.setFuncionarioHabilitadoNif(h.getFuncionarioHabilitadoNif());
+			m.setFuncionarioHabilitadoNombre(h.getFuncionarioHabilitadoNombre());
+			m.setFuncionarioHabilitadoApellido1(h.getFuncionarioHabilitadoApellido1());
+			m.setFuncionarioHabilitadoApellido2(h.getFuncionarioHabilitadoApellido2());
+
 		}
 		return m;
 	}
 
-	/**
-	 * Método de acceso a idArea.
-	 *
-	 * @return idArea
-	 */
-	public String getIdArea() {
-		return idArea;
-	}
 
-	/**
-	 * Método para establecer idArea.
-	 *
-	 * @param idArea
-	 *                   idArea a establecer
-	 */
-	public void setIdArea(final String idArea) {
-		this.idArea = idArea;
-	}
-
-	/**
-	 * Método de acceso a servicioCP.
-	 *
-	 * @return servicioCP
-	 */
-	public boolean isServicioCP() {
-		return servicioCP;
-	}
-
-	/**
-	 * Método para establecer servicioCP.
-	 *
-	 * @param servicioCP
-	 *                       servicioCP a establecer
-	 */
-	public void setServicioCP(final boolean servicioCP) {
-		this.servicioCP = servicioCP;
-	}
 
 }

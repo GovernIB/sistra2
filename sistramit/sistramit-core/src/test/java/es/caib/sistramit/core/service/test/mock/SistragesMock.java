@@ -6,29 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import es.caib.sistra2.commons.plugins.digitalizacion.mock.ComponenteDigitalizacionPluginMock;
+import es.caib.sistrages.rest.api.interna.*;
+import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.caib.sistrages.rest.api.interna.RAviso;
-import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
-import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
-import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
-import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
-import es.caib.sistrages.rest.api.interna.RDominio;
-import es.caib.sistrages.rest.api.interna.REnvioRemoto;
-import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
-import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
-import es.caib.sistrages.rest.api.interna.RListaParametros;
-import es.caib.sistrages.rest.api.interna.RLiteral;
-import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
-import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
-import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
-import es.caib.sistrages.rest.api.interna.RPlantillaIdioma;
-import es.caib.sistrages.rest.api.interna.RPlugin;
-import es.caib.sistrages.rest.api.interna.RValorParametro;
-import es.caib.sistrages.rest.api.interna.RValoresDominio;
-import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -62,6 +47,8 @@ public class SistragesMock {
 	public final static String ID_TRAMITE = "CAIB.TESTS.TEST-JUNIT";
 	/** Id tramite test tipo servicio. */
 	public final static String ID_TRAMITE_SERVICIO = "CAIB.TESTS.TEST-SERVICIO";
+	/** Si el trámite acaba en este sufijo es en modo FH (se adapta definición trámite: quitar pagos). */
+	public static final String SUFIJO_TRAMITE_FH =  "_FH";
 	/** Version tramite test. */
 	public final static int VERSION_TRAMITE = 1;
 	/** Id tramite CP test. */
@@ -249,6 +236,9 @@ public class SistragesMock {
 		enviosRemoto.add(er);
 		e.setEnviosRemoto(enviosRemoto);
 
+		// ACCESO FH
+		e.setModoFuncionarioHabilitado(true);
+
 		return e;
 
 	}
@@ -311,6 +301,13 @@ public class SistragesMock {
 		plugin.setPropiedades(crearListaParametros());
 		plugins.add(plugin);
 
+		plugin = new RPlugin();
+		plugin.setTipo(TypePluginEntidad.DIGITALIZACION.toString());
+		plugin.setClassname("es.caib.sistra2.commons.plugins.digitalizacion.mock.ComponenteDigitalizacionPluginMock");
+		plugin.setPrefijoPropiedades(ComponenteDigitalizacionPluginMock.DIGITALIZACION_BASE_PROPERTY + ComponenteDigitalizacionPluginMock.IMPLEMENTATION_BASE_PROPERTY);
+		plugin.setPropiedades(crearListaParametros());
+		plugins.add(plugin);
+
 		return plugins;
 	}
 
@@ -359,9 +356,14 @@ public class SistragesMock {
 		return vd;
 	}
 
-	public static RVersionTramite crearVersionTramite(final String idTramite) {
+	public static RVersionTramite crearVersionTramite(final String pIdTramite) {
 
 		try {
+			boolean fh = pIdTramite.endsWith(SUFIJO_TRAMITE_FH);
+			String idTramite = pIdTramite;
+			if (fh) {
+				idTramite = idTramite.substring(0, idTramite.length() - SUFIJO_TRAMITE_FH.length());
+			}
 			final InputStream inputStream = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream("test-files/" + idTramite + ".json");
 			final StringWriter writer = new StringWriter();
@@ -370,6 +372,37 @@ public class SistragesMock {
 			final ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			final RVersionTramite defTramite = mapper.readValue(json, RVersionTramite.class);
+
+			// Eliminamos anexo xml y paso pago del test (no soportado para FH)
+			if (fh) {
+				defTramite.setIdentificador(pIdTramite);
+				int indicePago = -1;
+				for (int i = 0; i < defTramite.getPasos().size(); i++) {
+					TypePaso typePaso = TypePaso.fromString(defTramite.getPasos().get(i).getTipo());
+					if (typePaso == TypePaso.PAGAR) {
+						indicePago = i;
+					}
+					if (typePaso == TypePaso.ANEXAR) {
+						RPasoTramitacionAnexar pasoAnexar = (RPasoTramitacionAnexar) defTramite.getPasos().get(i);
+						int indiceAnexoXML = -1;
+						for (int j = 0; j < pasoAnexar.getAnexos().size(); j++) {
+							if (pasoAnexar.getAnexos().get(j).getIdentificador().equals("ANE-XML")) {
+								indiceAnexoXML = j;
+								break;
+							}
+						}
+						if (indiceAnexoXML != -1) {
+							pasoAnexar.getAnexos().remove(indiceAnexoXML);
+						}
+					}
+
+
+				}
+				if (indicePago != -1) {
+					defTramite.getPasos().remove(indicePago);
+				}
+			}
+
 			defTramite.setIdEntidad(DIR3_ENTIDAD);
 			defTramite.setTimestamp("" + System.currentTimeMillis());
 			return defTramite;

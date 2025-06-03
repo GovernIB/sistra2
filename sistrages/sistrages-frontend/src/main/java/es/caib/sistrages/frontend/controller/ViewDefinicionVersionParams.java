@@ -13,7 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -587,7 +587,8 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	/**
 	 * Consultar Script.
 	 *
-	 * @param iScript
+	 * @param tipoScript tipo script
+	 * @param idScript   id script
 	 */
 	public void consultarScript(final String tipoScript, final Long idScript) {
 
@@ -689,7 +690,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 470);
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1100, 600);
 	}
 
 	/**
@@ -716,7 +717,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 			 */
 
 		}
-		RequestContext.getCurrentInstance().execute("clickUpdate();");
+		PrimeFaces.current().executeScript("clickUpdate();");
 	}
 
 	/**
@@ -1103,9 +1104,8 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	// ------- VIEW DE PASO DE DOCUMENTO ------------------------------
 
 	/**
-	 * Consultar Script.
+	 * Editar Script lista dinamica.
 	 *
-	 * @param iScript
 	 */
 	public void editarScriptListaDinamica() {
 
@@ -1221,7 +1221,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(),
 				entidadService.loadEntidadByArea(area.getCodigo()).getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 1050, 685);
+		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 1100, 670);
 	}
 
 	/**
@@ -1460,7 +1460,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 700, 450);
+		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 750, 350);
 	}
 
 	/**
@@ -1481,8 +1481,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 	public void returnDialogPrevisualizar(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-		RequestContext requestContext = RequestContext.getCurrentInstance();
-		requestContext.update(":workDefinicionVersion");
+		PrimeFaces.current().ajax().update(":workDefinicionVersion");
 
 	}
 
@@ -1814,7 +1813,8 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	 */
 	private void setExpandedRecursively(final TreeNode node, final boolean expanded) {
 		if (node != null) {
-			for (final TreeNode child : node.getChildren()) {
+			for (final Object object : node.getChildren()) {
+				final TreeNode child = (TreeNode) object;
 				setExpandedRecursively(child, expanded);
 			}
 			node.setExpanded(expanded);
@@ -1956,7 +1956,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		inicializarArbol();
 
 		if (arbol.getParent().getData().equals("Root")) {
-			root.getChildren().get(Integer.parseInt(arbol.getRowKey())).setSelected(true);
+			((TreeNode)root.getChildren().get(Integer.parseInt(arbol.getRowKey()))).setSelected(true);
 		}
 
 		OpcionArbol opArbol = (OpcionArbol) arbol.getData();
@@ -2009,7 +2009,9 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 			if (!"root".equals(arbol.getRowKey())) {
 				final OpcionArbol opcionArbol = (OpcionArbol) arbol.getData();
-				final DefaultMenuItem item = new DefaultMenuItem(opcionArbol.getName());
+				final DefaultMenuItem item = new DefaultMenuItem();
+				item.setAriaLabel(opcionArbol.getName());
+				item.setValue(opcionArbol.getName());
 				item.setProcess("@this");
 				item.setDelay("500");
 				item.setUpdate("@form :workDefinicionVersion :formArbol:arbol");
@@ -2018,19 +2020,19 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 					mpan = arbol;
 					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan())}");
 
-					breadCrumb.addElement(item);
+					breadCrumb.getElements().add(item);
 					conti++;
 				} else if (conti == 1) {
 					mpan1 = arbol;
 					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan1())}");
 
-					breadCrumb.addElement(item);
+					breadCrumb.getElements().add(item);
 					conti++;
 				} else {
 					mpan2 = arbol;
 					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan2())}");
 
-					breadCrumb.addElement(item);
+					breadCrumb.getElements().add(item);
 				}
 
 			} else {
@@ -2050,7 +2052,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		if (menumodel != null && !menumodel.getElements().isEmpty()) {
 			res = new DefaultMenuModel();
 			for (final MenuElement item : menumodel.getElements()) {
-				res.addElement(item);
+				res.getElements().add(item);
 			}
 		}
 		return res;

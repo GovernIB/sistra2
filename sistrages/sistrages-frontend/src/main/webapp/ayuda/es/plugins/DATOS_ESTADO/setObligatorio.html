@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_ESTADO.setObligatorio(obligatorio)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_ESTADO">DATOS_ESTADO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_ESTADO&metodo=setObligatorio">setObligatorio</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setObligatorio(obligatorio): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite indicar si un campo es obligatorio.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+    	<li><b>obligatorio</b>: parámetro de tipo booleano, que si es true indica que el campo es obligatorio.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Por ejemplo, si queremos que un campo sea obligatorio para garantizar que el usuario proporcione un valor antes de continuar, haríamos lo siguiente:
+</p>
+<p class="codigoScript">
+DATOS_ESTADO.setObligatorio(true);
+</p>
+<p>El resultado sería que el campo se marcaría como obligatorio, y el formulario no podría enviarse sin que se complete dicho campo.
+</p>
+<p>Debemos tener en cuenta que el check obligatorio no debe estar marcado, ya que tiene preferencia y el script no surtiría efecto.
+</p>
+</body>
+</html>

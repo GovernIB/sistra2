@@ -184,7 +184,7 @@ public class DialogFormularioExterno extends DialogControllerBase {
 		params.put(TypeParametroVentana.AREA.toString(), this.area);
 		params.put(TypeParametroVentana.ID.toString(),
 				String.valueOf(this.data.getConfiguracionAutenticacion().getCodigo()));
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 265);
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class DialogFormularioExterno extends DialogControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.AREA.toString(), this.area);
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 265);
 
 	}
 

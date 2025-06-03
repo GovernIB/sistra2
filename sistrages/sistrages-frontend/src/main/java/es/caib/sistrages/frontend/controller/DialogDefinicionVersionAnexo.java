@@ -1,6 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
@@ -92,6 +92,8 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	private String errorCopiar;
 
+	private boolean mostrarConvertirPDF;
+
     /**
 	 * Obtiene el valor de permiteEditar.
 	 *
@@ -119,6 +121,11 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		}
 
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
+
+		final String propConvertirPDF = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_CONVERTIR_PDF.toString());
+		mostrarConvertirPDF = propConvertirPDF != null && BooleanUtils.toBoolean(propConvertirPDF);
+
 
 	}
 
@@ -507,6 +514,12 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			}
 		}
 
+		boolean soloPDF = TypeExtension.PERSONALIZADAS.equals(data.getExtensionSeleccion()) && "pdf".equals(StringUtils.trim(data.getExtensiones()));
+		if( this.isRequiereFirma() && ! soloPDF){
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.firma.no.pdf"));
+			return false;
+		}
+
 		return true;
 	}
 
@@ -679,5 +692,13 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		if(!isRequiereFirma()) {
 			this.data.setDebeValidarFirmantes(false);
 		}
+	}
+
+	public boolean isMostrarConvertirPDF() {
+		return mostrarConvertirPDF;
+	}
+
+	public void setMostrarConvertirPDF(boolean mostrarConvertirPDF) {
+		this.mostrarConvertirPDF = mostrarConvertirPDF;
 	}
 }

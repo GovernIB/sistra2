@@ -2,13 +2,7 @@ package es.caib.sistramit.core.service.component.flujo;
 
 import java.util.Map;
 
-import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
-import es.caib.sistramit.core.api.model.flujo.DetallePasos;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
+import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.service.model.system.FlujoTramitacionCacheIntf;
@@ -37,15 +31,15 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 *
 	 */
 	String iniciarTramite(UsuarioAutenticadoInfo usuarioAutenticado, String idTramite, int version, String idioma,
-			String idTramiteCatalogo, final boolean servicioCatalogo, String urlInicio,
-			Map<String, String> parametrosInicio);
+						  String idTramiteCatalogo, boolean servicioCatalogo, String urlInicio,
+						  Map<String, String> parametrosInicio);
 
 	/**
 	 * Carga un trámite existente de persistencia.
 	 *
 	 * @param idSesionTramitacion
 	 *                                   Id sesión de tramitación
-	 * @param usuarioAutenticadoInfo
+	 * @param usuarioAutenticado
 	 *                                   info usuario
 	 */
 	void cargarTramite(String idSesionTramitacion, UsuarioAutenticadoInfo usuarioAutenticado);

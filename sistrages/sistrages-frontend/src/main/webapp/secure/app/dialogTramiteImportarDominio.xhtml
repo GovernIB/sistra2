@@ -136,7 +136,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25 va-top, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="w25 va-top, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual']}:" />
 
@@ -188,11 +188,11 @@
 								 paginator="false">
 
 								 <!-- Columnas -->
-								 <p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
+								 <p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell" sortBy="#{td.codigo}">
 								 	<h:outputText value="#{td.codigo}" />
 							     </p:column>
 
-							     <p:column headerText="#{msg['dialogDominio.headerParametros.valor']}" class="ui-panelgrid-cell">
+							     <p:column headerText="#{msg['dialogDominio.headerParametros.valor']}" class="ui-panelgrid-cell" sortBy="#{td.valor}">
 							     	<h:outputText value="#{td.valor}" />
 							     </p:column>
 				    </p:dataTable>
