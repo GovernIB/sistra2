@@ -1,0 +1,11 @@
+--Se cambia PIN por MOV y si ya existe MOV y PIN se elimina PIN
+UPDATE STG_VERTRA
+SET VTR_AUTMET = CASE
+    WHEN VTR_AUTMET LIKE '%MOV%' THEN
+        TRIM(BOTH ';' FROM REPLACE(REPLACE(VTR_AUTMET, 'PIN;', ''), ';PIN', ''))
+    ELSE
+        REPLACE(VTR_AUTMET, 'PIN', 'MOV')
+END
+WHERE VTR_AUTMET LIKE '%PIN%';
+
+COMMIT;

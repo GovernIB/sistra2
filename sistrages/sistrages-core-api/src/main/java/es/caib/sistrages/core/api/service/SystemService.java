@@ -2,6 +2,8 @@ package es.caib.sistrages.core.api.service;
 
 import es.caib.sistrages.core.api.model.Sesion;
 
+import java.util.Properties;
+
 /**
  * La interface SystemService.
  */
@@ -79,4 +81,5 @@ public interface SystemService {
 	 */
 	public void updateSesionPropiedades(String pUserName, String pPropiedades);
 
+	Properties obtenerPropiedadesLocales();
 }

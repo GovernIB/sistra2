@@ -154,7 +154,7 @@
 				        <h:outputText value="#{td.elemento}" />
 				    </p:column>
 
-					<p:column headerText="#{msg['dialogTramiteScripts.headerComponente']}">
+					<p:column headerText="#{msg['dialogTramiteScripts.headerComponente']}" sortFunction="#{dialogTramiteScripts.sortByComponent}" sortBy="#{td}">
 				        <h:outputText value="#{msg['dialogTramiteScripts.typeComponente.' += td.componente]}" rendered="#{not empty td.componente}" />
 				        <h:outputText value=" : #{td.idComponente}" rendered="#{not empty td.idComponente}" />
 				        <h:outputText value="#{td.componente}" rendered="#{empty td.componente}" />

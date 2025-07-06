@@ -175,7 +175,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	@Override
 	public byte[] formatear(final byte[] ixml, final List<String> paginasRellenadas, final byte[] plantilla,
 			final String idioma, final RFormularioInterno defFormInterno, final String tituloProcedimiento,
-			final String tituloTramite, final String siaProcedimiento, final String codigoDir3Responsable, final boolean funcionarioHabilitado) {
+			final String tituloTramite, final String siaProcedimiento, final String codigoDir3Responsable,
+			final boolean funcionarioHabilitado, final boolean formularioUnico) {
 
 
 		// TODO FH --- VER QUE MARCA SE PONE PARA INDICAR QUE SE HA TRAMITADO POR FH
@@ -200,7 +201,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			cabecera.setTitulo(tituloProcedimiento);
 		}
 
-		if (mostrarSubtitulo) {
+		// - Subtitulo (está habilitado subtitulo y no es formulario único)
+		if (mostrarSubtitulo && !formularioUnico) {
 			cabecera.setSubtitulo(defFormInterno.getTitulo());
 		}
 

@@ -1,12 +1,8 @@
 package es.caib.sistrahelp.frontend.controller;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,12 +14,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.swing.SortOrder;
 
 import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.types.TypeIniciadoPor;
+import es.caib.sistrahelp.core.api.service.EventoService;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
 
@@ -32,7 +27,6 @@ import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
-import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
@@ -59,6 +53,9 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	@Inject
 	private ConfiguracionService configuracionService;
+
+	@Inject
+	private EventoService eventoService;
 
 	/** Paginacion */
 	private Integer paginacion;
@@ -132,13 +129,11 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false);
 
 		// cargamos los eventos quitando el de purga
-		tiposEventos = new ArrayList<>();
-		for (final TypeEvento ev : TypeEvento.values()) {
-			if (!TypeEvento.PROCESO_PURGA.equals(ev) && !TypeEvento.INV_EJE.equals(ev)
-					&& !TypeEvento.INV_REQ.equals(ev)) {
-				tiposEventos.add(ev);
-			}
-		}
+		tiposEventos = eventoService.getTiposEvento(entidad);
+		tiposEventos.removeAll(Arrays.asList(TypeEvento.PROCESO_PURGA, TypeEvento.INV_EJE, TypeEvento.INV_REQ));
+
+		filtros.setTiposEventos(new ArrayList<>(tiposEventos));
+
 
 		if (idSesionParam != null && !idSesionParam.isEmpty()) {
 			filtros.setIdSesionTramitacion(idSesionParam);

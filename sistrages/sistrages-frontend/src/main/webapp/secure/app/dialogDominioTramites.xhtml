@@ -34,7 +34,42 @@
 		<f:viewParam name="ID" value="#{dialogDominioTramites.id}"/>
 		<f:viewAction action="#{dialogDominioTramites.init}" />
 	</f:metadata>
+
+	<script type="text/javascript">
+		function setHeight(){
+			// Altura de la pantalla
+			var altura = window.innerHeight;
+			// Altura de la tabla
+			var alturaDatatable = altura  - 85;
+			// Altura del scrollable body
+			var alturaScrollableBody = alturaDatatable - 85;
+
+			console.log("altura: " + altura);
+
+			console.log("alturaDatatable: " + alturaDatatable);
+
+			$('#dialogFuenteDatos\\:dataTableDatos').height(alturaDatatable);
+			$('#dialogFuenteDatos\\:dataTableDatos .ui-datatable-scrollable-body').height(alturaScrollableBody);
+		}
+
+		jQuery(document).ready(function() {
+			$(window).resize(function () {
+				setTimeout(function () {
+					setHeight();
+				}, 100);
+			});
+
+			setTimeout(function () {
+				setHeight();
+			}, 10);
+		});
+	</script>
+
 	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
+
+
+
+
 			<h:outputScript >
 
 			  var arrayCm = [];
@@ -146,7 +181,7 @@
 				<f:facet name="left">
 					<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 						<p:inputText placeholder="#{msg['botones.buscar']}" value="#{dialogDominioTramites.filtro}" onblur="this.value = this.value.trim();"/>
-						<p:commandButton icon="fa fa-search" actionListener="#{dialogDominioTramites.filtrar()}" process="panelFiltro" update="growlDialog dataTableDatos" />
+						<p:commandButton icon="fa fa-search" actionListener="#{dialogDominioTramites.filtrar()}" process="panelFiltro" update="growlDialog dataTableDatos"  oncomplete="setHeight()"/>
 					</h:panelGrid>
 				</f:facet>
 			</p:toolbar>

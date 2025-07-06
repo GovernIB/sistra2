@@ -7,6 +7,7 @@ import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +32,8 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
+
+	private List<TypeEvento> tiposEventos = new ArrayList<>();
 
 	private TypeIniciadoPor iniciadoPor;
 	private String excepcion;
@@ -128,6 +131,8 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.errorTipo = pFiltroAuditoriaTramitacion.errorTipo;
 			this.tipoProblemaIncidencia = pFiltroAuditoriaTramitacion.tipoProblemaIncidencia;
 			this.rolAcceso = pFiltroAuditoriaTramitacion.rolAcceso;
+
+			this.tiposEventos = pFiltroAuditoriaTramitacion.getTiposEventos();
 		}
 	}
 
@@ -405,4 +410,11 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 		this.rolAcceso = rolAcceso;
 	}
 
+	public List<TypeEvento> getTiposEventos() {
+		return tiposEventos;
+	}
+
+	public void setTiposEventos(List<TypeEvento> tiposEventos) {
+		this.tiposEventos = tiposEventos;
+	}
 }

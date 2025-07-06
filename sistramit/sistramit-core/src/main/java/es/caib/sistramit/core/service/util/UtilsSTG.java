@@ -787,4 +787,33 @@ public final class UtilsSTG {
 		}
 		return pago;
 	}
+
+	/**
+	 * Verifica si el paso solo tiene 1 formulario.
+	 * @param idPaso id paso
+	 * @param definicionTramite Definición trámite
+	 * @return true si paso tiene un único formulario, false en caso de que tenga varios formularios.
+	 */
+	public static boolean isFormularioUnico(String idPaso, DefinicionTramiteSTG definicionTramite) {
+		boolean res = true;
+		RPasoTramitacion paso = UtilsSTG.devuelveDefinicionPaso(idPaso, definicionTramite);
+		final TypePaso tipoPaso = TypePaso.fromString(paso.getTipo());
+		switch (tipoPaso) {
+			case RELLENAR:
+				RPasoTramitacionRellenar pasoRellenar = (RPasoTramitacionRellenar) paso;
+				if (pasoRellenar.getFormularios() != null && pasoRellenar.getFormularios().size() > 1) {
+					res = false;
+				}
+				break;
+			case CAPTURAR:
+				// Captura: 1 unico formulario
+				// TODO: PASO PENDIENTE TODAVIA DE IMPLEMENTAR
+				res = true;
+				break;
+			default:
+				throw new ErrorConfiguracionException(
+						"S'ha indicat un tipus de passa que no té formularis: " + paso.getTipo());
+		}
+		return res;
+	}
 }

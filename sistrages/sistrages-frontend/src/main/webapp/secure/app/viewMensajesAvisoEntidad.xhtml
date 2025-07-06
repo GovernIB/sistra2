@@ -157,7 +157,7 @@
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText onblur="this.value = this.value.trim();" placeholder="#{msg['botones.buscar']}" value="#{viewMensajesAvisoEntidad.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewMensajesAvisoEntidad.filtrar()}" process="panelFiltro" update="growl dataTable" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewMensajesAvisoEntidad.filtrar()}" process="panelFiltro" update="growl dataTable" oncomplete="setHeight()"/>
 	           		</h:panelGrid>
 		        </f:facet>
 

@@ -100,6 +100,19 @@
 
 
 
+.imc--annexes[data-lectura="s"] a { color: #000; cursor: default; pointer-events: none; }
+
+.imc--annexes[data-lectura="s"] a:hover,
+.imc--annexes[data-lectura="s"] a:focus { color: #000; }
+
+.imc--annexes[data-lectura="s"] .imc--ann > ul a.imc--doc-obri:hover,
+.imc--annexes[data-lectura="s"] .imc--ann > ul a.imc--doc-obri:focus { color: #000; }
+
+.imc--annexes[data-lectura="s"] .imc--plantilla,
+.imc--annexes[data-lectura="s"] button.imc--esborra { display: none; pointer-events: none; }
+
+
+
 /* icones */
 
 .imc--icones { width: 100%; margin-top: 2em; }

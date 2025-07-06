@@ -42,6 +42,9 @@ public class RFiltroEventoAuditoria {
 	@ApiModelProperty(value = "Tipo Evento")
 	private String evento;
 
+	@ApiModelProperty(value = "Lista Tipos Eventos")
+	private List<String> tiposEventos;
+
 	@ApiModelProperty(value = "Iniciado Por")
 	private String iniciadoPor;
 
@@ -283,4 +286,11 @@ public class RFiltroEventoAuditoria {
 		this.rolAcceso = rolAcceso;
 	}
 
+	public List<String> getTiposEventos() {
+		return tiposEventos;
+	}
+
+	public void setTiposEventos(List<String> tiposEventos) {
+		this.tiposEventos = tiposEventos;
+	}
 }

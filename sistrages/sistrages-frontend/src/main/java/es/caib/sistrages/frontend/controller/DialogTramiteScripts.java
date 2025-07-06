@@ -19,6 +19,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.StreamedContent;
 
 import es.caib.sistrages.core.api.model.LiteralScript;
@@ -239,5 +240,61 @@ public class DialogTramiteScripts extends DialogControllerBase {
 			}
 		});
 	}
+
+
+//	<h:outputText value="#{msg['dialogTramiteScripts.typeComponente.' += td.componente]}" rendered="#{not empty td.componente}" />
+//	<h:outputText value=" : #{td.idComponente}" rendered="#{not empty td.idComponente}" />
+//	<h:outputText value="#{td.componente}" rendered="#{empty td.componente}" />
+	public int sortByComponent(Object o1, Object o2, SortMeta sortMeta){
+
+		// componente | : idComponente |componente
+
+		if (o1 instanceof ScriptInfo && o2 instanceof ScriptInfo) {
+			ScriptInfo s1 = (ScriptInfo) o1;
+			ScriptInfo s2 = (ScriptInfo) o2;
+
+			if (s1.getComponente() == null && s2.getComponente() == null) {
+				return 0;
+			} else if (s1.getComponente() == null) {
+				return -1;
+			} else if (s2.getComponente() == null) {
+				return 1;
+			} else {
+//				return s1.getComponente().getNombre().compareTo(s2.getComponente().getNombre());
+			}
+
+			String literal1, literal2 = "";
+
+			if(s1.getComponente() != null){
+				literal1 = UtilJSF.getLiteral("dialogTramiteScripts.typeComponente." + s1.getComponente().toString());
+			} else {
+				literal1 = "";
+			}
+
+			if(s1.getIdComponente() != null && !s1.getIdComponente().isEmpty()){
+				literal1 += " : " + s1.getIdComponente();
+			}
+
+
+
+			if(s2.getComponente() != null){
+				literal2 = UtilJSF.getLiteral("dialogTramiteScripts.typeComponente." + s2.getComponente().toString());
+			} else {
+				literal2 = "";
+			}
+
+			if(s2.getIdComponente() != null && !s2.getIdComponente().isEmpty()){
+				literal2 += " : " + s2.getIdComponente();
+			}
+
+
+
+			return  literal1.compareTo(literal2);
+		}
+
+
+		return 0;
+	}
+
 
 }

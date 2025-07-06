@@ -1,15 +1,6 @@
 package es.caib.sistrahelp.frontend.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -93,12 +84,16 @@ public class SessionBean {
 	private int indexUmbralAR = -1;
 
 	/** Lista de areas de cada perfil. **/
-	private List<Area> listaAreasHelpDesk = new ArrayList<>();
-	private List<Area> listaAreasHelpSupervisor = new ArrayList<>();
+//	private List<Area> listaAreasHelpDesk = new ArrayList<>();
+//	private List<Area> listaAreasHelpSupervisor = new ArrayList<>();
+
+	private Map<TypeRoleAcceso, List<Area>> listaAreasPorRol = new HashMap<>();
 
 	/** Lista de entidades segun cada rol. **/
-	private List<Entidad> listaEntidadesHelpDesk;
-	private List<Entidad> listaEntidadesHelpSupervisor;
+
+//	private List<Entidad> listaEntidadesHelpDesk;
+//	private List<Entidad> listaEntidadesHelpSupervisor;
+	private Map<TypeRoleAcceso, List<Entidad>> listaEntidadesPorRol = new HashMap<>();
 
 	/** Lista de entidades activa en ese momento. **/
 	private List<Entidad> listaEntidades;
@@ -191,34 +186,33 @@ public class SessionBean {
 		rolesList = securityService.getRoles();
 
 		// Lista de areas según cada rol
-		if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
-			listaAreasHelpDesk = securityService.obtenerAreas(TypeRoleAcceso.HELPDESK);
-			// Si no tiene areas asociadas a helpdesk, quitar el rol
-			if (listaAreasHelpDesk.isEmpty()) {
-				rolesList.remove(TypeRoleAcceso.HELPDESK);
-			}
-		}
-		if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
-			listaAreasHelpSupervisor = securityService.obtenerAreas(TypeRoleAcceso.SUPERVISOR_ENTIDAD);
-			if (listaAreasHelpSupervisor.isEmpty()) {
-				rolesList.remove(TypeRoleAcceso.SUPERVISOR_ENTIDAD);
+		for(TypeRoleAcceso rolSTH : TypeRoleAcceso.values()){
+			if (rolesList.contains(rolSTH)) {
+				List<Area> listaAreasHelpDesk = securityService.obtenerAreas(rolSTH);
+				listaAreasPorRol.put(rolSTH, listaAreasHelpDesk);
+
+				// Si no tiene areas asociadas a helpdesk, quitar el rol
+				if (listaAreasHelpDesk.isEmpty()) {
+					rolesList.remove(rolSTH);
+				}
 			}
 		}
 
+
 		// Lista de entidades según cada rol
-		if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
-			listaEntidadesHelpDesk = obtenerEntidades(this.listaAreasHelpDesk);
-		}
-		if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
-			listaEntidadesHelpSupervisor = obtenerEntidades(this.listaAreasHelpSupervisor);
+		for(TypeRoleAcceso rolSTH : TypeRoleAcceso.values()){
+			if (rolesList.contains(rolSTH)) {
+				List<Entidad> listaEntidadesHelpDesk = obtenerEntidades(this.listaAreasPorRol.get(rolSTH));
+				listaEntidadesPorRol.put(rolSTH, listaEntidadesHelpDesk);
+			}
 		}
 
 		// Limpieza de entidades (si ya están en nivel supervisor, se deben quitar del
 		// helpdesk). Si se queda sin entidades el helpDesk, se borra el permiso.
-		if (listaEntidadesHelpDesk != null && listaEntidadesHelpSupervisor != null) {
+		if (listaEntidadesPorRol.get(TypeRoleAcceso.HELPDESK) != null && listaEntidadesPorRol.get(TypeRoleAcceso.SUPERVISOR_ENTIDAD) != null) {
 			final List<Entidad> entidadesBorrarHelpDesk = new ArrayList<>();
-			for (final Entidad ent : listaEntidadesHelpDesk) {
-				for (final Entidad ent2 : listaEntidadesHelpSupervisor) {
+			for (final Entidad ent : listaEntidadesPorRol.get(TypeRoleAcceso.HELPDESK)) {
+				for (final Entidad ent2 : listaEntidadesPorRol.get(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
 					if (ent2.getCodigoDIR3().equals(ent.getCodigoDIR3())) {
 						entidadesBorrarHelpDesk.add(ent);
 					}
@@ -226,10 +220,10 @@ public class SessionBean {
 			}
 
 			if (!entidadesBorrarHelpDesk.isEmpty()) {
-				listaEntidadesHelpDesk.removeAll(entidadesBorrarHelpDesk);
+				listaEntidadesPorRol.get(TypeRoleAcceso.HELPDESK).removeAll(entidadesBorrarHelpDesk);
 			}
 
-			if (listaEntidadesHelpDesk.isEmpty()) {
+			if (listaEntidadesPorRol.get(TypeRoleAcceso.HELPDESK).isEmpty()) {
 				rolesList.remove(TypeRoleAcceso.HELPDESK);
 			}
 		}
@@ -241,6 +235,8 @@ public class SessionBean {
 				activeRole = TypeRoleAcceso.SUPERVISOR_ENTIDAD;
 			} else if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
 				activeRole = TypeRoleAcceso.HELPDESK;
+			} else if(rolesList.contains(TypeRoleAcceso.PERSONAL_CAU)) {
+				activeRole = TypeRoleAcceso.PERSONAL_CAU;
 			} else {
 				UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
 				return;
@@ -320,11 +316,10 @@ public class SessionBean {
 
 	/** Método que carga las entidades ya las areas. **/
 	private void cargarDatos() {
-		if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
-			listaEntidades = listaEntidadesHelpSupervisor;
-		} else if (activeRole == TypeRoleAcceso.HELPDESK) {
-			listaEntidades = listaEntidadesHelpDesk;
-		} else {
+
+		listaEntidades = listaEntidadesPorRol.get(activeRole);
+
+		if (listaEntidades == null) {
 			UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
 			return;
 		}
@@ -333,11 +328,13 @@ public class SessionBean {
 			if(entidad == null) {
 				entidad = listaEntidades.get(0);
 			}
-			if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
-				listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpSupervisor, entidad);
-			} else {
-				listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpDesk, entidad);
-			}
+
+			listaAreasEntidad = obtenerAreasEntidad(listaAreasPorRol.get(activeRole), entidad);
+//			if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
+//				listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpSupervisor, entidad);
+//			} else {
+//				listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpDesk, entidad);
+//			}
 		} else {
 			UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
 			return;
@@ -460,11 +457,14 @@ public class SessionBean {
 		for (final Entidad e : listaEntidades) {
 			if (e.getCodigoDIR3().equals(idEntidad)) {
 				entidad = e;
-				if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
-					listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpSupervisor, entidad);
-				} else {
-					listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpDesk, entidad);
-				}
+
+				listaAreasEntidad = obtenerAreasEntidad(listaAreasPorRol.get(activeRole), entidad);
+
+//				if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
+//					listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpSupervisor, entidad);
+//				} else {
+//					listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpDesk, entidad);
+//				}
 			}
 		}
 		// Cambio logo
@@ -488,14 +488,30 @@ public class SessionBean {
 			idEntidad = entidad.getCodigo();
 		}
 
-		for (final TypeOpcionMenu opcion : TypeOpcionMenu.values()) {
-			if (!opcion.name().equals("ALERTAS")
-					|| (opcion.name().equals("ALERTAS") && this.activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+
+		if( TypeRoleAcceso.PERSONAL_CAU.equals(activeRole)){
+
+			List<TypeOpcionMenu> opcionesCau = Arrays.asList(TypeOpcionMenu.AUDITORIA_TRAMITES, TypeOpcionMenu.CUADRO_MANDO);
+
+			for (final TypeOpcionMenu opcion : opcionesCau) {
 				item = new DefaultMenuItem();
 				item.setAriaLabel(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
 				item.setValue(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
 				item.setUrl(UtilJSF.getContextPath()  + UtilJSF.getUrlOpcionMenu(opcion, idEntidad));
 				model.getElements().add(item);
+			}
+
+		} else {
+
+			for (final TypeOpcionMenu opcion : TypeOpcionMenu.values()) {
+				if (!opcion.name().equals("ALERTAS")
+						|| (opcion.name().equals("ALERTAS") && this.activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+					item = new DefaultMenuItem();
+					item.setAriaLabel(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+					item.setValue(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+					item.setUrl(UtilJSF.getContextPath() + UtilJSF.getUrlOpcionMenu(opcion, idEntidad));
+					model.getElements().add(item);
+				}
 			}
 		}
 
@@ -720,7 +736,7 @@ public class SessionBean {
 		// actualizamos propiedades de sesión
 		propiedad = new Propiedad();
 		propiedad.setCodigo("entidad");
-		propiedad.setValor(entidad.getCodigo().toString());
+		propiedad.setValor(entidad.getCodigoDIR3());
 
 		if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
 			propiedades.removeIf(prop -> prop.getCodigo().equals("entidad"));

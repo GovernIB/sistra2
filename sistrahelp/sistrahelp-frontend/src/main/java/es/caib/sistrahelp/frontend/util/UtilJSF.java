@@ -2,6 +2,7 @@ package es.caib.sistrahelp.frontend.util;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -444,6 +445,7 @@ public final class UtilJSF {
 			switch (role) {
 			case SUPERVISOR_ENTIDAD:
 			case HELPDESK:
+			case PERSONAL_CAU:
 				url = getUrlOpcionMenu(getDefaultOpcion(), idEntidad);
 				break;
 			default:
@@ -557,7 +559,7 @@ public final class UtilJSF {
 	public static void verificarAcceso() {
 		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionBean");
-		if (sb.getActiveRole() != TypeRoleAcceso.HELPDESK && sb.getActiveRole() != TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
+		if ( ! Arrays.asList(TypeRoleAcceso.values()).contains(sb.getActiveRole() ) ) {
 			throw new FrontException("No se está accediendo con perfil adecuado");
 		}
 	}

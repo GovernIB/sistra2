@@ -9,6 +9,7 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeUser" var="TypeUser" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeRoleUser" var="TypeRoleUser" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeRolePermisos" var="TypeRolePermisos" />
 
@@ -112,14 +113,14 @@
                     	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.add("d-none");
+						listaCm[i].classList.add("d-none");
 					}
                   }else{
                   	for(i=0;i&lt;listaCm.length;i++){
                   		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.remove("d-none");
+						listaCm[i].classList.remove("d-none");
 					}
 					if(arrayCm.length&gt;1){
 						arrayCm.pop();
@@ -141,16 +142,24 @@
 
 				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
 
+					<p:outputLabel for="tipoUsuario" value="#{msg['dialogRolesPermisos.headerTipoUsuario']}" />
+					<p:selectOneMenu id="tipoUsuario" value="#{dialogRolesPermisos.data.tipoUsuario}" style="width:90%" required="true" disabled="#{dialogRolesPermisos.consulta}">
+						<f:selectItems value="#{TypeUser.ALL_VALUES}" var="tipoUsuario" itemLabel="#{msg['typeUser.' += tipoUsuario]}" />
+						<p:ajax event="change"
+								listener="#{dialogRolesPermisos.tipoUsuarioChanged}" update="@form"/>
+					</p:selectOneMenu>
+
 					<p:outputLabel for="tipo" value="#{msg['dialogRolesPermisos.headerTipo']}" />
-					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:90%" required="true" disabled="#{dialogRolesPermisos.consulta}">
+					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:90%" required="true" disabled="#{dialogRolesPermisos.consulta}" >
 					     <f:selectItems value="#{TypeRoleUser.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeRoleUser.' += tipo]}" />
 					</p:selectOneMenu >
 
 					<p:outputLabel for="codigo" value="#{msg['dialogRolesPermisos.headerCodigo']}" />
 					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" onblur="this.value = this.value.trim();" readonly="#{dialogRolesPermisos.consulta}" required="true" style="width:95%" maxlength="100"/>
 
-					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
-					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" style="width:90%"  converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
+					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" rendered="#{dialogRolesPermisos.visible.area}"/>
+					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" style="width:90%"  converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}"
+									 rendered="#{dialogRolesPermisos.visible.area}">
             			<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.identificador}" itemValue="#{area}" />
         			</p:selectOneMenu>
 
@@ -160,8 +169,9 @@
 					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}:"/>
 					<p:outputLabel value=" " />
 
-					<p:outputLabel value="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;#{msg['dialogRolesPermisos.headerGestorTramites']}" escape="false"/>
-					<p:panelGrid>
+					<p:outputLabel value="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;#{msg['dialogRolesPermisos.headerGestorTramites']}" escape="false"
+								   rendered="#{dialogRolesPermisos.visible.permisosGestorTramites}"/>
+					<p:panelGrid rendered="#{dialogRolesPermisos.visible.permisosGestorTramites}">
 						<p:selectOneButton id="gestor" value="#{dialogRolesPermisos.gestor}">
 							<f:selectItem itemValue="#{TypeRolePermisos.ADMINISTRADOR_AREA}" itemLabel="#{msg['typeRolePermisos.A']}" disabled="#{dialogRolesPermisos.consulta}"/>
 							<f:selectItem itemValue="#{TypeRolePermisos.DESARROLLADOR_AREA}" itemLabel="#{msg['typeRolePermisos.M']}" disabled="#{dialogRolesPermisos.consulta}"/>
@@ -171,9 +181,14 @@
 
 					<p:outputLabel value="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;#{msg['dialogRolesPermisos.headerHelpdesk']}" escape="false"/>
 					<p:panelGrid>
-						<p:selectOneButton id="help" value="#{dialogRolesPermisos.helpdesk}">
+						<p:selectOneButton id="help" value="#{dialogRolesPermisos.helpdesk}" rendered="#{!dialogRolesPermisos.visible.helpdeskCau}">
 							<f:selectItem itemValue="#{TypeRolePermisos.HELPDESK}" itemLabel="#{msg['typeRolePermisos.H']}" disabled="#{dialogRolesPermisos.consulta}"/>
 						</p:selectOneButton>
+
+						<p:selectOneButton id="helpCau" value="#{dialogRolesPermisos.helpdesk}" rendered="#{dialogRolesPermisos.visible.helpdeskCau}">
+							<f:selectItem itemValue="#{TypeRolePermisos.HELPDESK}" itemLabel="#{msg['typeRolePermisos.HCAU']}" disabled="#{dialogRolesPermisos.consulta}"/>
+						</p:selectOneButton>
+
 					</p:panelGrid>
 				</h:panelGrid>
 

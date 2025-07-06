@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import es.caib.sistrahelp.core.api.model.*;
 import org.apache.commons.codec.binary.Base64;
@@ -837,6 +838,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			if(pFiltro.getRolAcceso() != null) {
 				rFiltro.setRolAcceso(pFiltro.getRolAcceso());
 			}
+
+			rFiltro.setTiposEventos( pFiltro.getTiposEventos().stream()
+							.map(TypeEvento::toString).collect(Collectors.toList()) );
 		}
 
 		return rFiltro;

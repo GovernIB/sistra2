@@ -80,6 +80,7 @@ $.fn.appFormsAvalua = function(options) {
 					.on("blur.appFormsAvalua", "div[data-tipus='texto'] input, div[data-tipus='texto'] textarea", selecciona)
 					.on("click.appFormsAvalua", "div[data-tipus='selector'][data-contingut='d'] .imc-select a.imc-select", preselecciona)
 					.on("click.appFormsAvalua", "div[data-tipus='selector'][data-contingut='d'] .imc-select-submenu ul a", selecciona)
+					.on("click.appFormsAvalua", "div[data-tipus='selector'][data-contingut='d'] button.imc--bt-reset", selecciona)
 					.on("click.appFormsAvalua", "fieldset[data-tipus='selector'] label", selecciona)
 					.on("change.appFormsAvalua", "div[data-type='check'] .imc-input-check > input", selecciona)
 					.on("click.appFormsAvalua", "button[data-accio=seleccio-elimina], .imc--selector-opcions-ajax button", selecciona);

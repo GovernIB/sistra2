@@ -124,6 +124,7 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 
 			entidad.setModoFuncionarioHabilitado( configuracionEntidad.isModoFuncionarioHabilitado() );
 
+			entidad.setHabilitarModoEntrega(configuracionEntidad.isHabilitarModoEntrega());
 		}
 		return entidad;
 

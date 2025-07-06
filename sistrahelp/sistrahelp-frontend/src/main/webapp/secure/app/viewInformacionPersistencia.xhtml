@@ -231,7 +231,7 @@
 	          		</p:column>
 		        	<p:column  styleClass="w14">
 			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
-		          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPersistencia.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+		          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPersistencia.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight()"/>
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewInformacionPersistencia.ayuda}"/>
 						</h:panelGrid>
 	          		</p:column>

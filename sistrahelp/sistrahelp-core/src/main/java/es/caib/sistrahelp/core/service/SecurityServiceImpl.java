@@ -42,15 +42,19 @@ public class SecurityServiceImpl implements SecurityService {
 	@NegocioInterceptor
 	public List<Area> obtenerAreas(final TypeRoleAcceso rol) {
 		final List<Area> res = new ArrayList<>();
+
+		boolean permisoCau = false;
+
 		if (contextService.getRoles().contains(rol)) {
 
 			for (final RPermisoHelpDesk permiso : sistragesApiComponent.obtenerPermisosHelpdesk()) {
 
 				if (StringUtils.isNoneEmpty(permiso.getValor())) {
-					if ("A".equals(permiso.getTipoPermiso()) && rol == TypeRoleAcceso.HELPDESK) {
-						if ("R".equals(permiso.getTipo().trim()) && contextService.hashRole(permiso.getValor().trim())
-								|| "U".equals(permiso.getTipo().trim())
-										&& contextService.getUsername().equals(permiso.getValor().trim())) {
+
+					// añadimos areas de permisos de areas para rol operador
+					if ("A".equals(permiso.getTipoPermiso()) && esPermisoDeUsuario(permiso)) {
+
+						if(rol == TypeRoleAcceso.HELPDESK) {
 							final Area area = new Area();
 							area.setCodigoDIR3Entidad(permiso.getCodigoDIR3Entidad());
 							area.setIdentificador(permiso.getIdentificadorArea());
@@ -58,9 +62,16 @@ public class SecurityServiceImpl implements SecurityService {
 								res.add(area);
 							}
 						}
-					} else if ("E".equals(permiso.getTipoPermiso()) && rol == TypeRoleAcceso.SUPERVISOR_ENTIDAD
+
+						if(rol == TypeRoleAcceso.PERSONAL_CAU) {
+							permisoCau = true;
+						}
+					}
+
+					// añadimos areas de permisos entidad para roles supervisor y cau. Se añade el listado de areas si tiene
+					else if ("E".equals(permiso.getTipoPermiso()) && ( TypeRoleAcceso.SUPERVISOR_ENTIDAD.equals(rol) ||  TypeRoleAcceso.PERSONAL_CAU.equals(rol)  )
 							&& contextService.hashRole(permiso.getValor().trim())
-							&& contextService.getRoles().contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)
+							&& ( contextService.getRoles().contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD) || contextService.getRoles().contains(TypeRoleAcceso.PERSONAL_CAU) )
 							&& permiso.getListaIdentificadorArea() != null) {
 						for (final String idArea : permiso.getListaIdentificadorArea()) {
 							final Area area = new Area();
@@ -74,7 +85,20 @@ public class SecurityServiceImpl implements SecurityService {
 				}
 			}
 		}
+
+		// Si tiene rol CAU pero con acceso inhabilitado para sth le quitamos los permisos por entidades
+		if(rol == TypeRoleAcceso.PERSONAL_CAU && !permisoCau){
+			res.clear();
+		}
+
 		return res;
 	}
 
+
+	private boolean esPermisoDeUsuario(RPermisoHelpDesk permiso){
+		boolean permisoSuRol = "R".equals(permiso.getTipo().trim()) && contextService.hashRole(permiso.getValor().trim());
+
+		return  permisoSuRol ||
+				( "U".equals(permiso.getTipo().trim()) && contextService.getUsername().equals(permiso.getValor().trim() ));
+	}
 }

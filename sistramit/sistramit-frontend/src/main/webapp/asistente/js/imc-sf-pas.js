@@ -538,7 +538,7 @@ $.fn.appPas = function(options) {
 				} else if (pas_tipus === "ad") {
 
 					HTML_PAS_LITERALS[pas_tipus]["hiHaAnnexes"] = pas_json.datos.actual.anexos.length;
-
+					HTML_PAS_LITERALS[pas_tipus]["jsonSolsLectura"] = pas_json.datos.actual.soloLectura;
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
 					HTML_PAS_LITERALS[pas_tipus]["annexesPresencials"] = pas_json.datos.actual.anexos;
 

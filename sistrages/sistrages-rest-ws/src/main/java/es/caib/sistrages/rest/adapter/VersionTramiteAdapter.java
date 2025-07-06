@@ -447,6 +447,7 @@ public class VersionTramiteAdapter {
 					rfe.setIdentificadorFormulario(f.getIdFormularioExterno());
 					formularioTramite.setFormularioExterno(rfe);
 				}
+
 				res.add(formularioTramite);
 			}
 		}

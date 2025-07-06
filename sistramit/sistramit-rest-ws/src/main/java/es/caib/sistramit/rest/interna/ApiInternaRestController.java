@@ -550,6 +550,18 @@ public class ApiInternaRestController {
 				filtro.setEvento(TypeEvento.valueOf(pRFiltro.getEvento()));
 			}
 
+			if(!pRFiltro.getTiposEventos().isEmpty()){
+				filtro.setTiposEventos(new ArrayList<>());
+
+				for(final String tipoEvento : pRFiltro.getTiposEventos()){
+
+					TypeEvento typeEvento = TypeEvento.fromString(tipoEvento);
+					if(typeEvento != null) {
+						filtro.getTiposEventos().add(typeEvento);
+					}
+				}
+			}
+
 			if(pRFiltro.getIniciadoPor() != null) {
 				filtro.setIniciadoPor(TypeIniciadoPor.valueOf(pRFiltro.getIniciadoPor()));
 			}

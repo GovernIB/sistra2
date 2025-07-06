@@ -20,26 +20,34 @@
 		<script type="text/javascript">
 			function setHeight(){
 				// Altura de la pantalla
-				var altura = window.innerHeight - 50;
+				var altura = window.innerHeight;
 				// Altura de la tabla
-				var alturaDatatable = altura - 290;
+				var alturaDatatable = altura - 63;
 				// Altura del scrollable body
-				var alturaScrollableBody = alturaDatatable - 57;
+				var alturaScrollableBody = alturaDatatable - 94;
 
-				$('#form\\:dataTable').height(alturaDatatable);
-				$('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+				console.log("altura: " + altura);
+
+				console.log("alturaDatatable: " + alturaDatatable);
+
+				 $('#form\\:dataTable').height(alturaDatatable);
+				 $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
 			}
 
 			jQuery(document).ready(function() {
-				$(window).resize(function() {
-					setTimeout(function(){  setHeight(); }, 100);
+				$(window).resize(function () {
+					setTimeout(function () {
+						setHeight();
+					}, 100);
 				});
 
-				setTimeout(function(){  setHeight(); }, 1000);
+				setTimeout(function () {
+					setHeight();
+				}, 1000);
 			});
 		</script>
 
-		<h:form id="form" style="height:88%;">
+		<h:form id="form" style="height:99%;">
 
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
@@ -122,7 +130,7 @@
 					</p:column>
 					<p:column styleClass=" noPadding p-align-start">
 			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" >
-		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramitesParams.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramitesParams.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight()"/>
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramitesParams.ayuda}"/>
 						</h:panelGrid>
 					</p:column>
@@ -199,7 +207,8 @@
 		        	document.getElementById("form:paginacion").blur();
 		      }
 		    </h:outputScript>
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewAuditoriaTramitesParams.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewAuditoriaTramitesParams.rcDobleClick()}" process="@this" update="growl" style="display:none"
+			oncomplete="setHeight()"/>
 			<p:inputText id="paginacion" value="#{viewAuditoriaTramitesParams.paginacion}" style="opacity:0">
 				<p:ajax event="blur" update="@form" process="@this"/>
 			</p:inputText>

@@ -119,6 +119,12 @@ public class SystemServiceImpl implements SystemService {
 		sesionDao.updatePropiedades(pUserName, pPropiedades);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public Properties obtenerPropiedadesLocales(){
+		return propiedadesLocales;
+	}
+
 	// ----------------------------------------------------------------------
 	// FUNCIONES PRIVADAS
 	// ----------------------------------------------------------------------

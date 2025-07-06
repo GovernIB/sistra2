@@ -225,7 +225,7 @@
 
 				<p:column  styleClass=" noPadding columna-filtros-botones ">
 					<h:panelGrid id="panelBotones" columns="2" styleClass="table-rightaligned">
-						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewEventosPlataforma.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewEventosPlataforma.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight()"/>
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewEventosPlataforma.ayuda}"/>
 					</h:panelGrid>
 				</p:column>

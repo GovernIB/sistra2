@@ -31,7 +31,7 @@ public class RolesAdapter {
 			rPermiso.setTipoPermiso("A");
 			rPermiso.setCodigoDIR3Entidad(rol.getArea().getCodigoDIR3Entidad());
 			rPermiso.setIdentificadorArea(rol.getArea().getIdentificadorCompuesto());
-			rPermiso.setTipo(rol.getTipo().toString());
+			rPermiso.setTipo(rol.getTipo().toString()); // rol / Usuario
 			rPermiso.setValor(rol.getValor());
 			rListaPermisos.add(rPermiso);
 		}

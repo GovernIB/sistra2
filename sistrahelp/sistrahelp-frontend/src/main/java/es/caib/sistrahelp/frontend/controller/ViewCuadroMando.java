@@ -583,7 +583,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 		this.filtrar();
 	}
 
-	public String calcularEtiquetaTram(Long porcentage, String id) {
+	public String calcularEtiquetaTram(Double porcentage, String id) {
 		String texto = "";
 		if (porcentage > 0) {
 			if (100 - porcentage >= this.umbralAtencionRevisar) {

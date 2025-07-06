@@ -51,7 +51,7 @@ public final class DatosSesionFormularioInterno {
 
 	/**
 	 * Método de acceso a definicionTramite.
-	 * 
+	 *
 	 * @return definicionTramite
 	 */
 	public DefinicionTramiteSTG getDefinicionTramite() {
@@ -60,7 +60,7 @@ public final class DatosSesionFormularioInterno {
 
 	/**
 	 * Método de acceso a datosInicioSesion.
-	 * 
+	 *
 	 * @return datosInicioSesion
 	 */
 	public DatosInicioSesionFormulario getDatosInicioSesion() {
@@ -69,7 +69,7 @@ public final class DatosSesionFormularioInterno {
 
 	/**
 	 * Método de acceso a datosFormulario.
-	 * 
+	 *
 	 * @return datosFormulario
 	 */
 	public DatosFormularioInterno getDatosFormulario() {
@@ -79,7 +79,7 @@ public final class DatosSesionFormularioInterno {
 
 	/**
 	 * Método para establecer datosFormulario.
-	 * 
+	 *
 	 * @param datosFormulario
 	 *            datosFormulario a establecer
 	 */
@@ -92,7 +92,7 @@ public final class DatosSesionFormularioInterno {
 
 	/**
 	 * Indica si esta activo debug para sesion formulario.
-	 * 
+	 *
 	 * @return debugEnabled
 	 */
 	public boolean isDebugEnabled() {
@@ -101,7 +101,7 @@ public final class DatosSesionFormularioInterno {
 
 	/**
 	 * Método de acceso a finalizada.
-	 * 
+	 *
 	 * @return finalizada
 	 */
 	public boolean isFinalizada() {
@@ -175,6 +175,10 @@ public final class DatosSesionFormularioInterno {
 				getDatosInicioSesion().getIdPaso(), getDatosInicioSesion().getIdFormulario(),
 				getDefinicionTramite());
 		return defFormulario.getFormularioInterno();
+	}
+
+	public boolean isFormularioUnico() {
+		return UtilsSTG.isFormularioUnico(getDatosInicioSesion().getIdPaso(), getDefinicionTramite());
 	}
 
 	/**

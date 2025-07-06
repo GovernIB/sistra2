@@ -131,7 +131,7 @@ public class RolDaoImpl implements RolDao {
 		jRolNew.setCodigo(jRol.getCodigo());
 
 		if (rol.getArea() != null) {
-			final JArea jArea = entityManager.find(JArea.class, rol.getArea().getCodigo());
+			final JArea jArea = entityManager.getReference(JArea.class, rol.getArea().getCodigo());
 			jRolNew.setArea(jArea);
 		}
 

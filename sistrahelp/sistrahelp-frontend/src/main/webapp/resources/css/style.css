@@ -52,6 +52,7 @@ body{
 /* ajustamos en la cabecera el icono del menu de boton "opciones" */
 #header .ui-menubar, #header .ui-menubutton {float:right !important;}
 
+
 /****  fin cabecera *****/
 
 /*color gris para el cuerpo de la pantalla y el pie*/
@@ -769,10 +770,11 @@ textarea[readonly="readonly"] {
     text-align: center;               /* AlineaciÃƒÆ’Ã‚Â³n centrada del texto dentro del h2 */
     margin: 5px !important;
 }
-.ui-icon-triangle-1-s {
-    -webkit-filter: brightness(0) invert(1); /* Invertir colores para que el icono sea blanco */
-    filter: brightness(0) invert(1); /* Para navegadores compatibles */
-}
+/* Se comenta para que se vea bien el icono */
+/*.ui-icon-triangle-1-s {*/
+/*    -webkit-filter: brightness(0) invert(1); !* Invertir colores para que el icono sea blanco *!*/
+/*    filter: brightness(0) invert(1); !* Para navegadores compatibles *!*/
+/*}*/
 
 /*.ui-menu .ui-menuitem-text {
     color: white;
@@ -854,4 +856,52 @@ textarea[readonly="readonly"] {
 
 .flex-column{
     flex-direction: column;
+}
+
+
+.ui-selectonemenu {
+    min-height: 24px;
+    display: inline-block;
+    position: relative;
+    width: auto;
+    cursor: pointer;
+    padding-right: 22px;
+    vertical-align: top;
+}
+
+.ui-menuitem > .ui-state-active, .ui-menuitem > .ui-widget-content .ui-state-active, .ui-menuitem > .ui-widget-header .ui-state-active {
+    background: none !important;
+    border: none !important;
+    color: inherit !important;
+}
+
+
+/**
+Contraste menu cabecera si ratón por encima
+ */
+#header [aria-expanded].ui-state-hover .ui-menuitem-text{
+    color: black;
+    font-weight: bold;
+}
+
+
+#header [aria-expanded].ui-state-hover .ui-menuitem-icon{
+    color: black;
+    font-weight: bold;
+}
+
+#header [aria-expanded].ui-state-hover .ui-icon-triangle-1-s {
+    color: black;
+    font-weight: bold;
+    filter: brightness(0) invert(0) !important;
+}
+
+.ui-selectonemenu {
+    min-height: 24px;
+    display: inline-block;
+    position: relative;
+    width: auto;
+    cursor: pointer;
+    padding-right: 22px;
+    vertical-align: top;
 }

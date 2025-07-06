@@ -9,12 +9,15 @@ import javax.inject.Inject;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.model.types.TypeRoleUser;
+import es.caib.sistrages.core.api.model.types.TypeUser;
 import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.visible.VisibleRolesPermisos;
 
 @ManagedBean
 @ViewScoped
@@ -44,6 +47,8 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	private String portapapeles;
 
 	private String errorCopiar;
+
+	private VisibleRolesPermisos visible = new VisibleRolesPermisos();;
 
 	/**
 	 * Inicialización.
@@ -75,6 +80,8 @@ public class DialogRolesPermisos extends DialogControllerBase {
 			}
 
 		}
+
+		visibilidad();
 	}
 
 	/**
@@ -84,7 +91,12 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
-		if (gestor == null && helpdesk == null) {
+		if(TypeUser.PERSONAL_CAU.equals(data.getTipoUsuario())){
+			gestor = null; // personal cau no tiene permisos en sistrages
+			data.setArea(this.getAreas().get(0)); // rol personal cau es para todos sus areas pero le asignamos una para que se sepa su identidad.
+		}
+
+		if (TypeUser.GESTOR_TRAMITES.equals(data.getTipoUsuario()) && gestor == null && helpdesk == null) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.permiso"));
 			return;
 		} else {
@@ -164,6 +176,27 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		UtilJSF.openHelp("rolesPermisosDialog");
 	}
 
+	public void tipoUsuarioChanged(){
+
+		visibilidad();
+
+	}
+
+	private void visibilidad(){
+		if(TypeUser.GESTOR_TRAMITES.equals(data.getTipoUsuario())){
+
+			visible.setArea(true);
+			visible.setPermisosGestorTramites(true);
+			visible.setHelpdeskCau(false);
+
+		}else{
+
+			visible.setArea(false);
+			visible.setPermisosGestorTramites(false);
+			visible.setHelpdeskCau(true);
+		}
+	}
+
 	/**
 	 * Valida roles.
 	 *
@@ -171,7 +204,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	 */
 	private boolean validaRoles() {
 		if (data != null) {
-			if (data.isAlta() || data.isModificacion() || data.isConsulta() || data.isHelpdesk()) {
+			if (data.isAlta() || data.isModificacion() || data.isConsulta() || (data.isHelpdesk() || TypeUser.PERSONAL_CAU.equals(data.getTipoUsuario()) ) ) { // Personal CAU puede no tener permisos
 				return true;
 			} else {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.permiso"));
@@ -282,4 +315,11 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		this.helpdesk = helpdesk;
 	}
 
+	public VisibleRolesPermisos getVisible() {
+		return visible;
+	}
+
+	public void setVisible(VisibleRolesPermisos visible) {
+		this.visible = visible;
+	}
 }

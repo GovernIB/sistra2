@@ -1122,9 +1122,16 @@ $.fn.appSuport = function(options) {
 
 				// revisa desc problema
 
-				var problemaDesc_val = $("#problemaDesc").val();
+				function amplariaRealTextarea(text) {
+					const saltsLinia = (text.match(/(?<!\r)\n/g) || []).length;
+					return text.length + saltsLinia;
+				}
 
-				var esProblemaDescCorrecte = problemaDesc_val.length <= 4000 ? true : false;
+				var problemaDesc_ = $("#problemaDesc")
+					,problemaDesc_val = problemaDesc_.val()
+					,problemaDesc_max = 4000;
+
+				var esProblemaDescCorrecte = amplariaRealTextarea(problemaDesc_val) <= problemaDesc_max ? true : false;
 
 				if (!esProblemaDescCorrecte) {
 
@@ -1143,17 +1150,17 @@ $.fn.appSuport = function(options) {
 
 					};
 
-					imc_missatge
-						.appMissatge({ accio: "error", titol: txtProblemaDesc_errorTitol, text: txtProblemaDesc_errorText, alTancar: function() { problemaDesc_error(); } });
+					var text_missatge_error = txtProblemaDesc_errorText + " " + amplariaRealTextarea(problemaDesc_val) + " " + txtProblemaDesc_errorText_01 + problemaDesc_max + ".";
 
+					imc_missatge
+						.appMissatge({ accio: "error", titol: txtProblemaDesc_errorTitol, text: text_missatge_error, alTancar: function() { problemaDesc_error(); } });
+					
 					return;
 
 				}
 
 				$("#problemaDesc")
 					.removeClass("imc--f-suport-error");
-
-
 
 
 				// missatge

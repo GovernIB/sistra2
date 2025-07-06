@@ -53,15 +53,6 @@ body{
 
 .ui-menu-parent .ui-submenu-link .ui-icon.fa {color: white;}
 
-/* ajustes fa icon
-#elementID {
-    color: #fff;
-    text-shadow: 1px 1px 1px #ccc;
-    font-size: 1.5em;
-}
-*/
-
-
 .titulo-color {
 	font-size:22pt;
 	white-space: nowrap;
@@ -637,7 +628,7 @@ label.ui-state-disabled {
 }
 
 .no-display {
-	display: none;
+	display: none !important;
 }
 
 /** Para cambiar el fondo a los inputs y se vea blanco. **/

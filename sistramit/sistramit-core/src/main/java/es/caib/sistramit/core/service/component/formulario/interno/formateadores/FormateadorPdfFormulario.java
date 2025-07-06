@@ -37,6 +37,6 @@ public interface FormateadorPdfFormulario {
 	 */
 	byte[] formatear(byte[] xml, List<String> paginasRellenadas, byte[] plantilla, String idioma,
 			RFormularioInterno defFormInterno, String tituloProcedimiento, String tituloTramite,
-			String siaProcedimiento, String codigoDir3Responsable, boolean funcionarioHabilitado);
+			String siaProcedimiento, String codigoDir3Responsable, boolean funcionarioHabilitado, boolean formularioUnico);
 
 }

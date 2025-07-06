@@ -648,7 +648,7 @@ $.fn.appAnnexaLlistat = function(opcions){
 
 				// està completat?
 
-				if (bt.closest("li").hasClass("imc--completat")) {
+				if (bt.closest("li").hasClass("imc--completat") || bt.closest(".imc--annexes").attr("data-lectura") === "s") {
 					return;
 				}
 

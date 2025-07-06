@@ -218,10 +218,10 @@ public class AnexarDocumentoComponent {
                     throw new ParametrosEntradaIncorrectosException("Digitalització només permessa en mode funcionari habilitat");
                 }
             } else {
-                // Solo si se requiere firma (firma asistente o anexar firmado)
+                // Se valida protección por contraseña en cualquier caso
+                validarProteccionPassword(anexoDetalle, datosFichero, nombreFichero);
+				// Solo si se requiere firma (firma asistente o anexar firmado)
                 if (anexoDetalle.getFirmar() == TypeSiNo.SI || anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
-                    // - Validacion protegido con contraseña
-                    validarProteccionPassword(anexoDetalle, datosFichero, nombreFichero);
                     // - Validaciones de anexo firmado
                     final boolean anexadoFirmado = validacionAnexoFirmado(pDefinicionTramite, pVariablesFlujo, anexoDetalle,
                             datosFichero, nombreFichero);

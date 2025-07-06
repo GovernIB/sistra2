@@ -141,6 +141,9 @@ public class Entidad extends ModelApi {
 
 	private boolean modoFuncionarioHabilitado;
 
+	/** Para habilitar / deshabilitar modo entrega (CES2). Por defecto deshabilitado. */
+	private boolean habilitarModoEntrega;
+
 	/**
 	 * Obtiene el valor de codigo.
 	 *
@@ -564,5 +567,13 @@ public class Entidad extends ModelApi {
 
 	public void setModoFuncionarioHabilitado(boolean modoFuncionarioHabilitado) {
 		this.modoFuncionarioHabilitado = modoFuncionarioHabilitado;
+	}
+
+	public boolean isHabilitarModoEntrega() {
+		return habilitarModoEntrega;
+	}
+
+	public void setHabilitarModoEntrega(boolean habilitarModoEntrega) {
+		this.habilitarModoEntrega = habilitarModoEntrega;
 	}
 }

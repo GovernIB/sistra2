@@ -15,6 +15,7 @@ public final class ConstantesRolesAcceso {
 
 	public static final String HELPDESK = "STH_OPE";
 	public static final String SUPERVISOR_ENTIDAD = "STH_SUP";
+	public static final String PERSONAL_CAU = "STH_CAU";
 
 	public static final String[] listaRoles() {
 		final String[] rolesPrincipales = { HELPDESK, SUPERVISOR_ENTIDAD };

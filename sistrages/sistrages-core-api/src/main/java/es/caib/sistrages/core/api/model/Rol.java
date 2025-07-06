@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
 import es.caib.sistrages.core.api.model.types.TypeRoleUser;
+import es.caib.sistrages.core.api.model.types.TypeUser;
 
 /**
  * La clase Rol.
@@ -13,6 +14,8 @@ public class Rol extends ModelApi {
 
 	/** codigo. */
 	private Long codigo;
+
+	private TypeUser tipoUsuario = TypeUser.GESTOR_TRAMITES;
 
 	/** tipo. */
 	private TypeRoleUser tipo;
@@ -209,4 +212,11 @@ public class Rol extends ModelApi {
 		this.helpdesk = helpdesk;
 	}
 
+	public TypeUser getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(TypeUser tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
+	}
 }

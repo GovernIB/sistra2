@@ -183,7 +183,7 @@
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewSeccionesReutilizables.filtro}" onblur="this.value = this.value.trim();"/>
-	           			<p:commandButton widgetVar="btnFiltro" icon="fa fa-search" actionListener="#{viewSeccionesReutilizables.filtrar()}" process="panelFiltro" update="growl dataTable" />
+	           			<p:commandButton widgetVar="btnFiltro" icon="fa fa-search" actionListener="#{viewSeccionesReutilizables.filtrar()}" process="panelFiltro" update="growl dataTable" oncomplete="setHeight()"/>
 
 	           		</h:panelGrid>
 		        </f:facet>

@@ -1,6 +1,7 @@
 package es.caib.sistrahelp.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.service.EventoService;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.LazyDataModel;
@@ -34,6 +37,9 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	 */
 	@Inject
 	private HelpDeskService helpDeskService;
+
+	@Inject
+	private EventoService eventoService;
 
 	/** Paginacion */
 	private Integer paginacion;
@@ -65,6 +71,8 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), true);
+
+		filtros.setTiposEventos(Arrays.asList(TypeEvento.ERROR, TypeEvento.PROCESO_PURGA, TypeEvento.VALORACION_TRAMITE) );
 	}
 
 	/**

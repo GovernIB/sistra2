@@ -185,4 +185,8 @@ public enum TypeEvento {
 		return eventosExternos;
 	}
 
+
+	public String getValue(){
+		return stringValueEvento;
+	}
 }

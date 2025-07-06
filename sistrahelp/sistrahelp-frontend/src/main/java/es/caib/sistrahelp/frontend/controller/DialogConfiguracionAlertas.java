@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import es.caib.sistrahelp.core.api.service.EventoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,9 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	 */
 	@Inject
 	private AlertaService alertaService;
+
+	@Inject
+	private EventoService eventoService;
 
 	/**
 	 * Id elemento a tratar.
@@ -305,7 +309,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		if (!isResumenDiario()) {
 			concurrenciasSeleccionado = null;
 		}
-		eventos = Arrays.asList(TypeEvento.values());
+		eventos = eventoService.getTiposEvento(UtilJSF.getSessionBean().getEntidad());
 		opLogicoNOT = false;
 		opLogicoAND_OR.add("AND");
 		opLogicoAND_OR.add("OR");

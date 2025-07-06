@@ -51,7 +51,7 @@ public class ConfiguracionServiceBean implements ConfiguracionService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD, ConstantesRolesAcceso.PERSONAL_CAU })
 	public String obtenerPropiedadConfiguracionSistrages(TypePropiedadConfiguracion propiedad) {
 		return configuracionService.obtenerPropiedadConfiguracionSistrages(propiedad);
 	}

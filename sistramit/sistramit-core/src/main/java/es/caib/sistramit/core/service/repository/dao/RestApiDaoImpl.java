@@ -29,6 +29,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import es.caib.sistramit.core.api.model.system.types.TypeIniciadoPor;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -772,6 +773,12 @@ public final class RestApiDaoImpl implements RestApiDao {
 		if (pFiltroBusqueda.getEvento() != null) {
 			predicate = builder.and(predicate,
 					builder.equal(tableE.get("tipo"), pFiltroBusqueda.getEvento().toString()));
+		} else  if(CollectionUtils.isNotEmpty(pFiltroBusqueda.getTiposEventos())){
+
+			List<String> lTiposEventos = pFiltroBusqueda.getTiposEventos().stream().map(
+					TypeEvento::getValue
+			).collect(Collectors.toList());
+			predicate = builder.and(predicate, builder.in( tableE.get("tipo")).value(lTiposEventos) );
 		}
 
 		if(pFiltroBusqueda.getIniciadoPor() != null) {
@@ -965,7 +972,17 @@ public final class RestApiDaoImpl implements RestApiDao {
 		if (pFiltroBusqueda.getEvento() != null) {
 			predicate = builder.and(predicate,
 					builder.equal(tableE.get("tipo"), pFiltroBusqueda.getEvento().toString()));
+		}else{
+			if( ! pFiltroBusqueda.getTiposEventos().isEmpty()){
+
+				List<String> lTiposEventos = pFiltroBusqueda.getTiposEventos().stream().map(
+						TypeEvento::getValue
+				).collect(Collectors.toList());
+				predicate = builder.and(predicate, builder.in( tableE.get("tipo")).value(lTiposEventos) );
+			}
 		}
+
+
 
 		query.where(predicate);
 

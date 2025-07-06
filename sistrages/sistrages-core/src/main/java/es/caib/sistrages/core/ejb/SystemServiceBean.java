@@ -12,6 +12,8 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.service.SystemService;
 
+import java.util.Properties;
+
 /**
  * Servicios de sistema.
  *
@@ -74,6 +76,12 @@ public class SystemServiceBean implements SystemService {
 	@PermitAll
 	public void updateSesionPropiedades(String pUserName, String pPropiedades) {
 		systemService.updateSesionPropiedades(pUserName, pPropiedades);
+	}
+
+	@Override
+	@PermitAll
+	public Properties obtenerPropiedadesLocales() {
+		return systemService.obtenerPropiedadesLocales();
 	}
 
 }

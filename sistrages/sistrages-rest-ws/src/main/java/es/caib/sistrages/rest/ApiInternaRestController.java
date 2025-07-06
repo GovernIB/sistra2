@@ -2,7 +2,9 @@ package es.caib.sistrages.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import es.caib.sistrages.core.api.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,9 @@ public class ApiInternaRestController {
 	@Autowired
 	private RestApiInternaService restApiService;
 
+	@Autowired
+	private SystemService systemService;
+
 	/**
 	 * ConfiguracionGlobalAdapter
 	 */
@@ -122,11 +127,15 @@ public class ApiInternaRestController {
 	@ApiOperation(value = "Lista de Propiedades de configuracion global", notes = "Lista de Propiedades de configuracion global", response = RConfiguracionGlobal.class)
 	@RequestMapping(value = "/configuracionGlobal", method = RequestMethod.GET)
 	public RConfiguracionGlobal obtenerConfiguracionGlobal() {
+		// recuperamos propiedades locales
+
+		final Properties propiedadesLocales = systemService.obtenerPropiedadesLocales();
+
 		final List<ConfiguracionGlobal> cg = restApiService.listConfiguracionGlobal(null);
 		final List<Plugin> pg = restApiService.listPlugin(TypeAmbito.GLOBAL, (long) 0, null);
 		final List<ConfiguracionAutenticacion> configuraciones = restApiService
 				.listConfiguracionAutenticacion(TypeAmbito.GLOBAL, null);
-		return confGlobalAdapter.convertir(cg, pg, configuraciones);
+		return confGlobalAdapter.convertir(propiedadesLocales, cg, pg, configuraciones);
 	}
 
 	/**

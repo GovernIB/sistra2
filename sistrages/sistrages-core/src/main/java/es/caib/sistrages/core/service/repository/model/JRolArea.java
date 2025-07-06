@@ -1,18 +1,10 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.types.TypeRoleUser;
+import es.caib.sistrages.core.api.model.types.TypeUser;
 
 /**
  * JRolArea
@@ -39,6 +31,10 @@ public class JRolArea implements IModelApi {
 	/** Tipo: R (Role) / U (Usuario) **/
 	@Column(name = "RLA_TIPO", nullable = false, length = 1)
 	private String tipo;
+
+	/** Tipo usuario: GT (Gestor Trámites) / CAU (Personal CAU) **/
+	@Column(name = "RLA_TIPOUSU", length = 3)
+	private String tipoUsuario;
 
 	/** Valor. **/
 	@Column(name = "RLA_VALOR", nullable = false, length = 100)
@@ -204,6 +200,14 @@ public class JRolArea implements IModelApi {
 		this.permisoAccesoHelpdesk = permisoAccesoHelpdesk;
 	}
 
+	public String getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(String tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
+	}
+
 	/**
 	 * toModel.
 	 *
@@ -213,6 +217,7 @@ public class JRolArea implements IModelApi {
 		final Rol rol = new Rol();
 		rol.setCodigo(codigo);
 		rol.setTipo(TypeRoleUser.fromString(tipo));
+		rol.setTipoUsuario(TypeUser.fromString(tipoUsuario));
 		rol.setValor(valor);
 		rol.setDescripcion(descripcion);
 		rol.setAlta(permisoAltaBajaTramites);
@@ -234,6 +239,7 @@ public class JRolArea implements IModelApi {
 			jModel = new JRolArea();
 			jModel.setCodigo(model.getCodigo());
 			jModel.setTipo(model.getTipo().toString());
+			jModel.setTipoUsuario( model.getTipoUsuario().toString());
 			jModel.setValor(model.getValor());
 			jModel.setDescripcion(model.getDescripcion());
 			jModel.setPermisoAltaBajaTramites(model.isAlta());

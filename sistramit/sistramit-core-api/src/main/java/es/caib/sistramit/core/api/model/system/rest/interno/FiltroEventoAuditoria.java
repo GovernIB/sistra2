@@ -23,6 +23,7 @@ public class FiltroEventoAuditoria implements Serializable {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
+	private List<TypeEvento> tiposEventos;
 
 	private TypeIniciadoPor iniciadoPor;
 
@@ -269,4 +270,11 @@ public class FiltroEventoAuditoria implements Serializable {
 		this.rolAcceso = rolAcceso;
 	}
 
+	public List<TypeEvento> getTiposEventos() {
+		return tiposEventos;
+	}
+
+	public void setTiposEventos(List<TypeEvento> tiposEventos) {
+		this.tiposEventos = tiposEventos;
+	}
 }

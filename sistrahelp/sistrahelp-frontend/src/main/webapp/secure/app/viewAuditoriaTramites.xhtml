@@ -208,7 +208,7 @@
 						</p:column>
 						<p:column styleClass=" noPadding columna-filtros-botones " style="border-style:inherit  !important;">
 	        				<h:panelGrid id="panelBotones" columns="1" styleClass="w100, noPadding">
-	       						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+	       						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight();"/>
 			          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
 			          			<p:commandButton id="btnDetalle" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.consultar}" style="display:none;"/>
 			          			<p:commandButton id="btnSesion" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaSesion}" style="display:none;"/>
@@ -293,7 +293,7 @@
 					</p:column>
 					<p:column styleClass=" noPadding p-align-start">
 			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
-		          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+		          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight()"/>
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
 		          			<p:commandButton id="btnDetalle" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.consultar}"/>
 		          			<p:commandButton id="btnSesion" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaSesion}"/>
@@ -340,7 +340,7 @@
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" class="sesion" style="width:12% !important;" sortBy="#{dt.idSesionTramitacion}" rendered="#{viewAuditoriaTramites.idSesionParam == null}">
 			        <h:outputText value="#{dt.idSesionTramitacion}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}" class="nif" style="width:5% !important;" sortBy="#{dt.nif}" rendered="#{viewAuditoriaTramites.nifParam == null}">
+			    <p:column  headerText="#{msg['viewAuditoriaTramites.headNif']}" class="nif"  style="width:5% !important;" sortBy="#{dt.nif}" rendered="#{viewAuditoriaTramites.nifParam == null}">
 			        <h:outputText value="#{dt.nif}" />
 			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headNombre']}" style="width:8% !important;" sortBy="#{dt.nombre}">
@@ -379,7 +379,15 @@
 
 				document.addEventListener('contextmenu', function(ev) {
 			    	ev.preventDefault();
+					// Get the clicked element
+					var clickedElement = ev.target;
+
+					// Check the column class and show the appropriate context menu
+					// if (clickedElement.closest('.columnNif')) {
+					// 	PF('nifCm').show(ev);
+					// }
 			    	getPos();
+
 			    	return false;
 				}, false);
 				  setTimeout(() => {
@@ -501,14 +509,14 @@
                     	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.add("d-none");
+						listaCm[i].classList.add("d-none");
 					}
                   }else{
                   	for(i=0;i&lt;listaCm.length;i++){
                   		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.remove("d-none");
+						listaCm[i].classList.remove("d-none");
 					}
 					if(arrayCm.length&gt;1){
 						arrayCm.pop();
@@ -549,7 +557,10 @@
 
 		   </h:outputScript>
 
-		    <p:contextMenu for=":work">
+
+
+
+		    <p:contextMenu for="dataTable" id="contextMenuNif" widgetVar="nifCm">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
        			<p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>

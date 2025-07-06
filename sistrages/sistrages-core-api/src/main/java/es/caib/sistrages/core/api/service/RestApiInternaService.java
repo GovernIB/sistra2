@@ -83,6 +83,10 @@ public interface RestApiInternaService {
 
 	Entidad loadEntidadByArea(Long idArea);
 
+	/**
+	 * Obtiene todos los roles con permiso para helpdesk
+	 * @return
+	 */
 	public List<Rol> obtenerPermisosHelpdesk();
 
 	ValoresDominio realizarConsultaListaFija(String idDominio);

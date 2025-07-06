@@ -3,6 +3,7 @@ package es.caib.sistrahelp.frontend.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import es.caib.sistrahelp.core.api.model.Entidad;
+import es.caib.sistrahelp.core.api.service.EventoService;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
@@ -41,6 +44,9 @@ public class ViewAuditoriaTramitesParams extends ViewControllerBase {
 	 */
 	@Inject
 	private HelpDeskService helpDeskService;
+
+	@Inject
+	private EventoService eventoService;
 
 	/** Paginacion */
 	private Integer paginacion;
@@ -99,12 +105,12 @@ public class ViewAuditoriaTramitesParams extends ViewControllerBase {
 		}
 
 		// cargamos los eventos quitando el de purga
-		tiposEventos = new ArrayList<>();
-		for (final TypeEvento ev : TypeEvento.values()) {
-			if (!TypeEvento.PROCESO_PURGA.equals(ev) && !TypeEvento.VALORACION_TRAMITE.equals(ev)) {
-				tiposEventos.add(ev);
-			}
-		}
+		Entidad entidad =UtilJSF.getSessionBean().getEntidad();
+		tiposEventos = eventoService.getTiposEvento(entidad);
+
+		tiposEventos.removeAll(Arrays.asList(TypeEvento.PROCESO_PURGA, TypeEvento.VALORACION_TRAMITE));
+
+		filtros.setTiposEventos( new ArrayList<>(tiposEventos));
 
 		this.buscar();
 	}

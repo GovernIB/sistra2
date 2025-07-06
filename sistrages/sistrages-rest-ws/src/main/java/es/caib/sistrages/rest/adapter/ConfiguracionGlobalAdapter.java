@@ -2,6 +2,7 @@ package es.caib.sistrages.rest.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.springframework.stereotype.Component;
 
@@ -33,10 +34,25 @@ public class ConfiguracionGlobalAdapter {
 	 *               lista de Plugins
 	 * @return configuracion global
 	 */
-	public RConfiguracionGlobal convertir(final List<ConfiguracionGlobal> cg, final List<Plugin> pg, final List<ConfiguracionAutenticacion> configuraciones) {
+	public RConfiguracionGlobal convertir(final Properties propiedadesLocales, final List<ConfiguracionGlobal> cg, final List<Plugin> pg, final List<ConfiguracionAutenticacion> configuraciones) {
 		final RConfiguracionGlobal rConfiguracionGlobal = new RConfiguracionGlobal();
 		rConfiguracionGlobal.setTimestamp(System.currentTimeMillis() + "");
-		rConfiguracionGlobal.setPropiedades(toListaParametrosCG(cg));
+
+		RListaParametros rListaParametros = new RListaParametros();
+		if (propiedadesLocales != null) {
+			rListaParametros.setParametros(new ArrayList<>());
+			for (String key : propiedadesLocales.stringPropertyNames()) {
+				RValorParametro rValorParametro = new RValorParametro();
+				rValorParametro.setCodigo(key);
+				rValorParametro.setValor(propiedadesLocales.getProperty(key));
+				rListaParametros.getParametros().add(rValorParametro);
+			}
+		}
+
+		RListaParametros lParametrosGlobales = toListaParametrosCG(cg);
+		rListaParametros.getParametros().addAll(lParametrosGlobales.getParametros());
+
+		rConfiguracionGlobal.setPropiedades(rListaParametros);
 		rConfiguracionGlobal.setPlugins(AdapterUtils.crearPlugins(pg));
 
 		if (configuraciones != null) {

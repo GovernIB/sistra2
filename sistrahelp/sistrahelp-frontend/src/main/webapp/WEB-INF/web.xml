@@ -78,6 +78,7 @@
     <auth-constraint>
      <role-name>STH_SUP</role-name>
      <role-name>STH_OPE</role-name>
+     <role-name>STH_CAU</role-name>
     </auth-constraint>
   </security-constraint>
   <login-config>
@@ -89,6 +90,9 @@
   </security-role>
   <security-role>
     <role-name>STH_OPE</role-name>
+  </security-role>
+  <security-role>
+    <role-name>STH_CAU</role-name>
   </security-role>
   <welcome-file-list>
     <welcome-file>index.xhtml</welcome-file>

@@ -639,12 +639,14 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 		// Formateamos a PDF
 		final RFormularioInterno defFormulario = datosSesion.obtenerDefinicionFormularioInterno();
+		final boolean formularioUnico = datosSesion.isFormularioUnico();
 		return formateador.formatear(xml, pagsRellenadas, plantilla,
 				definicionTramiteSTG.getDefinicionVersion().getIdioma(), defFormulario,
 				datosInicioSesionFormulario.getTituloProcedimiento(), datosInicioSesionFormulario.getTituloTramite(),
 				datosInicioSesionFormulario.getCodigoSiaProcedimiento(),
 				datosInicioSesionFormulario.getDir3ResponsableProcedimiento(),
-				datosInicioSesionFormulario.getInfoAutenticacion().getFuncionarioHabilitado() != null);
+				datosInicioSesionFormulario.getInfoAutenticacion().getFuncionarioHabilitado() != null,
+				formularioUnico);
 
 	}
 

@@ -10,7 +10,9 @@ import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
  */
 public enum TypeRoleAcceso {
 
-	HELPDESK(ConstantesRolesAcceso.HELPDESK), SUPERVISOR_ENTIDAD(ConstantesRolesAcceso.SUPERVISOR_ENTIDAD);
+	HELPDESK(ConstantesRolesAcceso.HELPDESK),
+	SUPERVISOR_ENTIDAD(ConstantesRolesAcceso.SUPERVISOR_ENTIDAD),
+	PERSONAL_CAU(ConstantesRolesAcceso.PERSONAL_CAU);
 
 	/**
 	 * Role name;

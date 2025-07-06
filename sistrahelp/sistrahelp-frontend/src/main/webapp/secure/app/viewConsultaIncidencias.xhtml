@@ -164,14 +164,14 @@
                     	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.add("d-none");
+		                listaCm[i].classList.add("d-none");
 					}
                   }else{
                   	for(i=0;i&lt;listaCm.length;i++){
                   		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.remove("d-none");
+	                	listaCm[i].classList.remove("d-none");
 					}
 					if(arrayCm.length&gt;1){
 						arrayCm.pop();
@@ -264,7 +264,7 @@
 			</p:column>
 			<p:column styleClass="noPadding columna-filtros-botones" style="border-style:inherit  !important;">
 	        	<h:panelGrid id="panelBotones" columns="1" styleClass="w100, noPadding">
-	       			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewConsultaIncidencias.filtrar()}" process="@form:panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+	       			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewConsultaIncidencias.filtrar()}" process="@form:panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight()"/>
 	       			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConsultaIncidencias.ayuda()}"/>
 				</h:panelGrid>
 			</p:column>
@@ -285,8 +285,8 @@
         <!-- Necesario para actualizar en controlador la fila seleccionada -->
         <p:ajax event="rowSelect" global="false"/>
         <p:ajax event="page" update=":form:dataTable"/>
-        <p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcIdSesion();"/>
-		<p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcNifUsu();"/>
+<!--        <p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcIdSesion();"/>-->
+<!--		<p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcNifUsu();"/>-->
 		<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 
         <!-- Columnas -->
@@ -358,8 +358,8 @@
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
 		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
-		    </p:confirmDialog>
-	      <p:contextMenu for=":work">
+      </p:confirmDialog>
+        <p:contextMenu for="dataTable" id="contextMenuDB">
              <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
              <p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
              <p:menuitem id="consultaSesion" icon="fa fa-window-maximize" onclick="consultarSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}" process="@this"/>

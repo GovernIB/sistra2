@@ -49,7 +49,10 @@ public enum TypePropiedadConfiguracion {
 	/** STG Url. */
 	SISTRAMIT_PWD("sistramit.rest.pwd"),
 	/** PIB Url. */
-	PAYMENTIB_VIEW_URL("paymentib.view.url");
+	PAYMENTIB_VIEW_URL("paymentib.view.url"),
+	SISTRAGES_MODOENTREGA_HABILITAR("sistrages.modoEntrega.habilitar");
+
+
 
 	/**
 	 * Valor como string.

@@ -1387,7 +1387,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomas);
 
 		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950,
-				520);
+				540);
 	}
 
 	/**

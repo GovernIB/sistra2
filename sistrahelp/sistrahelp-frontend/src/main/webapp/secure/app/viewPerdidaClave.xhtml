@@ -224,7 +224,8 @@
 				</p:column>
 				<p:column styleClass=" noPadding columna-filtros-botones " style="border-style:inherit  !important;">
 					<h:panelGrid id="panelBotones" columns="1" styleClass="noPadding">
-						<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewPerdidaClave.filtrar}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+						<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewPerdidaClave.filtrar}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"
+										 oncomplete="setHeight()"/>
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewPerdidaClave.ayuda}"/>
 					</h:panelGrid>
 				</p:column>

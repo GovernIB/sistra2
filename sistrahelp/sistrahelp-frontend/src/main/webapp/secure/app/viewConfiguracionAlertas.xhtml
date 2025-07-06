@@ -201,15 +201,15 @@
                     <h:panelGrid id="panelBotones" columns="6" cellspacing="5" styleClass="table-rightaligned">
                     <p:commandButton value="#{msg['viewConfiguracionAlertas.probarAlerta']}" id="btnProbarAlerta" actionListener="#{viewConfiguracionAlertas.probarAlerta()}" process="@this" update="growl"/>
                     <p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewConfiguracionAlertas.nuevo()}" process="@this" update="growl">
-                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
+                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight()"/>
                     </p:commandButton>
                     <p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConfiguracionAlertas.editar()}" process="@this" update="growl">
-                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
+                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight()"/>
                     </p:commandButton>
                     <p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewConfiguracionAlertas.eliminar()}" process="@this" update="growl dataTable">
-                        <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+                        <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" oncomplete="setHeight()"/>
                     </p:commandButton>
-                    <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConfiguracionAlertas.ayuda}"/>
+                    <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConfiguracionAlertas.ayuda}" oncomplete="setHeight()"/>
                     </h:panelGrid>
                 </p:column>
             </p:row>

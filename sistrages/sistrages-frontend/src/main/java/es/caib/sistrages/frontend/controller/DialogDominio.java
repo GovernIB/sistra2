@@ -919,7 +919,7 @@ public class DialogDominio extends DialogControllerBase {
 				params.put("ENTIDAD", id);
 			}
 		}
-		UtilJSF.openDialog(DialogDominioTramites.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+		UtilJSF.openDialog(DialogDominioTramites.class, TypeModoAcceso.CONSULTA, params, true, 770, 500);
 	}
 
 	/**

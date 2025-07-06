@@ -240,7 +240,7 @@
 
 				<p:column styleClass="noPadding columna-filtros-botones align-content-center">
 					<h:panelGrid id="panelBotones" columns="2" styleClass="table-rightaligned">
-						<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPagos.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+						<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPagos.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight()"/>
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewInformacionPagos.ayuda}"/>
 					</h:panelGrid>
 				</p:column>
