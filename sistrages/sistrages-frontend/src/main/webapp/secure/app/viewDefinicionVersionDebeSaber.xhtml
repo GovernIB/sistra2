@@ -38,7 +38,7 @@
 					<p:commandButton style="margin-left: 20px;" id="scriptButton1" icon="fa fa-bolt"
 						actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEBE_SABER.name(),viewDefinicionVersion.tramitePasoDSSeleccionado.scriptDebeSaber.codigo)}"
 						styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoDSSeleccionado.scriptDebeSaber)}"
-						disabled="#{viewDefinicionVersion.tramitePasoDSSeleccionado.scriptDebeSaber eq null}"
+						disabled="#{viewDefinicionVersion.tramitePasoDSSeleccionado.scriptDebeSaber eq null or viewDefinicionVersion.tramitePasoDSSeleccionado.scriptDebeSaber.estaVacio()}"
 						value="#{msg['viewDefinicionVersionDebeSaber.instruccionesScript']}"
 						process="@this" update="growl"  />
 				</p:column>

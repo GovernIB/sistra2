@@ -45,7 +45,7 @@
 
 		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
 					styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptObligatoriedad)}"
-					disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptObligatoriedad eq null}"
+					disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptObligatoriedad eq null or viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptObligatoriedad.estaVacio()}"
 					process="@this" update="growl"/>
          	</p:panelGrid>
 
@@ -120,14 +120,14 @@
 
 							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
 									styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente)}"
-									disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null}"
+									disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null or viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente.estaVacio()}"
 									process="@this" update="growl"/>
 						</p:panelGrid>
 
 						<p:outputLabel value="#{msg['script.SCRIPT_VALIDAR_ANEXO.titulo']}" />
 						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO.name(), viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptValidacion.codigo)}"
 									styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptValidacion)}"
-									disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptValidacion eq null}"
+									disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptValidacion eq null or viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptValidacion.estaVacio()}"
 										process="@this" update="growl"/>
 
 					</h:panelGrid>

@@ -54,7 +54,7 @@
 								<p:radioButton id="opt1" for="customRadio" itemIndex="0"/>
 								<h:outputLabel for="op1" value="#{msg['viewDefinicionVersionRegistrarTramite.registroElectronico']}"/>
 				                <p:commandButton id="scriptButton1" icon="fa fa-bolt"
-								disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptDestinoRegistro eq null}"
+								disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptDestinoRegistro eq null or viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptDestinoRegistro.estaVacio()}"
 								actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(),viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptDestinoRegistro.codigo)}"
 								value="#{msg['script.SCRIPT_PARAMETROS_REGISTRO.titulo']}"
 								process="@this" update="growl" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptDestinoRegistro)} w100" />
@@ -80,7 +80,7 @@
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.presentacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:commandButton id="scriptButton2"
-           				disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptPresentador eq null}"
+           				disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptPresentador eq null or viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptPresentador.estaVacio()}"
 						icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(), viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptPresentador.codigo)}"
 						process="@this" update="growl" value="#{msg['script.SCRIPT_PRESENTADOR_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptPresentador)}" />
 				<p:spacer width="30" height="1"/>
@@ -91,7 +91,7 @@
 	            <p:selectBooleanCheckbox id="admite" readonly="true" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.admiteRepresentacion}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.admite']}"/>
 	            <p:spacer width="30" height="1"/>
 	           		<p:commandButton id="scriptButton3"
-	           				disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptRepresentante eq null}"
+	           				disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptRepresentante eq null or viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptRepresentante.estaVacio()}"
 							icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO.name(), viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
 							process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTACION_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptRepresentante)}" />
 				<p:spacer width="30" height="1"/>
@@ -100,7 +100,7 @@
 
     		<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.registrar']}" />
 			<p:commandButton id="scriptButton4"
-						disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptValidarRegistrar eq null}"
+						disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptValidarRegistrar eq null or viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptValidarRegistrar.estaVacio()}"
 						icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO.name(), viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptValidarRegistrar.codigo)}"
 						process="@this" update="growl" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptValidarRegistrar)}"/>
 
@@ -110,7 +110,7 @@
 	            <p:selectBooleanCheckbox id="aviso" readonly="true" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.avisoAlFinalizar}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar.aviso']}"/>
 	            <p:spacer width="30" height="1"/>
 	           		<p:commandButton id="scriptButton5"
-	           				disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptAlFinalizar eq null}"
+	           				disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptAlFinalizar eq null or viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptAlFinalizar.estaVacio()}"
 							icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_AVISO.name(), viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptAlFinalizar.codigo)}"
 							process="@this" update="growl" value="#{msg['script.SCRIPT_AVISO.titulo']}" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptAlFinalizar)}" />
 			</p:outputPanel>

@@ -73,8 +73,7 @@ public final class AccionVerificarPagoPasarela implements AccionPaso {
 		final PagoComponentVerificacion dvp = pagoExternoComponent.verificarPagoElectronico(sesionPago,
 				UtilsSTG.isDebugEnabled(pDefinicionTramite));
 
-		// En funcion del resultado de la validacion actualizamos estado paso y
-		// persistencia
+		// En funcion del resultado de la validacion actualizamos estado paso y persistencia
 		// - Actualizamos detalle
 		actualizarDetallePago(pDipa, idPago, dvp, pVariablesFlujo);
 		// - Actualizamos persistencia
@@ -111,14 +110,14 @@ public final class AccionVerificarPagoPasarela implements AccionPaso {
 
 		final Pago detallePago = ((DetallePasoPagar) pDipa.getDetallePaso()).getPago(idPago);
 
-		// TODO PENDIENTE ERROR TIMEOUT PAGO
+		// TODO PAGO --- PENDIENTE ERROR TIMEOUT PAGO
 
 		// Si se ha verificado como pagado, establecemos como pagado
 		if (pDvp.isVerificado() && pDvp.isPagado()) {
 			detallePago.setRellenado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
 			detallePago.setEstadoIncorrecto(null);
 		} else {
-			// En caso contrario establecemos detalle error
+			// En caso contrario consideramos que el pago está iniciado y no se ha podido verificar
 			final String msgError = ControladorPasoPagarHelper.getInstance().generarMensajeEstadoIncorrecto(literales,
 					pVariablesFlujo.getIdioma(), TypeEstadoPagoIncorrecto.PAGO_INICIADO, pDvp.getCodigoError(),
 					pDvp.getMensajeError());
@@ -145,50 +144,38 @@ public final class AccionVerificarPagoPasarela implements AccionPaso {
 	 */
 	private void actualizarPersistencia(final DatosInternosPasoPagar pDipa, final DatosPersistenciaPaso pDpp,
 			final String pIdPago, final PagoComponentVerificacion pResPasarela, final String pIdSesionTramitacion) {
-		// - Obtenemos id sesion pago, datos pago y fichero de autorizacion de
-		// pago
+		// - Obtenemos id sesion pago, datos pago y fichero de autorizacion de pago
 		final DatosSesionPago datosSesionPago = pDipa.recuperarSesionPago(pIdPago);
 		final DocumentoPasoPersistencia docPagoPersistencia = pDpp.getDocumentoPasoPersistencia(pIdPago,
 				ConstantesNumero.N1);
 
 		// Actualizamos sesion de pago
-		// - Si no se ha verificado, actualizamos estado pago incorrecto
-		// (pendiente verificacion)
-		if (!pResPasarela.isVerificado()) {
+		// - Si se ha verificado y pagado, marcamos como pagado
+		if (pResPasarela.isVerificado() && pResPasarela.isPagado()) {
+			// Actualizamos sesion pago con datos del pago realizado
+			datosSesionPago.setFechaPago(pResPasarela.getFechaPago());
+			datosSesionPago.setLocalizador(pResPasarela.getLocalizador());
+			datosSesionPago.setMetodoPagoSeleccionado(pResPasarela.getMetodoPago());
 			// Documento pago persistencia
+			docPagoPersistencia.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
+			docPagoPersistencia.setPagoEstadoIncorrecto(null);
+			docPagoPersistencia.setPagoErrorPasarela(null);
+			docPagoPersistencia.setPagoMensajeErrorPasarela(null);
+			docPagoPersistencia.setPagoIdentificador(datosSesionPago.getIdentificadorPago());
+			// Ficheros asociados
+			// - Datos pago
+			final byte[] xmlPago = ControladorPasoPagarHelper.getInstance().toXML(datosSesionPago);
+			dao.actualizarFicheroPersistencia(docPagoPersistencia.getFichero(), pIdPago + ".xml", xmlPago);
+			// - Justificante de pago
+			final ReferenciaFichero refJustificante = dao.insertarFicheroPersistencia(pIdPago + ".pdf",
+					pResPasarela.getJustificantePDF(), pIdSesionTramitacion);
+			docPagoPersistencia.setPagoJustificantePdf(refJustificante);
+		} else {
+			// - Si no se ha pagado, establecemos que se ha iniciado el pago y está pendiente verificar
 			docPagoPersistencia.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
 			docPagoPersistencia.setPagoEstadoIncorrecto(TypeEstadoPagoIncorrecto.PAGO_INICIADO);
 			docPagoPersistencia.setPagoErrorPasarela(pResPasarela.getCodigoError());
 			docPagoPersistencia.setPagoMensajeErrorPasarela(pResPasarela.getMensajeError());
-		} else {
-			// Comprobamos si el pago se ha realizado
-			if (pResPasarela.isPagado()) {
-				// Actualizamos sesion pago con datos del pago realizado
-				datosSesionPago.setFechaPago(pResPasarela.getFechaPago());
-				datosSesionPago.setLocalizador(pResPasarela.getLocalizador());
-				datosSesionPago.setMetodoPagoSeleccionado(pResPasarela.getMetodoPago());
-
-				// Documento pago persistencia
-				docPagoPersistencia.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
-				docPagoPersistencia.setPagoEstadoIncorrecto(null);
-				docPagoPersistencia.setPagoErrorPasarela(null);
-				docPagoPersistencia.setPagoMensajeErrorPasarela(null);
-				docPagoPersistencia.setPagoIdentificador(datosSesionPago.getIdentificadorPago());
-				// Ficheros asociados
-				// - Datos pago
-				final byte[] xmlPago = ControladorPasoPagarHelper.getInstance().toXML(datosSesionPago);
-				dao.actualizarFicheroPersistencia(docPagoPersistencia.getFichero(), pIdPago + ".xml", xmlPago);
-				// - Justificante de pago
-				final ReferenciaFichero refJustificante = dao.insertarFicheroPersistencia(pIdPago + ".pdf",
-						pResPasarela.getJustificantePDF(), pIdSesionTramitacion);
-				docPagoPersistencia.setPagoJustificantePdf(refJustificante);
-			} else {
-				// No pagado, reseteamos para inicio de nuevo
-				docPagoPersistencia.setEstado(TypeEstadoDocumento.SIN_RELLENAR);
-				docPagoPersistencia.setPagoEstadoIncorrecto(null);
-				docPagoPersistencia.setPagoErrorPasarela(null);
-				docPagoPersistencia.setPagoMensajeErrorPasarela(null);
-			}
 		}
 
 		// Actualizamos persistencia

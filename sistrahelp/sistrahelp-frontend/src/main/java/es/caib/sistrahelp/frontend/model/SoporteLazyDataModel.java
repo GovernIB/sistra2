@@ -30,9 +30,11 @@ public class SoporteLazyDataModel extends LazyDataModel<Soporte> {
 	private List<Soporte> lista;
 
 	public int count(Map<String, FilterMeta> filterBy) {
-		//TODO Implementar
-		return 20;
-		//return helpDeskService.countSoporte(filtros).intValue();
+
+		filtros.setSoloContar(true);
+		ResultadoSoporte result = helpDeskService.obtenerFormularioSoporte(filtros, null);
+		filtros.setSoloContar(false);
+		return result.getNumElementos().intValue();
 	}
 
 	@Override

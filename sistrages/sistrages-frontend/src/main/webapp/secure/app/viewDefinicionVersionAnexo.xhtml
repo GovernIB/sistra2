@@ -44,7 +44,7 @@
 
 		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
 					styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad)}"
-					disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad eq null}"
+					disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad eq null or viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad.estaVacio()}"
 					process="@this" update="growl"/>
          	</p:panelGrid>
 
@@ -124,14 +124,14 @@
 
 							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
 									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente)}"
-									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null}"
+									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null or viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.estaVacio()}"
 									process="@this" update="growl"/>
 						</p:column>
 
 						<p:outputLabel value="#{msg['script.SCRIPT_VALIDAR_ANEXO.titulo']}" />
 						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion.codigo)}"
 									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion)}"
-									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion eq null}"
+									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion eq null or  viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion.estaVacio()}"
 										process="@this" update="growl"/>
 
 					</h:panelGrid>

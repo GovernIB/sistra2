@@ -255,8 +255,8 @@
               $('#form\\:btnEditarHidden').click();
           }
         </h:outputScript>
-        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConfiguracionAlertas.rcDobleClick()}" process="@this" update=":form:growl" style="display:none">
-           <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
+        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConfiguracionAlertas.rcDobleClick()}" process="@this" update=":form:growl" style="display:none" oncomplete="setHeight();">
+           <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight()"/>
         </p:commandButton>
         <h:outputScript >
           document.getElementsByName("form:dataTable_rppDD")[0].addEventListener("change", refrescarPaginacion);

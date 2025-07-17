@@ -43,7 +43,9 @@ public enum TypePropiedadConfiguracion {
 	/** Sistramit rest usuario. **/
 	SISTRAMIT_REST_APIEXTERNA_USER("sistramit.rest.externa.user"),
 	/** Sistramit rest url. **/
-	SISTRAMIT_REST_APIEXTERNA_URL("sistramit.rest.externa.url");
+	SISTRAMIT_REST_APIEXTERNA_URL("sistramit.rest.externa.url"),
+	/** Motor de scripting. */
+	SCRIPT_ENGINE("scriptEngine");
 
 	/**
 	 * Valor como string.

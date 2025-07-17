@@ -43,7 +43,7 @@
 				     </p:column>
 				     <p:column>
 				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
-							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad eq null}"
+							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad eq null or viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad.estaVacio()}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad)}" >
 
 						</p:commandButton>
@@ -53,7 +53,7 @@
 
             <p:outputLabel for="scriptdepago" value="#{msg['viewDefinicionVersionTasa.scriptdepago']}" />
           	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_PAGO.name(), viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago.codigo)}" value="#{msg['viewDefinicionVersionTasa.scriptdepago.establecerdatos']}"
-							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago eq null}"
+							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago eq null or viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago.estaVacio()}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago)}" />
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionTasa.simularpago']}" style="#{viewDefinicionVersion.simular()}"/>

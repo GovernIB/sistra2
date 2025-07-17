@@ -219,4 +219,8 @@ public class Rol extends ModelApi {
 	public void setTipoUsuario(TypeUser tipoUsuario) {
 		this.tipoUsuario = tipoUsuario;
 	}
+
+	public boolean todasAreas(){
+		return TypeUser.PERSONAL_CAU.equals(tipoUsuario);
+	}
 }

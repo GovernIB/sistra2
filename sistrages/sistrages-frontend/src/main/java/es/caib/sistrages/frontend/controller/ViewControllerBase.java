@@ -221,7 +221,7 @@ public abstract class ViewControllerBase {
 	 */
 	public String getColorScript(final Script script) {
 		String className = "";
-		if (script != null) {
+		if (script != null && !script.estaVacio()) {
 			className = "scriptRelleno";
 		}
 		return className;

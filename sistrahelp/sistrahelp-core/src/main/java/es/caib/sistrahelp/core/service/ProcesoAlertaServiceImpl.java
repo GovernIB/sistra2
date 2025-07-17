@@ -19,7 +19,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import es.caib.sistrahelp.core.service.component.ConfiguracionComponent;
 import org.apache.commons.digester.plugins.PluginException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +77,9 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 	@Autowired
 	private SistramitApiComponent sistramitApiComponent;
 
+	@Autowired
+	private ConfiguracionComponent configuracionComponent;
+
 	private int tramIni;
 
 	private int tramFin;
@@ -123,7 +128,6 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 	private Integer umbralAtencionRevisarProperties;
 
 	ScriptEngineManager manager = new ScriptEngineManager();
-    ScriptEngine interprete = manager.getEngineByName("js");
 
 	@Override
     @NegocioInterceptor
@@ -227,9 +231,21 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					}
 				}
 			}
-			Boolean evaluacion = null;
+
+
+
+			Boolean evaluacion = false;
 			try {
-				evaluacion = (Boolean)interprete.eval(condicion);
+				final String engineScript = configuracionComponent
+						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SCRIPT_ENGINE);
+
+				if (StringUtils.isBlank(engineScript)) {
+					throw new ScriptException("No s'ha establert ScriptEngine");
+				}
+
+				ScriptEngine interprete = manager.getEngineByName(engineScript);
+				evaluacion = (Boolean) interprete.eval(condicion);
+
 			} catch (ScriptException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

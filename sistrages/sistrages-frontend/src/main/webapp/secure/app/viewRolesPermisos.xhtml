@@ -230,8 +230,9 @@
 
 			    </p:column>
 
-				<p:column headerText="#{msg['viewRolesPermisos.headerArea']}" styleClass="w25">
-			        <h:outputText value="#{td.area.identificador}" />
+				<p:column headerText="#{msg['viewRolesPermisos.headerArea']}" styleClass="w25" >
+			        <h:outputText value="#{td.area.identificador}" rendered="#{!td.todasAreas()}"/>
+					<h:outputText value="#{msg['viewRolesPermisos.area.todos']}" rendered="#{td.todasAreas()}"/>
 			    </p:column>
 
 			</p:dataTable>

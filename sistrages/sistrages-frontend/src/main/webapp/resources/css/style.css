@@ -644,6 +644,10 @@ label.ui-state-disabled {
 	color:#007fff;
 }
 
+.scriptRelleno span.fa-bolt{
+    color:#007fff;
+}
+
 #dialogDisenyoFormulario\:componente-panel .ui-panel-content { padding-left: 5px !important; padding-right: 5px !important; }
 
 #dialogDisenyoFormulario\:formDisenyoTextbox .ui-widget .ui-widget{font-size: 8pt !important;}

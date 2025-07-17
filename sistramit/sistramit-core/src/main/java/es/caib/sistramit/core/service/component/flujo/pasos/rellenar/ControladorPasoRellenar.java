@@ -542,6 +542,8 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 				updateBD = true;
 				ficsPersistenciaBorrar.addAll(ficsBorrar);
 				pDocDpp.setFormularioPdf(null);
+				// - Borramos firmas
+				pDocDpp.removeFirmasFicheros();
 			}
 		}
 

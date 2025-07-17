@@ -92,7 +92,6 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
 	 *                         Datos pago
 	 * @param debugEnabled
 	 *                         Debug enabled
-	 * @param pReiniciar
 	 */
 	private void validacionesPago(final DatosInternosPasoPagar pDipa, final Pago pPago, final boolean debugEnabled) {
 
@@ -112,14 +111,15 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
 			}
 			break;
 		case ELECTRONICA:
-			// En caso de que sea un pago electronico verificamos que este
-			// iniciado y que no se haya pagado
+			// En caso de que sea un pago electronico verificamos que este iniciado y que no se haya pagado
 			if (pPago.getRellenado() != TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE) {
 				throw new AccionPasoNoPermitidaException("El pagament no està en estat iniciat");
 			}
-			final PagoComponentVerificacion dvp = pagoExternoComponent.verificarPagoElectronico(sesionPago,
-					debugEnabled);
+			// Verificamos el pago electronico por si está pagado
+			final PagoComponentVerificacion dvp = pagoExternoComponent.verificarPagoElectronico(sesionPago,	debugEnabled);
+			// TODO PAGO --- Si no se puede verificar el pago, no dejar cancelar el pago
 			if (dvp.isVerificado() && dvp.isPagado()) {
+				// TODO PAGO -- MEJORAR CONTROL ERROR PARA INDICAR QUE EL PAGO YA SE HA REALIZADO (SALE ERROR GENERAL)
 				throw new AccionPasoNoPermitidaException("El pagament està completat");
 			}
 			break;

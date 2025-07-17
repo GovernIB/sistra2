@@ -50,7 +50,9 @@ public enum TypePropiedadConfiguracion {
 	SISTRAMIT_PWD("sistramit.rest.pwd"),
 	/** PIB Url. */
 	PAYMENTIB_VIEW_URL("paymentib.view.url"),
-	SISTRAGES_MODOENTREGA_HABILITAR("sistrages.modoEntrega.habilitar");
+	SISTRAGES_MODOENTREGA_HABILITAR("sistrages.modoEntrega.habilitar"),
+	/** Motor de scripting. */
+	SCRIPT_ENGINE("scriptEngine");
 
 
 

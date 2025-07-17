@@ -346,7 +346,6 @@
 											    </c:otherwise>
 											</c:choose>
 											<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}" oncomplete="invertirColores()">
-												<p:ajax event="dialogReturn" listener="#{dialogScript.cerrar}"/>
 											</p:commandButton>
 											<p:commandButton id="btnEliminar" value="#{msg['botones.borrar']}" icon="fa fa-trash" actionListener="#{dialogScript.borrar()}" process="@this" update="growlScript" styleClass="boton-rojo" rendered="#{dialogScript.isEdicion()}" >
 						        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>

@@ -238,9 +238,7 @@ public final class PagoComponentImpl implements PagoComponent {
 
 			// Devuelve verificacion y justificante
 			final PagoComponentVerificacion res = new PagoComponentVerificacion();
-			// TODO Ver si algun caso podemos establecer como no verificado
-			// (capturar excepcion??)
-			res.setVerificado(true);
+			res.setVerificado(resPlg.getEstado() != TypeEstadoPago.DESCONOCIDO);
 			res.setPagado(resPlg.getEstado() == TypeEstadoPago.PAGADO);
 			res.setFechaPago(resPlg.getFechaPago());
 			res.setLocalizador(resPlg.getLocalizador());

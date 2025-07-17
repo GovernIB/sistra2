@@ -41,7 +41,7 @@
              		</p:column>
              		<p:column>
                			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
-              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptObligatoriedad eq null}"
+              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptObligatoriedad eq null or viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptObligatoriedad.estaVacio()}"
               				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptObligatoriedad)}"
               				process="@this" update="growl"/>
           			</p:column>
@@ -56,7 +56,7 @@
              		</p:column>
              		<p:column>
                			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
-              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma eq null}"
+              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma eq null or viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma.estaVacio()}"
               				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma)}"
               				process="@this" update="growl"/>
           			</p:column>
@@ -68,7 +68,7 @@
            		<p:row>
                 	<p:column styleClass="noPadding-left">
            		 		<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptDatosIniciales.codigo)}" value="#{msg['script.SCRIPT_DATOS_INICIALES_FORMULARIO.titulo']}"
-              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptDatosIniciales eq null}"
+              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptDatosIniciales eq null or viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptDatosIniciales.estaVacio()}"
               				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptDatosIniciales)}"
               				process="@this" update="growl"/>
           			</p:column>
@@ -76,7 +76,7 @@
             	<p:row>
              		<p:column styleClass="noPadding-left">
              			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptParametros.codigo)}" value="#{msg['script.SCRIPT_PARAMETROS_FORMULARIO.titulo']}"
-             				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptParametros eq null}"
+             				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptParametros eq null or viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptParametros.estaVacio()}"
               				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptParametros)}"
               			 	process="@this" update="growl"/>
           			</p:column>
@@ -84,7 +84,7 @@
         		<p:row>
              		<p:column styleClass="noPadding-left">
                			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptRetorno.codigo)}" value="#{msg['script.SCRIPT_POSTGUARDAR_FORMULARIO.titulo']}"
-	             			disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptRetorno eq null}"
+	             			disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptRetorno eq null or viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptRetorno.estaVacio()}"
     	          			styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptRetorno)}"
         	      			process="@this" update="growl"/>
           			</p:column>

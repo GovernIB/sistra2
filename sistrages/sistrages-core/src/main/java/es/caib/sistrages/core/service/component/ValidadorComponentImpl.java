@@ -11,6 +11,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import es.caib.sistrages.core.api.model.types.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.plugins.documentconverter.openoffice.OpenOfficeDocumentConverterPlugin;
@@ -55,15 +56,6 @@ import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.VariableArea;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
-import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.model.types.TypeDominio;
-import es.caib.sistrages.core.api.model.types.TypeErrorValidacion;
-import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
-import es.caib.sistrages.core.api.model.types.TypeIdioma;
-import es.caib.sistrages.core.api.model.types.TypeListaValores;
-import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
-import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
-import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
@@ -99,6 +91,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 	@Autowired
 	private ConfiguracionGlobalService cfService;
+
+	@Autowired
+	private ConfiguracionComponent configuracionComponent;
 
 	@Autowired
 	TramitePasoDao tramitePasoDao;
@@ -1344,10 +1339,16 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	private String compilarScript(final String script) {
 		final StringBuilder error = new StringBuilder();
 		try {
+			final String engineScript = configuracionComponent
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SCRIPT_ENGINE);
+			if (StringUtils.isBlank(engineScript)) {
+				throw new ScriptException("No s'ha establert ScriptEngine");
+			}
+
 			final ScriptEngineManager engineManager = new ScriptEngineManager();
 			final StringBuilder sb = new StringBuilder();
 			sb.append("function ejecutarScript() { ").append(script).append("\n}; ejecutarScript();");
-			final ScriptEngine jsEngine = engineManager.getEngineByName("JavaScript");
+			final ScriptEngine jsEngine = engineManager.getEngineByName(engineScript);
 			final Compilable compilingEngine = (Compilable) jsEngine;
 			compilingEngine.compile(sb.toString());
 		} catch (final ScriptException e) {
