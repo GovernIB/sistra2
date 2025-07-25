@@ -10,11 +10,45 @@
 		<f:viewAction action="#{viewMigracion.init}" />
 	</f:metadata>
 
+	<ui:define name="icerick">
+		<script type="text/javascript">
+		function setHeight(){
+			// Altura de la pantalla menos 50px del footer
+
+			var altura = window.innerHeight - 50;
+			console.log("altura: " + altura);
+			// Altura de la tabla menos altura de la cabecera y del toolbar
+			var alturaDatatable = altura - 240;
+			// Altura del scrollable body, tabla menos cabecera y footer (de la tabla)
+			var alturaScrollableBody = alturaDatatable - 57;
+
+			// $('#dataTable').height(alturaDatatable);
+			// $('#dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+
+			$('#contentBody').height(alturaDatatable + 50);
+
+			console.log("alturaDatatable: " + alturaDatatable);
+			console.log("alturaContent: " + altura);
+		}
+
+		jQuery(document).ready(function() {
+
+			$(window).resize(function() {
+				setTimeout(function(){  setHeight(); }, 100);
+			});
+
+			setTimeout(function(){  setHeight(); }, 10);
+		});
+
+		</script>
+	</ui:define>
 
 	<ui:define name="content">
 
 		<h:form id="form" styleClass="h100" prependId="false">
 			<h:outputScript >
+
+
 
 			  var arrayCm = [];
 
@@ -121,7 +155,9 @@
 			</h:outputScript>
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-			<p:panel>
+
+
+			<p:panel id="contentBody">
 				<h:panelGrid columns="5" styleClass="w100" columnClasses="grid-center,grid-center,grid-center,grid-center,grid-center">
 					<p:outputPanel style="#{viewMigracion.setVisibleExcepcion(0)}">
 						<p:outputLabel value="#{msg['viewMigracion.tramite']}:" styleClass="va-middle margin-right-3" for="comboTramitesSistra"/>
@@ -175,7 +211,7 @@
 
 				<p:dataTable  id="dataTable" var="dt" value="#{viewMigracion.listaErrores}"
 							emptyMessage="#{msg['error.emptyRows']}" styleClass="margin-left-25 margin-right-25"
-							scrollable="true" scrollHeight="400" rendered="#{viewMigracion.listaErrores.size() > 0}"
+							scrollable="true" scrollHeight="90%" rendered="#{viewMigracion.listaErrores.size() > 0}"
 							selectionMode="single" rowKey="#{dt.hashCode()}">
 
 					<!-- Columnas -->

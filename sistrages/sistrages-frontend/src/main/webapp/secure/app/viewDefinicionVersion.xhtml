@@ -76,10 +76,10 @@
 				</div>
 
 				<!-- Side panel (previously indexDefinicionVersion) -->
-				<div class="d-flex h-100" style="display: flex; flex-direction: row; height: 100vh;">
+				<div class="d-flex h-100" style="display: flex; flex-direction: row; height: 75vh;">
 
 					<!-- Sidebar de ancho fijo de 250px -->
-					<div id="indexDefinicionVersion" class="h-100" style="width: 250px; flex-shrink: 0; margin-right: 10px;height:70%">
+					<div id="indexDefinicionVersion" class="h-100" style="width: 250px; flex-shrink: 0; margin-right: 10px;height:99%">
 							<h:form id="formArbol" class="w-100 h-100" styleClass="h100">
 								<p:tree id="arbol" value="#{viewDefinicionVersion.root}" var="node" selectionMode="single"
 										selection="#{viewDefinicionVersion.selectedNode}" styleClass="sin-bordes h100 w100 arbolTramites h-100"
@@ -100,7 +100,7 @@
 					</div>
 
 					<!-- Contenido principal que ocupa el resto del espacio -->
-					<div class="flex-grow-1 w100" style="overflow: auto; border: 0.2px solid #c9c9c9; border-radius: 1%;height:70%">
+					<div class="flex-grow-1 w100" style="overflow: auto; border: 0.2px solid #c9c9c9; border-radius: 1%;height:99%">
 						<p:outputPanel id="workDefinicionVersion" styleClass="h100 update w100">
 							<ui:include src="#{viewDefinicionVersion.opcionUrl}" />
 						</p:outputPanel>
