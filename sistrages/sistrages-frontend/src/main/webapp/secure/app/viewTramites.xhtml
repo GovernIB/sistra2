@@ -358,7 +358,7 @@
                      // Deseleccionar todas las filas primero
 				  	 dataTable.unselectAllRows();
 
-				  	// Seleccionar una fila en el índice 0 y reemplazar cualquier selección existente
+				  	// Seleccionar una fila en el indice 0 y reemplazar cualquier seleccion existente
 				  	dataTable.selectRow(posicion, false);
 
                   }
@@ -369,7 +369,7 @@
 
 				  // Asegurarse de que el DataTable y su tbody existen
 				  if (!dataTable || !dataTable.tbody || !dataTable.tbody[0]) {
-					  console.error("El DataTable o su cuerpo (tbody) no están disponibles.");
+					  console.error("El DataTable o su cuerpo (tbody) no estan disponibles.");
 					  return -1;
 				  }
 
@@ -383,11 +383,11 @@
 					  var rowKey = row.getAttribute("data-rk"); // 'data-rk' suele contener el rowKey en PrimeFaces
 
 					  if (!seleccionadas.includes(rowKey)) {
-						  return i; // Retornar la posición del elemento no seleccionado
+						  return i; // Retornar la posicion del elemento no seleccionado
 					  }
 				  }
 
-				  return -1; // Si todos los elementos están seleccionados
+				  return -1; // Si todos los elementos estan seleccionados
 			  }
 
 
@@ -960,7 +960,7 @@
 			  if (btn) {
                   btn.click();
 			  } else {
-				  console.warn("No se encontró ningún elemento cuyo ID termine en " + id);
+				  console.warn("No se encontro ningun elemento cuyo ID termine en " + id);
 			  }
 		  }
 

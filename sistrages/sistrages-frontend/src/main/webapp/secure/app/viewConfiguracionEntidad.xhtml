@@ -19,7 +19,7 @@
 				var style = window.getComputedStyle(div);
 				var paddingBottomActual = parseFloat(style.getPropertyValue('padding-bottom'));
 
-				// Calculamos padding a añadir
+				// Calculamos padding a anyadir
 				var divRectBottom = div.getBoundingClientRect().bottom - paddingBottomActual;
 				var windowHeight = window.innerHeight;
 				var paddingBottomDinamico = windowHeight - divRectBottom - 90 - 20;

@@ -215,7 +215,7 @@
 					// Asigna el contenido del elemento especificado al valor del campo
 					aux.setAttribute("value", texto.value);
 
-					// Añade el campo a la página
+					// Anyade el campo a la pagina
 					document.body.appendChild(aux);
 
 					// Selecciona el contenido del campo
@@ -224,7 +224,7 @@
 					// Copia el texto seleccionado
 					document.execCommand("copy");
 
-					// Elimina el campo de la página
+					// Elimina el campo de la pagina
 					document.body.removeChild(aux);
 
 					document.getElementById("dialogTramite:hiddenCommandGrowl").click();
@@ -235,12 +235,12 @@
 
             <h:outputScript >
             	function llamarBoton() {
-					// Habría que crear un botón de buscar
+					// Habria que crear un boton de buscar
 					document.getElementById("dialogTramite:getProcedimientosEnd").click();
 				}
 
 				function llamarBotonRecargar() {
-					//Habría que crear un botón de buscar
+					//Habria que crear un boton de buscar
 					document.getElementById("dialogTramite:getProcedimientosRecargar").click();
 				}
 

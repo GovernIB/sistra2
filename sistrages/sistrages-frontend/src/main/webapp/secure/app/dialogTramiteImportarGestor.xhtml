@@ -27,7 +27,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -141,7 +141,7 @@
 						    <f:selectItems value="#{dialogTramiteImportarGestor.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
 					</p:selectOneMenu >
 					<p:commandButton id="btnConsultarConf" title="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogTramiteImportarGestor.consultarConfiguracion()}"  disabled="#{dialogTramiteImportarGestor.isConsulta()}"  process="@this configAut" update="growlDialog" />
-					 <p:commandButton id="btnAñadirConf" title="#{msg['botones.anyadir']}" icon="fa fa-plus"  actionListener="#{dialogTramiteImportarGestor.nuevo()}" process="@this" update="growlDialog configAut">
+					 <p:commandButton id="btnAnyadirConf" title="#{msg['botones.anyadir']}" icon="fa fa-plus"  actionListener="#{dialogTramiteImportarGestor.nuevo()}" process="@this" update="growlDialog configAut">
 		        			<p:ajax event="dialogReturn" listener="#{dialogTramiteImportarGestor.returnDialogo}" update="growlDialog configAut"/>
 		        		</p:commandButton>
 

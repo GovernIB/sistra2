@@ -210,7 +210,7 @@
 						</p:selectOneMenu >
 
 						<p:commandButton id="btnConsultarConf" title="#{msg['botones.consultar']}" icon="fa fa-eye" style="top:-9px" actionListener="#{dialogTramiteImportarDominio.consultarConfiguracion()}"  disabled="#{dialogTramiteImportarDominio.isConsulta()}"  process="@this configAut" update="growlDialog" />
-                        <p:commandButton id="btnAñadirConf" title="#{msg['botones.anyadir']}" icon="fa fa-plus" style="top:-9px" actionListener="#{dialogTramiteImportarDominio.nuevo()}" process="@this" update="growlDialog configAut">
+                        <p:commandButton id="btnAnyadirConf" title="#{msg['botones.anyadir']}" icon="fa fa-plus" style="top:-9px" actionListener="#{dialogTramiteImportarDominio.nuevo()}" process="@this" update="growlDialog configAut">
 		        			<p:ajax event="dialogReturn" listener="#{dialogTramiteImportarDominio.returnDialogo}" update="growlDialog configAut"/>
 		        		</p:commandButton>
 

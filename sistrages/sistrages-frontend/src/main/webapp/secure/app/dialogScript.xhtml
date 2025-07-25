@@ -265,19 +265,18 @@
 						</h:panelGrid>
 
 						<h:outputScript >
-
-					     	function triggerCopiar() {
+							function triggerCopiar() {
 
 								// Valor del nodo seleccionado
 								var valor = document.getElementsByClassName("ui-state-highlight")[0].innerText;
 
-								// Crea un campo de texto "oculto"
+								// Crea un campo de texto oculto
 								var aux = document.createElement("input");
 
 								// Asigna el contenido del elemento especificado al valor del campo
 								aux.setAttribute("value", valor);
 
-								// Añade el campo a la página
+								// Anyade el campo a la pagina
 								document.body.appendChild(aux);
 
 								// Selecciona el contenido del campo
@@ -286,43 +285,40 @@
 								// Copia el texto seleccionado
 								document.execCommand("copy");
 
-								// Elimina el campo de la página
+								// Elimina el campo de la pagina
 								document.body.removeChild(aux);
-
-								//console.log("texto copiado fin:" + valor);
 
 								document.getElementById("dialogScript:hiddenCommandMensajeCopy").click();
 							}
 
-							function copiarClipboardDominio(domIdentificador) {
+                            function copiarClipboardDominio(domIdentificador) {
 
-								// Crea un campo de texto "oculto"
-								var aux = document.createElement("input");
+    							// Crea un campo de texto oculto
+    							var aux = document.createElement("input");
 
-								// Asigna el contenido del elemento especificado al valor del campo
+                                // Asigna el contenido del elemento especificado al valor del campo
 								aux.setAttribute("value", domIdentificador);
 
-								// Añade el campo a la página
+                                // Anyade el campo a la pagina
 								document.body.appendChild(aux);
 
-								// Selecciona el contenido del campo
+                                // Selecciona el contenido del campo
 								aux.select();
 
-								// Copia el texto seleccionado
+                                // Copia el texto seleccionado
 								document.execCommand("copy");
 
-								// Elimina el campo de la página
+                                // Elimina el campo de la pagina
 								document.body.removeChild(aux);
-
 							}
 
-							function invertirColores() {
-								var editor = document.getElementsByClassName("CodeMirror")[0];
-								var editorScroll = document.getElementsByClassName("CodeMirror-vscrollbar")[0];
+                            function invertirColores() {
+    							var editor = document.getElementsByClassName("CodeMirror")[0];
+                                var editorScroll = document.getElementsByClassName("CodeMirror-vscrollbar")[0];
 								if(#{dialogScript.colorEditorOscuro}){
 									editor.style.filter="invert(0%)";
 									editorScroll.style.filter="invert(0%)";
-								}else{
+								} else {
 									editor.style.filter="invert(100%)";
 									editorScroll.style.filter="invert(100%)";
 								}
@@ -345,7 +341,7 @@
 													<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogScript.cancelar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
 											    </c:otherwise>
 											</c:choose>
-											<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}" oncomplete="invertirColores()">
+											<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}">
 											</p:commandButton>
 											<p:commandButton id="btnEliminar" value="#{msg['botones.borrar']}" icon="fa fa-trash" actionListener="#{dialogScript.borrar()}" process="@this" update="growlScript" styleClass="boton-rojo" rendered="#{dialogScript.isEdicion()}" >
 						        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
