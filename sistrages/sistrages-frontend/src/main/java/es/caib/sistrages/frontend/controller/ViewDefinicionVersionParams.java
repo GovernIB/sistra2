@@ -482,8 +482,8 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
 				TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
 		params.put(Constantes.CLAVE_ES_IFRAME, "true");
-		Integer width = UtilJSF.getSessionBean().getWidth();
-		Integer height = UtilJSF.getSessionBean().getHeight() - 60;
+		Integer width = UtilJSF.getSessionBean().getWidth() - 20;
+		Integer height = UtilJSF.getSessionBean().getHeight() - 20;
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
 	}
 

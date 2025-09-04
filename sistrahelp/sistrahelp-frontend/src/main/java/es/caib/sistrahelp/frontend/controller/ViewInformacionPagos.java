@@ -145,14 +145,14 @@ public class ViewInformacionPagos extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		int alto = 350;
+		int alto = 370;
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_PAGO, datoSeleccionado);
 
 		if (TypeEstadoPago.EN_CURSO.equals(datoSeleccionado.getEstadoPago()) && TypePresentacion.ELECTRONICA
 				.equals(TypePresentacion.fromString(datoSeleccionado.getPresentacion()))) {
-			alto = 500;
+			alto = 520;
 		}
 		// Muestra dialogo
 		UtilJSF.openDialog(DialogInformacionPagos.class, TypeModoAcceso.CONSULTA, null, true, 900, alto);

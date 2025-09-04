@@ -546,11 +546,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (UtilJSF.getSessionBean().getWidth() == null) {
 			UtilJSF.getSessionBean().setWidth(1920); //Ponemos algun valor por defecto
 		}
-		Integer width = UtilJSF.getSessionBean().getWidth();
+		Integer width = UtilJSF.getSessionBean().getWidth() - 20;
 		if (UtilJSF.getSessionBean().getHeight() == null) {
 			UtilJSF.getSessionBean().setHeight(1080); //Ponemos algun valor por defecto
 		}
-		Integer height = UtilJSF.getSessionBean().getHeight() - 60;
+		Integer height = UtilJSF.getSessionBean().getHeight() - 20;
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
 	}
 
@@ -1312,7 +1312,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(),
 				entidadService.loadEntidadByArea(area.getCodigo()).getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 1100, 635);
+		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 1100, 640);
 	}
 
 	/**
@@ -1551,7 +1551,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 750, 350);
+		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 780, 350);
 	}
 
 	/**

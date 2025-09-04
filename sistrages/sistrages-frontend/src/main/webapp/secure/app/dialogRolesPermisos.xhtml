@@ -20,6 +20,9 @@
 <h:body>
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
 	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -140,7 +143,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 wpx150," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
 
 					<p:outputLabel for="tipoUsuario" value="#{msg['dialogRolesPermisos.headerTipoUsuario']}" />
 					<p:selectOneMenu id="tipoUsuario" value="#{dialogRolesPermisos.data.tipoUsuario}" style="width:90%" required="true" disabled="#{dialogRolesPermisos.consulta}">

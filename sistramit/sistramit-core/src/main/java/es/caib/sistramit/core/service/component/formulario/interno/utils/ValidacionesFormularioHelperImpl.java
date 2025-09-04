@@ -614,12 +614,16 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 			final ValorCampo vc) {
 		boolean validacion = true;
 		final ConfiguracionCampoVerificacion confVerificacion = (ConfiguracionCampoVerificacion) configuracion;
+		// Verifica que tenga valor checked / no checked
 		final ValoresCampoVerificacion valores = confVerificacion.getValores();
-
 		final ValorCampoSimple valorCampoVerificacion = (ValorCampoSimple) vc;
-
 		if (!valorCampoVerificacion.getValor().equals(valores.getChecked())
 				&& !valorCampoVerificacion.getValor().equals(valores.getNoChecked())) {
+			validacion = false;
+		}
+		// Si es obligatorio debe estar en checked
+		if (validacion && configuracion.getObligatorio() == TypeSiNo.SI
+				&& !valorCampoVerificacion.getValor().equals(valores.getChecked())) {
 			validacion = false;
 		}
 		return validacion;

@@ -511,10 +511,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		if (this.modoAcceso.equals(TypeModoAcceso.EDICION.toString())) {
-			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 400);
+			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 480);
 		} else {
 			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 830,
-					400);
+					480);
 		}
 	}
 
@@ -1044,7 +1044,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 
-		UtilJSF.openDialog(DialogPaginaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 190);
+		UtilJSF.openDialog(DialogPaginaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 230);
 	}
 
 	public void returnDialogoPagina(final SelectEvent event) {
@@ -1386,7 +1386,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomas);
 
-		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 970,
+		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 980,
 				540);
 	}
 
@@ -2839,7 +2839,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getCodigo()));
 
 		UtilJSF.openDialog(DialogEstructuraFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 450,
-				460);
+				500);
 	}
 
 	public void changedNoModificable() {

@@ -243,8 +243,8 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
 					TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
 
-			Integer width = UtilJSF.getSessionBean().getWidth();
-			Integer height = UtilJSF.getSessionBean().getHeight() - 60;
+			Integer width = UtilJSF.getSessionBean().getWidth() - 20;
+			Integer height = UtilJSF.getSessionBean().getHeight() - 20;
 			UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.valueOf(this.modoAcceso), params, true,
 					width, height);
 		}
@@ -267,8 +267,8 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
 					TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
 
-			Integer width = UtilJSF.getSessionBean().getWidth();
-			Integer height = UtilJSF.getSessionBean().getHeight() - 40;
+			Integer width = UtilJSF.getSessionBean().getWidth() - 20;
+			Integer height = UtilJSF.getSessionBean().getHeight() - 20;
 			UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
 		}
 	}

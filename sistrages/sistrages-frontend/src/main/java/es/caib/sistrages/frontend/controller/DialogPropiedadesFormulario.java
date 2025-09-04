@@ -404,7 +404,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 
-		UtilJSF.openDialog(DialogPaginaFormulario.class, modo, params, true, 430, 190);
+		UtilJSF.openDialog(DialogPaginaFormulario.class, modo, params, true, 450, 230);
 	}
 
 	/**

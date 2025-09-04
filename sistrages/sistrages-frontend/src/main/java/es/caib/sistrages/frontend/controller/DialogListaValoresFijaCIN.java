@@ -79,7 +79,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 	 * Crea nuevo valor.
 	 */
 	public void nuevoValor() {
-		UtilJSF.openDialog(DialogListaValoresFija.class, TypeModoAcceso.ALTA, null, true, 430, 170);
+		UtilJSF.openDialog(DialogListaValoresFija.class, TypeModoAcceso.ALTA, null, true, 430, 200);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
-		UtilJSF.openDialog(DialogListaValoresFija.class, TypeModoAcceso.EDICION, params, true, 430, 170);
+		UtilJSF.openDialog(DialogListaValoresFija.class, TypeModoAcceso.EDICION, params, true, 430, 200);
 	}
 
 	/**

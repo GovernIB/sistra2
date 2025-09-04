@@ -651,11 +651,7 @@ public class UtilsFormularioInterno {
 		config.setId(confCampo.getId());
 		config.setSoloLectura(TypeSiNo.fromBoolean(confCampo.getForzarSoloLectura().toBoolean() || estado.getEstadoCampo().getSoloLectura().toBoolean()));
 		config.setOculto(estado.getEstadoCampo().getOculto());
-		config.setObligatorio(TypeSiNo.fromBoolean (
-						confCampo.getTipo() != TypeCampo.VERIFICACION &&
-								( propiedadesCampo.isObligatorio() ||  estado.getEstadoCampo().getObligatorio().toBoolean())
-				)
-		);
+		config.setObligatorio(TypeSiNo.fromBoolean ( propiedadesCampo.isObligatorio() ||  estado.getEstadoCampo().getObligatorio().toBoolean()));
 		return config;
 	}
 

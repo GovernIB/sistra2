@@ -603,7 +603,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		confCampo.setAyuda(pCampoDef.getAyuda());
 		final RPropiedadesCampo propsGenerales = UtilsFormularioInterno.obtenerPropiedadesCampo(pCampoDef);
 		confCampo.setId(pCampoDef.getIdentificador());
-		confCampo.setObligatorio(TypeSiNo.fromBoolean(propsGenerales.isObligatorio() && confCampo.getTipo() != TypeCampo.VERIFICACION) );
+		confCampo.setObligatorio(TypeSiNo.fromBoolean(propsGenerales.isObligatorio()));
 		confCampo.setForzarSoloLectura(TypeSiNo.fromBoolean(propsGenerales.isSoloLectura()));
 		confCampo.setSoloLectura(TypeSiNo.fromBoolean(propsGenerales.isSoloLectura()));
 		confCampo.setModificable(TypeSiNo.fromBoolean(!propsGenerales.isNoModificable()));

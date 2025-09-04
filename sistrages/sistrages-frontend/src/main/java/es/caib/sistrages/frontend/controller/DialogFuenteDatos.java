@@ -206,7 +206,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 * @return
 	 */
 	private int calcularY(final int tamanyo) {
-		return 70 + (tamanyo * 85);
+		return 70 + (tamanyo * 85) + 10;
 	}
 
 	/**

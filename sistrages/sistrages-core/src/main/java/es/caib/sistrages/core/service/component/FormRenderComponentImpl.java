@@ -471,7 +471,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 					+ trataLiteral(campo.getTexto().getTraduccion(pLang)) + "</label>";
 		}
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente())+" " +dataSeccionReutilizable, escribeCodigo(pCF.getCodigo(), pModoEdicion),
-				escribeTieneScripts(campo, pModoEdicion), "class=\"imc-element imc-el-check", estilo.toString(),
+				escribeTieneScripts(campo, pModoEdicion), (campo.isObligatorio() ? "data-obligatori=\"s\"" : "") + "class=\"imc-element imc-el-check", estilo.toString(),
 				"\" data-type=\"check\">", 5);
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);

@@ -841,6 +841,11 @@ public final class ValidacionesTipo {
 		} else {
 			pattern = "#########.##";
 		}
+		if (",".equals(pSeparadorMiles)) {
+			nf = NumberFormat.getInstance(Locale.GERMAN);
+		} else {
+			nf = NumberFormat.getInstance(Locale.US);
+		}
 		final DecimalFormat formatter = (DecimalFormat) nf;
 		formatter.applyPattern(pattern);
 		formatter.setGroupingUsed(true);

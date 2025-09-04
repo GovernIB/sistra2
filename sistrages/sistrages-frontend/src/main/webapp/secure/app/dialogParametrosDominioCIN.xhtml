@@ -16,6 +16,11 @@
 <h:body>
   	<f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
+
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
+
   	</f:facet>
 
 	<!-- Parametros dialogo -->
@@ -232,14 +237,15 @@
            <p:inputText id="auxCopiar" value="#{dialogParametrosDominioCIN.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
            <p:contextMenu for="datalistValores" id="cMenuPropiedades" widgetVar="cMenuPropiedadesWV" beforeShow="return true;">
-                <p:menuitem id="mnuCopyValor" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogCampo:auxCopiar" update="growldialogParametrosDominioCIN" />
+                <p:menuitem id="mnuCopyValor" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90"
+							process="@this :dialogCampo:auxCopiar" update="growldialogParametrosDominioCIN" />
                 <p:separator/>
 				<p:menuitem id="mnuNuevoValor" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogCampo:btnNuevoValor').click();" />
 				<p:menuitem id="mnuEditarValor" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('dialogCampo:btnEditarValor').click();"/>
 				<p:menuitem id="mnuEliminarValor" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('dialogCampo:btnEliminarValor').click();" />
             </p:contextMenu>
-            <pe:clipboard id="clipContextCopyValores" trigger="mnuCopyValor" action="copy" target="auxCopiar">
-                <p:ajax event="success" listener="#{dialogParametrosDominioCIN.copiadoCorr}" process="@this" update="@this growldialogParametrosDominioCIN"/>
+            <pe:clipboard id="clipContextCopyValores" trigger="mnuCopyValor" action="copy" target="auxCopiar" >
+                <p:ajax event="success" listener="#{dialogParametrosDominioCIN.copiadoCorr}" process="@this" update="@this growldialogParametrosDominioCIN" />
                 <p:ajax event="error" listener="#{dialogParametrosDominioCIN.copiadoErr}" update="@this growldialogParametrosDominioCIN"/>
             </pe:clipboard>
 	</h:form>

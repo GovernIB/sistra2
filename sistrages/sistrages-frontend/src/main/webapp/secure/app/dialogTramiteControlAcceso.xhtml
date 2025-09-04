@@ -203,7 +203,7 @@
 						<p:column>
 							<p:spacer width="20" height="1" />
 						</p:column>
-						<p:column>
+						<p:column style="display: contents;">
 							<p:outputLabel for="numtramitraciones" value="#{msg['dialogTramiteControlAcceso.numtramitraciones']}" />
 							<p:spacer width="8" height="1" />
 							<p:inputNumber minValue="0" maxValue="9999" decimalPlaces="0" id="numtramitraciones" readonly="#{!dialogTramiteControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogTramiteControlAcceso.tramiteVersion.numLimiteTramitacion}" />
@@ -211,7 +211,7 @@
 						<p:column>
 							<p:spacer width="10" height="1" />
 						</p:column>
-						<p:column>
+						<p:column style="display: contents;">
 							<p:outputLabel for="intervalo" value="#{msg['dialogTramiteControlAcceso.intervalo']}" />
 							<p:spacer width="8" height="1" />
 							<p:inputNumber minValue="0" maxValue="99" decimalPlaces="0" id="intervalo" readonly="#{!dialogTramiteControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogTramiteControlAcceso.tramiteVersion.intLimiteTramitacion}"/>
