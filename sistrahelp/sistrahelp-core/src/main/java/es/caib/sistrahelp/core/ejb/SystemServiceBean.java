@@ -54,4 +54,10 @@ public class SystemServiceBean implements SystemService {
 	public List<Alerta> calcularAlertasEjecucion(){
 		return systemService.calcularAlertasEjecucion();
 	}
+
+	@Override
+	@PermitAll
+	public void actualizarFechaAcceso(String pUserName) {
+		systemService.actualizarFechaAcceso(pUserName);
+	}
 }

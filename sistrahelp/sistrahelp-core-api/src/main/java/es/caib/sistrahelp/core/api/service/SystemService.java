@@ -13,7 +13,7 @@ public interface SystemService {
 	/**
 	 * Obtiene el valor de sesion.
 	 *
-	 * @param userName
+	 * @param pUserName
 	 *            usuario
 	 * @return el valor de sesion
 	 */
@@ -27,7 +27,7 @@ public interface SystemService {
 	 * @param pPropiedades
 	 *            propiedades de la sesión
 	 */
-	public void updateSesionPropiedades(String pUserName, String pPropiedades);
+	 void updateSesionPropiedades(String pUserName, String pPropiedades);
 
 	/**
 	 * Verifica si es maestro
@@ -39,4 +39,9 @@ public interface SystemService {
 
 	public List<Alerta> calcularAlertasEjecucion();
 
+	/**
+	 * Actualizar fecha acceso del usuario.
+	 * @param pUserName
+	 */
+    void actualizarFechaAcceso(String pUserName);
 }

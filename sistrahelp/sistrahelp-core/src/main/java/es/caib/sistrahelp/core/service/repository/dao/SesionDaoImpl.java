@@ -50,4 +50,13 @@ public class SesionDaoImpl implements SesionDao {
 		}
 	}
 
+	@Override
+	public void updateFechaAcceso(final String pUsername) {
+		final JSesion jSesion = entityManager.find(JSesion.class, pUsername);
+
+		if (jSesion != null) {
+			jSesion.setFecha(new Date());
+			entityManager.merge(jSesion);
+		}
+	}
 }

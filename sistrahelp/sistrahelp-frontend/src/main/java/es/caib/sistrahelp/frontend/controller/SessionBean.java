@@ -168,7 +168,6 @@ public class SessionBean {
 
 			obtenerPerfil(propiedades);
 			obtenerIdioma(propiedades);
-			obtenerEntidad(propiedades);
 			obtenerUmbrales(propiedades);
 		}
 
@@ -199,6 +198,7 @@ public class SessionBean {
 		}
 
 
+		// Entidades
 		// Lista de entidades según cada rol
 		for(TypeRoleAcceso rolSTH : TypeRoleAcceso.values()){
 			if (rolesList.contains(rolSTH)) {
@@ -243,8 +243,11 @@ public class SessionBean {
 			}
 		}
 
+ 		obtenerEntidad(propiedades);
+
 		cargarDatos();
 
+		systemService.actualizarFechaAcceso(userName);
 	}
 
 
@@ -271,11 +274,16 @@ public class SessionBean {
 	}
 
 	private void obtenerEntidad(List<Propiedad> list) {
+		if(listaEntidadesPorRol.get(activeRole) == null ) {
+			UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
+			return;
+		}
+
 		// recuperamos el idioma
 		for (final Propiedad prop : list) {
 			if (prop.getCodigo().equals("entidad")) {
-				for (final Entidad e : listaEntidades) {
-					if (e.getCodigo().toString() == prop.getValor()) {
+				for (final Entidad e : listaEntidadesPorRol.get(activeRole)) {
+					if ( Objects.equals(e.getCodigoDIR3(), prop.getValor()) ) {
 						entidad = e;
 					}
 				}

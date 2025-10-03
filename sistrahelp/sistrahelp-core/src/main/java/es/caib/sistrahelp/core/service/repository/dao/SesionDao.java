@@ -7,4 +7,6 @@ public interface SesionDao {
 	Sesion getByUser(String pUsername);
 
 	void updatePropiedades(String pUsername, String pPropiedades);
+
+	void updateFechaAcceso(String pUsername);
 }

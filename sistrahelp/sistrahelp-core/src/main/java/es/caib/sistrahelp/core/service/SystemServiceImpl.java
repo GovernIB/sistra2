@@ -1,9 +1,6 @@
 package es.caib.sistrahelp.core.service;
 
-import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -129,4 +126,9 @@ public class SystemServiceImpl implements SystemService {
 		return result;
 	}
 
+	@Override
+	@NegocioInterceptor
+	public void actualizarFechaAcceso(final String pUserName) {
+		sesionDao.updateFechaAcceso(pUserName);
+	}
 }
