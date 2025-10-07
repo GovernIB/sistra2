@@ -1,16 +1,76 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
+import es.caib.sistrages.core.api.model.types.TypeNivelEidas;
+import es.caib.sistrages.core.api.model.types.TypeNivelSeguridad;
 
 /**
  * The Class TramiteVersion.
  */
 
 public class TramiteVersion extends ModelApi {
+
+	public static Map<TypeNivelSeguridad, ConfiguracionSeguridad> nivelesSeguridad;
+
+	static {
+
+		nivelesSeguridad = new HashMap<>();
+
+		ConfiguracionSeguridad nivelBajo = new ConfiguracionSeguridad.Builder()
+				.nivelSeguridad(TypeNivelSeguridad.BAJO)
+				.nivelEidas(TypeNivelEidas.BAJO)
+				.verificarFirmanteFormulario(false)
+				.configurableVerificarFirmantesAnexo(false)
+				.opcionalExtensionAnexo(false)
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CLAVE_MOVIL).subtipos(Arrays.asList("B", "A")).build())
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CLAVE_PERMANENTE).subtipos(Arrays.asList("B", "A")).build())
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CERTIFICADO).subtipos(Arrays.asList("SW", "HW")).build())
+				.build();
+
+		ConfiguracionSeguridad nivelSustancial = new ConfiguracionSeguridad.Builder()
+				.nivelSeguridad(TypeNivelSeguridad.SUSTANCIAL)
+				.nivelEidas(TypeNivelEidas.SUSTANCIAL)
+				.verificarFirmanteFormulario(false)
+				.configurableVerificarFirmantesAnexo(false)
+				.opcionalExtensionAnexo(false)
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CLAVE_MOVIL).subtipos(Arrays.asList("A")).build())
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CLAVE_PERMANENTE).subtipos(Arrays.asList("A")).build())
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CERTIFICADO).subtipos(Arrays.asList("SW", "HW")).build())
+
+				.build();
+
+		ConfiguracionSeguridad nivelSustancialCertificado = new ConfiguracionSeguridad.Builder()
+				.nivelSeguridad(TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO)
+				.nivelEidas(TypeNivelEidas.SUSTANCIAL)
+				.verificarFirmanteFormulario(true)
+				.configurableVerificarFirmantesAnexo(true) // puede ser true según configuración
+				.opcionalExtensionAnexo(true)
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CLAVE_PERMANENTE).subtipos(Arrays.asList("A")).build())
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CERTIFICADO).subtipos(Arrays.asList("SW", "HW")).build())
+				.build();
+
+		ConfiguracionSeguridad nivelAlto = new ConfiguracionSeguridad.Builder()
+				.nivelSeguridad(TypeNivelSeguridad.ALTO)
+				.nivelEidas(TypeNivelEidas.ALTO)
+				.verificarFirmanteFormulario(true)
+				.configurableVerificarFirmantesAnexo(true)  // puede ser true según configuración
+				.opcionalExtensionAnexo(true)
+				.metodoAutenticacion(new MetodoAutenticacion.Builder().tipo(TypeAutenticacion.CERTIFICADO).subtipos(Arrays.asList("HW")).build())
+				.build();
+
+
+		nivelesSeguridad.put(TypeNivelSeguridad.BAJO, nivelBajo);
+		nivelesSeguridad.put(TypeNivelSeguridad.SUSTANCIAL,nivelSustancial);
+		nivelesSeguridad.put(TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO, nivelSustancialCertificado);
+		nivelesSeguridad.put(TypeNivelSeguridad.ALTO, nivelAlto);
+	}
 
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
@@ -23,6 +83,8 @@ public class TramiteVersion extends ModelApi {
 
 	/** Tipo Tramite. */
 	private String tipoTramite;
+
+	private String normativa;
 
 	/** codigo tramite. */
 	private Long idTramite;
@@ -45,8 +107,8 @@ public class TramiteVersion extends ModelApi {
 	/** No autenticado. **/
 	private boolean noAutenticado;
 
-	/** nivel QAA. */
-	private int nivelQAA;
+	/** nivel seguridad. */
+	private int nivelSeguridad;
 
 	/** idiomas soportados. */
 	private String idiomasSoportados;
@@ -150,6 +212,14 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public final void setTipoTramite(String tipoTramite) {
 		this.tipoTramite = tipoTramite;
+	}
+
+	public String getNormativa() {
+		return normativa;
+	}
+
+	public void setNormativa(String normativa) {
+		this.normativa = normativa;
 	}
 
 	/**
@@ -337,22 +407,18 @@ public class TramiteVersion extends ModelApi {
 		this.noAutenticado = noAutenticado;
 	}
 
-	/**
-	 * Obtiene el valor de nivelQAA.
-	 *
-	 * @return el valor de nivelQAA
-	 */
-	public int getNivelQAA() {
-		return nivelQAA;
-	}
 
 	/**
 	 * Establece el valor de nivelQAA.
 	 *
-	 * @param nivelQAA el nuevo valor de nivelQAA
+	 * @param nivelSeguridad el nuevo valor de nivelQAA
 	 */
-	public void setNivelQAA(final int nivelQAA) {
-		this.nivelQAA = nivelQAA;
+	public void setConfiguracionSeguridad(final int nivelSeguridad) {
+		this.nivelSeguridad = nivelSeguridad;
+	}
+
+	public ConfiguracionSeguridad getConfigSeguridad(){
+		return this.nivelesSeguridad.get(TypeNivelSeguridad.fromValor(this.nivelSeguridad));
 	}
 
 	/**
@@ -824,25 +890,50 @@ public class TramiteVersion extends ModelApi {
 		this.identificadorArea = identificadorArea;
 	}
 
+	public int getNivelSeguridad() {
+		return this.nivelSeguridad;
+	}
+
+	public void setNivelSeguridad(int nivelSeguridad) {
+		this.nivelSeguridad = nivelSeguridad;
+	}
+
+	public void setConfiguracionSeguridad(ConfiguracionSeguridad nivelSeguridad) {
+		this.nivelSeguridad = nivelSeguridad.getNivelSeguridad().getValor();
+	}
+
 	/**
 	 * Comprueba si tiene un tipo de autenticacion
 	 *
 	 * @param string
 	 * @return
 	 */
-	public boolean tieneTipoAutenticacion(final String tipo) {
-		boolean tiene = false;
-		if (tipo != null && !tipo.isEmpty() && this.getTiposAutenticacion() != null
-				&& !this.getTiposAutenticacion().isEmpty()) {
-			for (final TypeAutenticacion tipoAutenticacion : this.getTiposAutenticacion()) {
-				if (tipoAutenticacion.toString().equals(tipo)) {
-					tiene = true;
-					break;
-				}
-			}
-		}
-		return tiene;
+	public boolean tieneTipoAutenticacion(final String tipoAutenticacion) {
+//		boolean tiene = false;
+//		if (tipo != null && !tipo.isEmpty() && this.getTiposAutenticacion() != null
+//				&& !this.getTiposAutenticacion().isEmpty()) {
+//			for (final TypeAutenticacion tipoAutenticacion : this.getTiposAutenticacion()) {
+//				if (tipoAutenticacion.toString().equals(tipo)) {
+//					tiene = true;
+//					break;
+//				}
+//			}
+//		}
+//		return tiene;
+
+		TypeAutenticacion tipo = TypeAutenticacion.fromString(tipoAutenticacion);
+
+		return this.getConfigSeguridad().getMetodoAutenticacion(tipo) != null;
 	}
+
+	public String getSubtiposAutenticacion(String tipoAutenticacion){
+
+		TypeAutenticacion tipo = TypeAutenticacion.fromString(tipoAutenticacion);
+
+		return String.join(".", getConfigSeguridad().getMetodoAutenticacion(tipo).getSubtipos());
+
+	}
+
 
 	@Override
 	public String toString() {
@@ -865,13 +956,14 @@ public class TramiteVersion extends ModelApi {
            texto.append(tabulacion +"\t debug:" + debug + "\n");
            texto.append(tabulacion +"\t Descripció:" + descripcion + "\n");
            texto.append(tabulacion +"\t TipusTramit:" + tipoTramite + "\n");
+		   texto.append(tabulacion +"\t Normativa:" + normativa + "\n");
            texto.append(tabulacion +"\t IdTramit:" + idTramite + "\n");
            texto.append(tabulacion +"\t IdArea:" + idArea + "\n");
            texto.append(tabulacion +"\t IdentificadorArea:" + identificadorArea + "\n");
            texto.append(tabulacion +"\t TipusFlux:" + tipoFlujo + "\n");
            texto.append(tabulacion +"\t Autenticat:" + autenticado + "\n");
            texto.append(tabulacion +"\t NoAutenticat:" + noAutenticado + "\n");
-           texto.append(tabulacion +"\t NivellQAA:" + nivelQAA + "\n");
+           texto.append(tabulacion +"\t NivellQAA:" + nivelSeguridad + "\n");
            texto.append(tabulacion +"\t IdiomasSoportats:" + idiomasSoportados + "\n");
            texto.append(tabulacion +"\t Persistencia:" + persistencia + "\n");
            texto.append(tabulacion +"\t PersistenciaInfinita:" + persistenciaInfinita + "\n");
@@ -918,4 +1010,8 @@ public class TramiteVersion extends ModelApi {
            return texto.toString();
      }
 
+
+     public boolean isTipoCER(){
+         return tieneTipoAutenticacion("CER");
+     }
 }

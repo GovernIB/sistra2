@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeNormativa" var="TypeNormativa"/>
 
 	<h:form id="formViewDefinicionVersionPropiedades" styleClass="h100">
 		<h:outputStylesheet>
@@ -26,12 +27,24 @@
 				<p:inputText onblur="this.value = this.value.trim();" value="#{viewDefinicionVersionParams.tramiteVersion.descripcion}"  readonly="true"  size="107"    />
 			</p:panelGrid>
 
-			<p:outputLabel value="#{msg['dialogDominioExportar.tipo']} *" />
-			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
-				<p:selectOneRadio id="tipo" value="#{viewDefinicionVersionParams.tramiteVersion.tipoTramite}" disabled="true">
-		            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
-		            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S"/>
-		        </p:selectOneRadio>
+            <p:outputLabel value="#{msg['dialogDominioExportar.tipo']} *" />
+            <p:panelGrid styleClass="noBorders">
+                <p:row class="g-0">
+                    <p:column styleClass="col-md-3">
+                        <p:selectOneRadio id="tipo" value="#{viewDefinicionVersionParams.tramiteVersion.tipoTramite}" disabled="true">
+                            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
+                            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S"/>
+                        </p:selectOneRadio>
+                    </p:column>
+
+                    <p:column styleClass="col-md-3" style="display: flex; align-items: center;">
+                        <p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.normativa']} *" style="margin-left: 60px;margin-right: 80px;"/>
+                        <p:selectOneRadio id="normativa" value="#{viewDefinicionVersionParams.tramiteVersion.normativa}" disabled="true">
+                            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.normativa.general']}" itemValue="#{TypeNormativa.GENERAL.toString()}" />
+                            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.normativa.especifica']}" itemValue="#{TypeNormativa.ESPECIFICA.toString()}" />
+                        </p:selectOneRadio>
+                    </p:column>
+                </p:row>
 			</p:panelGrid>
 
             <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
@@ -43,7 +56,7 @@
 					<p:column>
 						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
 						<p:spacer width="8" height="1"/>
-						<p:inputText id="nivelQAA" onblur="this.value = this.value.trim();" readonly="true" value="#{msg['typeQAA.' += viewDefinicionVersionParams.tramiteVersion.nivelQAA]}"/>
+						<p:inputText id="nivelQAA" onblur="this.value = this.value.trim();" readonly="true" value="#{msg['typeQAA.' += viewDefinicionVersionParams.tramiteVersion.nivelSeguridad]}"/>
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.CER']}" value="#{viewDefinicionVersionParams.tramiteVersion.tieneTipoAutenticacion('CER')}" disabled="true" />

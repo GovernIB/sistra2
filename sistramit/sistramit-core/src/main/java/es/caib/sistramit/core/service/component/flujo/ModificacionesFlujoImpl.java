@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import es.caib.sistramit.core.api.model.flujo.FuncionarioHabilitado;
-import es.caib.sistramit.core.api.model.flujo.PersonaDesglosado;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -253,6 +252,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 		dpdt.setIdioma(pDatosSesion.getDatosTramite().getIdioma());
 		dpdt.setVersionTramite(pDatosSesion.getDatosTramite().getVersionTramite());
 		dpdt.setIdTramite(pDatosSesion.getDatosTramite().getIdTramite());
+		dpdt.setIdEntidad(pDatosSesion.getDefinicionTramite().getDefinicionVersion().getIdEntidad());
 		dpdt.setIdArea(pDatosSesion.getDefinicionTramite().getDefinicionVersion().getIdArea());
 		dpdt.setIdTramiteCP(pDatosSesion.getDatosTramite().getDefinicionTramiteCP().getIdentificador());
 		dpdt.setIdProcedimientoCP(pDatosSesion.getDatosTramite().getDefinicionTramiteCP().getIdentificador());
@@ -280,6 +280,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 			dpdt.setFuncionarioHabilitadoNombre(fh.getNombre());
 			dpdt.setFuncionarioHabilitadoApellido1(fh.getApellido1());
 			dpdt.setFuncionarioHabilitadoApellido2(fh.getApellido2());
+			dpdt.setFuncionarioHabilitadoIdActuacion(fh.getIdActuacionFH());
 		}
 		dao.crearTramitePersistencia(dpdt);
 

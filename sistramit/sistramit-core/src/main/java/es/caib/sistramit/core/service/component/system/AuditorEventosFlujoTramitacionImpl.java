@@ -41,9 +41,6 @@ import es.caib.sistramit.core.service.util.UtilsFlujo;
 @Component("auditorEventosFlujoTramitacionComponent")
 public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosFlujoTramitacion {
 
-	// TODO FH -- VER SI ES NECESARIO REALIZAR ALGUN AJUSTE PARA FH
-
-
 	@Override
 	public List<EventoAuditoria> interceptaInvocacion(final String idSesionTramitacion, final String pMetodo,
 			final Object[] pArgumentos, final boolean debugEnabled) {

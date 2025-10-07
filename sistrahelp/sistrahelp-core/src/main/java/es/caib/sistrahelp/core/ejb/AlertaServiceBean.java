@@ -3,7 +3,6 @@ package es.caib.sistrahelp.core.ejb;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -11,10 +10,8 @@ import javax.interceptor.Interceptors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
-import org.springframework.stereotype.Repository;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
-import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 
 /**
@@ -65,6 +62,12 @@ public class AlertaServiceBean implements AlertaService {
 	@PermitAll
 	public List<Alerta> listAlertaActivo(final String filtro, final boolean activo) {
 		return alertaService.listAlertaActivo(filtro, activo);
+	}
+
+	@Override
+	@PermitAll
+	public Alerta duplicarAlerta(Alerta alerta) {
+		return alertaService.duplicarAlerta(alerta);
 	}
 
 	@Override

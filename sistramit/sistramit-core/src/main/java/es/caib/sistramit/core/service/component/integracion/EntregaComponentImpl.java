@@ -32,12 +32,16 @@ public final class EntregaComponentImpl implements EntregaComponent {
 	@Autowired
 	private EnvioRemotoComponent envioRemotoComponent;
 
+	/** Funcionario habilitado component. */
+	@Autowired
+	private FuncionarioHabilitadoComponent funcionarioHabilitadoComponent;
+
+	/** Componente entrega offline (CES2). **/
+	public static final String COMPONENTE_ENTREGA = "CES2";
+
 	/** Debug. */
 	// TODO CES2 HACER QUE SEA CONFIGURABLE POR PROPS?
 	private boolean debug = true;
-
-	/** Id envío remoto. */
-	private final String idEnvioRemoto = "CES2";
 
 	@Override
 	public List<EntregaTramite> recuperarInmediatosPendientes() {
@@ -79,6 +83,31 @@ public final class EntregaComponentImpl implements EntregaComponent {
 	@Override
 	public void desbloquearEntregasBloqueadas() {
 		entregaTramiteDaoDao.desbloquearEntregas();
+	}
+
+	@Override
+	public List<TramiteFinalizado> recuperarFinalizadosFHPendientes() {
+		return entregaTramiteDaoDao.recuperarFinalizadosFHPendientes();
+	}
+
+	@Override
+	public boolean procesarAvisoFuncionarioHabilitado(TramiteFinalizado tramiteFinalizado) {
+		boolean avisado;
+
+		// Aviso a FH
+		String msgError = funcionarioHabilitadoComponent.avisarTramiteFinalizado(tramiteFinalizado, debug);
+		if (msgError == null) {
+			// Indica que se ha avisado
+			entregaTramiteDaoDao.actualizarAvisoCorrectoFuncionarioHabilitado(tramiteFinalizado.getIdSesionTramitacion());
+			avisado = true;
+		} else {
+			// Indica que no se ha avisado
+			entregaTramiteDaoDao.actualizarAvisoErrorFuncionarioHabilitado(tramiteFinalizado.getIdSesionTramitacion(), msgError);
+			avisado = false;
+		}
+
+		// Indica si se ha avisado
+		return avisado;
 	}
 
 	/**
@@ -123,7 +152,7 @@ public final class EntregaComponentImpl implements EntregaComponent {
 		if (!error) {
 			try {
 				idSesionRegistro = envioRemotoComponent.iniciarSesionEnvio(tramEntrega.getIdEntidad(),
-						idEnvioRemoto,
+						COMPONENTE_ENTREGA,
 						debug);
 			} catch (Exception e) {
 				estado = TypeEntregaEstado.ERROR_ENTREGA;
@@ -141,7 +170,7 @@ public final class EntregaComponentImpl implements EntregaComponent {
 				datosTramitacion.setIdProcedimiento(tramiteFinalizado.getIdProcedimientoCP());
 				datosTramitacion.setIdProcedimientoSIA(tramiteFinalizado.getIdProcedimientoSIA());
 				ResultadoRegistrar resReg = envioRemotoComponent.realizarEnvio(tramEntrega.getIdEntidad(),
-						idEnvioRemoto,
+						COMPONENTE_ENTREGA,
 						tramEntrega.getIdSesionTramitacion(),
 						idSesionRegistro,
 						datosTramitacion,
@@ -188,7 +217,7 @@ public final class EntregaComponentImpl implements EntregaComponent {
 		try {
 			// Reintento
 			ResultadoRegistrar resReg = envioRemotoComponent.reintentarEnvio(tramEntrega.getIdEntidad(),
-					idEnvioRemoto,
+					COMPONENTE_ENTREGA,
 					tramEntrega.getIdSesionEnvio(),
 					debug);
 			// Evalua estado

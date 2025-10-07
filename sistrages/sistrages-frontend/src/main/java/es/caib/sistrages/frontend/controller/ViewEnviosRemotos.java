@@ -411,6 +411,12 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 		}
 	}
 
+	public void cambiarArea(){
+		area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+
+		buscar(filtro);
+	}
+
 	/**
 	 * Retorno dialogo clonar.
 	 *

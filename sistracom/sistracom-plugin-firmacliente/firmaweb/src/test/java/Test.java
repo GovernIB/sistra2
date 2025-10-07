@@ -9,6 +9,8 @@ public class Test {
 
     public static void main(String[] args) throws FirmaPluginException {
 
+        // String configJSON =
+
         final Properties properties = new Properties();
         properties.put(IFirmaPlugin.FIRMACLIENTE_BASE_PROPERTY + "url",
                 "http://portafib2.fundaciobit.org/portafib/common/rest/apifirmawebsimple/v1/");

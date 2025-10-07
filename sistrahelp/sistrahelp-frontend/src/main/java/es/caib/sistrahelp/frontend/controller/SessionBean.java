@@ -182,6 +182,7 @@ public class SessionBean {
 		}
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+		// AREAS
 		rolesList = securityService.getRoles();
 
 		// Lista de areas según cada rol
@@ -238,16 +239,17 @@ public class SessionBean {
 			} else if(rolesList.contains(TypeRoleAcceso.PERSONAL_CAU)) {
 				activeRole = TypeRoleAcceso.PERSONAL_CAU;
 			} else {
-				UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
+					UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
 				return;
 			}
 		}
 
- 		obtenerEntidad(propiedades);
+		obtenerEntidad(propiedades);
 
 		cargarDatos();
 
 		systemService.actualizarFechaAcceso(userName);
+
 	}
 
 
@@ -274,6 +276,7 @@ public class SessionBean {
 	}
 
 	private void obtenerEntidad(List<Propiedad> list) {
+
 		if(listaEntidadesPorRol.get(activeRole) == null ) {
 			UtilJSF.redirectJsfPage( URL_ERROR_USUARIO_SIN_ROL, null);
 			return;
@@ -282,6 +285,7 @@ public class SessionBean {
 		// recuperamos el idioma
 		for (final Propiedad prop : list) {
 			if (prop.getCodigo().equals("entidad")) {
+
 				for (final Entidad e : listaEntidadesPorRol.get(activeRole)) {
 					if ( Objects.equals(e.getCodigoDIR3(), prop.getValor()) ) {
 						entidad = e;

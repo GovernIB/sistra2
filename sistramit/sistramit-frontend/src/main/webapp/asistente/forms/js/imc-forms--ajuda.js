@@ -38,6 +38,8 @@ $.fn.appFormsAjuda = function(opcions) {
 					txtAjudaBoto = txtFormDinDesactiva;
 					ajuda_data = "on";
 
+					APP_FORMS_AJUDA_ACTIVADA = "S";
+
 				} else {
 
 					imc_forms_ajuda
@@ -50,6 +52,8 @@ $.fn.appFormsAjuda = function(opcions) {
 					txtAjudaInfo = txtFormDinAjuda + " " + txtFormDinDesctivada;
 					txtAjudaBoto = txtFormDinActiva;
 					ajuda_data = "off";
+
+					APP_FORMS_AJUDA_ACTIVADA = "N";
 
 				}
 

@@ -64,6 +64,11 @@ public abstract class DialogControllerBase {
 		return (modo == TypeModoAcceso.CONSULTA);
 	}
 
+	public boolean isDuplicar() {
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		return (modo == TypeModoAcceso.DUPLICAR);
+	}
+
 	/**
 	 * Indica si el dialogo no se abre en modo consulta.
 	 *

@@ -13,8 +13,7 @@
   ],
   "propiedades": {
     "autenticado": true,
-    "nivelQAA": 2,
-    "metodosAutenticacion":"CER;PIN;PER;MOV",
+    "nivelSeguridadAutenticado": 3,
     "noAutenticado": true,
     "idiomas": [
       "es",
@@ -980,8 +979,8 @@
         "script": "DATOS_AVISO.setEmail(\"soportecaib@indra.es\");",
         "literales": []
       },
-      "modoEntregaHabilitar": false,
-      "modoEntregaHabilitarInmediato": false
+      "modoEntregaHabilitar": true,
+      "modoEntregaHabilitarInmediato": true
     }
   ]
 }

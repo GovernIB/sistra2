@@ -48,13 +48,13 @@
 					<p:commandButton id="btnSubir"
 						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
 						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
-						actionListener="#{viewDefinicionVersionParams.subirFormulario()}"
+						actionListener="#{viewDefinicionVersionParams.verificarSubirFormulario()}"
 						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
 
 					<p:commandButton id="btnBajar"
 						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
 						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
-						actionListener="#{viewDefinicionVersionParams.bajarFormulario()}"
+						actionListener="#{viewDefinicionVersionParams.verificarBajarFormulario()}"
 						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
@@ -125,4 +125,20 @@
 
 	</h:form>
 
+	<p:confirmDialog widgetVar="confirmSubirWidget" header="#{msg['confirm.titulo']}" message="#{msg['confirm.moverForm']}" icon="fa fa-question-circle fa-3x confirmar_icono">
+		<p:outputPanel styleClass="confirmar_botonera">
+			<p:commandButton value="#{msg['botones.si']}" icon="fa fa-check" styleClass="ui-confirmdialog-yes boton-azul"
+							 actionListener="#{viewDefinicionVersion.subirFormulario()}" onclick="PF('confirmSubirWidget').hide();"
+							 process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
+			<p:commandButton value="#{msg['botones.no']}" icon="fa fa-times" styleClass="ui-confirmdialog-no" onclick="PF('confirmSubirWidget').hide();" type="button" />
+		</p:outputPanel>
+	</p:confirmDialog>
+	<p:confirmDialog widgetVar="confirmBajarWidget" header="#{msg['confirm.titulo']}" message="#{msg['confirm.moverForm']}" icon="fa fa-question-circle fa-3x confirmar_icono">
+		<p:outputPanel styleClass="confirmar_botonera">
+			<p:commandButton value="#{msg['botones.si']}" icon="fa fa-check" styleClass="ui-confirmdialog-yes boton-azul"
+							 actionListener="#{viewDefinicionVersion.bajarFormulario()}" onclick="PF('confirmBajarWidget').hide();"
+							 process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
+			<p:commandButton value="#{msg['botones.no']}" icon="fa fa-times" styleClass="ui-confirmdialog-no" onclick="PF('confirmBajarWidget').hide();" type="button" />
+		</p:outputPanel>
+	</p:confirmDialog>
 </ui:composition>

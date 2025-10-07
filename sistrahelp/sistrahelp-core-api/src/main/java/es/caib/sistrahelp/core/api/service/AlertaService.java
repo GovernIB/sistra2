@@ -69,4 +69,12 @@ public interface AlertaService {
 	 */
 	public List<Alerta> listAlertaActivo(String filtro, boolean activo);
 
+	/**
+	 * Duplica una alerta dejándola inactiva y con el nombre vacío.
+	 *
+	 * @param alerta Alerta a duplicar
+	 * @return Alerta duplicada
+	 */
+	public Alerta duplicarAlerta(Alerta alerta);
+
 }

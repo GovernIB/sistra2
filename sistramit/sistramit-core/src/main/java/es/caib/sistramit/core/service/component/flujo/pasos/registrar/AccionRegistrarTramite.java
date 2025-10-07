@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistra2.commons.plugins.registro.api.*;
+import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.service.model.flujo.*;
 import es.caib.sistramit.core.service.model.flujo.ResultadoRegistro;
 import es.caib.sistramit.core.service.repository.dao.EntregaTramiteDao;
@@ -37,12 +38,6 @@ import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.DatosInteresado;
-import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
-import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
-import es.caib.sistramit.core.api.model.flujo.Entidad;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
@@ -355,11 +350,13 @@ public final class AccionRegistrarTramite implements AccionPaso {
 												  DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 		ResultadoRegistrar resReg;
 		if (pVariablesFlujo.getTipoDestino() == TypeDestino.REGISTRO) {
+			// TIPO REGISTRO: realizamos registro
 			resReg = registroComponent.registrar(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
 					pVariablesFlujo.getIdSesionTramitacion(), idSesionRegistro, asiento,
 					pVariablesFlujo.isDebugEnabled());
 		} else {
-			// Verificamos si esta habilitado modo entrega
+			// TIPO ENVIO: realizamos envio remoto en offline (CES2) o en online (envio remoto establecido en el trámite)
+			// Verificamos si esta habilitado modo entrega --> envio remoto offline (CES2)
 			if (UtilsSTG.isModoEntregaHabilitado(pDefinicionTramite)) {
 				// Si esta habilitado modo entrega no realizamos envio, se realiza offline. Devolvemos id sesion tramitacion como id envio.
 				resReg = new ResultadoRegistrar();
@@ -367,7 +364,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 				resReg.setNumeroRegistro(idSesionRegistro);
 				resReg.setFechaRegistro(new Date());
 			} else {
-				// Si no esta habilitado modo entrega, realizamos envio remoto
+				// Si no esta habilitado modo entrega, realizamos envio remoto --> envio remoto online (envio remoto establecido en el trámite)
 				DatosTramitacion datosTramitacion = new DatosTramitacion();
 				datosTramitacion.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
 				datosTramitacion.setIdTramite(pVariablesFlujo.getIdTramite());
@@ -496,7 +493,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			dao.establecerDatosDocumento(pDipa.getIdSesionTramitacion(), pDipa.getIdPaso(), docAsientoDpp);
 			// - Si es correcto y esta habilitado entrega, persistimos entrega para que se procese offline
 			if (UtilsSTG.isModoEntregaHabilitado(pDefinicionTramite)) {
-				entregaTramiteDao.crearEntrega(pIdSesionTramitacion, resReg.getFechaRegistro(), pDefinicionTramite.getDefinicionVersion().getIdEntidad(), asientoRegitral, UtilsSTG.isModoEntregaInmediato(pDefinicionTramite));
+				entregaTramiteDao.crearEntrega(pIdSesionTramitacion, resReg.getFechaRegistro(),
+						pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
+						asientoRegitral, UtilsSTG.isModoEntregaInmediato(pDefinicionTramite));
 			}
 			break;
 		case ERROR:
@@ -566,6 +565,20 @@ public final class AccionRegistrarTramite implements AccionPaso {
 					pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador()));
 		}
 		asiento.setInteresados(interesados);
+
+		// TODO FH -- PENDIENTE API RW4 PARA PASAR INFO FH EN CAMPOS ESPECIFICOS.
+		//  DE MOMENTO SE MAPEAN EN ESTOS CAMPOS YA EXISTENTES:
+		//referenciaExterna->Codigo Funcionario Habilitado
+		//numeroExpediente->Nif Funcionario Habilitado
+		//observaciones->Nombre Funcionario Habilitado
+		if (pVariablesFlujo.isFuncionarioHabilitado()) {
+			FuncionarioHabilitado fh = pVariablesFlujo.getUsuarioAutenticado().getFuncionarioHabilitado();
+			datosAsunto.setReferenciaExterna(fh.getUserName());
+			datosAsunto.setNumeroExpediente(fh.getNif());
+			datosAsunto.setObservaciones(fh.getNombreApellidos());
+
+		}
+
 		// - Documentos
 		final List<DocumentoAsiento> documentosRegistro = new ArrayList<>();
 		final DetallePasoRegistrar dpr = (DetallePasoRegistrar) pDipa.getDetallePaso();

@@ -53,17 +53,9 @@
   </f:facet>
 
     <div id="mainLayout" class="d-flex flex-column h-100">
-        <div id="header" class="noPadding sin-bordes" style="height: 95px;">
-            <ui:include src="./header.xhtml" />
-        </div>
-
         <div id="work" class="flex-grow-1 margin-top-10" style="overflow: auto;">
             <h2>#{msg[sessionBean.literalTituloPantalla]}</h2>
             <ui:insert name="content" />
-        </div>
-
-        <div id="footer" style="height: 60px;">
-            <ui:include src="./footer.xhtml" />
         </div>
     </div>
 

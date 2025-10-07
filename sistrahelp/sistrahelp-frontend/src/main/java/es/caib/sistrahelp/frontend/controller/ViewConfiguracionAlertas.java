@@ -1,44 +1,23 @@
 package es.caib.sistrahelp.frontend.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ScheduledExecutorService;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.PrimeFaces;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.LazyDataModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-
 import es.caib.sistrahelp.core.api.model.Alerta;
-import es.caib.sistrahelp.core.api.model.Area;
-import es.caib.sistrahelp.core.api.model.DisparadorAlerta;
-import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.service.AlertaService;
-import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.api.service.ProcesoAlertaService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
-import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.event.SelectEvent;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * La clase ViewEventosPlataforma.
@@ -134,7 +113,7 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 
-		UtilJSF.openDialog(DialogConfiguracionAlertas.class, modoAccesoDlg, params, true, 1030, 620);
+		UtilJSF.openDialog(DialogConfiguracionAlertas.class, modoAccesoDlg, params, true, 1030, 680);
 	}
 
 	/**
@@ -451,5 +430,67 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Duplica la alerta seleccionada
+	 */
+	public void duplicarAlerta() {
+
+		if(this.datoSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
+		UtilJSF.openDialog(DialogConfiguracionAlertas.class, TypeModoAcceso.DUPLICAR, params, true, 1030, 680);
+
+	}
+
+	public void returnDialogoClonar() {
+		// Refrescamos datos
+		buscar(filtros);
+
+
+	}
+
+	public String labelTipo(String tipo){
+
+		// return label for tipo of alerta
+		switch (tipo) {
+			case "E":
+				return UtilJSF.getLiteral("dialogInformacionPagos.entidadId");
+			case "A":
+				return UtilJSF.getLiteral("viewAuditoriaTramites.headArea");
+			case "T":
+				return UtilJSF.getLiteral("viewPerdidaClave.headTramite");
+			case "V":
+				return UtilJSF.getLiteral("viewAuditoriaTramites.headVersion");
+			default:
+				return tipo;
+		}
+	}
+
+	// label ambito
+	public String labelAmbito(Alerta alerta){
+
+		// return label for ambito of alerta
+		switch (alerta.getTipo()) {
+			case "E":
+				return alerta.getListaAreas().get(0).substring(0, alerta.getListaAreas().get(0).indexOf(".")-1);
+			case "A":
+				return alerta.getListaAreas().get(0);
+			case "T":
+				return alerta.getListaAreas().get(0) + "." + alerta.getTramite();
+			case "V":
+				return alerta.getListaAreas().get(0) + "." + alerta.getTramite() + "." + alerta.getVersion();
+			default:
+				return "";
+		}
+	}
+
+	public String labelEmails(Alerta alerta){
+		return StringUtils.join( alerta.getEmail(), ";");
 	}
 }

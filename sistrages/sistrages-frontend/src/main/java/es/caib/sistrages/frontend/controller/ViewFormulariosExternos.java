@@ -279,7 +279,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	/**
 	 * Cambia de acción
 	 */
-	public void cambiarAccion() {
+	public void
+	cambiarAccion() {
 		switch (accion) {
 		case "V":
 			UtilJSF.redirectJsfPage("/secure/app/viewVariablesArea.xhtml?id=" + id);
@@ -297,6 +298,13 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		default:
 			break;
 		}
+	}
+
+
+	public void cambiarArea(){
+		area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+
+		buscar();
 	}
 
 	/**

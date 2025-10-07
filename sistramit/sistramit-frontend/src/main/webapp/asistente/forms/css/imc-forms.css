@@ -366,7 +366,7 @@
 
 .imc-form .imc-el-hidden { display: none; }
 
-.imc-form .imc-el-etiqueta { padding: 0 .8em .2em .8em; }
+.imc-form .imc-el-etiqueta { padding: 0 .8em .2em .8em; word-break: break-all; }
 
 .imc-form .imc-el-control { min-height: 2em; padding: 0 .8em; }
 
@@ -1739,6 +1739,18 @@ div[data-desplasarocults="s"] .imc-element[data-ocult="s"] { display: none !impo
 
 .imc-form .imc-element.imc--acordio-fi.imc--acordio-titol-over { border-color: #c2e6d1; }
 
+
+
+/* textarea -> amplaria */
+
+.imc--textarea-contador { float: right; white-space: nowrap; }
+.imc--textarea-contador p { line-height: 1; text-align: right; }
+
+.imc--textarea-contador.imc--am-atencio { color: #965500; }
+.imc--textarea-contador.imc--am-limit { color: #8a0000; }
+
+
+.imc-element[data-amplaria]:has(textarea) .imc-el-etiqueta { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 0 1em; }
 
 
 

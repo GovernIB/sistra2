@@ -32,27 +32,39 @@ public final class EntregaProcess {
 	private SystemService systemService;
 
 	/**
-	 * Process. Cada 1 minutos
+	 * Envío remoto: avisos inmediantos. Cada 1 minutos
 	 */
 	@Scheduled(cron = "${procesos.entregaTramitesFinalizados.inmediatos.cron}")
 	public void processInmediatos() {
 		log.debug("Proceso entrega finalizados [inmediato]- inicio");
 		if (UtilProcess.checkMaestro("entrega finalizados [inmediato]", servletContext, systemService)) {
-			entregaService.procesarEntregaFinalizadosInmediatos();
+			entregaService.procesarEnvioRemotoFinalizadosInmediatos();
 		}
 		log.debug("Proceso entrega finalizados [inmediato] - fin");
 	}
 
 	/**
-	 * Process. Aprox cada 60 min
+	 * Envío remoto: avisos periódicos. Aprox cada 60 min
 	 */
 	@Scheduled(cron = "${procesos.entregaTramitesFinalizados.periodicos.cron}")
-	public void process() {
+	public void processPeriodicos() {
 		log.debug("Proceso entrega finalizados [inmediato] - inicio");
 		if (UtilProcess.checkMaestro("entrega finalizados [inmediato]", servletContext, systemService)) {
-			entregaService.procesarEntregaFinalizadosPeriodicos();
+			entregaService.procesarEnvioRemotoFinalizadosPeriodicos();
 		}
 		log.debug("Proceso entrega finalizados [inmediato] - fin");
+	}
+
+	/**
+	 * Funcionario habilitado: aviso trámites finalizados. Cada 5 minutos
+	 */
+	@Scheduled(cron = "${procesos.funcionarioHabilitadoTramitesFinalizados.cron}")
+	public void processFuncionarioHabilitado() {
+		log.debug("Proceso funcionario habilitado finalizados - inicio");
+		if (UtilProcess.checkMaestro("funcionario habilitado finalizados", servletContext, systemService)) {
+			entregaService.procesarFuncionarioHabilitadoFinalizados();
+		}
+		log.debug("Proceso funcionario habilitado finalizados - fin");
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
 import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.model.formulario.*;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
@@ -23,6 +24,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -45,6 +49,8 @@ import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 
+import javax.persistence.EntityManager;
+
 //TODO Meter en test la funcionalidad que se pueda: convertir pdf,
 //anexar firmado, script validacion, anexos dinamicos, opcionales,...
 
@@ -52,9 +58,14 @@ import es.caib.sistramit.core.service.util.UtilsFormulario;
  * Testing capa de negocio de tramitación (flujo trámite normalizado tipo
  * trámite con toda la casuística).
  *
+ * FORZAMOS A NO HACER ROLLBACK DESPUES DE CADA TESTS, PORQUE H2 TIENE PROBLEMAS CON DIFERENTES TX (NO SE VEN CAMBIOS ENTRE ELLAS)
+ * Y NO SE PUEDE PROBAR EN EL MISMO TEST REGISTRAR UN TRAMITE Y LANZAR UN PROCESO.
+ *
  * @author Indra
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Transactional(isolation = Isolation.READ_COMMITTED)
+@Rollback(false)
 public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 	/** Flujo tramitación. */
@@ -207,8 +218,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 */
 	@Test
 	public void test8_flujoTramitacionElectronicoFH() throws Exception {
+		// Tramitacion FH
 		test_flujoTramitacionElectronico(true, true);
 	}
+
+
 
 	/**
 	 * Verificación flujo tramitación de tipo servicio en modo FH adaptando definición del trámite para que sea compatible con FH
@@ -216,6 +230,27 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	@Test
 	public void test9_flujoTramitacionTramiteServicioFH() throws Exception {
 		test_flujoTramitacionElectronico(false, true);
+	}
+
+
+	@Test
+	public void testA_procesarTramitesFinalizados_entrega() {
+		// -- Entrega CES2
+		ResultadoProcesoProgramado rpe = entregaService.procesarEnvioRemotoFinalizadosInmediatos();
+		int procesadasOK = Integer.parseInt(rpe.getDetalles().getPropiedad("procesadasOK"));
+		int procesadasKO = Integer.parseInt(rpe.getDetalles().getPropiedad("procesadasKO"));
+		Assert.isTrue(procesadasOK > 0 && procesadasKO == 0,
+				"No se ha procesado la entrega inmediata correctamente: procesadasOK=" + procesadasOK + " - procesadasKO=" + procesadasKO);
+	}
+
+	@Test
+	public void testB_procesarTramitesFinalizados_avisoFH() {
+		// -- Aviso RFHAB
+		ResultadoProcesoProgramado rpf = entregaService.procesarFuncionarioHabilitadoFinalizados();
+		int avisadosOK = Integer.parseInt(rpf.getDetalles().getPropiedad("avisadosOK"));
+		int avisadosKO = Integer.parseInt(rpf.getDetalles().getPropiedad("avisadosKO"));
+		Assert.isTrue(avisadosOK > 0 && avisadosKO == 0,
+				"No se ha procesado aviso FH correctamente: procesadasOK=" + avisadosOK + " - procesadasKO=" + avisadosKO);
 	}
 
 	protected void test_flujoTramitacionElectronico(final boolean registro, final boolean modoFH)
@@ -266,9 +301,6 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		// Pasamos a paso siguiente: registrar
 		flujoTramitacion_registro_electronico(idSesionTramitacion, usuarioAutenticadoInfo, fh, registro, modoFH);
-
-		// Entrega CES2 -- no se xq no guarda los datos en tabla entregas al finalizar tx
-		// entregaService.procesarEntregaFinalizadosInmediatos();
 
 	}
 
@@ -427,6 +459,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		usuarioAutenticado.setQaa(TypeQAA.MEDIO);
 		infoTicketAcceso.setUsuarioAutenticadoInfo(usuarioAutenticado);
 		InfoAccesoFH infoFH = new InfoAccesoFH();
+		infoFH.setIdActuacionFH("ACT1");
 		infoFH.setDir3FH("ES07000000");
 		infoFH.setInteresado(interesado);
 		InfoTramiteFH tramiteFH = new InfoTramiteFH();

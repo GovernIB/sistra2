@@ -3,6 +3,9 @@ package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -161,10 +164,13 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		}
 
 		// Invoca a componente para redirección firma
+		TypeNivelSeguridad nivelSeguridadAutenticado = UtilsSTG.obtenerNivelSeguridadAutenticado(pDefinicionTramite);
+		// pDefinicionTramite.getDefinicionVersion().get
 		final RedireccionFirma redireccionFirma = firmaComponent.redireccionFirmaExterna(
-				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), pVariablesFlujo.getUsuarioAutenticado(), firmante, representante,
+				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), nivelSeguridadAutenticado, pVariablesFlujo.getUsuarioAutenticado(), firmante, representante,
 				idDocumento + "-" + instancia, fileContent, fileName, tipoDocumental, urlCallBack,
 				pVariablesFlujo.getIdioma());
 		return redireccionFirma;
 	}
+
 }

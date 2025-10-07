@@ -259,4 +259,10 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	public byte[] contenidoLogoEntidad(String codDir3) {
 		return sistragesApiComponent.urlLogoEntidad(codDir3);
 	}
+
+	@Override
+	@NegocioInterceptor
+	public List<String> obtenerListaErroresAuditoria(boolean eventoPlataforma) {
+		return sistramitApiComponent.listarTiposErrorAuditoria(eventoPlataforma);
+	}
 }

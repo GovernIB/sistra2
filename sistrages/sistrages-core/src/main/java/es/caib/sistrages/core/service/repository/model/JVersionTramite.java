@@ -48,6 +48,10 @@ public class JVersionTramite implements IModelApi {
 	@Column(name = "VTR_TIPTRA", nullable = false, length = 1)
 	private String tipoTramite;
 
+	/** Tipo Trámite. **/
+	@Column(name = "VTR_NORMATIVA", nullable = false, length = 1)
+	private String normativa;
+
 	/** Script inicialización trámite. **/
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "VTR_SCRINTRA")
@@ -81,8 +85,12 @@ public class JVersionTramite implements IModelApi {
 	private boolean autenticado;
 
 	/** Nivel QAA . **/
-	@Column(name = "VTR_AUTQAA", precision = 1, scale = 0)
-	private Integer nivelQAA;
+//	@Column(name = "VTR_AUTQAA", precision = 1, scale = 0)
+//	private Integer nivelQAA;
+
+	/** Nivel seguridad. **/
+	@Column(name = "VTR_NIVSEG", length = 1)
+	private Integer nivelSeguridad;
 
 	/** No autenticado. **/
 	@Column(name = "VTR_AUTENO", nullable = false, precision = 1, scale = 0)
@@ -296,18 +304,12 @@ public class JVersionTramite implements IModelApi {
 		this.autenticado = autenticado;
 	}
 
-	/**
-	 * @return the nivelQAA
-	 */
-	public Integer getNivelQAA() {
-		return nivelQAA;
+	public Integer getNivelSeguridad() {
+		return nivelSeguridad;
 	}
 
-	/**
-	 * @param nivelQAA the nivelQAA to set
-	 */
-	public void setNivelQAA(final Integer nivelQAA) {
-		this.nivelQAA = nivelQAA;
+	public void setNivelSeguridad(Integer nivelSeguridad) {
+		this.nivelSeguridad = nivelSeguridad;
 	}
 
 	/**
@@ -590,6 +592,14 @@ public class JVersionTramite implements IModelApi {
 		this.tipoTramite = tipoTramite;
 	}
 
+	public String getNormativa() {
+		return normativa;
+	}
+
+	public void setNormativa(String normativa) {
+		this.normativa = normativa;
+	}
+
 	/**
 	 * ToModel.
 	 *
@@ -614,6 +624,9 @@ public class JVersionTramite implements IModelApi {
 		if (this.getTipoTramite() != null) {
 			tramiteVersion.setTipoTramite(this.getTipoTramite());
 		}
+		if (this.getNormativa() != null) {
+			tramiteVersion.setNormativa(this.getNormativa());
+		}
 		tramiteVersion.setCodigo(this.getCodigo());
 		if (this.getTramite() != null) {
 			tramiteVersion.setIdTramite(this.getTramite().getCodigo());
@@ -637,7 +650,7 @@ public class JVersionTramite implements IModelApi {
 			tramiteVersion.setMensajeDesactivacion(this.getMensajeDesactivacion().toModel());
 		}
 
-		tramiteVersion.setNivelQAA(this.getNivelQAA());
+		tramiteVersion.setConfiguracionSeguridad(this.getNivelSeguridad());
 		tramiteVersion.setNumeroVersion(this.getNumeroVersion());
 		tramiteVersion.setPersistencia(this.isAdmitePersistencia());
 		tramiteVersion.setPersistenciaDias(this.getPersistenciaDias());
@@ -696,7 +709,7 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite.setLimiteTramitacionIntervalo(model.getIntLimiteTramitacion());
 			jversionTramite.setLimiteTramitacionNumero(model.getNumLimiteTramitacion());
 			jversionTramite.setMensajeDesactivacion(JLiteral.fromModel(model.getMensajeDesactivacion()));
-			jversionTramite.setNivelQAA(model.getNivelQAA());
+			jversionTramite.setNivelSeguridad(model.getNivelSeguridad());
 			jversionTramite.setNumeroVersion(model.getNumeroVersion());
 			jversionTramite.setAdmitePersistencia(model.isPersistencia());
 			jversionTramite.setPersistenciaDias(model.getPersistenciaDias());
@@ -713,6 +726,10 @@ public class JVersionTramite implements IModelApi {
 
 			if (model.getTipoTramite() != null) {
 				jversionTramite.setTipoTramite(model.getTipoTramite());
+			}
+
+			if (model.getNormativa() != null) {
+				jversionTramite.setNormativa(model.getNormativa());
 			}
 
 			if (model.getTiposAutenticacion() != null) {
@@ -749,6 +766,7 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite.setCodigo(null);
 			jversionTramite.setDescripcion(origVersionTramite.getDescripcion());
 			jversionTramite.setTipoTramite(origVersionTramite.getTipoTramite());
+			jversionTramite.setNormativa(origVersionTramite.getNormativa());
 			jversionTramite.setRelease(1);
 			jversionTramite.setNumeroVersion(numVersionNuevo);
 			jversionTramite.setTramite(origVersionTramite.getTramite());
@@ -766,7 +784,7 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite.setLimiteTramitacionIntervalo(origVersionTramite.getLimiteTramitacionIntervalo());
 			jversionTramite.setLimiteTramitacionNumero(origVersionTramite.getLimiteTramitacionNumero());
 			jversionTramite.setMensajeDesactivacion(JLiteral.clonar(origVersionTramite.getMensajeDesactivacion()));
-			jversionTramite.setNivelQAA(origVersionTramite.getNivelQAA());
+			jversionTramite.setNivelSeguridad(origVersionTramite.getNivelSeguridad());
 			jversionTramite.setAdmitePersistencia(origVersionTramite.isAdmitePersistencia());
 			jversionTramite.setPersistenciaDias(origVersionTramite.getPersistenciaDias());
 			jversionTramite.setPersistenciaInfinita(origVersionTramite.isPersistenciaInfinita());

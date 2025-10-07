@@ -1,5 +1,8 @@
 package es.caib.sistra2.commons.plugins.firmacliente.api;
 
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoNivelSeguridad;
+
 /**
  * Datos relativos a la sesión de firma.
  *
@@ -16,6 +19,12 @@ public class InfoSesionFirma {
 
 	/** Código SIA del procedimento. **/
 	private String codigoSIA;
+
+	/** Nivel seguridad. */
+	private TipoNivelSeguridad nivelSeguridad;
+
+	/** Método de autenticación. */
+	private TipoMetodoAutenticacion metodoAutenticacion;
 
 	/** Indica si el plugin debe validar firmante (no se indicarán datos de firmante ni de representante). **/
 	private boolean validarFirmante;
@@ -184,5 +193,21 @@ public class InfoSesionFirma {
 	 */
 	public void setValidarFirmante(final boolean validarFirmante) {
 		this.validarFirmante = validarFirmante;
+	}
+
+	public TipoNivelSeguridad getNivelSeguridad() {
+		return nivelSeguridad;
+	}
+
+	public void setNivelSeguridad(TipoNivelSeguridad nivelSeguridad) {
+		this.nivelSeguridad = nivelSeguridad;
+	}
+
+	public TipoMetodoAutenticacion getMetodoAutenticacion() {
+		return metodoAutenticacion;
+	}
+
+	public void setMetodoAutenticacion(TipoMetodoAutenticacion metodoAutenticacion) {
+		this.metodoAutenticacion = metodoAutenticacion;
 	}
 }

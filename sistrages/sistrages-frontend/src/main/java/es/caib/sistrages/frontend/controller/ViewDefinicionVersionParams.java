@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.sistrages.core.api.model.types.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -47,14 +48,6 @@ import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
-import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.model.types.TypeEntorno;
-import es.caib.sistrages.core.api.model.types.TypeExtension;
-import es.caib.sistrages.core.api.model.types.TypePaso;
-import es.caib.sistrages.core.api.model.types.TypePlugin;
-import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
-import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
-import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -1015,10 +1008,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		return filaSeleccionada;
 	}
 
-	/**
-	 * Sube el formulario.
-	 */
-	public void subirFormulario() {
+	public void verificarSubirFormulario() {
 		if (!verificarFormularioSeleccionado()) {
 			return;
 		}
@@ -1030,6 +1020,29 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 			return;
 		}
 
+		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) && posicion == 1) {
+			PrimeFaces.current().executeScript("PF('confirmSubirWidget').show();");
+			return;
+		}
+
+		subirFormulario();
+	}
+
+	/**
+	 * Sube el formulario.
+	 */
+	public void subirFormulario() {
+		final int posicion = posicionFormulario(this.formularioSeleccionado);
+
+		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) && posicion == 1) {
+			FormularioTramite formPosicion1 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(0);
+			FormularioTramite formPosicion2 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(1);
+			formPosicion1.setDebeFirmarse(false);
+			formPosicion2.setDebeFirmarse(true);
+			tramiteService.updateFormularioTramite(formPosicion1);
+			tramiteService.updateFormularioTramite(formPosicion2);
+		}
+
 		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getCodigo(),
 				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(posicion - 1).getCodigo());
 
@@ -1038,10 +1051,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		inicializarArbol();
 	}
 
-	/**
-	 * Baja el formulario.
-	 */
-	public void bajarFormulario() {
+	public void verificarBajarFormulario() {
 		if (!verificarFormularioSeleccionado()) {
 			return;
 		}
@@ -1051,6 +1061,29 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		if (posicion >= this.getTramitePasoRELLSeleccionado().getFormulariosTramite().size() - 1) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERABAJO));
 			return;
+		}
+
+		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) && posicion == 0) {
+			PrimeFaces.current().executeScript("PF('confirmBajarWidget').show();");
+			return;
+		}
+
+		bajarFormulario();
+	}
+
+	/**
+	 * Baja el formulario.
+	 */
+	public void bajarFormulario() {
+		final int posicion = posicionFormulario(this.formularioSeleccionado);
+
+		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) && posicion == 0) {
+			FormularioTramite formPosicion1 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(0);
+			FormularioTramite formPosicion2 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(1);
+			formPosicion1.setDebeFirmarse(false);
+			formPosicion2.setDebeFirmarse(true);
+			tramiteService.updateFormularioTramite(formPosicion1);
+			tramiteService.updateFormularioTramite(formPosicion2);
 		}
 
 		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getCodigo(),

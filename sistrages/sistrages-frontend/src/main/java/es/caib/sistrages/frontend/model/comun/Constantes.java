@@ -119,6 +119,11 @@ public final class Constantes {
 	/** Constante mochila literal. **/
 	public static final String CLAVE_MOCHILA_LITERALES_HTML = "LITERALESHTML";
 
+	/**
+	 * Variable que contiene una lista de areas para marcar un ámbito de trabajo en un punto de la aplicación.
+	 */
+	public static final String CLAVE_MOCHILA_AREAS_AMBITO = "AREAS_AMBITO";
+
 	/** Sistramit rest password. **/
 	public static final String SISTRAMIT_REST_PWD = "sistramit.rest.pwd";
 

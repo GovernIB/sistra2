@@ -72,6 +72,17 @@ public class BaseDbUnit extends AbstractTransactionalJUnit4SpringContextTests {
             conn.createStatement().execute("ALTER TABLE STT_TCKCDC MODIFY COLUMN TCC_INFAUT VARCHAR(4000)");
             conn.close();
             System.out.println("BaseDbUnit.init()");
+
+            /*
+            // TEST para ver si DS coge conexiones diferentes
+            try (Connection c1 = dataSource.getConnection();
+                 Connection c2 = dataSource.getConnection()) {
+                System.out.println("Conn1 == Conn2 ? " + (c1 == c2));
+                System.out.println("Isolation C1: " + c1.getTransactionIsolation());
+                System.out.println("Isolation C2: " + c2.getTransactionIsolation());
+            }
+             */
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

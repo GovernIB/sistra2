@@ -17,6 +17,9 @@ public class FuncionarioHabilitado extends PersonaDesglosado {
 	/** DIR3 asociado al FH. */
 	private String dir3;
 
+	/** Id actuación en FH. */
+	private String idActuacionFH;
+
 	/**
 	 * Constructor.
 	 */
@@ -27,10 +30,11 @@ public class FuncionarioHabilitado extends PersonaDesglosado {
 	/**
 	 * Constructor.
 	 */
-	public FuncionarioHabilitado(String userName, String nif, String nombre, String apellido1, String apellido2, String dir3) {
+	public FuncionarioHabilitado(String userName, String nif, String nombre, String apellido1, String apellido2, String dir3, String idActuacionFH) {
 		super(nif, nombre, apellido1, apellido2);
 		this.userName = userName;
 		this.dir3 = dir3;
+		this.idActuacionFH = idActuacionFH;
 	}
 
 	/**
@@ -65,13 +69,17 @@ public class FuncionarioHabilitado extends PersonaDesglosado {
 		this.dir3 = dir3;
 	}
 
+	public String getIdActuacionFH() {
+		return idActuacionFH;
+	}
+
 	/**
 	 * Método para mostrar el contenido de la clase FH.
 	 *
 	 * @return el string
 	 */
 	public String print() {
-		return "FH [username = " + userName + ", nif = " + getNif() + ", nombre = " + getNombre() + ", apellido1 = " + getApellido1() + ", apellido2 = " + getApellido2() + ", dir3 = " + dir3 + "]";
+		return "FH [username = " + userName + ", nif = " + getNif() + ", nombre = " + getNombre() + ", apellido1 = " + getApellido1() + ", apellido2 = " + getApellido2() + ", dir3 = " + dir3 + ", idActuacionFH = " + idActuacionFH + "]";
 	}
 
 }

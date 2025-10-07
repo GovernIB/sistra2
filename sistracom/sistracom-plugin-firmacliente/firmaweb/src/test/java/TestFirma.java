@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoNivelSeguridad;
 import es.caib.sistra2.commons.plugins.firmacliente.api.*;
 import org.fundaciobit.pluginsib.core.IPlugin;
 import org.fundaciobit.pluginsib.core.utils.FileUtils;
@@ -33,18 +35,27 @@ public class TestFirma {
 	 */
 	public static void main(final String args[]) {
 		try {
+
+			// Generamos la configuración del plugin de firma web en formato JSON.
+			String jsonConfig = ConfiguradorPluginFirmaWeb.generateConfigJSON(true);
+
+			// Configuración del plugin de firma web
 			final Properties prop = new Properties();
 			prop.put("plugins.firma.url",
 					"http://portafib2.fundaciobit.org/portafib/common/rest/apifirmawebsimple/v1/");
-			prop.put("plugins.firma.usr", "ibsalut_sistra2");
-			prop.put("plugins.firma.pwd", "ibsalut_sistra2");
+			prop.put("plugins.firma.configuracion", jsonConfig);
+
+			// Cargamos el plugin de firma web
 			final IPlugin plg = (IPlugin) PluginsManager.instancePluginByClassName(
 					"es.caib.sistra2.commons.plugins.firmacliente.firmaweb.ComponenteFirmaSimpleWebPlugin",
 					"plugins.firma.", prop);
 			final ComponenteFirmaSimpleWebPlugin plugin = (ComponenteFirmaSimpleWebPlugin) plg;
 
-			// Paso 1. Crear sesion
+			// Paso 1. Crear sesion  (firma con autofirma y clave firma)
 			final InfoSesionFirma infoSesionFirma = new InfoSesionFirma();
+			infoSesionFirma.setNivelSeguridad(TipoNivelSeguridad.SUSTANCIAL_CERTIFICADO);
+			infoSesionFirma.setMetodoAutenticacion(TipoMetodoAutenticacion.CLAVE_CERTIFICADO);
+			infoSesionFirma.setValidarFirmante(true);
 			infoSesionFirma.setEntidad("12345678C");
 			infoSesionFirma.setIdioma("ca");
 			infoSesionFirma.setNombreUsuario("jmico");
@@ -87,18 +98,22 @@ public class TestFirma {
 
 			// Paso 3. Crear transaction y obtener url
 			final String url = plugin.iniciarSesionFirma(idSession, null, null);
-			System.out.println("URL:" + url);
+			System.out.println("Redirige para realizar firma a URL:" + url);
 
-			// Paso 3.5 Esperando a que se finalice el firmado (4 seg durmiendo)
+
+			// Paso 4. Esperamos a que usuario complete firma
+			System.out.println("Una vez completada firma, pulsa tecja para continuar...");
+			System.in.read();
+
+
+			// Paso 5. Obtenemos el estado de la firma
 			TypeEstadoFirmado estado = TypeEstadoFirmado.INICIALIZADO;
-			while (estado != TypeEstadoFirmado.FINALIZADO_OK) {
-				EstadoFirma estadoFirma = plugin.obtenerEstadoSesionFirma(idSession);
-				estado = estadoFirma.getEstadoFirmado();
-				System.out.println("estado: " + estado);
-				Thread.sleep(4000l);
-			}
+			EstadoFirma estadoFirma = plugin.obtenerEstadoSesionFirma(idSession);
+			estado = estadoFirma.getEstadoFirmado();
+			System.out.println("Estado de la firma: " + estado);
 
-			// Paso 4. Obtenemos ficheros cuando finalizado
+
+			// Paso 6. Obtenemos ficheros cuando finalizado
 			if (estado == TypeEstadoFirmado.FINALIZADO_OK) {
 				final FicheroFirmado ficheroFirmado1 = plugin.obtenerFirmaFichero(idSession, "666");
 				final Path path = Paths.get("/" + ficheroFirmado1.getNombreFichero());
@@ -109,7 +124,7 @@ public class TestFirma {
 				Files.write(path2, ficheroFirmado2.getFirmaFichero());
 			}
 
-			// Paso 5. Cerramos session.
+			// Paso 7. Cerramos session.
 			plugin.cerrarSesionFirma(idSession);
 
 		} catch (final Exception e) {

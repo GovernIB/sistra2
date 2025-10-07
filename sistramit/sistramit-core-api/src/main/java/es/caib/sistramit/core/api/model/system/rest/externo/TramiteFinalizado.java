@@ -26,6 +26,8 @@ public final class TramiteFinalizado implements Serializable {
 	private int versionTramite;
 	/** Descripcion Tramite */
 	private String descripcionTramite;
+	/** Id entidad. */
+	private String idEntidad;
 	/** Código Procedimiento catálogo procedimientos. */
 	private String idProcedimientoCP;
 	/** Id procedimiento SIA */
@@ -56,7 +58,10 @@ public final class TramiteFinalizado implements Serializable {
 	private String funcionarioHabilitadoApellido1;
 	/** Funcionario habilitado: Apellido 2. */
 	private String funcionarioHabilitadoApellido2;
-
+	/** Funcionario habilitado: Id actuación. */
+	private String funcionarioHabilitadoIdActuacion;
+	/** Funcionario habilitado: Fecha aviso si tiene establecido id actuación. */
+	private Date funcionarioHabilitadoFechaAviso;
 
 	/**
 	 * Método de acceso a idSesionTramitacion.
@@ -437,5 +442,57 @@ public final class TramiteFinalizado implements Serializable {
 		this.funcionarioHabilitadoUsername = funcionarioHabilitadoUsername;
 	}
 
+	/**
+	 * Método de acceso a funcionarioHabilitadoIdActuacion.
+	 *
+	 * @return funcionarioHabilitadoIdActuacion
+	 */
+	public String getFuncionarioHabilitadoIdActuacion() {
+		return funcionarioHabilitadoIdActuacion;
+	}
 
+	/**
+	 * Método para establecer funcionarioHabilitadoIdActuacion.
+	 *
+	 * @param funcionarioHabilitadoIdActuacion
+	 *                                       funcionarioHabilitadoIdActuacion a establecer
+	 */
+	public void setFuncionarioHabilitadoIdActuacion(final String funcionarioHabilitadoIdActuacion) {
+		this.funcionarioHabilitadoIdActuacion = funcionarioHabilitadoIdActuacion;
+	}
+
+	/**
+	 * Método de acceso a funcionarioHabilitadoFechaAviso.
+	 *
+	 * @return funcionarioHabilitadoFechaAviso
+	 */
+	public Date getFuncionarioHabilitadoFechaAviso() {
+		return funcionarioHabilitadoFechaAviso;
+	}
+
+	/**
+	 * Método para establecer funcionarioHabilitadoFechaAviso.
+	 *
+	 * @param funcionarioHabilitadoFechaAviso
+	 *                                       funcionarioHabilitadoFechaAviso a establecer
+	 */
+	public void setFuncionarioHabilitadoFechaAviso(final Date funcionarioHabilitadoFechaAviso) {
+		this.funcionarioHabilitadoFechaAviso = funcionarioHabilitadoFechaAviso;
+	}
+
+	/**
+	 * Devuelve el idEntidad.
+	 * @return idEntidad
+	 */
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * Establece el idEntidad.
+	 * @param idEntidad el nuevo idEntidad
+	 */
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
 }

@@ -181,4 +181,10 @@ public class HelpDeskServiceBean implements HelpDeskService {
 		return helpdeskService.contenidoLogoEntidad(codDir3);
 	}
 
+	@Override
+	@PermitAll
+	public List<String> obtenerListaErroresAuditoria(boolean eventoPlataforma) {
+		return helpdeskService.obtenerListaErroresAuditoria(eventoPlataforma);
+	}
+
 }

@@ -1,29 +1,29 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.primefaces.event.SelectEvent;
-
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.util.UtilJSON;
+import es.caib.sistrages.frontend.ManagedBeanInspector;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
+import org.apache.commons.beanutils.BeanUtils;
+import org.primefaces.event.SelectEvent;
 
-@ManagedBean
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+
+@Named
 @ViewScoped
-public class DialogListaValoresFija extends DialogControllerBase {
+public class DialogListaValoresFija extends DialogControllerBase implements Serializable {
 
 	/**
 	 * Dato elemento en formato JSON.
@@ -49,6 +49,8 @@ public class DialogListaValoresFija extends DialogControllerBase {
 	@SuppressWarnings("unchecked")
 	public void init() {
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+		ManagedBeanInspector.listManagedBeans();
+
 
 		if (!mochilaDatos.isEmpty()) {
 			idiomas = (List<String>) mochilaDatos.get(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
@@ -112,6 +114,10 @@ public class DialogListaValoresFija extends DialogControllerBase {
 				data.setDescripcion(traduccionesEdit);
 			}
 
+			if(respuesta.getModoAcceso() == TypeModoAcceso.ALTA && !respuesta.isCanceled()) {
+				data.setDescripcion((Literal) respuesta.getResult());
+			}
+
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			UtilJSF.loggearErrorFront("Error establecimiendo traducciones", e);
 			throw new FrontException("Error estableciendo traducciones", e);
@@ -124,11 +130,17 @@ public class DialogListaValoresFija extends DialogControllerBase {
 	 */
 	public void editarTraducciones() {
 
+		TypeModoAcceso modo =null;
+
 		if (data.getDescripcion() != null) {
 			setTraduccionesEdit(data.getDescripcion());
+			modo = TypeModoAcceso.EDICION;
+		}else{
+//			setTraduccionesEdit(new Literal());
+			modo = TypeModoAcceso.ALTA;
 		}
 
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccion(modo, data.getDescripcion(), idiomas, idiomas);
 	}
 
 	/**

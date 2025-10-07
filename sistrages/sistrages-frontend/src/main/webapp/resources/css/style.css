@@ -820,7 +820,9 @@ textarea[readonly="readonly"] {
 .pi-user, .pi-id-card {
     padding-right: 4px;
 }
-
+.fa-user, .fa-id-card {
+    padding-right: 4px;
+}
 
 .colorNegro span{
     color: #000  !important;

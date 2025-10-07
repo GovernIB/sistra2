@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -296,30 +297,38 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 				formulariosCompletados.add(ddf);
 			}
 
+			// Se debe verificar firmante (calcular firmantes) si:
+			//  - Si no es FH
+			//  - Si nivel seguridad es sustancial certificado o alto
+			TypeNivelSeguridad nivelSeguridadAutenticado = UtilsSTG.obtenerNivelSeguridadAutenticado(pDefinicionTramite);
+			boolean verificarFirmante = !pVariablesFlujo.isFuncionarioHabilitado()
+					&& (
+						nivelSeguridadAutenticado == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO ||
+						nivelSeguridadAutenticado == TypeNivelSeguridad.ALTO
+			);
+
 			// Si se tiene que firmar y está completado, calculamos firmantes
-			if (formulario.getFirmar() == TypeSiNo.SI && docPer != null
-					&& docPer.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
-				// Si es FH no se indica firmante (será el FH)
-				if (!pVariablesFlujo.isFuncionarioHabilitado()) {
-					// Si tiene script de firmantes lo ejecutamos
-					if (UtilsSTG.existeScript(formularioDef.getScriptFirmantes())) {
-						final List<Firmante> firmantes = calcularFirmantes(pVariablesFlujo, pDefinicionTramite,
-								formularioDef, formulariosCompletados);
-						formulario.setFirmantes(firmantes);
-					} else {
-						// Si no tiene script de firmantes, pues el único
-						// firmante sería el iniciador.
-						// En caso de que el acceso sea no autenticado generamos
-						// error ya que no sabremos nif iniciador
-						if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
-							throw new ErrorConfiguracionException(
-									"No s'ha establert script de signants per formulari "
-											+ formularioDef.getIdentificador());
-						}
-						final Persona f = UtilsFlujo.usuarioPersona(pVariablesFlujo.getUsuario());
-						formulario.getFirmantes()
-								.add(new Firmante(f.getNif(), f.getNombre(), TypeObligatoriedadFirmante.OBLIGATORIO));
+			if (formulario.getFirmar() == TypeSiNo.SI && verificarFirmante &&
+					docPer != null && docPer.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE
+				) {
+				// Si tiene script de firmantes lo ejecutamos
+				if (UtilsSTG.existeScript(formularioDef.getScriptFirmantes())) {
+					final List<Firmante> firmantes = calcularFirmantes(pVariablesFlujo, pDefinicionTramite,
+							formularioDef, formulariosCompletados);
+					formulario.setFirmantes(firmantes);
+				} else {
+					// Si no tiene script de firmantes, pues el único
+					// firmante sería el iniciador.
+					// En caso de que el acceso sea no autenticado generamos
+					// error ya que no sabremos nif iniciador
+					if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
+						throw new ErrorConfiguracionException(
+								"No s'ha establert script de signants per formulari "
+										+ formularioDef.getIdentificador());
 					}
+					final Persona f = UtilsFlujo.usuarioPersona(pVariablesFlujo.getUsuario());
+					formulario.getFirmantes()
+							.add(new Firmante(f.getNif(), f.getNombre(), TypeObligatoriedadFirmante.OBLIGATORIO));
 				}
 			}
 

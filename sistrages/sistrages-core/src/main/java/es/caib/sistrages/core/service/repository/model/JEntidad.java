@@ -129,6 +129,12 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_MODFUNCHAB", nullable = false, precision = 1, scale = 0)
 	private boolean modoFuncionarioHabilitado;
 
+	@Column(name = "ENT_SUSTCERT", nullable = false, precision = 1, scale = 0)
+	private boolean nivelSustancialCertificado;
+
+	@Column(name = "ENT_PERMEXTSUST", nullable = false, precision = 1, scale = 0)
+	private boolean permitirExtensionesSustancial;
+
 	/** Texto respecto LOPD. **/
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_LOPD")
@@ -787,6 +793,22 @@ public class JEntidad implements IModelApi {
 		this.urlSede = urlSedeElectronica;
 	}
 
+	public boolean isNivelSustancialCertificado() {
+		return nivelSustancialCertificado;
+	}
+
+	public void setNivelSustancialCertificado(boolean nivelSustancialCertificado) {
+		this.nivelSustancialCertificado = nivelSustancialCertificado;
+	}
+
+	public boolean isPermitirExtensionesSustancial() {
+		return permitirExtensionesSustancial;
+	}
+
+	public void setPermitirExtensionesSustancial(boolean permitirExtensionesSustancial) {
+		this.permitirExtensionesSustancial = permitirExtensionesSustancial;
+	}
+
 	/**
 	 * toModel.
 	 */
@@ -841,6 +863,9 @@ public class JEntidad implements IModelApi {
 
 		entidad.setModoFuncionarioHabilitado(modoFuncionarioHabilitado);
 
+		entidad.setNivelSustancialCertificado(nivelSustancialCertificado);
+		entidad.setPermitirExtensionesSustancial( permitirExtensionesSustancial);
+
 		if (this.mapaWeb != null) {
 			entidad.setMapaWeb(this.mapaWeb.toModel());
 		}
@@ -882,6 +907,10 @@ public class JEntidad implements IModelApi {
 //			}
 //		}
 //		entidad.setPlantillas(plantillas);
+
+		entidad.setNivelSustancialCertificado(this.nivelSustancialCertificado);
+		entidad.setPermitirExtensionesSustancial(this.permitirExtensionesSustancial);
+
 		return entidad;
 	}
 

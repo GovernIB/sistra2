@@ -258,9 +258,25 @@
 					            	<p:selectBooleanCheckbox id="checkModoFuncionarioHabilitado" value="#{viewConfiguracionEntidad.data.modoFuncionarioHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								</p:column>
 
+
+								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerPermitirNivelSustancialCertificado']}" />
+					            <p:column>
+					            	<p:selectBooleanCheckbox id="checkPermitirNivelSustancial" value="#{viewConfiguracionEntidad.data.nivelSustancialCertificado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+								</p:column>
+
+
+								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerPermitirExtensionesSustancial']}" />
+					            <p:selectBooleanCheckbox id="checkPermitirExtensionesSustancial" value="#{viewConfiguracionEntidad.data.permitirExtensionesSustancial}"
+														 disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+
+
 							</h:panelGrid>
 
 	        			</p:tab>
+
+
+
+
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.tabAyuda']}">
 	        				<h:panelGrid styleClass="noBorders" columns="3" cellpadding="10">
 		           				<p:selectBooleanCheckbox id="checkEmail" required="true" value="#{viewConfiguracionEntidad.data.emailHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>

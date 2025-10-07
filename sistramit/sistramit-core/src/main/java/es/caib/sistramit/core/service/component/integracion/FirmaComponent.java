@@ -5,6 +5,7 @@ import java.util.List;
 import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
 import es.caib.sistramit.core.service.model.integracion.FirmaClienteRespuesta;
 import es.caib.sistramit.core.service.model.integracion.RedireccionFirma;
 import es.caib.sistramit.core.service.model.integracion.ValidacionFirmante;
@@ -18,35 +19,27 @@ import es.caib.sistramit.core.service.model.integracion.ValidacionFirmante;
 public interface FirmaComponent {
 
 	/**
-	 * Redirección a firma externa.
-	 *
-	 * @param idEntidad
-	 *                           Entidad
-	 * @param usuarioAutenticado Usuario autenticado
-	 * @param firmante
-	 *                           Firmante
-	 * @param representante
-	 *                           En caso de estar autenticado con un certificado de
-	 *                           representación, indica el representante (quien
-	 *                           firmará con su cert de representación)
-	 * @param fileId
-	 *                           Id fichero
-	 * @param fileContent
-	 *                           Contenido fichero
-	 * @param fileName
-	 *                           Nombre fichero con extensión
-	 * @param tipoDocumental
-	 *                           Tipo documental
-	 * @param urlCallBack
-	 *                           url callback
-	 * @param idioma
-	 *                           idioma
-	 * @return Datos redirección firma
-	 */
-	RedireccionFirma redireccionFirmaExterna(String idEntidad, UsuarioAutenticadoInfo usuarioAutenticado,
-											 Persona firmante, final Persona representante,
-											 String fileId, byte[] fileContent, String fileName, String tipoDocumental, String urlCallBack,
-											 String idioma);
+     * Redirección a firma externa.
+     *
+     * @param idEntidad          Entidad
+     * @param nivelSeguridad	 Nivel de seguridad del trámite
+     * @param usuarioAutenticado Usuario autenticado
+     * @param firmante           Firmante
+     * @param representante      En caso de estar autenticado con un certificado de
+     *                           representación, indica el representante (quien
+     *                           firmará con su cert de representación)
+     * @param fileId             Id fichero
+     * @param fileContent        Contenido fichero
+     * @param fileName           Nombre fichero con extensión
+     * @param tipoDocumental     Tipo documental
+     * @param urlCallBack        url callback
+     * @param idioma             idioma
+     * @return Datos redirección firma
+     */
+	RedireccionFirma redireccionFirmaExterna(String idEntidad, TypeNivelSeguridad nivelSeguridad, UsuarioAutenticadoInfo usuarioAutenticado,
+                                             Persona firmante, final Persona representante,
+                                             String fileId, byte[] fileContent, String fileName, String tipoDocumental, String urlCallBack,
+                                             String idioma);
 
 	/**
 	 * Recupera resultado firma externa.

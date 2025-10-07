@@ -7,7 +7,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.commons.lang3.BooleanUtils;
+import es.caib.sistrages.core.api.model.ConfiguracionSeguridad;
+import es.caib.sistrages.core.api.model.types.TypeNivelEidas;
+import es.caib.sistrages.core.api.model.types.TypeNivelSeguridad;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -187,6 +189,10 @@ public class EntidadDaoImpl implements EntidadDao {
 				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
 		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
 		jEntidad.setModoFuncionarioHabilitado(entidad.isModoFuncionarioHabilitado());
+		jEntidad.setNivelSustancialCertificado(entidad.isNivelSustancialCertificado());
+		jEntidad.setPermitirExtensionesSustancial(entidad.isPermitirExtensionesSustancial());
+
+
 		jEntidad.setTituloAsistenteTramitacion(
 				JLiteral.mergeModel(jEntidad.getTituloAsistenteTramitacion(), entidad.getTituloAsistenteTramitacion()));
 		jEntidad.setMapaWeb(JLiteral.mergeModel(jEntidad.getMapaWeb(), entidad.getMapaWeb()));
@@ -209,6 +215,9 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setValorarTramite(entidad.isValorarTramite());
 		jEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
 		jEntidad.setHabilitarModoEntrega(entidad.isHabilitarModoEntrega());
+
+        jEntidad.setNivelSustancialCertificado(entidad.isNivelSustancialCertificado());
+        jEntidad.setPermitirExtensionesSustancial(entidad.isPermitirExtensionesSustancial());
 
 		entityManager.merge(jEntidad);
 	}
@@ -554,4 +563,52 @@ public class EntidadDaoImpl implements EntidadDao {
 
 		return entidad;
 	}
+
+
+
+
+//	private List<ConfiguracionSeguridad> getListaNivelesSeguridad(){
+//
+//		List<ConfiguracionSeguridad> nivelesSeguridad = new ArrayList<>();
+//
+//		ConfiguracionSeguridad nivelBajo = new ConfiguracionSeguridad.Builder()
+//				.nivelSeguridad(TypeNivelSeguridad.BAJO)
+//				.nivelEidas(TypeNivelEidas.BAJO)
+//				.verificarFirmanteFormulario(false)
+//				.configurableVerificarFirmantesAnexo(false)
+//				.opcionalExtensionAnexo(false)
+//				.build();
+//
+//		ConfiguracionSeguridad nivelSustancial = new ConfiguracionSeguridad.Builder()
+//				.nivelSeguridad(TypeNivelSeguridad.SUSTANCIAL)
+//				.nivelEidas(TypeNivelEidas.SUSTANCIAL)
+//				.verificarFirmanteFormulario(false)
+//				.configurableVerificarFirmantesAnexo(false)
+//				.opcionalExtensionAnexo(false)
+//				.build();
+//
+//		ConfiguracionSeguridad nivelSustancialCertificado = new ConfiguracionSeguridad.Builder()
+//				.nivelSeguridad(TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO)
+//				.nivelEidas(TypeNivelEidas.SUSTANCIAL)
+//				.verificarFirmanteFormulario(true)
+//				.configurableVerificarFirmantesAnexo(false) // puede ser true según configuración
+//				.opcionalExtensionAnexo(false)  // puede ser true según configuración
+//				.build();
+//
+//		ConfiguracionSeguridad nivelAlto = new ConfiguracionSeguridad.Builder()
+//				.nivelSeguridad(TypeNivelSeguridad.ALTO)
+//				.nivelEidas(TypeNivelEidas.ALTO)
+//				.verificarFirmanteFormulario(true)
+//				.configurableVerificarFirmantesAnexo(false)  // puede ser true según configuración
+//				.opcionalExtensionAnexo(false) // puede ser true según configuración
+//				.build();
+//
+//
+//		nivelesSeguridad.add(nivelBajo);
+//		nivelesSeguridad.add(nivelSustancial);
+//		nivelesSeguridad.add(nivelSustancialCertificado);
+//		nivelesSeguridad.add(nivelAlto);
+//
+//		return nivelesSeguridad;
+//	}
 }

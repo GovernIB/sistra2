@@ -491,6 +491,9 @@ public class TramiteDaoImpl implements TramiteDao {
 		if (jTramiteVersion.getTipoTramite() == null) {
 			jTramiteVersion.setTipoTramite("T");
 		}
+		if (jTramiteVersion.getNormativa() == null) {
+			jTramiteVersion.setNormativa("G");
+		}
 		entityManager.persist(jTramiteVersion);
 		entityManager.flush();
 
@@ -1562,6 +1565,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			final JTramite jTramite = entityManager.find(JTramite.class, idTramite);
 			jTramiteVersion.setTramite(jTramite);
 			jTramiteVersion.setTipoTramite(filaTramiteVersion.getTramiteVersion().getTipoTramite());
+			jTramiteVersion.setNormativa(filaTramiteVersion.getTramiteVersion().getNormativa());
 
 			entityManager.persist(jTramiteVersion);
 			idTramiteVersion = jTramiteVersion.getCodigo();
@@ -1600,6 +1604,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			tv.setAutenticado(filaTramiteVersion.getTramiteVersion().isAutenticado());
 			tv.setBloqueada(false);
 			tv.setTipoTramite(filaTramiteVersion.getTramiteVersion().getTipoTramite());
+			tv.setNormativa(filaTramiteVersion.getTramiteVersion().getNormativa());
 			tv.setDebug(filaTramiteVersion.getTramiteVersion().isDebug());
 			tv.setDesactivacion(filaTramiteVersion.getTramiteVersion().isDesactivacion());
 			tv.setIdiomasSoportados(filaTramiteVersion.getTramiteVersion().getIdiomasSoportados());
@@ -1611,7 +1616,7 @@ public class TramiteDaoImpl implements TramiteDao {
 						.clonar(JLiteral.fromModel(filaTramiteVersion.getTramiteVersion().getMensajeDesactivacion()))
 						.toModel());
 			}
-			tv.setNivelQAA(filaTramiteVersion.getTramiteVersion().getNivelQAA());
+			tv.setConfiguracionSeguridad(filaTramiteVersion.getTramiteVersion().getNivelSeguridad());
 			tv.setNoAutenticado(filaTramiteVersion.getTramiteVersion().isNoAutenticado());
 			tv.setPersistenciaDias(filaTramiteVersion.getTramiteVersion().getPersistenciaDias());
 			tv.setPersistenciaInfinita(filaTramiteVersion.getTramiteVersion().isPersistenciaInfinita());
@@ -1636,6 +1641,9 @@ public class TramiteDaoImpl implements TramiteDao {
 			tv.setHuella(filaTramiteVersion.getTramiteVersion().getHuella());
 			if (tv.getTipoTramite() == null) {
 				tv.setTipoTramite("T");
+			}
+			if (tv.getNormativa() == null) {
+				tv.setNormativa("G");
 			}
 			this.updateTramiteVersion(tv);
 

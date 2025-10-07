@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import es.caib.sistra2.commons.plugins.digitalizacion.mock.ComponenteDigitalizacionPluginMock;
+import es.caib.sistra2.commons.plugins.funcionariohabilitado.mock.ComponenteFuncionarioHabilitadoPluginMock;
 import es.caib.sistrages.rest.api.interna.*;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.service.util.UtilsSTG;
@@ -228,13 +229,24 @@ public class SistragesMock {
 
 		// ENVIO REMOTO
 		final List<REnvioRemoto> enviosRemoto = new ArrayList<>();
+		//  -- Componente remoto online
 		final REnvioRemoto er = new REnvioRemoto();
 		er.setIdentificador(ID_EVRE_MOCK);
 		er.setIdentificadorConfAutenticacion(ID_AUT_MOCK);
 		er.setUrl("http://www.google.com");
 		er.setTimeout("30");
 		enviosRemoto.add(er);
+		//  -- Componente remoto offline CES2
+		final REnvioRemoto erCES2 = new REnvioRemoto();
+		erCES2.setIdentificador("CES2");
+		erCES2.setIdentificadorConfAutenticacion(ID_AUT_MOCK);
+		erCES2.setUrl("http://www.google.com");
+		erCES2.setTimeout("30");
+		enviosRemoto.add(erCES2);
+		// -- Añadimos envios remotos
 		e.setEnviosRemoto(enviosRemoto);
+
+
 
 		// ACCESO FH
 		e.setModoFuncionarioHabilitado(true);
@@ -305,6 +317,13 @@ public class SistragesMock {
 		plugin.setTipo(TypePluginEntidad.DIGITALIZACION.toString());
 		plugin.setClassname("es.caib.sistra2.commons.plugins.digitalizacion.mock.ComponenteDigitalizacionPluginMock");
 		plugin.setPrefijoPropiedades(ComponenteDigitalizacionPluginMock.DIGITALIZACION_BASE_PROPERTY + ComponenteDigitalizacionPluginMock.IMPLEMENTATION_BASE_PROPERTY);
+		plugin.setPropiedades(crearListaParametros());
+		plugins.add(plugin);
+
+		plugin = new RPlugin();
+		plugin.setTipo(TypePluginEntidad.FUNCIONARIO_HABILITADO.toString());
+		plugin.setClassname("es.caib.sistra2.commons.plugins.funcionariohabilitado.mock.ComponenteFuncionarioHabilitadoPluginMock");
+		plugin.setPrefijoPropiedades(ComponenteFuncionarioHabilitadoPluginMock.FUNCIONARIOHABILITADO_BASE_PROPERTY + ComponenteFuncionarioHabilitadoPluginMock.IMPLEMENTATION_BASE_PROPERTY);
 		plugin.setPropiedades(crearListaParametros());
 		plugins.add(plugin);
 

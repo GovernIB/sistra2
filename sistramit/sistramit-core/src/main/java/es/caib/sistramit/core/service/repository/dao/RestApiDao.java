@@ -222,4 +222,6 @@ public interface RestApiDao {
 
 	void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios);
 
+	List<String> listarTiposErrorAuditoria(boolean eventoPlataforma);
+
 }

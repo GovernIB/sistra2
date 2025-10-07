@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.model.types.TypeModoEvaluacionAlerta;
 
 /**
  * JAlerta
@@ -74,6 +75,12 @@ public class JAlerta implements IModelApi {
 
 	@Column(name = "AVI_HORA_RESUMEN")
 	private String horaResumen;
+
+	@Column(name = "AVI_IDIOMA")
+	private String idioma;
+
+	@Column(name = "AVI_MODO_EVALUACION", length = 1)
+	private Integer modoEvaluacion;
 
 	public JAlerta() {
 		super();
@@ -247,6 +254,26 @@ public class JAlerta implements IModelApi {
 		this.horaResumen = horaResumen;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
+	public String getIdioma() {
+		return idioma;
+	}
+
+	public void setIdioma(String idioma) {
+		this.idioma = idioma;
+	}
+
+	public Integer getModoEvaluacion() {
+		return modoEvaluacion;
+	}
+
+	public void setModoEvaluacion(Integer modoEvaluacion) {
+		this.modoEvaluacion = modoEvaluacion;
+	}
+
 	public Alerta toModel() {
 		final Alerta alerta = new Alerta();
 		alerta.setCodigo(codigo);
@@ -295,6 +322,13 @@ public class JAlerta implements IModelApi {
 		alerta.setFecha(fecha);
 		alerta.setActivo(activo.equals(1) ? true : false);
 		alerta.setHoraResumen(horaResumen);
+
+		alerta.setIdioma(idioma);
+
+		if(modoEvaluacion!=null) {
+			alerta.setModoEvaluacion(TypeModoEvaluacionAlerta.fromCodigo(modoEvaluacion));
+		}
+
 		return alerta;
 	}
 
@@ -353,6 +387,12 @@ public class JAlerta implements IModelApi {
 			jModel.setFecha(model.getFecha());
 			jModel.setActivo(model.isActivo() ? 1 : 0);
 			jModel.setHoraResumen(model.getHoraResumen());
+
+			jModel.setIdioma(model.getIdioma());
+
+			if(model.getModoEvaluacion()!=null) {
+				jModel.setModoEvaluacion(model.getModoEvaluacion().getCodigo());
+			}
 		}
 		return jModel;
 	}

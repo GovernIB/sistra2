@@ -357,6 +357,9 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		}
 
 		// Datos asunto
+		asientoWs.setCodigoAsunto(asiento.getDatosAsunto().getCodigoAsunto());
+		asientoWs.setReferenciaExterna(asiento.getDatosAsunto().getReferenciaExterna());
+		asientoWs.setObservaciones(asiento.getDatosAsunto().getObservaciones());
 		asientoWs.setResumen(UtilsRegweb3.truncarTexto(asiento.getDatosAsunto().getExtractoAsunto(),
 				ConstantesRegweb3.MAX_SIZE_ASUNTO_RESUMEN));
 		asientoWs.setTipoDocumentacionFisicaCodigo(ConstantesRegweb3.TIPO_DOCFIS_DIGTL);

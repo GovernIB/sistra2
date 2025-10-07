@@ -19,12 +19,17 @@ public class EntregaServiceBean implements EntregaService {
 	private EntregaService entregaService;
 
 	@Override
-	public ResultadoProcesoProgramado procesarEntregaFinalizadosInmediatos() {
-		return entregaService.procesarEntregaFinalizadosInmediatos();
+	public ResultadoProcesoProgramado procesarEnvioRemotoFinalizadosInmediatos() {
+		return entregaService.procesarEnvioRemotoFinalizadosInmediatos();
 	}
 
 	@Override
-	public ResultadoProcesoProgramado procesarEntregaFinalizadosPeriodicos() {
-		return entregaService.procesarEntregaFinalizadosPeriodicos();
+	public ResultadoProcesoProgramado procesarEnvioRemotoFinalizadosPeriodicos() {
+		return entregaService.procesarEnvioRemotoFinalizadosPeriodicos();
+	}
+
+	@Override
+	public ResultadoProcesoProgramado procesarFuncionarioHabilitadoFinalizados() {
+		return entregaService.procesarFuncionarioHabilitadoFinalizados();
 	}
 }

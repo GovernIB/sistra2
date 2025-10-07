@@ -18,13 +18,9 @@ public class RVersionTramitePropiedades {
 	@ApiModelProperty(value = "Autenticado")
 	private boolean autenticado;
 
-	/** Nivel QAA de autenticación. */
-	@ApiModelProperty(value = "Nivel QAA de autenticación")
-	private int nivelQAA;
-
-	/** Métodos de autenticación permitidos. */
-	@ApiModelProperty(value = "Métodos autenticación permitidos separados por ; (CER:Certificado / PIN: ClavePin / PER: ClavePermanente / MOV: ClaveMovil)")
-	private String metodosAutenticacion;
+	/** Nivel seguridad trámite. */
+	@ApiModelProperty(value = "Nivel seguridad trámite")
+	private Integer nivelSeguridadAutenticado;
 
 	/** Autenticado. */
 	@ApiModelProperty(value = "Autenticado")
@@ -184,41 +180,22 @@ public class RVersionTramitePropiedades {
 	}
 
 	/**
-	 * Método de acceso a nivelQAA.
+	 * Método de acceso a nivelSeguridad.
 	 *
-	 * @return nivelQAA
+	 * @return nivelSeguridad
 	 */
-	public int getNivelQAA() {
-		return nivelQAA;
+	public Integer getNivelSeguridadAutenticado() {
+		return nivelSeguridadAutenticado;
 	}
 
 	/**
-	 * Método para establecer nivelQAA.
+	 * Método para establecer nivelSeguridad.
 	 *
-	 * @param nivelQAA
-	 *                     nivelQAA a establecer
+	 * @param nivelSeguridadAutenticado
+	 *                          nivelSeguridad a establecer
 	 */
-	public void setNivelQAA(final int nivelQAA) {
-		this.nivelQAA = nivelQAA;
-	}
-
-	/**
-	 * Método de acceso a metodosAutenticacion.
-	 *
-	 * @return metodosAutenticacion
-	 */
-	public String getMetodosAutenticacion() {
-		return metodosAutenticacion;
-	}
-
-	/**
-	 * Método para establecer metodosAutenticacion.
-	 *
-	 * @param metodosAutenticacion
-	 *                                 metodosAutenticacion a establecer
-	 */
-	public void setMetodosAutenticacion(final String metodosAutenticacion) {
-		this.metodosAutenticacion = metodosAutenticacion;
+	public void setNivelSeguridadAutenticado(final Integer nivelSeguridadAutenticado) {
+		this.nivelSeguridadAutenticado = nivelSeguridadAutenticado;
 	}
 
 }

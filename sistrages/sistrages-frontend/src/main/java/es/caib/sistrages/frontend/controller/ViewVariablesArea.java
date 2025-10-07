@@ -8,6 +8,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Sesion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.service.SystemService;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -46,9 +50,15 @@ public class ViewVariablesArea extends ViewControllerBase {
 	@Inject
 	private SecurityService securityService;
 
+	@Inject
+	private SystemService systemService;
+
 	/** tramite service. */
 	@Inject
 	private TramiteService tramiteService;
+
+	/** Lista de areas. */
+	private List<Area> listaAreas;
 
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
@@ -98,6 +108,15 @@ public class ViewVariablesArea extends ViewControllerBase {
 		mostrarBreadcrumb = true;
 		/* inicializa breadcrum y lo creamos */
 		breadCrumb = new DefaultMenuModel();
+
+			Sesion sesion = null;
+			String userName = securityService.getUsername();
+			if (!userName.isEmpty()) {
+				sesion = systemService.getSesion(userName);
+				listaAreas = tramiteService.listArea(sesion.getEntidad(), null);
+
+			}
+
 
 		DefaultMenuItem item = null;
 
@@ -154,6 +173,10 @@ public class ViewVariablesArea extends ViewControllerBase {
 		default:
 			break;
 		}
+	}
+
+	public void cambiarArea(){
+		buscar(filtro);
 	}
 
 	/**
@@ -613,4 +636,11 @@ public class ViewVariablesArea extends ViewControllerBase {
 		this.msg = msg;
 	}
 
+	public List<Area> getListaAreas() {
+		return listaAreas;
+	}
+
+	public void setListaAreas(List<Area> listaAreas) {
+		this.listaAreas = listaAreas;
+	}
 }

@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service.component.integracion;
 
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.service.model.flujo.EntregaTramite;
 
 import java.util.Date;
@@ -44,5 +45,18 @@ public interface EntregaComponent {
 	 * Desbloquea entregas bloqueadas.
 	 */
 	void desbloquearEntregasBloqueadas();
+
+	/**
+	 * Obtiens trámites finalizados pendientes de notificar a funcionario habilitado.
+	 * @return trámites finalizados pendientes
+	 */
+	List<TramiteFinalizado> recuperarFinalizadosFHPendientes();
+
+	/**
+	 * Procesa aviso a funcionario habilitado de trámite finalizado.
+	 * @param tramiteFinalizado trámite finalizado
+	 * @return resultado
+	 */
+	boolean procesarAvisoFuncionarioHabilitado(TramiteFinalizado tramiteFinalizado);
 
 }

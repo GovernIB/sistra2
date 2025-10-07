@@ -3,12 +3,12 @@ package es.caib.sistrages.core.service.component;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.types.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Traduccion;
@@ -19,17 +19,6 @@ import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
-import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
-import es.caib.sistrages.core.api.model.types.TypeFlujo;
-import es.caib.sistrages.core.api.model.types.TypeFormulario;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypeIdioma;
-import es.caib.sistrages.core.api.model.types.TypePaso;
-import es.caib.sistrages.core.api.model.types.TypePresentacion;
-import es.caib.sistrages.core.api.model.types.TypeTamanyo;
-import es.caib.sistrages.core.api.model.types.TypeTipoDocumental;
-import es.caib.sistrages.core.api.model.types.TypeTramite;
 import es.caib.sistrages.core.service.component.literales.Literales;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.HistorialVersionDao;
@@ -69,7 +58,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tramiteVersion.setLimiteTramitacion(false);
 		tramiteVersion.setDesactivacion(false);
 		tramiteVersion.setRelease(0);
-		tramiteVersion.setNivelQAA(2);
+		tramiteVersion.setConfiguracionSeguridad(2);
 		tramiteVersion.setBloqueada(true);
 		tramiteVersion.setDatosUsuarioBloqueo(pDatosUsuarioBloqueo);
 		List<TypeAutenticacion> tiposAutenticacion = new ArrayList<>();
@@ -78,6 +67,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_MOVIL);
 		tramiteVersion.setTiposAutenticacion(tiposAutenticacion);
 		tramiteVersion.setTipoTramite(TypeTramite.TRAMITE.toString());
+		tramiteVersion.setNormativa(TypeNormativa.GENERAL.toString());
 		return tramiteVersion;
 	}
 
@@ -96,7 +86,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tramiteVersion.setLimiteTramitacion(false);
 		tramiteVersion.setDesactivacion(false);
 		tramiteVersion.setRelease(0);
-		tramiteVersion.setNivelQAA(2);
+		tramiteVersion.setConfiguracionSeguridad(2);
 		tramiteVersion.setBloqueada(false);
 		List<TypeAutenticacion> tiposAutenticacion = new ArrayList<>();
 		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
@@ -104,6 +94,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_MOVIL);
 		tramiteVersion.setTiposAutenticacion(tiposAutenticacion);
 		tramiteVersion.setTipoTramite(TypeTramite.TRAMITE.toString());
+		tramiteVersion.setNormativa(TypeNormativa.GENERAL.toString());
 		return tramiteVersion;
 	}
 

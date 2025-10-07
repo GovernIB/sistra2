@@ -335,9 +335,16 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			// Creamos texto aviso
 			final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false, true,
 					TypeFuente.NOTOSANS, 10);
+
+			// TODO TRATAR TEXTO HTML (VERIFICAR QUE VA TODO BIEN)
+
 			// Texto aviso puede contener html, por lo q limpiamos
-			final String textoAviso = Jsoup.parse(componenteAviso.getEtiqueta()).text();
-			final Texto texto = new Texto(personalizacicionTexto, textoAviso, 6);
+			// final String textoAviso = Jsoup.parse(componenteAviso.getEtiqueta()).text();
+			// final Texto texto = new Texto(personalizacicionTexto, textoAviso, 6);
+
+			personalizacicionTexto.setHtml(true);
+			final Texto texto = new Texto(personalizacicionTexto, componenteAviso.getEtiqueta(), 6);
+
 			linea.getObjetosLinea().add(texto);
 		}
 	}

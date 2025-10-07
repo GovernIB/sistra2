@@ -19,6 +19,8 @@ public class PersonalizacionTexto {
   private TypeFuente fuente;
   /**Tamaño del texto*/
   private int tamanio;
+  /** Indica que es HTML. */
+  private boolean html = false;
 
 
 
@@ -110,8 +112,19 @@ public class PersonalizacionTexto {
     this.tamanio = tamanio;
   }
 
+  /**
+   * Indica si el texto es HTML.
+   * @return Devuelve html
+   */
+  public boolean isHtml() {
+    return html;
+  }
 
-
-
-
+  /**
+   * Indica si el texto es HTML.
+   * @param html indica si el texto es HTML
+   */
+  public void setHtml(boolean html) {
+    this.html = html;
+  }
 }

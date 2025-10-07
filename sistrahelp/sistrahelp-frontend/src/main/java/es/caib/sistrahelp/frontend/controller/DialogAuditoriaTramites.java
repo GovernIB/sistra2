@@ -1,26 +1,33 @@
 package es.caib.sistrahelp.frontend.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
-import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
-import org.primefaces.event.SelectEvent;
-
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
+import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
+import es.caib.sistrahelp.frontend.model.NavegacionEventos;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
+import org.primefaces.event.SelectEvent;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @ManagedBean
 @ViewScoped
 public class DialogAuditoriaTramites extends DialogControllerBase {
+
+
+	@Inject
+	private HelpDeskService helpDeskService;
 
 	private EventoAuditoriaTramitacion dato;
 
@@ -29,6 +36,9 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 	private String portapapeles;
 
 	private String errorCopiar;
+
+	private NavegacionEventos navegacionEventos;
+
 
 	/**
 	 * Inicialización.
@@ -48,6 +58,21 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 				dato.getPropiedadesEvento().addPropiedades(dato.getFuncionarioHabilitado().toPropiedades());
 			}
 
+			navegacionEventos = (NavegacionEventos) UtilJSF.getSessionBean().getMochilaDatos()
+					.get(Constantes.CLAVE_MOCHILA_EVENTO_NAVEGACION);
+
+			if(navegacionEventos != null) {
+				int indexRow = navegacionEventos.getEventos().indexOf(dato);
+				if (indexRow < 0) { // desde stg por algún motivo no coinciden las instancias de evento seleccionado y la misma en la lista, por eso filtramos por id para localizarla
+					indexRow = navegacionEventos.getEventos().stream().filter(e -> e.getId().equals(dato.getId())).findFirst().map(navegacionEventos.getEventos()::indexOf).orElse(-1);
+				}
+
+				navegacionEventos.setRowIndex(indexRow);
+			}
+
+
+
+
 		}
 	}
 
@@ -61,7 +86,7 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 
 	public void sistrages() {
 		final Map<String, String> params = new HashMap<>();
-		params.put("viewAuditoriaTramites", dato.getIdTramite());
+		params.put("TRAMITE", dato.getIdTramite());
 		params.put("VERSION", dato.getVersionTramite().toString());
 		UtilJSF.openDialog(DialogDefinicionVersion.class, TypeModoAcceso.CONSULTA, params, true, 1350, 550);
 	}
@@ -99,6 +124,44 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 		params.put("esDialogParams", "true");
 
 		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
+	}
+
+	/**
+	 * Retroceder al anterior evento de la búsqueda realizada
+	 */
+	public void navigatePrevious() {
+		// Logic to navigate to the previous item
+		// Example: Update `dato` to the previous item in the list
+
+		if(navegacionEventos.hasPrevious()) {
+			if(navegacionEventos.getRowIndex() != 0) {
+				dato = navegacionEventos.getPreviousEvento();
+			}else{
+				List<EventoAuditoriaTramitacion> pagAnt = helpDeskService.obtenerAuditoriaEvento(navegacionEventos.getFiltros(), new FiltroPaginacion(navegacionEventos.getFirst() - navegacionEventos.getPageSize(), navegacionEventos.getPageSize()));
+				navegacionEventos.retrocedePagina(pagAnt);
+				dato = navegacionEventos.getEventos().get(navegacionEventos.getRowIndex());
+			}
+		}
+	}
+
+	/**
+	 * Avanzar al siguiente evento de la búsqueda realizada
+	 */
+	public void navigateNext() {
+
+		if(navegacionEventos.hasNext()) {
+			if( navegacionEventos.ultimoDePagina()) {
+				List<EventoAuditoriaTramitacion> pagSig = helpDeskService.obtenerAuditoriaEvento(navegacionEventos.getFiltros(), new FiltroPaginacion(navegacionEventos.getFirst() + navegacionEventos.getPageSize(), navegacionEventos.getPageSize()));
+				navegacionEventos.avanzarPagina(pagSig);
+				dato = navegacionEventos.getEventos().get(0);
+			}else {
+				dato = navegacionEventos.getNextEvento();
+			}
+		}
+	}
+
+	public boolean isMostrarNavegacion() {
+		return navegacionEventos != null && navegacionEventos.getEventos() != null && navegacionEventos.getEventos().size() > 1;
 	}
 
 	/**
@@ -184,4 +247,7 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 		this.portapapeles = portapapeles;
 	}
 
+	public NavegacionEventos getNavegacionEventos() {
+		return navegacionEventos;
+	}
 }

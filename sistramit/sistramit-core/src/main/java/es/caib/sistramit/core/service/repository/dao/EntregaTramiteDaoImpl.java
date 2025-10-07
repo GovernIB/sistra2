@@ -9,6 +9,7 @@ import es.caib.sistramit.core.service.model.flujo.EntregaTramite;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEntregaEstado;
 import es.caib.sistramit.core.service.repository.model.HTramiteEntrega;
 import es.caib.sistramit.core.service.repository.model.HTramiteFinalizado;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Repository;
 
@@ -142,6 +143,37 @@ public final class EntregaTramiteDaoImpl implements EntregaTramiteDao {
             res = HTramiteFinalizado.toModel(hTramiteFinalizado);
         }
         return res;
+    }
+
+    @Override
+    public List<TramiteFinalizado> recuperarFinalizadosFHPendientes() {
+        List<TramiteFinalizado> res = new ArrayList<>();
+        final String sql = "SELECT t from HTramiteFinalizado t where t.funcionarioHabilitadoIdActuacion is not null and t.funcionarioHabilitadoAvisoFecha is null";
+        final Query query = entityManager.createQuery(sql);
+        final List<?> results = query.getResultList();
+        for (Object obj : results) {
+            HTramiteFinalizado hTramiteFinalizado = (HTramiteFinalizado) obj;
+            res.add(HTramiteFinalizado.toModel(hTramiteFinalizado));
+        }
+        return res;
+    }
+
+    @Override
+    public void actualizarAvisoCorrectoFuncionarioHabilitado(String idSesionTramitacion) {
+        String sql = "UPDATE HTramiteFinalizado t SET t.funcionarioHabilitadoAvisoFecha = :fechaAviso, t.funcionarioHabilitadoAvisoError = null WHERE t.idSesionTramitacion = :idSesionTramitacion";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("fechaAviso", new Date());
+        query.setParameter("idSesionTramitacion", idSesionTramitacion);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void actualizarAvisoErrorFuncionarioHabilitado(String idSesionTramitacion, String msgError) {
+        String sql = "UPDATE HTramiteFinalizado t SET t.funcionarioHabilitadoAvisoFecha = null, t.funcionarioHabilitadoAvisoError = :msgError WHERE t.idSesionTramitacion = :idSesionTramitacion";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("msgError", StringUtils.substring(msgError, 0, 4000));
+        query.setParameter("idSesionTramitacion", idSesionTramitacion);
+        query.executeUpdate();
     }
 
     /**

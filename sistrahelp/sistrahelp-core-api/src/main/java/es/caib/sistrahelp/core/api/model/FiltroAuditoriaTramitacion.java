@@ -63,6 +63,9 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	private String rolAcceso;
 
+	private List<String> tiposErrores;
+	private String textoTraza;
+
 	public FiltroAuditoriaTramitacion() {
 		super();
 		this.fechaDesde = calcularFecha();
@@ -133,6 +136,9 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.rolAcceso = pFiltroAuditoriaTramitacion.rolAcceso;
 
 			this.tiposEventos = pFiltroAuditoriaTramitacion.getTiposEventos();
+
+			this.tiposErrores = pFiltroAuditoriaTramitacion.getTiposErrores();
+			this.textoTraza = pFiltroAuditoriaTramitacion.getTextoTraza();
 		}
 	}
 
@@ -416,5 +422,21 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	public void setTiposEventos(List<TypeEvento> tiposEventos) {
 		this.tiposEventos = tiposEventos;
+	}
+
+	public List<String> getTiposErrores() {
+		return tiposErrores;
+	}
+
+	public void setTiposErrores(List<String> tiposErrores) {
+		this.tiposErrores = tiposErrores;
+	}
+
+	public String getTextoTraza() {
+		return textoTraza;
+	}
+
+	public void setTextoTraza(String textoTraza) {
+		this.textoTraza = textoTraza;
 	}
 }

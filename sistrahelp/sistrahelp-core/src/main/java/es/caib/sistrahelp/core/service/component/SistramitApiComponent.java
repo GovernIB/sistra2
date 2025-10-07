@@ -125,4 +125,6 @@ public interface SistramitApiComponent {
 
 	String urlLogoEntidad(String codDir3);
 
+	List<String> listarTiposErrorAuditoria(boolean eventoPlataforma);
+
 }

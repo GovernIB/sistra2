@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="#{sessionBean.lang}"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:pe="http://primefaces.org/ui/extensions"
-	xmlns:p="http://primefaces.org/ui">
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -94,21 +94,7 @@
 		          aux.value = '';
 		        }
 
-				 var elEnDataT = document.getElementsByClassName('resaltar')[0];
-		        if(elEnDataT!=null &amp;&amp; elEnDataT.id=='dialogAuditoriaTramites:idSesionTramitacion'){
-		          document.getElementById("dialogAuditoriaTramites:sesion").classList.remove("d-none");
-		          document.getElementById("dialogAuditoriaTramites:sesion").classList.add("d-block");
-		        }else{
-		          document.getElementById("dialogAuditoriaTramites:sesion").classList.remove("d-block");
-		          document.getElementById("dialogAuditoriaTramites:sesion").classList.add("d-none")
-		        }
-				if(elEnDataT!=null &amp;&amp; elEnDataT.id=='dialogAuditoriaTramites:nifUsu'){
-		          document.getElementById("dialogAuditoriaTramites:nif").classList.remove("d-none");
-		          document.getElementById("dialogAuditoriaTramites:nif").classList.add("d-block");
-		        }else{
-		          document.getElementById("dialogAuditoriaTramites:nif").classList.remove("d-block");
-		          document.getElementById("dialogAuditoriaTramites:nif").classList.add("d-none")
-		        }
+
 
 		        if(aux.value!='' ){
             var multiple = false;
@@ -154,8 +140,27 @@
 
 			 }
 
+			  function opcMenu(){
+				  var elEnDataT = document.getElementsByClassName('resaltar')[0];
+				  if(elEnDataT!=null &amp;&amp; elEnDataT.id=='dialogAuditoriaTramites:idSesionTramitacion'){
+					  document.getElementById("dialogAuditoriaTramites:sesion").classList.remove("d-none");
+					  document.getElementById("dialogAuditoriaTramites:sesion").classList.add("d-block");
+				  }else{
+					  document.getElementById("dialogAuditoriaTramites:sesion").classList.remove("d-block");
+					  document.getElementById("dialogAuditoriaTramites:sesion").classList.add("d-none")
+				  }
+				  if(elEnDataT!=null &amp;&amp; elEnDataT.id=='dialogAuditoriaTramites:nifUsu'){
+					  document.getElementById("dialogAuditoriaTramites:nif").classList.remove("d-none");
+					  document.getElementById("dialogAuditoriaTramites:nif").classList.add("d-block");
+				  }else{
+					  document.getElementById("dialogAuditoriaTramites:nif").classList.remove("d-block");
+					  document.getElementById("dialogAuditoriaTramites:nif").classList.add("d-none")
+                  }
+              }
+
+
 			</h:outputScript>
-					    <p:contextMenu>
+		   <p:contextMenu beforeShow="opcMenu();">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogAuditoriaTramites:auxCopiar" update="growlDialog" />
 				<p:menuitem value="#{msg['botones.stg']}" icon="fa fa-send" styleClass="w90" actionListener="#{dialogAuditoriaTramites.sistrages()}" process="@this" rendered="{dialogAuditoriaTramites.dato.getIdTramite() != null}" style="margin-left:4px;width:200px;" />
 				<p:menuitem id="sesion" icon="fa fa-window-maximize" process="@this" update="growlDialog" actionListener="#{dialogAuditoriaTramites.pantallaSesion}" value="#{msg['viewConsultaIncidencias.eventos.sesion']}"/>
@@ -281,6 +286,20 @@
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
+					<f:facet name="left" >
+						<c:if test="#{dialogAuditoriaTramites.mostrarNavegacion}">
+
+							<p:commandButton id="btnPrevious"  icon="fa fa-arrow-left"
+											 actionListener="#{dialogAuditoriaTramites.navigatePrevious}" process="@this" update="dialogAuditoriaTramites"
+											 styleClass="boton-azul" disabled="#{! dialogAuditoriaTramites.navegacionEventos.hasPrevious()}"/>
+
+							<p:commandButton id="btnNext"  icon="fa fa-arrow-right"
+											 actionListener="#{dialogAuditoriaTramites.navigateNext}" process="@this" update="dialogAuditoriaTramites"
+											 disabled="#{! dialogAuditoriaTramites.navegacionEventos.hasNext()}"
+											 styleClass="boton-azul" />
+						</c:if>
+					</f:facet>
+
 					<f:facet name="right">
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" actionListener="#{dialogAuditoriaTramites.ayuda()}" />
 						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogAuditoriaTramites.cerrar}" process="@this" styleClass="boton-azul" />

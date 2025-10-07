@@ -1,12 +1,20 @@
 package es.caib.sistrages.core.api.model;
 
+import es.caib.sistrages.core.api.model.types.TypeNivelEidas;
+import es.caib.sistrages.core.api.model.types.TypeNivelSeguridad;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * La clase Entidad.
  */
 
 public class Entidad extends ModelApi {
+
+
 
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
@@ -147,6 +155,15 @@ public class Entidad extends ModelApi {
 	private List<PlantillaEntidad> plantillasMailFinRegistro;
 
 	private boolean modoFuncionarioHabilitado;
+
+	private boolean nivelSustancialCertificado;
+
+	/**
+	 * Permitir extensión diferente a PDF para nivel “Sustancial (firma con certificado)” y “Alto”.
+	 */
+	private boolean permitirExtensionesSustancial;
+
+	private TypeNivelSeguridad tipoNivelSeguridad;
 
 	/**
 	 * Obtiene el valor de codigo.
@@ -821,6 +838,22 @@ public class Entidad extends ModelApi {
 	@Override
 	public String toString() {
         return toString("","ca");
+	}
+
+	public boolean isNivelSustancialCertificado() {
+		return nivelSustancialCertificado;
+	}
+
+	public void setNivelSustancialCertificado(boolean nivelSustancialCertificado) {
+		this.nivelSustancialCertificado = nivelSustancialCertificado;
+	}
+
+	public boolean isPermitirExtensionesSustancial() {
+		return permitirExtensionesSustancial;
+	}
+
+	public void setPermitirExtensionesSustancial(boolean permitirExtensionesSustancial) {
+		this.permitirExtensionesSustancial = permitirExtensionesSustancial;
 	}
 
 	/**

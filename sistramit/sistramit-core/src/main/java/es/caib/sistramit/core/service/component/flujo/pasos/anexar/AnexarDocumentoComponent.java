@@ -205,6 +205,12 @@ public class AnexarDocumentoComponent {
         // Validaciones anexo electronico
         if (presentacion == TypePresentacion.ELECTRONICA) {
 
+            // - Si no es genérico, no dejamos anexar sin haberlo borrado antes (desde asistente no se da opción)
+            if (anexoDetalle.getRellenado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE &&
+                  anexoDetalle.getMaxInstancias() == ConstantesNumero.N1 ) {
+                throw new AccionPasoNoPermitidaException("No es pot annexar un fitxer sense haver esborrat l'anterior");
+            }
+
             // - Validaciones anexo generico
             validacionesAnexoGenerico(anexoDetalle, tituloInstancia);
 
@@ -220,7 +226,7 @@ public class AnexarDocumentoComponent {
             } else {
                 // Se valida protección por contraseña en cualquier caso
                 validarProteccionPassword(anexoDetalle, datosFichero, nombreFichero);
-				// Solo si se requiere firma (firma asistente o anexar firmado)
+                // Solo si se requiere firma (firma asistente o anexar firmado)
                 if (anexoDetalle.getFirmar() == TypeSiNo.SI || anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
                     // - Validaciones de anexo firmado
                     final boolean anexadoFirmado = validacionAnexoFirmado(pDefinicionTramite, pVariablesFlujo, anexoDetalle,

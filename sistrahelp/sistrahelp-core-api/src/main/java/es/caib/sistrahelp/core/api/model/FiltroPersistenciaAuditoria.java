@@ -35,6 +35,8 @@ public class FiltroPersistenciaAuditoria extends ModelApi {
 
 	private boolean soloContar;
 
+	private boolean mostrarCaducados;
+
 	private String sortField;
 	private String sortOrder;
 
@@ -61,6 +63,8 @@ public class FiltroPersistenciaAuditoria extends ModelApi {
 
 			this.sortField = pNewFiltroPersistenciaAuditoria.getSortField();
 			this.sortOrder = pNewFiltroPersistenciaAuditoria.getSortOrder();
+
+			this.mostrarCaducados = pNewFiltroPersistenciaAuditoria.isMostrarCaducados();
 		}
 	}
 
@@ -68,6 +72,8 @@ public class FiltroPersistenciaAuditoria extends ModelApi {
 		super();
 		this.listaAreas = listaAreas;
 		this.fechaDesde = calcularFecha();
+
+
 	}
 
 	public List<String> getListaAreas() {
@@ -158,6 +164,14 @@ public class FiltroPersistenciaAuditoria extends ModelApi {
 		this.soloContar = soloContar;
 	}
 
+	public boolean isMostrarCaducados() {
+		return mostrarCaducados;
+	}
+
+	public void setMostrarCaducados(boolean mostrarCaducados) {
+		this.mostrarCaducados = mostrarCaducados;
+	}
+
 	private Date getToday() {
 		final Calendar calendar = Calendar.getInstance();
 		final int year = calendar.get(Calendar.YEAR);
@@ -180,6 +194,8 @@ public class FiltroPersistenciaAuditoria extends ModelApi {
 		}
 
 	}
+
+
 
 	public String getSortField() {
 		return sortField;

@@ -148,11 +148,14 @@ public final class NegocioInterceptorAspect {
 
 		// Audita eventos entrega
 		 if (isEntregaService(jp)) {
-			if ("procesarEntregaFinalizadosInmediatos".equals(jp.getSignature().getName()) || "procesarEntregaFinalizadosPeriodicos".equals(jp.getSignature().getName())) {
+			// Entrega trámites finalizados (CES2)  y avisos a funcionario habilitado
+			if ("procesarEntregaFinalizadosInmediatos".equals(jp.getSignature().getName())
+					|| "procesarEntregaFinalizadosPeriodicos".equals(jp.getSignature().getName())
+					|| "procesarAvisoFuncionarioHabilitadoFinalizados".equals(jp.getSignature().getName())) {
 				final ResultadoProcesoProgramado rp = (ResultadoProcesoProgramado) retVal;
 				if (rp != null) {
 					final EventoAuditoria ev = new EventoAuditoria();
-					ev.setTipoEvento(TypeEvento.PROCESO_ENTREGA);
+					ev.setTipoEvento("procesarAvisoFuncionarioHabilitadoFinalizados".equals(jp.getSignature().getName())?TypeEvento.PROCESO_AVISOFH:TypeEvento.PROCESO_ENTREGA);
 					ev.setFecha(new Date());
 					ev.setResultado(Boolean.toString(rp.isFinalizadoOk()));
 					ev.setPropiedadesEvento(rp.getDetalles());

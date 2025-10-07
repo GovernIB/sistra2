@@ -345,6 +345,7 @@ public class ApiExternaRestController {
 		usuarioAutenticado.setApellido2(StringUtils.defaultIfBlank(rInfoTicketAccesoFH.getFuncionarioHabilitado().getApellido2(), null));
 		// Información representación
 		InfoAccesoFH infoAccesoFH = new InfoAccesoFH();
+		infoAccesoFH.setIdActuacionFH(StringUtils.trimToNull(rInfoTicketAccesoFH.getIdActuacionFH()));
 		infoAccesoFH.setDir3FH(rInfoTicketAccesoFH.getFuncionarioHabilitado().getDir3());
 		infoAccesoFH.setInteresado(conviertePersonaDesglosado(rInfoTicketAccesoFH.getInteresado()));
 		if (rInfoTicketAccesoFH.getRepresentante() != null) {

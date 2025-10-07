@@ -311,7 +311,7 @@ public class SecurityServiceImpl implements SecurityService {
 			usu.setRepresentante(rep);
 		}
 		// FH
-		usu.setFuncionarioHabilitado(new FuncionarioHabilitado(fh.getUsername(), fh.getNif(), fh.getNombre(), fh.getApellido1(), fh.getApellido2(), infoTicket.getInfoAccesoFH().getDir3FH()));
+		usu.setFuncionarioHabilitado(new FuncionarioHabilitado(fh.getUsername(), fh.getNif(), fh.getNombre(), fh.getApellido1(), fh.getApellido2(), infoTicket.getInfoAccesoFH().getDir3FH(), infoTicket.getInfoAccesoFH().getIdActuacionFH()));
 		return usu;
 	}
 
@@ -373,12 +373,9 @@ public class SecurityServiceImpl implements SecurityService {
 		res.setIdioma(idioma);
 		res.setTitulo(descripcionTramite);
 		res.setNiveles(niveles);
-		res.setMetodosAutenticado(UtilsSTG.convertMetodosAutenticado(
-				defTramite.getDefinicionVersion().getPropiedades().getMetodosAutenticacion()));
-		final int qaaTramite = defTramite.getDefinicionVersion().getPropiedades().getNivelQAA();
-		if (qaaTramite > 0) {
-			res.setQaa(TypeQAA.fromString(String.valueOf(qaaTramite)));
-		}
+		final Integer nivelSeguridadAutenticado = defTramite.getDefinicionVersion().getPropiedades().getNivelSeguridadAutenticado();
+		res.setMetodosAutenticado(UtilsSTG.obtenerMetodosAutenticacionNivelSeguridadAutenticado(nivelSeguridadAutenticado));
+		res.setQaa(UtilsSTG.obtenerQAANivelSeguridadAutenticado(nivelSeguridadAutenticado));
 		res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma, configuracionComponent));
 		res.setAvisos(avisos);
 		res.setBloquear(avisosBloqueantes);

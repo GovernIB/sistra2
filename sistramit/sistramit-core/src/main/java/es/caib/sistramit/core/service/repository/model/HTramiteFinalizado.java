@@ -57,6 +57,10 @@ public final class HTramiteFinalizado implements IModelApi {
 	@Column(name = "TRF_DESTRA")
 	private String descripcionTramite;
 
+	/** Atributo id entidad. */
+	@Column(name = "TRF_ENTIDAD")
+	private String idEntidad;
+
 	/** Código Procedimiento catálogo procedimientos. */
 	@Column(name = "TRF_PROCP")
 	private String idProcedimientoCP;
@@ -120,6 +124,19 @@ public final class HTramiteFinalizado implements IModelApi {
 	/** Funcionario habilitado: Apellido 2. */
 	@Column(name = "TRF_FHAPE2")
 	private String funcionarioHabilitadoApellido2;
+
+	/** Funcionario habilitado: Id actuación. */
+	@Column(name = "TRF_FHIDAC")
+	private String funcionarioHabilitadoIdActuacion;
+
+	/** Funcionario habilitado: Fecha en la que se ha avisado a FH (si tiene establecido id actuación). */
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "TRF_FHAVISO")
+	private Date funcionarioHabilitadoAvisoFecha;
+
+	/** Funcionario habilitado: Error al avisar a FH (si tiene establecido id actuación). */
+	@Column(name = "TRF_FHAERR")
+	private String funcionarioHabilitadoAvisoError;
 
 	/**
 	 * Método de acceso a codigo.
@@ -558,6 +575,72 @@ public final class HTramiteFinalizado implements IModelApi {
 		this.funcionarioHabilitadoUsername = funcionarioUsername;
 	}
 
+	/**
+	 * Método de acceso a funcionarioIdActuacion.
+	 *
+	 * @return funcionarioIdActuacion
+	 */
+	public String getFuncionarioHabilitadoIdActuacion() {
+		return funcionarioHabilitadoIdActuacion;
+	}
+
+	/**
+	 * Método para establecer funcionarioIdActuacion.
+	 *
+	 * @param funcionarioIdActuacion
+	 *                   funcionarioIdActuacion a establecer
+	 */
+	public void setFuncionarioHabilitadoIdActuacion(final String funcionarioIdActuacion) {
+		this.funcionarioHabilitadoIdActuacion = funcionarioIdActuacion;
+	}
+
+	/**
+	 * Método de acceso a funcionarioFechaAviso.
+	 * @return funcionarioFechaAviso
+	 */
+	public Date getFuncionarioHabilitadoAvisoFecha() {
+		return funcionarioHabilitadoAvisoFecha;
+	}
+
+	/**
+	 * Método para establecer funcionarioFechaAviso.
+	 * @param funcionarioFechaAviso funcionarioFechaAviso a establecer
+	 */
+	public void setFuncionarioHabilitadoAvisoFecha(final Date funcionarioFechaAviso) {
+		this.funcionarioHabilitadoAvisoFecha = funcionarioFechaAviso;
+	}
+
+	/**
+	 * Devuelve el idEntidad.
+	 * @return idEntidad
+	 */
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * Establece el idEntidad.
+	 * @param idEntidad el nuevo idEntidad
+	 */
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
+
+	/**
+	 * Devuelve el error al avisar a FH.
+	 * @return error al avisar a FH
+	 */
+	public String getFuncionarioHabilitadoAvisoError() {
+		return funcionarioHabilitadoAvisoError;
+	}
+
+	/**
+	 * Establece el error al avisar a FH.
+	 * @param funcionarioHabilitadoAvisoError el nuevo error al avisar a FH
+	 */
+	public void setFuncionarioHabilitadoAvisoError(String funcionarioHabilitadoAvisoError) {
+		this.funcionarioHabilitadoAvisoError = funcionarioHabilitadoAvisoError;
+	}
 
 	/**
 	 * Convierte a model.
@@ -575,6 +658,7 @@ public final class HTramiteFinalizado implements IModelApi {
 			m.setIdTramite(h.getIdTramite());
 			m.setVersionTramite(h.getVersionTramite());
 			m.setDescripcionTramite(h.getDescripcionTramite());
+			m.setIdEntidad(h.getIdEntidad());
 			m.setIdProcedimientoCP(h.getIdProcedimientoCP());
 			m.setIdProcedimientoSIA(h.getIdProcedimientoSIA());
 			m.setAutenticacion(TypeAutenticacion.fromString(h.getAutenticacion()));
@@ -590,6 +674,8 @@ public final class HTramiteFinalizado implements IModelApi {
 			m.setFuncionarioHabilitadoNombre(h.getFuncionarioHabilitadoNombre());
 			m.setFuncionarioHabilitadoApellido1(h.getFuncionarioHabilitadoApellido1());
 			m.setFuncionarioHabilitadoApellido2(h.getFuncionarioHabilitadoApellido2());
+			m.setFuncionarioHabilitadoIdActuacion(h.getFuncionarioHabilitadoIdActuacion());
+			m.setFuncionarioHabilitadoFechaAviso(h.getFuncionarioHabilitadoAvisoFecha());
 		}
 		return m;
 	}

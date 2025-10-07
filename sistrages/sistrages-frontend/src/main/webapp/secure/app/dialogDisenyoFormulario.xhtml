@@ -169,7 +169,8 @@
 					<p:commandButton id="btnLinea" 		    title="#{msg['dialogDisenyoFormulario.componente.LN']}" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.insertaLinea}" 					process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnLN}"  />
 		       		<p:commandButton id="btnSeccion" 		title="#{msg['dialogDisenyoFormulario.componente.SC']}" icon="fa fa-list" actionListener="#{dialogDisenyoFormulario.insertaSeccion}" 					process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnSC}"  />
 		       		<p:commandButton id="btnEtiqueta" 		title="#{msg['dialogDisenyoFormulario.componente.ET']}" icon="fa fa-comments" actionListener="#{dialogDisenyoFormulario.insertaEtiqueta}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnET}"  />
-		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-pencil" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}" 			process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnCT}"  />
+		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-pencil" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}"
+									 process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnCT}"  />
 					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-down" actionListener="#{dialogDisenyoFormulario.insertaSelector}" 		process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnSE}"  />
 		       		<p:commandButton id="btnCampoCheckbox" 	title="#{msg['dialogDisenyoFormulario.componente.CK']}" icon="fa fa-check-square" actionListener="#{dialogDisenyoFormulario.insertaCheckBox}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnCK}"  />
 		       		<p:commandButton id="btnCampoOculto" 	title="#{msg['dialogDisenyoFormulario.componente.OC']}" icon="fa fa-eye-slash" actionListener="#{dialogDisenyoFormulario.insertaCampoOculto}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnOC}"  />
@@ -269,7 +270,8 @@
 					<p:outputLabel id="paginaActual" value="#{dialogDisenyoFormulario.paginaActual}" rendered="#{dialogDisenyoFormulario.isTipoTramite()}"/>
 					<p:outputLabel value="/" rendered="#{dialogDisenyoFormulario.isTipoTramite()}"/>
 					<p:outputLabel value="#{dialogDisenyoFormulario.numeroPaginas}" rendered="#{dialogDisenyoFormulario.isTipoTramite()}" />
-					<p:commandButton icon="fa fa-chevron-right" id="der" actionListener="#{dialogDisenyoFormulario.moverPaginaDer}" process="@this" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnPagDer}"  title="#{msg['dialogDisenyoFormulario.title.pagPosterior']}" rendered="#{dialogDisenyoFormulario.isTipoTramite()}" />
+					<p:commandButton icon="fa fa-chevron-right" id="der" actionListener="#{dialogDisenyoFormulario.moverPaginaDer}" process="@this" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnPagDer}"
+									 title="#{msg['dialogDisenyoFormulario.title.pagPosterior']}" rendered="#{dialogDisenyoFormulario.isTipoTramite()}" />
 				</p:outputPanel>
 
 				<p:outputPanel>
@@ -294,7 +296,10 @@
 					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.pagina']}" actionListener="#{dialogDisenyoFormulario.editarPagina}" process="@this" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isTipoTramite()}" >
 						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoPagina}" update="growlDisenyoFormulario"/>
         			</p:commandButton>
-					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.abrirDialogoEstructura}" process="@this" update="growlDisenyoFormulario"  style="margin-right:4px;" rendered="#{dialogDisenyoFormulario.isTipoTramite() or dialogDisenyoFormulario.isTipoSeccion()}"  />
+					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.abrirDialogoEstructura}" process="@this" update="growlDisenyoFormulario"
+									 style="margin-right:4px;" rendered="#{dialogDisenyoFormulario.isTipoTramite() or dialogDisenyoFormulario.isTipoSeccion()}"  >
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoEstructura}" update="growlDisenyoFormulario" />
+					</p:commandButton>
 
 					<p:commandButton id="btnPrevisualizarTramite"
 									 	value="#{msg['botones.previsualizarTramite']}" rendered="#{dialogDisenyoFormulario.isTipoTramite() or dialogDisenyoFormulario.isTipoListaElementos()}"

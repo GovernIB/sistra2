@@ -74,7 +74,6 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 				nifFirmante);
 
 		// Recuperamos firma
-		// TODO FH --- VER SI FORZAR VERIFICACIN FIRMANTE ES FH
 		final FirmaClienteRespuesta resFirma = recuperarFirma(dipa, pDefinicionTramite, idDocumento, instancia,
 				nifFirmante, pVariablesFlujo);
 

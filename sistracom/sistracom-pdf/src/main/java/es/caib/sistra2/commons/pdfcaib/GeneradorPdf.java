@@ -2,7 +2,11 @@ package es.caib.sistra2.commons.pdfcaib;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
+import java.util.List;
 
+import com.lowagie.text.html.simpleparser.HTMLWorker;
+import com.lowagie.text.html.simpleparser.StyleSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -604,17 +608,34 @@ public class GeneradorPdf {
 	 * Método encargado de la escritura de un campo texto
 	 *
 	 * @param texto
-	 * @throws TextoException
+	 * @throws PdfCaibException
 	 */
 	public void writeTexto(final Texto texto) throws PdfCaibException {
 		try {
 			final Font f = getFontByPersonalizacionTexto(texto.getPersonalizacionTexto());
 
-			// añade bloque texto
-			final Paragraph bloque = new Paragraph(new Chunk(texto.getTexto(), f));
-			final PdfPCell cell = new PdfPCell(bloque);
-			cell.setBorder(Rectangle.BOX);
+			PdfPCell cell = null;
 
+			// Si es texto HTML, generamos de forma especial
+			if (texto.getPersonalizacionTexto() != null && texto.getPersonalizacionTexto().isHtml()) {
+				// Texto html: parsear HTML a elementos con HTMLWorker
+				StyleSheet styles = new StyleSheet();
+				styles.loadTagStyle("ul", "indent", "20");
+				styles.loadTagStyle("ol", "indent", "20");
+				List<Element> elements = HTMLWorker.parseToList(new StringReader(texto.getTexto()), styles);
+				// Crear celda y añadir elementos HTML parseados
+				cell = new PdfPCell();
+				for (Element element : elements) {
+					cell.addElement(element);
+				}
+			} else {
+				// Texto no html: añade bloque texto
+				final Paragraph bloque = new Paragraph(new Chunk(texto.getTexto(), f));
+				cell = new PdfPCell(bloque);
+			}
+
+			// Establece borde y colspan
+			cell.setBorder(Rectangle.BOX);
 			cell.setColspan(texto.getLayoutCols());
 
 			// se añade a la tabla principal

@@ -40,9 +40,7 @@ public final class HTramite implements IModelApi {
 	@Column(name = "TRP_CODIGO", unique = true, nullable = false, precision = ConstantesNumero.N10, scale = 0)
 	private Long codigo;
 
-	/**
-	 * Sesion tramitacion.
-	 */
+	/** Sesion tramitacion.	 */
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "TRP_CODSTR", nullable = false)
 	private HSesionTramitacion sesionTramitacion;
@@ -54,6 +52,10 @@ public final class HTramite implements IModelApi {
 	/** Atributo version tramite. */
 	@Column(name = "TRP_VERTRA")
 	private int versionTramite;
+
+	/** Atributo id entidad. */
+	@Column(name = "TRP_ENTIDAD")
+	private String idEntidad;
 
 	/** Atributo trámite Id Area. */
 	@Column(name = "TRP_IDEARE")
@@ -192,6 +194,10 @@ public final class HTramite implements IModelApi {
 	/** Funcionario habilitado: Apellido 2. */
 	@Column(name = "TRP_FHAPE2")
 	private String funcionarioHabilitadoApellido2;
+
+	/** Funcionario habilitado: Id actuación en FH. Si se informa, tras finalizar el trámite se invocará a componente FH para indicar que se ha realizado registro.*/
+	@Column(name = "TRP_FHIDAC")
+	private String funcionarioHabilitadoIdActuacion;
 
 
 	/**
@@ -890,6 +896,42 @@ public final class HTramite implements IModelApi {
 	}
 
 	/**
+	 * Método de acceso a funcionarioIdActuacion.
+	 *
+	 * @return funcionarioIdActuacion
+	 */
+	public String getFuncionarioHabilitadoIdActuacion() {
+		return funcionarioHabilitadoIdActuacion;
+	}
+
+	/**
+	 * Método para establecer funcionarioIdActuacion.
+	 *
+	 * @param funcionarioIdActuacion
+	 *                   funcionarioIdActuacion a establecer
+	 */
+	public void setFuncionarioHabilitadoIdActuacion(final String funcionarioIdActuacion) {
+		this.funcionarioHabilitadoIdActuacion = funcionarioIdActuacion;
+	}
+
+	/**
+	 * Devuelve el idEntidad.
+	 *
+	 * @return idEntidad Id de la entidad
+	 */
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * Establece el idEntidad.
+	 * @param idEntidad Id de la entidad
+	 */
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
+
+	/**
 	 * Convierte objeto de la capa negocio a la capa de repositorio.
 	 *
 	 * @param m
@@ -916,6 +958,8 @@ public final class HTramite implements IModelApi {
 		hTramite.setIdTramite(m.getIdTramite());
 		hTramite.setVersionTramite(m.getVersionTramite());
 		hTramite.setDescripcionTramite(m.getDescripcionTramite());
+
+		hTramite.setIdEntidad(m.getIdEntidad());
 		hTramite.setIdArea(m.getIdArea());
 		hTramite.setIdTramiteCP(m.getIdTramiteCP());
 		hTramite.setIdProcedimientoCP(m.getIdProcedimientoCP());
@@ -942,6 +986,7 @@ public final class HTramite implements IModelApi {
 		hTramite.setFuncionarioHabilitadoNombre(m.getFuncionarioHabilitadoNombre());
 		hTramite.setFuncionarioHabilitadoApellido1(m.getFuncionarioHabilitadoApellido1());
 		hTramite.setFuncionarioHabilitadoApellido2(m.getFuncionarioHabilitadoApellido2());
+		hTramite.setFuncionarioHabilitadoIdActuacion(m.getFuncionarioHabilitadoIdActuacion());
 
 		return hTramite;
 	}
@@ -982,6 +1027,8 @@ public final class HTramite implements IModelApi {
 			m.setIdTramite(h.getIdTramite());
 			m.setVersionTramite(h.getVersionTramite());
 			m.setDescripcionTramite(h.getDescripcionTramite());
+
+			m.setIdEntidad(h.getIdEntidad());
 			m.setIdArea(h.getIdArea());
 			m.setIdTramiteCP(h.getIdTramiteCP());
 			m.setIdProcedimientoCP(h.getIdProcedimientoCP());
@@ -1008,6 +1055,7 @@ public final class HTramite implements IModelApi {
 			m.setFuncionarioHabilitadoNombre(h.getFuncionarioHabilitadoNombre());
 			m.setFuncionarioHabilitadoApellido1(h.getFuncionarioHabilitadoApellido1());
 			m.setFuncionarioHabilitadoApellido2(h.getFuncionarioHabilitadoApellido2());
+			m.setFuncionarioHabilitadoIdActuacion(h.getFuncionarioHabilitadoIdActuacion());
 
 		}
 		return m;

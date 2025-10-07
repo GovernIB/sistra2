@@ -319,6 +319,11 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 		restApiDao.updateEstadoIncidencia(idSoporte, estado, comentarios);
 		;
 	}
+
+	@Override
+	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
+		return restApiDao.listarTiposErrorAuditoria(eventoPlataforma);
+	}
 	// ------------------ FUNCIONES INTERNAS ------------------
 
 	/**

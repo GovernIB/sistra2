@@ -1,58 +1,10 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.SerializationUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.PrimeFaces;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleEvent;
-
 import es.caib.sistrages.core.api.exception.ErrorNoControladoException;
 import es.caib.sistrages.core.api.exception.FrontException;
-import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.ComponenteFormulario;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
-import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
-import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
-import es.caib.sistrages.core.api.model.DisenyoFormulario;
-import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.ObjetoFormulario;
-import es.caib.sistrages.core.api.model.PaginaFormulario;
-import es.caib.sistrages.core.api.model.ParametroDominio;
-import es.caib.sistrages.core.api.model.Script;
-import es.caib.sistrages.core.api.model.SeccionReutilizable;
-import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.ValorListaFija;
+import es.caib.sistrages.core.api.model.*;
 import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
-import es.caib.sistrages.core.api.model.types.TypeAccionFormulario;
-import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.model.types.TypeCampoIndexado;
-import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
-import es.caib.sistrages.core.api.model.types.TypeDominio;
-import es.caib.sistrages.core.api.model.types.TypeIdioma;
-import es.caib.sistrages.core.api.model.types.TypeListaValores;
-import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
-import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
-import es.caib.sistrages.core.api.model.types.TypeSeparadorNumero;
+import es.caib.sistrages.core.api.model.types.*;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.SeccionReutilizableService;
@@ -61,12 +13,34 @@ import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.core.api.util.UtilDisenyo;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ObjetoNavegacion;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleEvent;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Disenyo formulario.
@@ -1283,6 +1257,87 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		((ComponenteFormulario) objetoFormularioEdit).setAyuda(traduccionesEdit);
 	}
 
+    public void returnDialogoEstructura(final SelectEvent event){
+        DialogResult respuesta = (DialogResult) event.getObject();
+
+		ObjetoFormulario componenteSeleccionado = null;
+
+		ObjetoNavegacion navegacion = (ObjetoNavegacion) respuesta.getResult();
+
+		String idComponenteSeleccionado = navegacion != null ? navegacion.getIdComponente() : null;
+
+		if( idComponenteSeleccionado == null){
+			return;
+		}
+
+		PaginaFormulario paginaComponente = null;
+
+		for( PaginaFormulario pagina :this.formulario.getPaginas()){
+
+			if( navegacion.getTipoComponente().equals(TypeObjetoFormulario.PAGINA) ){
+				int ordenNavegacion = NumberUtils.createInteger(navegacion.getIdComponente());
+				if(pagina.getOrden() == ordenNavegacion ){
+					paginaComponente = pagina;
+					break;
+				}
+			}
+
+			for(LineaComponentesFormulario linea : pagina.getLineas()){
+
+				if(navegacion.getTipoComponente().equals(TypeObjetoFormulario.LINEA)){
+
+					if( Objects.equals(navegacion.getIdComponente(), linea.getIdComponente()) ){
+						componenteSeleccionado = linea;
+						paginaComponente = pagina;
+						break;
+					}
+				} else {
+
+					for (ComponenteFormulario componente : linea.getComponentes()) {
+						if (Objects.equals(idComponenteSeleccionado, componente.getIdComponente())) {
+							componenteSeleccionado = componente;
+							paginaComponente = pagina;
+							break;
+						}
+					}
+				}
+			}
+
+			if(componenteSeleccionado != null){
+				break;
+			}
+		}
+
+
+		if(paginaComponente != null){
+			if( this.getPaginaActual() != paginaComponente.getOrden()){
+				moverAPagina(paginaComponente.getOrden(), true);
+			}
+		}
+
+		if(componenteSeleccionado != null) {
+
+			boolean isSR = navegacion.getTipoComponente().equals(TypeObjetoFormulario.SECCION_REUTILIZABLE);
+			Long seccionId = isSR ?	 ((ComponenteFormularioCampoSeccionReutilizable)componenteSeleccionado).getIdSeccionReutilizable() : null;
+
+			cambiarEdicionComponente(componenteSeleccionado.getCodigo() + "", false, seccionId, null);
+		}
+
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:formulario-panel");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:componente-panel");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:bh-mover");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:botonera");
+		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:bh-herramientas");
+
+    }
+
+	public void onNodeSelect(final NodeSelectEvent event) {
+		if (event != null) {
+
+
+		}
+	}
+
 	/**
 	 * Cierra la página
 	 **/
@@ -1771,6 +1826,20 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		limpiaSeleccion();
 
 		actualizarInterfazMoverPagina();
+	}
+
+	public void moverAPagina(int numPagina, boolean check){
+        if (check && isModificadoSinGuardar(TypeAccionFormulario.MOVER_DER)) {
+            return;
+        }
+
+        paginaActual = numPagina;
+        if (paginaActual > getNumeroPaginas()) {
+            paginaActual = getNumeroPaginas();
+        }
+        limpiaSeleccion();
+
+        actualizarInterfazMoverPagina();
 	}
 
 	/**

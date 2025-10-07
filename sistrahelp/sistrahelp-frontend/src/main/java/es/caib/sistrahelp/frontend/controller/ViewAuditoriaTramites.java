@@ -1,5 +1,29 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import es.caib.sistrahelp.core.api.model.Area;
+import es.caib.sistrahelp.core.api.model.Entidad;
+import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.comun.Constantes;
+import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.model.types.TypeIniciadoPor;
+import es.caib.sistrahelp.core.api.service.EventoService;
+import es.caib.sistrahelp.core.api.service.HelpDeskService;
+import es.caib.sistrahelp.frontend.model.DialogResult;
+import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
+import es.caib.sistrahelp.frontend.model.NavegacionEventos;
+import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrahelp.frontend.util.UtilJSF;
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.event.SelectEvent;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,31 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-
-import es.caib.sistrahelp.core.api.model.Entidad;
-import es.caib.sistrahelp.core.api.model.types.TypeIniciadoPor;
-import es.caib.sistrahelp.core.api.service.EventoService;
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.component.datatable.DataTable;
-import org.primefaces.model.LazyDataModel;
-
-import es.caib.sistrahelp.core.api.model.Area;
-import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.comun.Constantes;
-import es.caib.sistrahelp.core.api.model.types.TypeEvento;
-import es.caib.sistrahelp.core.api.service.ConfiguracionService;
-import es.caib.sistrahelp.core.api.service.HelpDeskService;
-import es.caib.sistrahelp.frontend.model.DialogResult;
-import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
-import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrahelp.frontend.util.UtilJSF;
+import java.util.stream.Collectors;
 
 /**
  * La clase ViewAuditoriaTramites.
@@ -48,11 +48,6 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	@Inject
 	private HelpDeskService helpDeskService;
 
-	/**
-	 * configuracion service.
-	 */
-	@Inject
-	private ConfiguracionService configuracionService;
 
 	@Inject
 	private EventoService eventoService;
@@ -63,7 +58,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * lista datos.
 	 */
-	private LazyDataModel<EventoAuditoriaTramitacion> listaDatos;
+	private EventoAuditoriaTramitacionLazyDataModel listaDatos;
 
 	/**
 	 * dato seleccionado.
@@ -112,6 +107,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	private String idSesionCorreoIncidencia;
 
 	private boolean comboIniciado;
+
+	// Filtros dialogo errores
+	private boolean checkTipoErrorDE = true;
+	private boolean checkTextoTrazaDE = false;
+	private String erroresSeleccionadosDE;
+	private String filtroTextoTrazaDE;
+    private String filtroTablaErroresDE;
 
 	/**
 	 * Inicializa.
@@ -211,6 +213,9 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * Filtrar.
 	 */
 	public void filtrar() {
+        // Resetear filtro errores
+        resetFiltroErrores();
+
 		// Normaliza filtro
 		normalizarFiltro();
 
@@ -231,6 +236,17 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
 		filtros.setCodSia(filtros.getCodSia());
 	}
+
+    private void resetFiltroErrores() {
+        if ( !TypeEvento.ERROR.equals(this.filtros.getEvento()) ) {
+            setCheckTipoErrorDE(true);
+            setCheckTextoTrazaDE(false);
+            filtros.setTiposErrores(null);
+            filtros.setTextoTraza(null);
+            setErroresSeleccionadosDE(null);
+            setFiltroTextoTrazaDE(null);
+        }
+    }
 
 	/** Genera texto a copiar **/
 	public void generarTxt() {
@@ -313,6 +329,72 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre dialogo errores
+	 */
+	public void abrirDialogErrores() {
+        Map<String, String> params = new HashMap<>();
+		params.put("eventoPlataforma", Boolean.FALSE.toString());
+		params.put("checkTipoError", String.valueOf(checkTipoErrorDE));
+		params.put("checkTextoTraza", String.valueOf(checkTextoTrazaDE));
+        if (erroresSeleccionadosDE != null) {
+            params.put("erroresSeleccionadosInit", erroresSeleccionadosDE);
+        }
+        if (filtroTextoTrazaDE != null) {
+            params.put("filtroTextoTraza", filtroTextoTrazaDE);
+        }
+        if (filtroTablaErroresDE != null) {
+            params.put("filtroTablaErrores", filtroTablaErroresDE);
+        }
+		UtilJSF.openDialog(DialogFiltroErrores.class, TypeModoAcceso.CONSULTA, params.isEmpty() ? null : params, true, 650, 662);
+	}
+
+    public void onDialogErroresReturn(final SelectEvent event) {
+        if (event == null || event.getObject() == null) {
+            return;
+        }
+        DialogResult result = (DialogResult) event.getObject();
+        if (result.isCanceled()) {
+            return;
+        }
+        Map<String, Object> valores = (Map<String, Object>) result.getResult();
+        if (valores != null) {
+			setCheckTipoErrorDE((boolean) valores.get("checkTipoError"));
+			setCheckTextoTrazaDE((boolean) valores.get("checkTextoTraza"));
+			setFiltroTablaErroresDE((String) valores.get("filtroTablaErrores"));
+
+			List<String> tiposErrores = (List<String>) valores.get("tiposErrorSeleccionados");
+			if (tiposErrores == null || tiposErrores.isEmpty()) {
+				setErroresSeleccionadosDE("");
+				filtros.setTiposErrores(null);
+			} else {
+				setErroresSeleccionadosDE(String.join(";", tiposErrores));
+				if (checkTipoErrorDE) {
+					if (filtroTablaErroresDE != null && !filtroTablaErroresDE.isEmpty()) {
+						Pattern pattern = Pattern.compile(filtroTablaErroresDE, Pattern.CASE_INSENSITIVE);
+						tiposErrores = tiposErrores.stream()
+								.filter(te -> pattern.matcher(te).find())
+								.collect(Collectors.toList());
+					}
+					filtros.setTiposErrores(tiposErrores);
+				} else {
+					filtros.setTiposErrores(null);
+				}
+			}
+
+			String filtroTextoTraza = (String) valores.get("filtroTextoTraza");
+			if (filtroTextoTraza != null) {
+				setFiltroTextoTrazaDE(filtroTextoTraza);
+				if (filtroTextoTraza.isEmpty() || !checkTextoTrazaDE) {
+					filtros.setTextoTraza(null);
+				} else {
+					filtros.setTextoTraza(filtroTextoTraza);
+				}
+			}
+        }
+		PrimeFaces.current().executeScript("document.getElementById('form:btnBuscar').click()");
+    }
+
+	/**
 	 * @param errorCopiar the errorCopiar to set
 	 */
 	public final void setErrorCopiar(String errorCopiar) {
@@ -380,6 +462,16 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO, datoSeleccionado);
+
+		// Añadimos objeto navegación de eventos: listado página, index, pageSize
+		NavegacionEventos navegacionEventos = new NavegacionEventos();
+
+		navegacionEventos.setEventos(listaDatos.getWrappedData());
+		navegacionEventos.setPageSize(listaDatos.getPageSize());
+		navegacionEventos.setFirst(listaDatos.getFirst());
+		navegacionEventos.setTotal(listaDatos.getRowCount());
+
+		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO_NAVEGACION, navegacionEventos);
 
 		// Muestra dialogo
 		UtilJSF.openDialog(DialogAuditoriaTramites.class, TypeModoAcceso.CONSULTA, null, true, 950, 750);
@@ -482,7 +574,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de listaDatos
 	 */
-	public LazyDataModel<EventoAuditoriaTramitacion> getListaDatos() {
+	public EventoAuditoriaTramitacionLazyDataModel getListaDatos() {
 		return listaDatos;
 	}
 
@@ -491,7 +583,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 *
 	 * @param listaDatos el nuevo valor de listaDatos
 	 */
-	public void setListaDatos(final LazyDataModel<EventoAuditoriaTramitacion> listaDatos) {
+	public void setListaDatos(final EventoAuditoriaTramitacionLazyDataModel listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
@@ -753,4 +845,44 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	public void setComboIniciado(boolean comboIniciado) {
 		this.comboIniciado = comboIniciado;
 	}
+
+	public boolean isCheckTipoErrorDE() {
+		return checkTipoErrorDE;
+	}
+
+	public void setCheckTipoErrorDE(boolean checkTipoErrorDE) {
+		this.checkTipoErrorDE = checkTipoErrorDE;
+	}
+
+	public boolean isCheckTextoTrazaDE() {
+		return checkTextoTrazaDE;
+	}
+
+	public void setCheckTextoTrazaDE(boolean checkTextoTrazaDE) {
+		this.checkTextoTrazaDE = checkTextoTrazaDE;
+	}
+
+	public String getErroresSeleccionadosDE() {
+		return erroresSeleccionadosDE;
+	}
+
+	public void setErroresSeleccionadosDE(String erroresSeleccionadosDE) {
+		this.erroresSeleccionadosDE = erroresSeleccionadosDE;
+	}
+
+	public String getFiltroTextoTrazaDE() {
+		return filtroTextoTrazaDE;
+	}
+
+	public void setFiltroTextoTrazaDE(String filtroTextoTrazaDE) {
+		this.filtroTextoTrazaDE = filtroTextoTrazaDE;
+	}
+
+    public String getFiltroTablaErroresDE() {
+        return filtroTablaErroresDE;
+    }
+
+    public void setFiltroTablaErroresDE(String filtroTablaErroresDE) {
+        this.filtroTablaErroresDE = filtroTablaErroresDE;
+    }
 }

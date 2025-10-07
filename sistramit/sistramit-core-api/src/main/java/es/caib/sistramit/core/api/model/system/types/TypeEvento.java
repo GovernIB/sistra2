@@ -111,8 +111,11 @@ public enum TypeEvento {
 	/**
 	 * PROCESO ENTREGA
 	 */
-	PROCESO_ENTREGA("TR_ETG")
-	;
+	PROCESO_ENTREGA("TR_ETG"),
+	/**
+	 * PROCESO AVISO FH
+	 */
+	PROCESO_AVISOFH("TR_AFH");
 
 	/**
 	 * Valor como string.

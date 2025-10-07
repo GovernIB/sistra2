@@ -1,8 +1,14 @@
 package es.caib.sistra2.commons.plugins.firmacliente.firmaweb;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Properties;
 
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoNivelSeguridad;
 import es.caib.sistra2.commons.plugins.firmacliente.api.*;
+import es.caib.sistra2.commons.utils.JSONUtil;
+import org.apache.commons.codec.binary.Base64;
 import org.fundaciobit.apisib.apifirmasimple.v1.ApiFirmaWebSimple;
 import org.fundaciobit.apisib.apifirmasimple.v1.beans.*;
 import org.fundaciobit.apisib.apifirmasimple.v1.jersey.ApiFirmaWebSimpleJersey;
@@ -19,6 +25,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	/** Prefix. */
 	public static final String IMPLEMENTATION_BASE_PROPERTY = "firmaweb.";
 
+	/** Constructor por defecto. */
 	public ComponenteFirmaSimpleWebPlugin() {
 	}
 
@@ -39,10 +46,11 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 
 		/** Crear conexion. **/
 		try {
-			final ApiFirmaWebSimple api = generarApi();
 
-			// Seleccionar profile según si se valida firmante o no
-			final String profile = infoSesionFirma.isValidarFirmante() ? getPropiedad("profile") : getPropiedad("profileNoValidarFirmante");
+			/** Perfil firma a usar en función de configuración. */
+			PluginFirmaWebPerfilFirmaConfig perfilFirma = obtenerPerfilFirma(infoSesionFirma.getMetodoAutenticacion(), infoSesionFirma.getNivelSeguridad(), infoSesionFirma.isValidarFirmante());
+
+			final ApiFirmaWebSimple api = generarApi(perfilFirma.getUsuario(), perfilFirma.getPassword());
 
 			final String email = infoSesionFirma.getEmail();
 			final String idioma = infoSesionFirma.getIdioma();
@@ -70,22 +78,28 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 				username = infoSesionFirma.getNombreUsuario();
 			}
 
-			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(profile, idioma, username,
+			// Obtenemos transaction id
+			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(perfilFirma.getPerfil(), idioma, username,
 					administrationId, organizationId, email);
+			String transactionID = api.getTransactionID(commonInfo);
 
-			return api.getTransactionID(commonInfo);
+			// Retornamos id sesión firma: perfil(B64) + transactionID
+			String perfilFirmaB64 = JSONUtil.toJSON(perfilFirma, false);
+			perfilFirmaB64 = new String(Base64.encodeBase64(perfilFirmaB64.getBytes(StandardCharsets.UTF_8)));
+			String sesionID = perfilFirmaB64 + "." + transactionID;
+			return sesionID;
 		} catch (final Exception e) {
 			throw new FirmaPluginException("Error generando una sesion para firmar.", e);
 		}
-
-	}
-
-	private ApiFirmaWebSimpleJersey generarApi() throws FirmaPluginException {
-		return new ApiFirmaWebSimpleJersey(getPropiedad("url"), getPropiedad("usr"), getPropiedad("pwd"));
 	}
 
 	@Override
 	public void anyadirFicheroAFirmar(final FicheroAFirmar ficheroAFirmar) throws FirmaPluginException {
+
+		// Perfil de firma y transaction id
+		PluginFirmaWebPerfilFirmaConfig perfilFirma = obtienerPerfilFirmaFromSesionId(ficheroAFirmar.getSesion());
+		String transactionId = obtenerTransactionIdFromSesionId(ficheroAFirmar.getSesion());
+
 		ApiFirmaWebSimple api = null;
 		try {
 
@@ -106,9 +120,9 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 						signNumber, languageSign, codigoTipoDocumental);
 			}
 
-			api = generarApi();
+			api = generarApi(perfilFirma.getUsuario(), perfilFirma.getPassword());
 
-			api.addFileToSign(new FirmaSimpleAddFileToSignRequest(ficheroAFirmar.getSesion(), fileInfoSignature));
+			api.addFileToSign(new FirmaSimpleAddFileToSignRequest(transactionId, fileInfoSignature));
 
 		} catch (final Exception e) {
 			throw new FirmaPluginException("Error añadiendo fichero", e);
@@ -119,9 +133,14 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	@Override
 	public String iniciarSesionFirma(final String idSesionFirma, final String urlCallBack, final String paramAdic)
 			throws FirmaPluginException {
-		final ApiFirmaWebSimple api = generarApi();
+
+		// Perfil de firma y transaction id
+		PluginFirmaWebPerfilFirmaConfig perfilFirma = obtienerPerfilFirmaFromSesionId(idSesionFirma);
+		String transactionId = obtenerTransactionIdFromSesionId(idSesionFirma);
+
+		final ApiFirmaWebSimple api = generarApi(perfilFirma.getUsuario(), perfilFirma.getPassword());
 		final FirmaSimpleStartTransactionRequest startTransactionInfo = new FirmaSimpleStartTransactionRequest(
-				idSesionFirma, urlCallBack, paramAdic);
+				transactionId, urlCallBack, paramAdic);
 
 		if ("true".equalsIgnoreCase(getPropiedad("iframe"))) {
 			startTransactionInfo.setView(FirmaSimpleStartTransactionRequest.VIEW_IFRAME);
@@ -140,10 +159,15 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 
 	@Override
 	public EstadoFirma obtenerEstadoSesionFirma(final String idSesionFirma) throws FirmaPluginException {
-		final ApiFirmaWebSimple api = generarApi();
+
+		// Perfil de firma y transaction id
+		PluginFirmaWebPerfilFirmaConfig perfilFirma = obtienerPerfilFirmaFromSesionId(idSesionFirma);
+		String transactionId = obtenerTransactionIdFromSesionId(idSesionFirma);
+
+		final ApiFirmaWebSimple api = generarApi(perfilFirma.getUsuario(), perfilFirma.getPassword());
 		FirmaSimpleGetTransactionStatusResponse fullTransactionStatus;
 		try {
-			fullTransactionStatus = api.getTransactionStatus(idSesionFirma);
+			fullTransactionStatus = api.getTransactionStatus(transactionId);
 		} catch (final Exception e) {
 			throw new FirmaPluginException("Error viendo el status de la transaction", e);
 		}
@@ -160,10 +184,15 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	@Override
 	public FicheroFirmado obtenerFirmaFichero(final String idSesionFirma, final String signID)
 			throws FirmaPluginException {
-		final ApiFirmaWebSimple api = generarApi();
+
+		// Perfil de firma y transaction id
+		PluginFirmaWebPerfilFirmaConfig perfilFirma = obtienerPerfilFirmaFromSesionId(idSesionFirma);
+		String transactionId = obtenerTransactionIdFromSesionId(idSesionFirma);
+
+		final ApiFirmaWebSimple api = generarApi(perfilFirma.getUsuario(), perfilFirma.getPassword());
 		FirmaSimpleSignatureResult fssr;
 		try {
-			fssr = api.getSignatureResult(new FirmaSimpleGetSignatureResultRequest(idSesionFirma, signID));
+			fssr = api.getSignatureResult(new FirmaSimpleGetSignatureResultRequest(transactionId, signID));
 		} catch (final Exception e) {
 			throw new FirmaPluginException("Error obtenido el resultado del fichero", e);
 		}
@@ -222,12 +251,85 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 
 	@Override
 	public void cerrarSesionFirma(final String idSesionFirma) throws FirmaPluginException {
-		final ApiFirmaWebSimple api = generarApi();
+
+		// Perfil de firma y transaction id
+		PluginFirmaWebPerfilFirmaConfig perfilFirma = obtienerPerfilFirmaFromSesionId(idSesionFirma);
+		String transactionId = obtenerTransactionIdFromSesionId(idSesionFirma);
+
+		final ApiFirmaWebSimple api = generarApi(perfilFirma.getUsuario(), perfilFirma.getPassword());
 		try {
-			api.closeTransaction(idSesionFirma);
+			api.closeTransaction(transactionId);
 		} catch (final Exception e) {
 			throw new FirmaPluginException("Error cerrando la sesion firma", e);
 		}
+	}
+
+	@Override
+	public boolean isVerificarFirma() throws FirmaPluginException {
+		return new Boolean(getPropiedad("verificarFirma"));
+	}
+
+	@Override
+	public boolean isIframe() throws FirmaPluginException {
+		return new Boolean(getPropiedad("iframe"));
+	}
+
+
+	// -------------------------------------------------------------------------------------------------------------
+	// Métodos privados
+	// -------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Obtiene el perfil de firma según el método de autenticación y nivel de
+	 * seguridad.
+	 *
+	 * @param metodoAutenticacion
+	 * @param nivelSeguridad
+	 * @param validarFirmante
+	 * @return perfil de firma
+	 */
+	private PluginFirmaWebPerfilFirmaConfig obtenerPerfilFirma(TipoMetodoAutenticacion metodoAutenticacion,
+															   TipoNivelSeguridad nivelSeguridad, boolean validarFirmante) throws FirmaPluginException {
+
+		PluginFirmaWebPerfilFirmaConfig perfilFirma = null;
+		List<PluginFirmaWebMetodoNivelConfig> config;
+
+		// Parseamos JSON configuración
+		try {
+			String configJson = getPropiedad("configuracion");
+			config = (List) JSONUtil.fromListJSON(configJson, PluginFirmaWebMetodoNivelConfig.class);
+		} catch (Exception e) {
+			throw new FirmaPluginException("Error leyendo propiedad configuracion de perfiles de firma", e);
+		}
+
+		// Obtenemos perfil de firma según método autenticación y nivel seguridad
+		for (PluginFirmaWebMetodoNivelConfig cfg : config) {
+			if (cfg.getMetodoAutenticacion() == metodoAutenticacion && cfg.getNivelesSeguridad().contains(nivelSeguridad)) {
+				perfilFirma = (validarFirmante? cfg.getPerfilFirmaConVerificacion() : cfg.getPerfilFirmaSinVerificacion());
+				break;
+			}
+		}
+
+		// Si no se ha encontrado perfil de firma, lanzamos excepción
+		if (perfilFirma == null) {
+			throw new FirmaPluginException("No se ha encontrado perfil de firma para método de autenticación "
+					+ metodoAutenticacion + " y nivel de seguridad " + nivelSeguridad);
+		}
+
+		// Retornamos perfil de firma
+		return perfilFirma;
+	}
+
+	/**
+	 * Genera la API de firma web simple.
+	 *
+	 * @param usuario
+	 * @param password
+	 * @return API de firma web simple
+	 * @throws FirmaPluginException
+	 */
+	private ApiFirmaWebSimpleJersey generarApi(String usuario, String password) throws FirmaPluginException {
+		return new ApiFirmaWebSimpleJersey(getPropiedad("url"), usuario, password);
 	}
 
 	/**
@@ -281,14 +383,29 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		return res;
 	}
 
-	@Override
-	public boolean isVerificarFirma() throws FirmaPluginException {
-		return new Boolean(getPropiedad("verificarFirma"));
+	/**
+	 * Obtiene perfil de firma a partir del id de sesión.
+	 * @param sessionId id de sesión
+	 * @return perfil de firma
+	 * @throws FirmaPluginException
+	 */
+	private PluginFirmaWebPerfilFirmaConfig obtienerPerfilFirmaFromSesionId(String sessionId) throws FirmaPluginException {
+		try {
+			String perfilFirmaB64 = sessionId.substring(0, sessionId.indexOf('.'));
+			String perfilFirmaJson = new String(Base64.decodeBase64(perfilFirmaB64.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+			return (PluginFirmaWebPerfilFirmaConfig) JSONUtil.fromJSON(perfilFirmaJson, PluginFirmaWebPerfilFirmaConfig.class);
+		} catch (Exception e) {
+			throw new FirmaPluginException("No se ha podido obtener perfil de firma del sesion id: " + sessionId, e);
+		}
 	}
 
-	@Override
-	public boolean isIframe() throws FirmaPluginException {
-		return new Boolean(getPropiedad("iframe"));
+	/**
+	 * Obtiene transaction id a partir del id de sesión
+	 * @param sessionId id de sesión
+	 * @return transaction id
+	 */
+	private String obtenerTransactionIdFromSesionId(String sessionId) {
+		return sessionId.substring(sessionId.indexOf('.') + 1);
 	}
 
 }

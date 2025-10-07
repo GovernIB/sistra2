@@ -534,8 +534,14 @@ $.fn.appFormsConfiguracio = function(options) {
 								if (conf_opcions.tamanyo && conf_opcions.tamanyo !== null) {
 
 									elm_input
-										.attr({ "maxlength": conf_opcions.tamanyo, "data-amplaria": conf_opcions.tamanyo })
-										.appTextareaAmplaria();
+										.attr({ "maxlength": conf_opcions.tamanyo, "data-amplaria": conf_opcions.tamanyo });
+
+									if (elm_input[0].nodeName === "TEXTAREA") {
+										
+										elm
+											.attr("data-amplaria", conf_opcions.tamanyo);
+
+									}
 
 								}
 
@@ -997,6 +1003,16 @@ $.fn.appFormsConfiguracio = function(options) {
 									}
 
 
+									// si es textarea
+
+									if (elm_input[0].nodeName === "TEXTAREA" && elm_input.attr("maxlength")) {
+
+										elm_input
+											.appTextareaAmplaria();
+
+									}
+
+
 								} else if (elm_input_tipus === "selector" && elm_input_contingut === "d") {
 
 									var opcio_valor = val_valor.valor || false;
@@ -1173,6 +1189,15 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										elm_input
 											.val( "" );
+
+									}
+
+									// si es textarea
+
+									if (elm_input[0].nodeName === "TEXTAREA" && elm_input.attr("maxlength")) {
+
+										elm_input
+											.appTextareaAmplaria();
 
 									}
 

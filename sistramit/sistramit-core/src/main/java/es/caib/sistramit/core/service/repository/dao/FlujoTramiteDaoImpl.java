@@ -126,6 +126,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 			hTramiteFin.setIdTramite(hTramite.getIdTramite());
 			hTramiteFin.setVersionTramite(hTramite.getVersionTramite());
 			hTramiteFin.setDescripcionTramite(hTramite.getDescripcionTramite());
+			hTramiteFin.setIdEntidad(hTramite.getIdEntidad());
 			hTramiteFin.setIdProcedimientoCP(hTramite.getIdProcedimientoCP());
 			hTramiteFin.setIdProcedimientoSIA(hTramite.getIdProcedimientoSIA());
 			hTramiteFin.setIdioma(hTramite.getIdioma());
@@ -165,6 +166,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 			hTramiteFin.setFuncionarioHabilitadoNombre(hTramite.getFuncionarioHabilitadoNombre());
 			hTramiteFin.setFuncionarioHabilitadoApellido1(hTramite.getFuncionarioHabilitadoApellido1());
 			hTramiteFin.setFuncionarioHabilitadoApellido2(hTramite.getFuncionarioHabilitadoApellido2());
+			hTramiteFin.setFuncionarioHabilitadoIdActuacion(hTramite.getFuncionarioHabilitadoIdActuacion());
 			// Persistimos
 			entityManager.persist(hTramiteFin);
 		}

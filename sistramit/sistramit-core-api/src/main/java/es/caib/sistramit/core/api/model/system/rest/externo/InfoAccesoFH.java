@@ -13,6 +13,9 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class InfoAccesoFH implements Serializable {
 
+	/** Identificador actuación en FH. Si se informa, tras finalizar el trámite se invocará a componente FH para indicar que se ha realizado registro.*/
+	private String idActuacionFH;
+
 	/** Interesado. */
 	private PersonaDesglosado interesado;
 
@@ -55,5 +58,13 @@ public class InfoAccesoFH implements Serializable {
 
 	public void setDir3FH(String dir3FH) {
 		this.dir3FH = dir3FH;
+	}
+
+	public String getIdActuacionFH() {
+		return idActuacionFH;
+	}
+
+	public void setIdActuacionFH(String idActuacionFH) {
+		this.idActuacionFH = idActuacionFH;
 	}
 }

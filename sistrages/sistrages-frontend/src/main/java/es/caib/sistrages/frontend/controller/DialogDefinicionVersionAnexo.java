@@ -9,6 +9,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.service.EntidadService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
@@ -50,6 +52,9 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Tramite service. */
 	@Inject
 	private TramiteService tramiteService;
+
+    @Inject
+    private EntidadService entidadService;
 
 	/** System service */
 	@Inject
@@ -94,6 +99,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	private boolean mostrarConvertirPDF;
 
+    private boolean soloFirmaPDF = false;
+
+	private boolean verificableFirmantesAnexo = false;
+
     /**
 	 * Obtiene el valor de permiteEditar.
 	 *
@@ -127,6 +136,23 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		mostrarConvertirPDF = propConvertirPDF != null && BooleanUtils.toBoolean(propConvertirPDF);
 
 
+
+        if( !tramiteVersion.getConfigSeguridad().isOpcionalExtensionAnexo()){
+			soloFirmaPDF = true;
+
+        }else {
+			Entidad entidad = entidadService.loadEntidadByArea(tramiteVersion.getIdArea());
+			soloFirmaPDF = ! entidad.isPermitirExtensionesSustancial();
+		}
+
+		if(data.isDebeAnexarFirmado() && soloFirmaPDF){
+			data.setExtensionSeleccion(TypeExtension.PERSONALIZADAS);
+			data.setExtensiones("pdf");
+		}
+
+		if(tramiteVersion.getConfigSeguridad().isConfigurableVerificarFirmantesAnexo()){
+			verificableFirmantesAnexo = true;
+		}
 	}
 
 	/**
@@ -514,8 +540,8 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			}
 		}
 
-		boolean soloPDF = TypeExtension.PERSONALIZADAS.equals(data.getExtensionSeleccion()) && "pdf".equals(StringUtils.trim(data.getExtensiones()));
-		if( this.isRequiereFirma() && ! soloPDF){
+		boolean extDifPDF = TypeExtension.PERSONALIZADAS.equals(data.getExtensionSeleccion()) && ! "pdf".equals(StringUtils.trim(data.getExtensiones()));
+		if( this.isRequiereFirma() && extDifPDF && isSoloFirmaPDF()){
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.firma.no.pdf"));
 			return false;
 		}
@@ -614,6 +640,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		this.idTramiteVersion = idTramiteVersion;
 	}
 
+	public TramiteVersion getTramiteVersion() {
+		return tramiteVersion;
+	}
+
 	/**
 	 * @return the idEntidad
 	 */
@@ -691,7 +721,12 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		this.data.setDebeFirmarDigitalmente(requiereFirma);
 		if(!isRequiereFirma()) {
 			this.data.setDebeValidarFirmantes(false);
+		} else if(soloFirmaPDF){
+			this.data.setExtensionSeleccion(TypeExtension.PERSONALIZADAS);
+			this.data.setExtensiones("pdf");
+			this.data.setDebeConvertirPDF(false);
 		}
+
 	}
 
 	public boolean isMostrarConvertirPDF() {
@@ -700,5 +735,13 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	public void setMostrarConvertirPDF(boolean mostrarConvertirPDF) {
 		this.mostrarConvertirPDF = mostrarConvertirPDF;
+	}
+
+    public boolean isSoloFirmaPDF() {
+        return soloFirmaPDF;
+    }
+
+	public boolean isVerificableFirmantesAnexo() {
+		return verificableFirmantesAnexo;
 	}
 }

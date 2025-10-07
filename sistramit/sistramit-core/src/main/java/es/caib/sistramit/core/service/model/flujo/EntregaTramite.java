@@ -1,11 +1,8 @@
 package es.caib.sistramit.core.service.model.flujo;
 
-import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEntregaEstado;
 
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Entrega trámite.
@@ -20,7 +17,7 @@ public final class EntregaTramite implements Serializable {
     private String idSesionTramitacion;
 
     /** Id entidad. */
-     private String idEntidad;
+    private String idEntidad;
 
     /** Estado entrega */
     private TypeEntregaEstado estado;
@@ -91,4 +88,5 @@ public final class EntregaTramite implements Serializable {
     public void setIdSesionEnvio(String idSesionEnvio) {
         this.idSesionEnvio = idSesionEnvio;
     }
+
 }

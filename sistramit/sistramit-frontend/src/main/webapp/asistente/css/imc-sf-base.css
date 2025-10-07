@@ -8,13 +8,14 @@
 
 .imc-cap .imc--logo { width: 4em; height: 3.5em; background: transparent url() no-repeat left center / auto 100%; }
 
-.imc-cap .imc--dades { width: 60%; padding-left: 2em; }
+.imc-cap .imc--dades { width: 70%; padding-left: 2em; }
 .imc-cap .imc--dades h1 { font-weight: normal; text-transform: uppercase; padding: 0 0 .1em 0; }
 .imc-cap .imc--dades h1 span { font-size: 1.5em; }
 .imc-cap .imc--dades div { display: inline-block; vertical-align: middle; margin-right: 1em; }
 
 
-.imc-cap .imc--dades .imc--nivell-autent { padding-left: 1em; }
+.imc-cap .imc--dades .imc--nivell-autent,
+.imc-cap .imc--dades .imc--metode-autent { padding-left: 1em; }
 
 
 .imc-cap .imc--opcions { width: calc(100% - 60% - 4em); text-align: right; }
@@ -1014,7 +1015,8 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 
 	body { overflow: auto; font-size: 90%; }
 
-	.imc-cap .imc--dades .imc--nivell-autent { display: block; padding-left: 0; }
+	.imc-cap .imc--dades .imc--nivell-autent,
+	.imc-cap .imc--dades .imc--metode-autent { display: block; padding-left: 0; }
 
 	.imc--func-hab .imc-cap .imc--dades h1 strong { left: 100%; white-space: nowrap; padding: .1em .5em; transform: translateX(-100%); }
 

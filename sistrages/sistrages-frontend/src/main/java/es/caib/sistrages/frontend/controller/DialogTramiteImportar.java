@@ -18,6 +18,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
@@ -169,7 +170,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Tramite. **/
 	private Tramite tramite;
 
-	/** Area. **/
+	/** Area importada (origen). **/
 	private Area area;
 
 	/** Dominios. **/
@@ -280,12 +281,20 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	private String errorCopiar;
 
 	/**
+	 * Lista de areas marcadas por el usuario al abrir el diálogo de importar.
+	 */
+	private List<Area> listaAreasAmbito;
+
+	/**
 	 * Inicialización.
 	 */
 	public void init() {
 		LOGGER.debug("DialogTramiteImportar");
 		setMostrarPanelInfo(false);
 		todoCorrecto = false;
+
+
+		listaAreasAmbito = (List<Area>)UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_AREAS_AMBITO);
 	}
 
 
@@ -610,6 +619,11 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	private void prepararFlujoArea() {
 
+		// Dos casos:
+		// 		1) el antiguo, misma area origen y destino. usuario puede elegir cualquier area como destino.
+		// 		2) si area seleccionada al importar, esta sera la destino. Si varias, entonces destino la primera
+		//			si una seleccionada se pueden elegir todas. si varias, solo entre las seleccionadas
+
 		// Creamos las acciones.
 		final List<TypeImportarAccion> acciones = new ArrayList<>();
 		acciones.add(TypeImportarAccion.SELECCIONAR);
@@ -617,45 +631,57 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			acciones.add(TypeImportarAccion.CREAR);
 		}
 
-		final Entidad entidadPropia = entidadService.loadEntidad(UtilJSF.getIdEntidad());
-		final Area areaActual = tramiteService.getAreaByIdentificador(entidadPropia.getIdentificador(),
-				area.getIdentificador());
-		if (areaActual == null) {
+		Area areaActual = null;
 
-			// Lo dejamos como pendiente
-			filaArea = FilaImportarArea.crearITnoExiste(area, areaActual);
-		} else {
+		// Caso 2
+		if(CollectionUtils.isNotEmpty(this.listaAreasAmbito)){
 
-			// Comprobamos que pertenezca a la misma entidad (el area y del usuario).
-			final Entidad entidad = entidadService.loadEntidadByArea(areaActual.getCodigo());
-			if (entidad.getCodigo().compareTo(UtilJSF.getIdEntidad()) != 0) {
+			areaActual = this.listaAreasAmbito.get(0);
+			filaArea = FilaImportarArea.crearITseleccionOK(area, areaActual);
 
-				// No pertenece al mismo area.
-				filaArea = FilaImportarArea.crearITerrorEntidadIncorrecta(area, areaActual,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.distintaEntidad"));
+		}else {
 
-			} else if (UtilJSF.isRolAdministrador()) {
+			final Entidad entidadPropia = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+			areaActual = tramiteService.getAreaByIdentificador(entidadPropia.getIdentificador(),
+					area.getIdentificador());
+			if (areaActual == null) {
 
-				// Si es adm. entidad, puede seleccionarlo sin problema
-				filaArea = FilaImportarArea.crearITseleccionOK(area, areaActual);
+				// Lo dejamos como pendiente
+				filaArea = FilaImportarArea.crearITnoExiste(area, areaActual);
+			} else {
 
-			} else { // Si es de tipo área.
+				// Comprobamos que pertenezca a la misma entidad (el area y del usuario).
+				// DS Comprobación inútil pues ya se sabe que es de la misma entidad
+				final Entidad entidad = entidadService.loadEntidadByArea(areaActual.getCodigo());
+				if (entidad.getCodigo().compareTo(UtilJSF.getIdEntidad()) != 0) {
 
-				final List<TypeRolePermisos> permisos = UtilJSF.getSessionBean().getSecurityService()
-						.getPermisosDesarrolladorEntidadByArea(areaActual.getCodigo());
+					// No pertenece al mismo area.
+					filaArea = FilaImportarArea.crearITerrorEntidadIncorrecta(area, areaActual,
+							UtilJSF.getLiteral("dialogTramiteImportar.error.distintaEntidad"));
 
-				if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+				} else if (UtilJSF.isRolAdministrador()) {
 
-					// No tiene permisos sobre el área
-					filaArea = FilaImportarArea.crearITerrorSinPermisos(area, areaActual,
-							UtilJSF.getLiteral("dialogTramiteImportar.error.sinpermisopromocionar"));
-				} else {
-
-					// Tiene permisos sobre el area
+					// Si es adm. entidad, puede seleccionarlo sin problema
 					filaArea = FilaImportarArea.crearITseleccionOK(area, areaActual);
-				}
-			}
 
+				} else { // Si es de tipo área.
+
+					final List<TypeRolePermisos> permisos = UtilJSF.getSessionBean().getSecurityService()
+							.getPermisosDesarrolladorEntidadByArea(areaActual.getCodigo());
+
+					if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+
+						// No tiene permisos sobre el área
+						filaArea = FilaImportarArea.crearITerrorSinPermisos(area, areaActual,
+								UtilJSF.getLiteral("dialogTramiteImportar.error.sinpermisopromocionar"));
+					} else {
+
+						// Tiene permisos sobre el area
+						filaArea = FilaImportarArea.crearITseleccionOK(area, areaActual);
+					}
+				}
+
+			}
 		}
 		filaArea.setAcciones(acciones);
 	}
@@ -1193,6 +1219,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.filaArea);
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_AREAS_AMBITO, this.listaAreasAmbito);
 		UtilJSF.openDialog(DialogTramiteImportarAR.class, TypeModoAcceso.EDICION, null, true, 770, 235);
 	}
 

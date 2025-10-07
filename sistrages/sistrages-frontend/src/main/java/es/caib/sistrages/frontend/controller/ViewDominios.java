@@ -156,10 +156,14 @@ public class ViewDominios extends ViewControllerBase {
 	 */
 	public boolean getPermiteImportar() {
 		boolean permite = false;
+		if(ambito == null || UtilJSF.getSessionBean() == null) {
+			return permite;
+		}
+
 		if (ambito.equals(TypeAmbito.GLOBAL.toString())) {
-			permite = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			permite = TypeRoleAcceso.SUPER_ADMIN.equals(UtilJSF.getSessionBean().getActiveRole());
 		} else if (ambito.equals(TypeAmbito.ENTIDAD.toString())) {
-			permite = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			permite = TypeRoleAcceso.ADMIN_ENT.equals(UtilJSF.getSessionBean().getActiveRole());
 		} else if (ambito.equals(TypeAmbito.AREA.toString())) {
 			permite = permiteEditar;
 		}
@@ -211,6 +215,13 @@ public class ViewDominios extends ViewControllerBase {
 			break;
 		}
 	}
+
+	public void cambiarArea(){
+		area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+
+		buscar(filtro);
+	}
+
 
 	/**
 	 * Abre dialogo para nuevo dato.

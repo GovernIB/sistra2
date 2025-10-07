@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import es.caib.sistramit.core.api.model.formulario.*;
+import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

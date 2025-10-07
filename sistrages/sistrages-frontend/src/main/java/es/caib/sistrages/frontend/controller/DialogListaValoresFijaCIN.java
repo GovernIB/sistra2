@@ -1,27 +1,29 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
-import org.primefaces.event.SelectEvent;
-
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.util.UtilJSON;
+import es.caib.sistrages.frontend.ManagedBeanInspector;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import org.primefaces.event.SelectEvent;
 
-@ManagedBean
+import javax.annotation.PreDestroy;
+import javax.faces.view.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Named
 @ViewScoped
-public class DialogListaValoresFijaCIN extends DialogControllerBase {
+public class DialogListaValoresFijaCIN extends DialogControllerBase implements Serializable {
 
 	/** Datos elemento. */
 	private List<ValorListaFija> data;
@@ -231,6 +233,8 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 		}
 
 	}
+
+
 
 	/**
 	 * @return the data

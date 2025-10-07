@@ -367,7 +367,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 					resultado.setListaPersistencia(new ArrayList<>());
 					Date now = new Date();
 					for (final RPersistenciaAuditoria rPersistencia : rResultado.getListaPersistencia()) {
-						if (rPersistencia.getFechaCaducidad() == null
+						if (pFiltroBusqueda.isMostrarCaducados() || rPersistencia.getFechaCaducidad() == null
 								|| rPersistencia.getFechaCaducidad().getTime() - now.getTime() > 0) {
 							resultado.getListaPersistencia().add(conviertePersistencia(rPersistencia));
 						}
@@ -758,6 +758,34 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		}
 	}
 
+	@Override
+	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
+		List<String> resultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("eventoPlataforma", eventoPlataforma);
+
+		final HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
+
+		try {
+			String url = getUrl() + "/auditoria/listarTiposError";
+			String[] response = restTemplate.postForObject(url, request, String[].class);
+
+			if (response != null) {
+				resultado = Arrays.asList(response);
+			}
+		} catch (Exception e) {
+			// Manejo de errores
+		}
+
+		return resultado;
+	}
+
 	private String getPassword() {
 		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_PWD);
 	}
@@ -841,6 +869,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 			rFiltro.setTiposEventos( pFiltro.getTiposEventos().stream()
 							.map(TypeEvento::toString).collect(Collectors.toList()) );
+
+			rFiltro.setTiposErrores(pFiltro.getTiposErrores());
+			rFiltro.setTextoTraza(pFiltro.getTextoTraza());
 		}
 
 		return rFiltro;

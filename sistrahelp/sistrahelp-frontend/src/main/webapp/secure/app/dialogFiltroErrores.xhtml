@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:pe="http://primefaces.org/ui/extensions">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogFiltroErrores.titulo']}"/></title>
+	<style type="text/css">
+		.checkbox-disabled {
+			pointer-events: none;
+			opacity: 0.8;
+		}
+	</style>
+</h:head>
+
+<h:body>
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
+  </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogFiltroErrores.modoAcceso}"/>
+		<f:viewParam name="eventoPlataforma" value="#{dialogFiltroErrores.eventoPlataforma}" converter="javax.faces.Boolean"/>
+		<f:viewParam name="checkTipoError" value="#{dialogFiltroErrores.checkTipoError}" converter="javax.faces.Boolean"/>
+		<f:viewParam name="checkTextoTraza" value="#{dialogFiltroErrores.checkTextoTraza}" converter="javax.faces.Boolean"/>
+        <f:viewParam name="erroresSeleccionadosInit" value="#{dialogFiltroErrores.erroresSeleccionadosInit}"/>
+        <f:viewParam name="filtroTablaErrores" value="#{dialogFiltroErrores.filtroTablaErrores}"/>
+        <f:viewParam name="filtroTextoTraza" value="#{dialogFiltroErrores.filtroTextoTraza}"/>
+		<f:viewAction action="#{dialogFiltroErrores.init}" />
+	</f:metadata>
+	<h:form id="dialogFiltroErrores" styleClass="w100 h100">
+		<p:outputPanel>
+			<!-- Contenido dialogo -->
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" />
+			<h:outputScript >
+
+				var arrayCm = [];
+
+				window.onload=function(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					onVisible(contextMenu, () => eliminarResaltar());
+
+					document.addEventListener('contextmenu', function(ev) {
+						ev.preventDefault();
+						getPos();
+						return false;
+					}, false);
+				}
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					let elementos = document.getElementsByClassName('resaltar');
+					if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+				}
+
+				function onVisible(element, callback) {
+					new IntersectionObserver((entries, observer) => {
+						entries.forEach(entry => {
+							if(entry.intersectionRatio == 0) {
+								callback(element);
+							}
+						});
+					}).observe(element);
+				}
+
+				function getPos(){
+					var e = window.event;
+
+					var posX = e.clientX;
+					var posY = e.clientY;
+					var el = document.elementFromPoint(posX, posY);
+
+					let elementos = document.getElementsByClassName('resaltar');
+					if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+
+					el.classList.add("resaltar");
+					var aux = document.getElementById("dialogFiltroErrores:auxCopiar");
+					if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+						aux.value = el.textContent;
+					}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+						aux.value = el.firstChild.value;
+					}else if(el.value!=null &amp;&amp; el.value!=''){
+						aux.value = el.value;
+					}else{
+						aux.value = '';
+					}
+
+					if(aux.value!='' ){
+						var multiple = false;
+						var hijos = el.children;
+						if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+							multiple = true;
+						}else if(hijos.length &gt;= 1 ){
+							if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+								hijos = hijos[0].children;
+							}
+							for(i=0;i&lt;hijos.length;i++){
+								if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+									multiple=true;
+								}
+							}
+
+						}
+						var listaCm = document.getElementsByClassName('ui-contextmenu');
+						if(multiple){
+							for(i=0;i&lt;listaCm.length;i++){
+								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+									arrayCm.push(listaCm[i]);
+								}
+								listaCm[i].classList.add("d-none");
+							}
+						}else{
+							for(i=0;i&lt;listaCm.length;i++){
+								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+									arrayCm.push(listaCm[i]);
+								}
+								listaCm[i].classList.remove("d-none");
+							}
+							if(arrayCm.length&gt;1){
+								arrayCm.pop();
+								for(let i=0; i&lt;arrayCm.length; i++){
+									arrayCm[i].style.display='none';
+								}
+							}
+							arrayCm = [];
+						}
+
+					}
+				}
+
+			</h:outputScript>
+
+			<p:panelGrid columns="1" style="width:100%;" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-5">
+				<!-- Checkbox y label en línea -->
+				<h:panelGroup layout="inline">
+					<p:selectBooleanCheckbox id="buscarPorTipoError" value="#{dialogFiltroErrores.checkTipoError}" style="margin-right:5px;" >
+						<p:ajax event="change" process="@this" update="tablaTiposError" />
+					</p:selectBooleanCheckbox>
+					<p:outputLabel for="buscarPorTipoError" value="#{msg['dialogFiltroErrores.buscarPorTipoError']}" />
+				</h:panelGroup>
+
+				<!-- Tabla en su propia fila -->
+				<p:dataTable id="tablaTiposError" widgetVar="tablaTiposError" value="#{dialogFiltroErrores.listaTiposError}"  var="tipoError" styleClass="w100"
+					selection="#{dialogFiltroErrores.listaErroresSeleccionados}" rowKey="#{tipoError}" selectionRowMode="new" autoResize="true" selectionMode="multiple"
+					scrollHeight="400px" scrollable="true" style="margin-bottom: 15px; table-layout: fixed;" filteredValue="#{dialogFiltroErrores.listaErroresFiltrados}">
+
+					<p:ajax event="rowSelectCheckbox" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowSelect" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowUnselect" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowUnselectCheckbox" process="@this" update="tablaTiposError"/>
+					<p:ajax event="toggleSelect" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowDblselect" process="@this" update="tablaTiposError"/>
+
+
+					<p:column selectionBox="true" style="width:16px; text-align:center" styleClass="#{!dialogFiltroErrores.checkTipoError ? 'checkbox-disabled' : ''}"/>
+					<p:column style="width:auto;" headerText="#{msg['dialogFiltroErrores.headError']}" filterBy="#{tipoError}" filterValue="#{dialogFiltroErrores.filtroTablaErrores}" filterMatchMode="contains" sortBy="#{tipoError}" selectRow="#{dialogFiltroErrores.checkTipoError}">
+						<h:outputText value="#{tipoError}" styleClass="#{!dialogFiltroErrores.checkTipoError ? 'checkbox-disabled' : ''}"/>
+					</p:column>
+				</p:dataTable>
+
+				<h:panelGroup layout="block">
+				    <div style="display: flex; align-items: center;">
+				        <p:selectBooleanCheckbox id="buscarPorTextoTraza" value="#{dialogFiltroErrores.checkTextoTraza}" style="margin-right:5px;">
+									<p:ajax event="change" process="@this" update="textoTraza" />
+						</p:selectBooleanCheckbox>
+				        <p:outputLabel for="buscarPorTextoTraza" value="#{msg['dialogFiltroErrores.buscarPorTextoTraza']}" />
+				    </div>
+				    <p:inputText id="textoTraza" value="#{dialogFiltroErrores.filtroTextoTraza}" styleClass="w100" style="margin-top:2px;" disabled="#{!dialogFiltroErrores.checkTextoTraza}">
+							<p:ajax event="change" process="@this" update="textoTraza" />
+					</p:inputText>
+				</h:panelGroup>
+			</p:panelGrid>
+
+			<p:contextMenu>
+				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFiltroErrores:auxCopiar" update="growl" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogFiltroErrores.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{dialogFiltroErrores.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+			<p:inputText id="auxCopiar" value="#{dialogFiltroErrores.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+		</p:outputPanel>
+
+		<p:outputPanel styleClass="botonera">
+			<p:toolbar>
+				<f:facet name="right">
+					<!-- Botones de acción -->
+					<p:commandButton value="#{msg['botones.buscar']}" actionListener="#{dialogFiltroErrores.aceptar}" process="@form" update="growl"/>
+					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFiltroErrores.cerrar}" process="@this" update="growl"/>
+					<p:commandButton value="#{msg['botones.ayuda']}" actionListener="#{dialogFiltroErrores.ayuda()}" process="@this" update="growl"/>
+				</f:facet>
+			</p:toolbar>
+		</p:outputPanel>
+
+	</h:form>
+
+</h:body>
+</f:view>
+
+</html>

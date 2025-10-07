@@ -181,7 +181,7 @@ public class XTestJson {
         final RVersionTramitePropiedades p = new RVersionTramitePropiedades();
         p.setAutenticado(true);
         p.setNoAutenticado(true);
-        p.setNivelQAA(2);
+        p.setNivelSeguridadAutenticado(1);
         p.setPersistente(true);
         return p;
     }

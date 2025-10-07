@@ -1,12 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
-
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
@@ -14,8 +7,15 @@ import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ObjetoNavegacion;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 /**
  * Disenyo formulario.
@@ -40,6 +40,8 @@ public class DialogEstructuraFormulario extends DialogControllerBase {
 	private String panelPropiedadesUrl;
 
 	private TreeNode arbolEstructura;
+
+	private TreeNode<Object> selectedNode;
 
 	/**
 	 * Inicializacion.
@@ -85,17 +87,17 @@ public class DialogEstructuraFormulario extends DialogControllerBase {
 		// recorremos paginas
 		for (final PaginaFormulario pagina : formulario.getPaginas()) {
 			final DefaultTreeNode nodoPagina = new DefaultTreeNode(TypeObjetoFormulario.PAGINA.toString(),
-					UtilJSF.getLiteral("dialogDisenyoFormulario.componente.PG") + " " + pagina.getOrden(),
+					pagina,
 					arbolEstructura);
 
 			for (final LineaComponentesFormulario linea : pagina.getLineas()) {
 				final DefaultTreeNode nodoLinea = new DefaultTreeNode(TypeObjetoFormulario.LINEA.toString(),
-						UtilJSF.getLiteral("dialogDisenyoFormulario.componente.LN") + " " + linea.getOrden(),
+						linea,
 						nodoPagina);
 
 				for (final ComponenteFormulario componente : linea.getComponentes()) {
 					final DefaultTreeNode nodoComponente = new DefaultTreeNode(componente.getTipo().toString(),
-							componente.getIdComponente(), nodoLinea);
+							componente, nodoLinea);
 				}
 			}
 		}
@@ -131,6 +133,45 @@ public class DialogEstructuraFormulario extends DialogControllerBase {
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
 	}
+
+	public void navegar() {
+
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setCanceled(true);
+
+		if (selectedNode != null) {
+
+			ObjetoNavegacion navegacion = null;
+
+			if(selectedNode.getType().equals(TypeObjetoFormulario.LINEA.toString())) {
+
+				LineaComponentesFormulario linea = ((LineaComponentesFormulario) selectedNode.getData());
+				navegacion = new ObjetoNavegacion(TypeObjetoFormulario.LINEA, linea.getIdComponente());
+
+			} else if (selectedNode.getType().equals(TypeObjetoFormulario.PAGINA.toString())){
+
+				PaginaFormulario pagina = ((PaginaFormulario) selectedNode.getData());
+				navegacion = new ObjetoNavegacion(TypeObjetoFormulario.PAGINA,pagina.getOrden() +"");
+
+			} else { // Componentes
+				navegacion = new ObjetoNavegacion(((ComponenteFormulario) selectedNode.getData()).getTipo(), ((ComponenteFormulario) selectedNode.getData()).getIdComponente());
+			}
+
+            result.setResult( navegacion);
+		}
+
+		UtilJSF.closeDialog(result);
+	}
+
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
+
 
 	// -- Getters / Setters
 

@@ -63,7 +63,9 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		data = (FilaImportarArea) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
+
+		Map<String, Object> mochila =  UtilJSF.getSessionBean().getMochilaDatos();
+		data = (FilaImportarArea) mochila.get(Constantes.CLAVE_MOCHILA_IMPORTAR);
 		if (data.getAccion() == null) {
 			accion = TypeImportarAccion.SELECCIONAR.toString();
 		} else if (data.getAccion() == TypeImportarAccion.CREAR || data.getAccion() == TypeImportarAccion.SELECCIONAR) {
@@ -73,16 +75,23 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 		identificador = this.data.getIdentificador();
 		descripcion = this.data.getDescripcion();
 
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			initAdministradorEntidad();
-		} else {
-			initDesarrolladorEntidad();
+		List<Area> areasAmbito = (List<Area>)mochila.get(Constantes.CLAVE_MOCHILA_AREAS_AMBITO);
+
+		if(areasAmbito != null && areasAmbito.size() > 1){
+			areas = new ArrayList<>(areasAmbito);
+		}else {
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+				initAdministradorEntidad();
+			} else {
+				initDesarrolladorEntidad();
+			}
 		}
 
 		/** Seleccionamos el area con el que venga. **/
-		if (data.getArea() != null) {
+		if (data.getAreaActual() != null) {
 			for (final Area area : areas) {
-				if (area.getIdentificador().equals(data.getArea().getIdentificador())) {
+				if (area.getIdentificador().equals(data.getAreaActual().getIdentificador())) {
 					areaSeleccionada = area.getCodigo();
 				}
 			}

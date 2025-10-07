@@ -11,17 +11,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import es.caib.sistrahelp.core.api.model.types.TypeIdioma;
+import es.caib.sistrahelp.core.api.model.types.TypeModoEvaluacionAlerta;
 import es.caib.sistrahelp.core.service.component.ConfiguracionComponent;
 import org.apache.commons.digester.plugins.PluginException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +167,12 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				faut.setIdTramite(al.getTramite());
 				faut.setVersionTramite(al.getVersion());
 			}
+
+			if(TypeModoEvaluacionAlerta.POR_INTERVALO.equals(al.getModoEvaluacion())){
+				Date fechaDesde = Date.from(LocalDateTime.now().minusSeconds(al.getPeriodoEvaluacion()).atZone(ZoneId.systemDefault()).toInstant());
+				faut.setFechaDesde(fechaDesde);
+			}
+
 		    String condicion = "";
 		    String expresionCorreoHistorial = "";
 
@@ -276,7 +287,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				}
 				Entidad entidad = sistragesApiComponent.obtenerDatosEntidad(al.getIdEntidad());
 				if (entidad.getNombre() != null) {
-					nombre = entidad.getNombre().getTraduccion("ca");
+					nombre = entidad.getNombre().getTraduccion(al.getIdioma());
 				}
 			}
 			final IEmailPlugin plgEmail = (IEmailPlugin) sistragesApiComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
@@ -289,58 +300,54 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			} catch (final IOException e) {
 				log.error("ALERTAS STH: Error obteniendo entorno" , e);
 			}
-			String msg =
-			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">\r\n" + "\r\n"
-					+ "<head>\r\n" + "\r\n"
-					+ "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n"
-					+ "	<title>" + nombre + "</title>\r\n" + "\r\n" + "	<!-- css -->\r\n"
-					+ "	<style type=\"text/css\">\r\n"
-					+ "		#contenidor { width:90%; font:normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif; color:#000; margin:1em auto; background-color:#fff; }\r\n"
-					+ "		#cap { font-size:1.2em; font-weight:bold; text-align:center; margin-bottom:1em; }\r\n"
-					+ "		#continguts { padding:1em 2em; border:1em solid #f2f2f2; }\r\n"
-					+ "		#continguts h1 { font-size:1.4em; margin-top:0; margin-bottom:1em; }\r\n"
-					+ "		#continguts table { margin-bottom:1.5em; border:0; empty-cells:hide; border-collapse:collapse; }\r\n"
-					+ "		#continguts table th { float:left; width:10em; font-size:1.1em; font-variant:small-caps; font-weight:normal; text-align:right; padding-right:.8em; }\r\n"
-					+ "		#continguts table td { font-weight:bold; padding-bottom:.5em; }\r\n"
-					+ "		#continguts h2 { font-size:1.1em; margin:.8em 0; }\r\n"
-					+ "		#continguts p { margin:.8em 0; }\r\n"
-					+ "		#contenidor p.peu { margin:1.5em 0; padding:1em; border:1px solid #ccc; }\r\n"
-					+ "		#contenidor div.accedir { padding:1em; background-color:#f7f7f7; }\r\n"
-					+ "		#contenidor a.accedirCertificado { display:block; font-size:1.5em; text-align:center; padding:1em; background-color:#f7f7f7; }\r\n"
-					+ "		#contenidor a.accedirClave { display:block; font-size:1.5em; text-align:center; padding:1em; background-color:#f7f7f7; }\r\n"
-					+ "		#contenidor p.auto { margin:1.5em 0; padding:1em;  font-size:0.9em; font-style: italic;}\r\n"
-					+ "	</style>\r\n" + "	<!-- /css -->\r\n" + "\r\n" + "</head>\r\n" + "\r\n" + "<body>\r\n"
-					+ "\r\n" + "	<!-- contenidor -->\r\n" + "	<div id=\"contenidor\">\r\n" + "\r\n"
-					+ "		<!-- logo illes balears -->\r\n" + "		<div id=\"cap\">\r\n";
-					if (imageBytes != null && imageBytes.length > 0) {
-						String encoded = Base64.getEncoder().encodeToString(imageBytes);
-						msg += "            <img  src=\"data:image/jpeg;base64," + encoded + "\" alt=\"logo\" width=\"100\" height=\"100\" style=\"width: 100px;height:100px;\"/>";
-					} else if( logo != null && !logo.isEmpty()) {
-						msg += "            <img  src=\"" + logo + "\" alt=\"logo\" width=\"100\" height=\"100\"/>";
-					}
-//					+ "			<h3> LOGO </h3>\r\n"
-					msg += "			<h1>" + nombre.toUpperCase() + "</h1>\r\n" + "		</div>\r\n"
-					+ "		<!-- /logo illes balears -->\r\n" + "\r\n" + "		<!-- continguts -->\r\n"
-					+ "	  <div id=\"continguts\">\r\n" + "\r\n" + "			<!-- titol -->\r\n"
-					+ "			<h1>\r\n"
-					+ "				Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP"
-					+ "</h1>" + "<h2>L&#39;expressi&#243;: \"" + expresionCorreoHistorial + "\" de l&#39;Alerta: \""
-					+ al.getNombre() + "\" (configurada per l&#39;entitat: "+al.getListaAreas().get(0).split("\\.")[0];
-						if(al.getTipo().equals("A")) {
-							msg += ", &#224;rea: " + al.getListaAreas().get(0).split("\\.")[1];
-						}else if(al.getTipo().equals("T")) {
-							msg += ", &#224;rea: " + al.getListaAreas().get(0).split("\\.")[1] + " i tr&#224;mit: "+ al.getTramite();
-						}else if(al.getTipo().equals("V")) {
-							msg += ", &#224;rea: " + al.getListaAreas().get(0).split("\\.")[1] + ", tr&#224;mit: "+ al.getTramite() + " i versi&#243;: "+ al.getVersion();
-						}
-					msg += ") s&#39;ha avaluat com a certa."
-					+ " En aquesta expressió apareixen entre claudàtors el nombre de vegades que s'ha produït l'esdeveniment corresponent durant el dia d'avui."// + countAuditoriaEvento(faut) + " vegades." + "			</h2>\r\n" + "\r\n"
-					+ "		<!-- /continguts -->\r\n" + "\r\n" + "\r\n" + "</div>"
-					+ "	<p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>\r\n"
-					+ "\r\n" + "	</div>\r\n" + "	<!-- /contenidor -->\r\n" + "\r\n" + "</body>\r\n"
-					+ "</html>";
-			//plgEmail.envioEmail(alertaDao.getByCodigo(alCod).getEmail(), "SISTRAHELP: AVÍS - " + alertaDao.getByCodigo(alCod).getNombre() + " - "
-			//		+ entorno, msg, null, DatatypeConverter.printBase64Binary(imageBytes));
+
+
+			String sufArea = null;
+			if(al.getTipo().equals("A")) {
+				sufArea = ", &#224;rea: " + al.getListaAreas().get(0).split("\\.")[1];
+			}else if(al.getTipo().equals("T")) {
+				if( TypeIdioma.CASTELLANO.toString().equals(al.getIdioma())) {
+					sufArea = ", &#224;rea: " + al.getListaAreas().get(0).split("\\.")[1] + " y trr&#224;mite: " + al.getTramite();
+				} else{
+					sufArea = ", &#224;rea: " + al.getListaAreas().get(0).split("\\.")[1] + " i trr&#224;mit: " + al.getTramite();
+				}
+			}else if(al.getTipo().equals("V")) {
+				if( TypeIdioma.CASTELLANO.toString().equals(al.getIdioma())) {
+					sufArea = ", &#224;rea: " + al.getListaAreas().get(0).split("\\.")[1] + ", trr&#224;mite: " + al.getTramite() + " y versir&#224;n: " + al.getVersion();
+				}else{
+					sufArea = ", &#224;rea: " + al.getListaAreas().get(0).split("\\.")[1] + ", trr&#224;mit: " + al.getTramite() + " i versi&#243;: " + al.getVersion();
+				}
+
+			}
+
+			String logoImg = "";
+			if (imageBytes != null && imageBytes.length > 0) {
+				String encoded = Base64.getEncoder().encodeToString(imageBytes);
+				logoImg = "            <img  src=\"data:image/jpeg;base64," + encoded + "\" alt=\"logo\" width=\"100\" height=\"100\" style=\"width: 100px;height:100px;\"/>";
+			} else if( logo != null && !logo.isEmpty()) {
+				logoImg = "            <img  src=\"" + logo + "\" alt=\"logo\" width=\"100\" height=\"100\"/>";
+			}
+
+			String TEMPLATE = null;
+			if( TypeIdioma.CASTELLANO.toString().equals(al.getIdioma())){
+				TEMPLATE = getPlantillaMailCastellano();
+			}else{
+				TEMPLATE = getPlantillaCatalan();
+			}
+
+			Map<String, Object> params = new HashMap<>();
+			params.put("nombre", nombre);
+            params.put("nombre2", nombre); // DS hay un bug en plugin maven properties y no deja usar mismo tag (nombre) dos veces en una property.
+			params.put("logoImg", logoImg);
+			params.put("hNombre", nombre.toUpperCase());
+			params.put("expresionAlerta", expresionCorreoHistorial);
+			params.put("area", al.getListaAreas().get(0).split("\\.")[0]);
+			params.put("area2", sufArea != null ? sufArea : "");
+
+
+
+			String msg = StringSubstitutor.replace(TEMPLATE, params);
+
 				plgEmail.envioEmail(al.getEmail(), "SISTRAHELP: AVÍS - " + al.getNombre() + " - "
 						+ entorno, msg, null);
 		} catch (EmailPluginException e) {
@@ -351,6 +358,94 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			log.error("ALERTAS STH: Error general enviando el email " , e);
 		}
 	}
+
+
+	private String getPlantillaMailCastellano(){
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"es\" lang=\"es\">                    " +
+				"          <head>                    " +
+				" <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />           " +
+				"          <title>${nombre}</title>                  <!-- css -->            " +
+				"          <style type=\"text/css\">            " +
+				"              #contenidor { width:90%; font:normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif; color:#000; margin:1em auto; background-color:#fff; }            " +
+				"              #cap { font-size:1.2em; font-weight:bold; text-align:center; margin-bottom:1em; }            " +
+				"              #continguts { padding:1em 2em; border:1em solid #f2f2f2; }            " +
+				"              #continguts h1 { font-size:1.4em; margin-top:0; margin-bottom:1em; }            " +
+				"              #continguts table { margin-bottom:1.5em; border:0; empty-cells:hide; border-collapse:collapse; }            " +
+				"              #continguts table th { float:left; width:10em; font-size:1.1em; font-variant:small-caps; font-weight:normal; text-align:right; padding-right:.8em; }           " +
+				"              #continguts table td { font-weight:bold; padding-bottom:.5em; }            " +
+				"              #continguts h2 { font-size:1.1em; margin:.8em 0; }            " +
+				"              #continguts p { margin:.8em 0; }            " +
+				"              #contenidor p.peu { margin:1.5em 0; padding:1em; border:1px solid #ccc; }            " +
+				"              #contenidor div.accedir { padding:1em; background-color:#f7f7f7; }            " +
+				"              #contenidor a.accedirCertificado { display:block; font-size:1.5em; text-align:center; padding:1em; background-color:#f7f7f7; }            " +
+				"              #contenidor a.accedirClave { display:block; font-size:1.5em; text-align:center; padding:1em; background-color:#f7f7f7; }            " +
+				"              #contenidor p.auto { margin:1.5em 0; padding:1em;  font-size:0.9em; font-style: italic;}            " +
+				"            </style>          <!-- /css -->                </head>                <body>            " +
+				"                  <!-- contenidor -->        <div id=\"contenidor\">                    " +
+				"              <!-- logo illes balears -->            <div id=\"cap\">            " +
+				"         ${logoImg}          " +
+				"                    <h1>${hNombre}</h1>            </div>            " +
+				"              <!-- /logo illes balears -->                    <!-- continguts -->            " +
+				"              <div id=\"continguts\">                      <!-- titol -->            " +
+				"                <h1>            " +
+				"                  Este mensaje ha sido generado por el sistema de alertas de SISTRAHELP    " +
+				"          </h1><h2>La expresi&oacute;n: \"${expresionAlerta}\" de la alerta:     " +
+				"         \"${nombre2}\" (configurada por la entidad: ${area}) se ha evaluado como cierta.    " +
+				"           En esta expresi&oacute;n aparece entre corchetes el n&uacute;mero de veces que se ha producido el acontecimiento correspondiente durante el d&iacute;a de hoy.    </h2>" +
+				"              <!-- /continguts -->                        </div>    " +
+				"            <p class=\"auto\">MUY IMPORTANTE: Este correo se ha generado de forma autom&aacute;tica. Por favor no se tiene que responder a este correo.</p>            " +
+				"                    </div>          <!-- /contenidor -->                </body>            " +
+				"          </html>");
+
+		return sb.toString();
+	}
+
+	private String getPlantillaCatalan(){
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append( "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">                     " +
+				"          <head>                     " +
+				"          <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />               " +
+				"          <title>${nombre}</title>                  <!-- css -->            " +
+				"          <style type=\"text/css\">               " +
+				"              #contenidor { width:90%; font:normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif; color:#000; margin:1em auto; background-color:#fff; }               " +
+				"              #cap { font-size:1.2em; font-weight:bold; text-align:center; margin-bottom:1em; }               " +
+				"              #continguts { padding:1em 2em; border:1em solid #f2f2f2; }               " +
+				"              #continguts h1 { font-size:1.4em; margin-top:0; margin-bottom:1em; }               " +
+				"              #continguts table { margin-bottom:1.5em; border:0; empty-cells:hide; border-collapse:collapse; }               " +
+				"              #continguts table th { float:left; width:10em; font-size:1.1em; font-variant:small-caps; font-weight:normal; text-align:right; padding-right:.8em; }               " +
+				"              #continguts table td { font-weight:bold; padding-bottom:.5em; }               " +
+				"              #continguts h2 { font-size:1.1em; margin:.8em 0; }               " +
+				"              #continguts p { margin:.8em 0; }               " +
+				"              #contenidor p.peu { margin:1.5em 0; padding:1em; border:1px solid #ccc; }               " +
+				"              #contenidor div.accedir { padding:1em; background-color:#f7f7f7; }               " +
+				"              #contenidor a.accedirCertificado { display:block; font-size:1.5em; text-align:center; padding:1em; background-color:#f7f7f7; }               " +
+				"              #contenidor a.accedirClave { display:block; font-size:1.5em; text-align:center; padding:1em; background-color:#f7f7f7; }               " +
+				"              #contenidor p.auto { margin:1.5em 0; padding:1em;  font-size:0.9em; font-style: italic;}               " +
+				"            </style>          <!-- /css -->                </head>                <body>               " +
+				"                    <!-- contenidor -->          <div id=   \"contenidor\">                       " +
+				"              <!-- logo illes balears -->            <div id=\"cap\">               " +
+				"          ${logoImg}             " +
+				"                    <h1>${hNombre}</h1>            </div>               " +
+				"              <!-- /logo illes balears -->                    <!-- continguts -->               " +
+				"              <div id=\"continguts\">                      <!-- titol -->               " +
+				"                <h1>               " +
+				"                  Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP       " +
+				"          </h1><h2>L&#39;expressi&#243;: \"${expresionAlerta}\" de l&#39;Alerta:        " +
+				"          \"${nombre2}\" (configurada per l&#39;entitat: ${area}${area2}) s&#39;ha avaluat com a certa.       " +
+				"           &nbsp;En aquesta expressi&oacute; apareixen entre claud&agrave;tors el nombre de vegades que s'ha produ&iuml;t l'esdeveniment corresponent durant el dia d'avui.      </h2> " +
+				"              <!-- /continguts -->                        </div>    " +
+				"            <p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>               " +
+				"                    </div>          <!-- /contenidor -->                </body>            " +
+				"          </html>");
+		
+		return sb.toString();
+		
+	}
+	
 
 	private void anadirHistorial(Alerta al, String expresionCorreoHistorial) {
 		HistorialAlerta hA = new HistorialAlerta();
@@ -471,6 +566,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 	//				+ "			   <h3> LOGO </h3>"
 					msg += "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
 					+ "         <!-- /logo illes balears -->  		<!-- continguts -->"
+
+
 					+ "         <div id=\"continguts\" style=\"padding: 1em;border: 1em solid #f2f2f2;\">"
 					+ "            <!-- titol --> 			"
 					+ "            <h1 style=\"font-size: 1.4em;margin-top: 0;margin-bottom: 1em;\">"

@@ -52,8 +52,9 @@ public enum TypePropiedadConfiguracion {
 	PAYMENTIB_VIEW_URL("paymentib.view.url"),
 	SISTRAGES_MODOENTREGA_HABILITAR("sistrages.modoEntrega.habilitar"),
 	/** Motor de scripting. */
-	SCRIPT_ENGINE("scriptEngine");
-
+	SCRIPT_ENGINE("scriptEngine"),
+	ALERT_MSG_TEMPLATE_ES("template.evento.es"),
+	ALERT_MSG_TEMPLATE_CA("template.evento.ca");
 
 
 	/**

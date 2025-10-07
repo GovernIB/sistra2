@@ -466,6 +466,16 @@ public class ApiInternaRestController {
 		return resultado;
 	}
 
+	@ApiOperation(value = "listar tipos errores auditoria", notes = "listar tipos errores auditoria", response = String.class, responseContainer = "List")
+	@RequestMapping(value = "/auditoria/listarTiposError", method = RequestMethod.POST)
+	public List<String> obtenerTiposErrorAuditoria(@RequestBody Map<String, Object> params) {
+	    boolean eventoPlataforma = false;
+	    if (params != null && params.get("eventoPlataforma") != null) {
+	        eventoPlataforma = Boolean.parseBoolean(params.get("eventoPlataforma").toString());
+	    }
+	    return restApiInternaService.listarTiposErrorAuditoria(eventoPlataforma);
+	}
+
 	/**
 	 * Convierte detalle pago.
 	 *
@@ -583,6 +593,9 @@ public class ApiInternaRestController {
 			if (pRFiltro.getRolAcceso() != null) {
 				filtro.setRolAcceso(pRFiltro.getRolAcceso());
 			}
+
+			filtro.setTiposErrores(pRFiltro.getTiposErrores());
+			filtro.setTextoTraza(pRFiltro.getTextoTraza());
 		}
 
 		return filtro;

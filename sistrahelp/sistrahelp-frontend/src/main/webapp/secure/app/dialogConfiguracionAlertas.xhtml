@@ -213,16 +213,46 @@
 
 					<p:outputLabel for="email" value="#{msg['viewConfiguracionAlertas.emails']}" />
 					<h:panelGrid columns = "1" cellspacing = "0"  width="100%">
-						<p:inputText id="email" onblur="this.value = this.value.trim();" value="#{dialogConfiguracionAlertas.emails}" maxlength="1024" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}" style="width:39%;">
-							<p:ajax event="change" process="@this"/>
-						</p:inputText>
+						<h:panelGroup>
+							<p:inputText id="email" onblur="this.value = this.value.trim();" value="#{dialogConfiguracionAlertas.emails}" maxlength="1024" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}" style="width:39%;">
+								<p:ajax event="change" process="@this"/>
+							</p:inputText>
+
+
+								<p:outputLabel for="idioma" value="#{msg['dialogConfiguracionAlertas.idioma']}" style="margin-left:16px; margin-right:16px;"/>
+								<p:selectOneMenu id="idioma" value="#{dialogConfiguracionAlertas.idioma}" styleClass="center-vertical" style="margin-right:16px;">
+									<p:ajax event="blur" process="@this" />
+									<f:selectItems value="#{dialogConfiguracionAlertas.idiomas}" var="lang" itemValue="#{lang}" itemLabel="#{msg[lang]}"/>
+								</p:selectOneMenu>
+
+						</h:panelGroup>
+
 						<p:outputLabel for="aviso" value=" " />
 					 	<h:outputText id="aviso" value="#{msg['dialogConfiguracionAlertas.avisoCorreos']}" />
+
+
 					</h:panelGrid>
-					<p:outputLabel for="peri" value="#{msg['viewConfiguracionAlertas.periodo']}" />
-					<p:calendar id="peri" value="#{dialogConfiguracionAlertas.periodo}" pattern="HH:mm" stepMinute="10" timeOnly="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
-							<p:ajax event="change" process="@this"/>
-						</p:calendar>
+
+
+						<p:outputLabel for="peri" value="#{msg['viewConfiguracionAlertas.periodo']}" />
+
+					<h:panelGroup>
+						<p:calendar id="peri" value="#{dialogConfiguracionAlertas.periodo}" pattern="HH:mm" stepMinute="10" timeOnly="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+								<p:ajax event="change" process="@this"/>
+							</p:calendar>
+
+
+
+
+						<p:outputLabel for="peri" value="#{msg['dialogConfiguracionAlertas.modoEvaluacion']}" style="margin-left:32px;margin-right:16px;"/>
+						<p:selectOneMenu id="modoEvaluacion" value="#{dialogConfiguracionAlertas.modoEvaluacion}" styleClass="center-vertical" style="margin-right:16px;" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+							<p:ajax event="blur" process="@this" />
+							<f:selectItem itemLabel="#{msg['dialogConfiguracionAlertas.modoEvaluacion.acumulado']}" itemValue="1"  />
+							<f:selectItem itemLabel="#{msg['dialogConfiguracionAlertas.modoEvaluacion.intervalo']}" itemValue="2"  />
+						</p:selectOneMenu>
+
+
+					</h:panelGroup>
 
 					<p:outputLabel for="interv" value="#{msg['viewConfiguracionAlertas.intervalo']}" />
 					<h:panelGrid columns = "5" cellspacing = "0"  width="100%" id="interv" columnClasses="wpx50,wpx200,wpx50," >
@@ -340,8 +370,8 @@
 						<p:selectBooleanCheckbox id="checkActivo" value="#{dialogConfiguracionAlertas.checkActivo}"/>
 		     		</f:facet>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAlertas.aceptar()}" process="@form" update="@form"  styleClass="boton-azul" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAlertas.aceptar()}" process="@form" update="@form"  styleClass="boton-azul" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion() or dialogConfiguracionAlertas.isDuplicar()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion() or dialogConfiguracionAlertas.isDuplicar()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this"  rendered="#{dialogConfiguracionAlertas.isConsulta()}"/>
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogConfiguracionAlertas.ayuda()}" process="@this"/>
 					</f:facet>

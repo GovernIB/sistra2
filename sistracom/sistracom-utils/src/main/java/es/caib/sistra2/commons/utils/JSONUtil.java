@@ -30,11 +30,27 @@ public class JSONUtil {
      * @throws JsonProcessingException
      */
     public static String toJSON(final Object objeto) throws JSONUtilException {
+       return toJSON(objeto, false);
+    }
+
+    /**
+     * Clase para convertir un objeto a JSON.
+     *
+     * @param objeto
+     * @return
+     * @throws JSONUtilException
+     * @throws JsonProcessingException
+     */
+    public static String toJSON(final Object objeto, final boolean prettyPrint) throws JSONUtilException {
         try {
             String res = null;
             if (objeto != null) {
                 final ObjectMapper mapper = new ObjectMapper();
-                res = mapper.writeValueAsString(objeto);
+                if (prettyPrint) {
+                    res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(objeto);
+                } else {
+                    res = mapper.writeValueAsString(objeto);
+                }
             }
             return res;
         } catch (final JsonProcessingException ex) {

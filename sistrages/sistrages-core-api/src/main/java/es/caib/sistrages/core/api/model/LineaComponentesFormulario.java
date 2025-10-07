@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * La clase LineaComponentesFormulario.
@@ -97,6 +98,8 @@ public final class LineaComponentesFormulario extends ObjetoFormulario
 				case CHECKBOX:
 					ncolumnas += elementoFormulario.getNumColumnas();
 					break;
+				case SECCION_REUTILIZABLE:
+					ncolumnas += ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA;  // las secciones reutilizables siempre ocupan toda la línea
 				default:
 					break;
 				}
@@ -223,6 +226,10 @@ public final class LineaComponentesFormulario extends ObjetoFormulario
 	@Override
 	public String toString() {
         return toString("","ca");
+	}
+
+	public String getIdComponente() {
+		return CollectionUtils.isNotEmpty(getComponentes()) ? getComponentes().get(0).getIdComponente() : null;
 	}
 
 	/**

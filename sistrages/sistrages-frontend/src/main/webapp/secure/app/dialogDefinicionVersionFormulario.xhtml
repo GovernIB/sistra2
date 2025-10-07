@@ -11,6 +11,7 @@
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioGestor" var="TypeFormularioGestor"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeNormativa" var="TypeNormativa"/>
 
 <h:head>
   <title><h:outputText value="#{msg['dialogDefinicionVersionFormulario.titulo']}"/></title>
@@ -190,7 +191,11 @@
            <p:panelGrid styleClass="noBorders">
                <p:row>
                  <p:column styleClass="noPadding-left">
-            <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}">
+            <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"
+									 disabled="#{(dialogDefinicionVersionFormulario.tramiteVersion.normativa.equals(TypeNormativa.ESPECIFICA.toString())
+									 		and dialogDefinicionVersionFormulario.tramiteVersion.noAutenticado == true)
+									 	or (dialogDefinicionVersionFormulario.tramiteVersion.normativa.equals(TypeNormativa.GENERAL.toString())
+									 		and dialogDefinicionVersionFormulario.data.orden == 1)}">
             	<p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}" process="@this" update="@this"/>
             </p:selectBooleanCheckbox>
              </p:column>

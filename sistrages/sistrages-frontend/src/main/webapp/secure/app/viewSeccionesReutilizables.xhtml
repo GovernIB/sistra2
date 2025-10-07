@@ -240,7 +240,7 @@
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false" />
 				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
-				<p:ajax event="contextMenu" global="false" process="@this"  update="@form:panelBotones" oncomplete="opcTabla();"/>
+				<p:ajax event="contextMenu" global="false" process="@this"  update="@form:panelBotones" />
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewSeccionesReutilizables.headerIdentificador']}" width="15%" sortBy="#{td.identificador}">
@@ -266,7 +266,7 @@
 			    </p:column>
 
 			</p:dataTable>
-			<p:contextMenu for="dataTable" id="cMenuVers">
+			<p:contextMenu for="dataTable" id="cMenuVers" beforeShow="opcTabla();">
 				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
 				<p:separator/>
 	            <p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" rendered="#{viewSeccionesReutilizables.permiteAlta}"/>

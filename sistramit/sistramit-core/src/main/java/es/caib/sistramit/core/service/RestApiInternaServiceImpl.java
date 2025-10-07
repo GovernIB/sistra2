@@ -194,4 +194,9 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	public void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios) {
 		restApiInternaComponent.updateEstadoIncidencia(idSoporte, estado, comentarios);
 	}
+
+	@Override
+	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
+		return restApiInternaComponent.listarTiposErrorAuditoria(eventoPlataforma);
+	}
 }

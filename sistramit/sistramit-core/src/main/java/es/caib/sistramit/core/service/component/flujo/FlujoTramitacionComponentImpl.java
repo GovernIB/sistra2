@@ -478,8 +478,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			final DefinicionTramiteSTG defTramSTG) {
 		if (this.usuarioAutenticadoInfo.getAutenticacion() != TypeAutenticacion.ANONIMO) {
 			// Control QAA
-			final TypeQAA qaaTramite = TypeQAA
-					.fromString(defTramSTG.getDefinicionVersion().getPropiedades().getNivelQAA() + "");
+			final TypeQAA qaaTramite = UtilsSTG.obtenerQAANivelSeguridadAutenticado(defTramSTG.getDefinicionVersion().getPropiedades().getNivelSeguridadAutenticado());
 			final TypeQAA qaaUsuario = this.usuarioAutenticadoInfo.getQaa();
 			if (qaaTramite.esSuperior(qaaUsuario)) {
 				if (inicio) {
@@ -489,8 +488,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 				}
 			}
 			// Control metodo autenticacion
-			final List<TypeMetodoAutenticacion> metAut = UtilsSTG.convertMetodosAutenticado(
-					defTramSTG.getDefinicionVersion().getPropiedades().getMetodosAutenticacion());
+			final List<TypeMetodoAutenticacion> metAut = UtilsSTG.obtenerMetodosAutenticacionNivelSeguridadAutenticado(defTramSTG.getDefinicionVersion().getPropiedades().getNivelSeguridadAutenticado());
 			if (!metAut.contains(this.usuarioAutenticadoInfo.getMetodoAutenticacion())) {
 				throw new MetodoAutenticacionException(this.usuarioAutenticadoInfo.getMetodoAutenticacion());
 			}

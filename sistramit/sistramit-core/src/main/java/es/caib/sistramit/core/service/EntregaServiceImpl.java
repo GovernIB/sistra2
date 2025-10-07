@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service;
 
 import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.api.service.EntregaService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.integracion.EntregaComponent;
@@ -38,17 +39,56 @@ public class EntregaServiceImpl implements EntregaService {
 
 	@Override
 	@NegocioInterceptor
-	public ResultadoProcesoProgramado procesarEntregaFinalizadosInmediatos() {
+	public ResultadoProcesoProgramado procesarEnvioRemotoFinalizadosInmediatos() {
 		return procesarEntregas(entregaComponent.recuperarInmediatosPendientes());
 	}
 
 	@Override
 	@NegocioInterceptor
-	public ResultadoProcesoProgramado procesarEntregaFinalizadosPeriodicos() {
+	public ResultadoProcesoProgramado procesarEnvioRemotoFinalizadosPeriodicos() {
 		// Desbloquea entregas que se hayan quedado bloqueadas
 		entregaComponent.desbloquearEntregasBloqueadas();
 		// Recupera trámites finalizados pendientes de entrega
 		return procesarEntregas(entregaComponent.recuperarPeriodicosPendientes());
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoProcesoProgramado procesarFuncionarioHabilitadoFinalizados() {
+		// Avisa a funcionario habilitado de los trámites finalizados
+		return procesarFinalizadosFH(entregaComponent.recuperarFinalizadosFHPendientes());
+	}
+
+	/**
+	 * Procesa trámites finalizados para funcionario habilitado.
+	 * @param tramiteFinalizados trámites finalizados
+	 * @return resultado proceso
+	 */
+	private ResultadoProcesoProgramado procesarFinalizadosFH(List<TramiteFinalizado> tramiteFinalizados) {
+		int avisadosOK = 0;
+		int avisadosKO = 0;
+		for (TramiteFinalizado tf : tramiteFinalizados) {
+			boolean avisado = false;
+			try {
+				// Realiza aviso
+				avisado = entregaComponent.procesarAvisoFuncionarioHabilitado(tf);
+			} catch (Exception e) {
+				log.error("Error procesando aviso FH trámite finalizado idSesionTramitacion=" + tf.getIdSesionTramitacion(), e);
+			}
+			// Actualiza contadores
+			if (avisado) {
+				avisadosOK++;
+			} else {
+				avisadosKO++;
+			}
+		}
+		// Retorna resultado proceso
+		ResultadoProcesoProgramado res = new ResultadoProcesoProgramado();
+		res.getDetalles().addPropiedad("pendientes", Integer.toString(tramiteFinalizados.size()));
+		res.getDetalles().addPropiedad("avisadosOK", Integer.toString(avisadosOK));
+		res.getDetalles().addPropiedad("avisadosKO", Integer.toString(avisadosKO));
+		return res;
+
 	}
 
 	/**

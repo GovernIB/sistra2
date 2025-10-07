@@ -5,10 +5,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -398,6 +400,16 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void importar() {
 		final Map<String, String> params = new HashMap<>();
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+		if(!this.mostrarTodasAreas) {
+
+			List<Area> areasAmbito = new ArrayList<>(listaAreasSeleccionadas);
+			Collections.sort(areasAmbito, Comparator.comparing(Area::getIdentificador));
+			mochila.put(Constantes.CLAVE_MOCHILA_AREAS_AMBITO, areasAmbito);
+		}else{
+			mochila.remove(Constantes.CLAVE_MOCHILA_AREAS_AMBITO);
+		}
+
 		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 640);
 	}
 
@@ -942,11 +954,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * @return
 	 */
 	private boolean verificarFilaSeleccionadaVersion() {
-		boolean filaSeleccionada = true;
-		if (this.versionSeleccionada == null) {
-			filaSeleccionada = false;
-		}
-		return filaSeleccionada;
+		return this.versionSeleccionada != null;
 	}
 
 	/** Calcular areas cuando pulsas el checkbox de visualizar todas. */
@@ -1599,11 +1607,16 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 		}
 
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
+		boolean usuarioVersion = Objects.equals(versionSeleccionada.getDatosUsuarioBloqueo(), UtilJSF.getSessionBean().getUserName());
 
-		UtilJSF.openDialog(DialogTramiteDesbloquear.class, TypeModoAcceso.EDICION, params, true, 500, 320);
+		if ( !usuarioVersion || validoTramiteVersion(true)) {
 
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
+
+			UtilJSF.openDialog(DialogTramiteDesbloquear.class, TypeModoAcceso.EDICION, params, true, 500, 320);
+
+		}
 	}
 
 	/**
@@ -1721,7 +1734,7 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		// Tiene que estar bloqueado por el mismo usuario
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && this.versionSeleccionada != null) {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
 			if (this.idTramiteCacheado == null
 					|| this.idTramiteCacheado.compareTo(this.versionSeleccionada.getIdTramite()) != 0) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.types.*;
 import es.caib.sistrages.rest.api.interna.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -52,14 +53,6 @@ import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDominio;
-import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
-import es.caib.sistrages.core.api.model.types.TypeDominio;
-import es.caib.sistrages.core.api.model.types.TypeFlujo;
-import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypePaso;
-import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
-import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.rest.utils.AdapterUtils;
@@ -202,35 +195,31 @@ public class VersionTramiteAdapter {
 	private RVersionTramitePropiedades generaPropiedades(final TramiteVersion tv, final String idioma) {
 
 		final RVersionTramitePropiedades res = new RVersionTramitePropiedades();
-		res.setAutenticado(tv.isAutenticado());
 
-		// TODO LEL VERIFICAR QUE EN STG SE HA GESTIONADO ESTABLECER VALOR X DEFECTO
-		// TRUE
+		// Autenticación
+		// - Autenticado
+		res.setAutenticado(tv.isAutenticado());
+		if (tv.isAutenticado()){
+			res.setNivelSeguridadAutenticado(tv.getNivelSeguridad());
+		}
+		// - No autenticado
+		res.setNoAutenticado(tv.isNoAutenticado());
+
+		// Persistencia
 		res.setPersistente(tv.isPersistencia());
 		if (tv.isPersistencia() && !tv.isPersistenciaInfinita()) {
 			res.setDiasPersistencia(tv.getPersistenciaDias());
 		}
 
+		// Idiomas
 		if (tv.getIdiomasSoportados() != null) {
 			res.setIdiomas(Arrays.asList(tv.getIdiomasSoportados().split(AdapterUtils.SEPARADOR_IDIOMAS)));
 		}
 
-		res.setNivelQAA(tv.getNivelQAA());
-
-		if (tv.getTiposAutenticacion() != null) {
-			String ma = "";
-			for (final TypeAutenticacion t : tv.getTiposAutenticacion()) {
-				ma += t.toString() + ";";
-			}
-			if (ma.endsWith(";")) {
-				ma = ma.substring(0, ma.length() - 1);
-			}
-			res.setMetodosAutenticacion(ma);
-		}
-
-		res.setNoAutenticado(tv.isNoAutenticado());
+		// Scripts
 		res.setScriptParametrosIniciales(AdapterUtils.generaScript(tv.getScriptInicializacionTramite(), idioma));
 		res.setScriptPersonalizacion(AdapterUtils.generaScript(tv.getScriptPersonalizacion(), idioma));
+
 		return res;
 	}
 

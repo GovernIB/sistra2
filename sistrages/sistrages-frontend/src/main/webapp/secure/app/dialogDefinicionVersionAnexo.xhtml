@@ -7,6 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeNormativa" var="TypeNormativa"/>
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -251,12 +252,15 @@
 							<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones']}" />
 
 						<p:column>
-								<p:selectOneRadio id="extensiones" value="#{dialogDefinicionVersionAnexo.data.extensionSeleccion}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}">
+								<p:selectOneRadio id="extensiones" value="#{dialogDefinicionVersionAnexo.data.extensionSeleccion}"
+												  disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and (!dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente or dialogDefinicionVersionAnexo.soloFirmaPDF)}">
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="#{TypeExtension.TODAS}"/>
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="#{TypeExtension.PERSONALIZADAS}"/>
 									<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:personalizadas_input"/>
 					        	</p:selectOneRadio>
-				        		<p:inputText id="personalizadas_input" size="15" value="#{dialogDefinicionVersionAnexo.data.extensiones}" readonly="#{(dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente)  or (dialogDefinicionVersionAnexo.data.extensionSeleccion eq TypeExtension.TODAS)}"
+				        		<p:inputText id="personalizadas_input" size="15" value="#{dialogDefinicionVersionAnexo.data.extensiones}"
+											 readonly="#{( dialogDefinicionVersionAnexo.data.debeAnexarFirmado and (!dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente or dialogDefinicionVersionAnexo.soloFirmaPDF) )
+											 or (dialogDefinicionVersionAnexo.data.extensionSeleccion eq TypeExtension.TODAS) }"
 											 style="height: fit-content; margin-top: 3px !important;">
 				        			<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambiosExtensionesPersonalizadas}" process="@this" update="@this"
 									/>
@@ -279,7 +283,8 @@
 
 
 							<p:selectBooleanCheckbox id="convertirpdf" value="#{dialogDefinicionVersionAnexo.data.debeConvertirPDF}"
-													 itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}"
+													 itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}"
+													 disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}"
 													rendered="#{dialogDefinicionVersionAnexo.mostrarConvertirPDF}"
 													 style="display: inline; margin-top: 6px !important;">
 								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
@@ -291,15 +296,19 @@
 
 							<p:selectBooleanCheckbox id="requiereFirma" value="#{dialogDefinicionVersionAnexo.requiereFirma}"
 													 itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.requiereFirma']}"
-													 disabled="#{dialogDefinicionVersionAnexo.data.numeroInstancia != 1}"
-													 style="margin-top: 6px !important;">
+													 disabled="#{(dialogDefinicionVersionAnexo.data.numeroInstancia != 1)
+													 				or (dialogDefinicionVersionAnexo.tramiteVersion.normativa.equals(TypeNormativa.ESPECIFICA.toString())
+													 					and dialogDefinicionVersionAnexo.tramiteVersion.noAutenticado == true)}" style="margin-top: 6px !important;">
 								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this"
 											update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input
 																:formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:debeValidarFirmantes :formDialogDefinicionVersionAnexo:btnScriptFirma"/>
 							</p:selectBooleanCheckbox>
-							<p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes" value="#{dialogDefinicionVersionAnexo.data.debeValidarFirmantes}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado ? false : true}"
+							<p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes"
+													 value="#{dialogDefinicionVersionAnexo.data.debeValidarFirmantes}"
+													 disabled="#{not dialogDefinicionVersionAnexo.data.debeAnexarFirmado or not dialogDefinicionVersionAnexo.verificableFirmantesAnexo}"
 													 style="margin-top: 6px !important;">
-								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:btnScriptFirma"/>
+								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this"
+										update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:btnScriptFirma"/>
 							</p:selectBooleanCheckbox>
 
 							<p:commandButton id="btnScriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"

@@ -353,26 +353,45 @@ function carregaHTML() {
 				.prepend( html_cap );
 
 
-			// nivell autenticació?
+			// mètode autenticació?
 
-			var jsonNivellAutenticacio = APP_JSON_TRAMIT_T.nivelAutenticacion;
+			if ( jsonAutenticacio === "c") {
 
-			if (jsonNivellAutenticacio && jsonNivellAutenticacio !== null && jsonNivellAutenticacio !== "") {
+				var jsonMetodeAutent = APP_JSON_TRAMIT_T.metodoAutenticacion;
 
-				var nivellAutent_txt =  eval( "txtNivellAutent" + jsonNivellAutenticacio )
-					,nivellAutent_codi = $("<span>").addClass("imc--nivell-autent");
+				if (jsonMetodeAutent && jsonMetodeAutent !== null && jsonMetodeAutent !== "") {
 
-				$("<strong>")
-					.text( txtNivellAutent + ": " )
-					.appendTo( nivellAutent_codi );
+					var metodeAutent_txt =  eval( "txtMetodeAutent" + jsonMetodeAutent )
+						,metodeAutent_codi = $("<span>").addClass("imc--metode-autent");
 
-				$("<span>")
-					.text( nivellAutent_txt )
-					.appendTo( nivellAutent_codi );
+					$("<strong>")
+						.text( txtMetodeAutent + ": " )
+						.appendTo( metodeAutent_codi );
 
-				$("#imc-cap")
-					.find(".imc--usuari:first")
-						.append( nivellAutent_codi );
+					$("<span>")
+						.text( metodeAutent_txt )
+						.appendTo( metodeAutent_codi );
+
+					$("#imc-cap")
+						.find(".imc--usuari:first")
+							.append( metodeAutent_codi );
+					
+
+					// nivell autenticació?
+
+					var jsonNivellAutenticacio = APP_JSON_TRAMIT_T.nivelAutenticacion;
+
+					if (jsonNivellAutenticacio && jsonNivellAutenticacio !== null && jsonNivellAutenticacio !== "") {
+
+						var nivellAutent_txt =  eval( "txtNivellAutent" + jsonNivellAutenticacio );
+
+						$("#imc-cap")
+							.find(".imc--metode-autent:first")
+								.append( " (" + nivellAutent_txt + ")" );
+
+					}
+
+				}
 
 			}
 

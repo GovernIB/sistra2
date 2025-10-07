@@ -12,6 +12,7 @@ import java.util.Date;
 @SuppressWarnings("serial")
 public class DatosAsunto implements Serializable {
 
+	private String codigoAsunto;
 	private Date fechaAsunto;
 	private String idiomaAsunto;
 	private String extractoAsunto;
@@ -20,6 +21,17 @@ public class DatosAsunto implements Serializable {
 	private String numeroExpediente;
 	private String textoExpone;
 	private String textoSolicita;
+	private String referenciaExterna;
+	private String observaciones;
+
+
+	public String getCodigoAsunto() { return codigoAsunto;}
+
+	public void setCodigoAsunto(final String codigoAsunto) { this.codigoAsunto = codigoAsunto; }
+
+	public String getReferenciaExterna() { 	return referenciaExterna; }
+
+	public void setReferenciaExterna(final String referenciaExterna) { this.referenciaExterna = referenciaExterna; }
 
 	public Date getFechaAsunto() {
 		return fechaAsunto;
@@ -128,5 +140,9 @@ public class DatosAsunto implements Serializable {
 	public void setTextoSolicita(final String textoSolicita) {
 		this.textoSolicita = textoSolicita;
 	}
+
+	public String getObservaciones() { return observaciones; }
+
+	public void setObservaciones(final String observaciones) { this.observaciones = observaciones; }
 
 }

@@ -76,4 +76,23 @@ public interface EntregaTramiteDao {
 	 * @return Trámite finalizado.
 	 */
     TramiteFinalizado recuperarTramiteFinalizado(String idSesionTramitacion);
+
+	/**
+	 * Recupera trámites finalizados pendientes de notificar a funcionario habilitado.
+	 * @return trámites finalizados pendientes
+	 */
+	List<TramiteFinalizado> recuperarFinalizadosFHPendientes();
+
+	/**
+	 * Indica que se ha avisado a funcionario habilitado del trámite finalizado.
+	 * @param idSesionTramitacion Identificador de la sesión de tramitación.
+	 */
+	void actualizarAvisoCorrectoFuncionarioHabilitado(String idSesionTramitacion);
+
+	/**
+	 * Indica que ha habido un error al avisar a funcionario habilitado del trámite finalizado.
+	 * @param idSesionTramitacion Identificador de la sesión de tramitación.
+	 * @param msgError mensaje de error
+	 */
+	void actualizarAvisoErrorFuncionarioHabilitado(String idSesionTramitacion, String msgError);
 }

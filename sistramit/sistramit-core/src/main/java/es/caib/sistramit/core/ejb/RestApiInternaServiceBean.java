@@ -177,4 +177,9 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		restApiInternaService.updateEstadoIncidencia(idSoporte, estado, comentarios);
 
 	}
+
+	@Override
+	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
+		return restApiInternaService.listarTiposErrorAuditoria(eventoPlataforma);
+	}
 }

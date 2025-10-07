@@ -37,7 +37,7 @@ public interface SystemService {
 	 */
 	boolean verificarMaestro(String instancia);
 
-	public List<Alerta> calcularAlertasEjecucion();
+	List<Alerta> calcularAlertasEjecucion();
 
 	/**
 	 * Actualizar fecha acceso del usuario.

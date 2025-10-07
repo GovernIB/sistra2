@@ -1,5 +1,7 @@
 package es.caib.sistrahelp.core.api.model;
 
+import es.caib.sistrahelp.core.api.model.types.TypeModoEvaluacionAlerta;
+
 import java.util.Date;
 import java.util.List;
 
@@ -59,6 +61,10 @@ public class Alerta extends ModelApi {
 
 	/** horaResumen. **/
 	private String horaResumen;
+
+	private String idioma;
+
+	private TypeModoEvaluacionAlerta modoEvaluacion;
 
 	/**
 	 * Crea una nueva instancia de Dominio.
@@ -235,4 +241,46 @@ public class Alerta extends ModelApi {
 		this.horaResumen = horaResumen;
 	}
 
+	public String getIdioma() {
+		return idioma;
+	}
+
+	public void setIdioma(String idioma) {
+		this.idioma = idioma;
+	}
+
+	public TypeModoEvaluacionAlerta getModoEvaluacion() {
+		return modoEvaluacion;
+	}
+
+	public void setModoEvaluacion(TypeModoEvaluacionAlerta modoEvaluacion) {
+		this.modoEvaluacion = modoEvaluacion;
+	}
+
+	@Override
+	public Alerta clone() {
+
+		Alerta clonada = new Alerta();
+
+		clonada.setActivo(this.isActivo());
+		clonada.setNombre(this.getNombre());
+		clonada.setCodigo(this.getCodigo());
+		clonada.setEmail(this.getEmail());
+		clonada.setEventos(this.getEventos());
+		clonada.setEliminar(this.isEliminar());
+		clonada.setFecha(this.getFecha());
+		clonada.setHoraResumen(this.getHoraResumen());
+		clonada.setIdEntidad(this.getIdEntidad());
+		clonada.setIdioma(this.getIdioma());
+		clonada.setIntervaloEvaluacion(this.getIntervaloEvaluacion());
+		clonada.setListaAreas(this.getListaAreas());
+		clonada.setModoEvaluacion(this.getModoEvaluacion());
+
+		clonada.setPeriodoEvaluacion(this.getPeriodoEvaluacion());
+		clonada.setTipo(this.getTipo());
+		clonada.setTramite(this.getTramite());
+		clonada.setVersion(this.getVersion());
+
+		return clonada;
+	}
 }

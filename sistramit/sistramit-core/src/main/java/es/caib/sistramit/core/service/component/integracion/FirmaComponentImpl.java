@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoNivelSeguridad;
 import es.caib.sistra2.commons.plugins.firmacliente.api.*;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
 import org.apache.commons.io.FilenameUtils;
 
 import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
@@ -55,8 +59,8 @@ public final class FirmaComponentImpl implements FirmaComponent {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FirmaComponentImpl.class);
 
 	@Override
-	public RedireccionFirma redireccionFirmaExterna(final String idEntidad, final UsuarioAutenticadoInfo usuarioAutenticado,
-													final Persona firmante,	final Persona representante,
+	public RedireccionFirma redireccionFirmaExterna(final String idEntidad, TypeNivelSeguridad nivelSeguridad, final UsuarioAutenticadoInfo usuarioAutenticado,
+													final Persona firmante, final Persona representante,
 													final String fileId, final byte[] fileContent, final String fileName,
 													final String tipoDocumental, final String urlCallBack, final String idioma) {
 
@@ -66,8 +70,11 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		// Crea sesion de firma
 		final InfoSesionFirma infoSesionFirma = new InfoSesionFirma();
 		infoSesionFirma.setEntidad(idEntidad);
-
+		infoSesionFirma.setIdioma(idioma);
+		infoSesionFirma.setNivelSeguridad(convertToTipoNivelSeguridad(nivelSeguridad));
+		infoSesionFirma.setMetodoAutenticacion(convertToTipoMetodoAutenticacion(usuarioAutenticado.getMetodoAutenticacion()));
 		if (firmante != null) {
+			// Se pasa firmante para validar
 			infoSesionFirma.setValidarFirmante(true);
 			infoSesionFirma.setNif(firmante.getNif());
 			infoSesionFirma.setNombreUsuario(firmante.getNombre());
@@ -76,6 +83,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 				infoSesionFirma.setNombreRepresentante(representante.getNombre());
 			}
 		} else {
+			// No se pasa firmante, no se valida
 			infoSesionFirma.setValidarFirmante(false);
 			// Se pasa usuario autenticado
 			if (usuarioAutenticado != null && usuarioAutenticado.getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
@@ -84,7 +92,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			}
 		}
 
-		infoSesionFirma.setIdioma(idioma);
+		// Genera sesión firma
 		String sf;
 		try {
 			sf = plgFirma.generarSesionFirma(infoSesionFirma);
@@ -360,4 +368,35 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		return plgFirma;
 	}
 
+
+	/**
+	 * Convierte el tipo de autenticación del cliente a tipo de autenticación del plugin.
+	 * @param metodoAutenticacion Método de autenticación del cliente
+	 * @return TipoMetodoAutenticacion del plugin
+	 */
+	private static TipoMetodoAutenticacion convertToTipoMetodoAutenticacion(TypeMetodoAutenticacion metodoAutenticacion) {
+		TipoMetodoAutenticacion res = TipoMetodoAutenticacion.fromString(metodoAutenticacion.toString());
+		if (res == null) {
+			throw new SesionFirmaClienteException("No es reconeix el mètode d'autenticació: "
+					+ metodoAutenticacion.toString());
+		}
+		return res;
+	}
+
+
+	/**
+	 * Convierte el tipo de nivel de seguridad del cliente a tipo de nivel de seguridad del plugin.
+	 * @param nivelSeguridad Nivel de seguridad del cliente
+	 * @return TipoNivelSeguridad del plugin
+	 */
+	private static TipoNivelSeguridad convertToTipoNivelSeguridad(TypeNivelSeguridad nivelSeguridad) {
+		TipoNivelSeguridad res = null;
+		if (nivelSeguridad != null) {
+			res = TipoNivelSeguridad.fromString(nivelSeguridad.toString());
+			if (res == null) {
+				throw new SesionFirmaClienteException("No es reconeix el nivell de seguretat: " + nivelSeguridad.toString());
+			}
+		}
+		return res;
+	}
 }

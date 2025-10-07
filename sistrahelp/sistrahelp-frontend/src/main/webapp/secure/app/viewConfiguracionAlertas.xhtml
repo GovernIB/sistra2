@@ -185,6 +185,14 @@
           	}else{
           		document.getElementById("form:mnuEliminar").style.display='none';
           	}
+
+            if(document.getElementById("form:btnDuplicar")!=null){
+                document.getElementById("form:duplicar").style.display='block';
+            }else{
+                document.getElementById("form:duplicar").style.display='none';
+            }
+
+              return true;
           }
       </h:outputScript>
 
@@ -210,10 +218,19 @@
                         <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" oncomplete="setHeight()"/>
                     </p:commandButton>
                     <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConfiguracionAlertas.ayuda}" oncomplete="setHeight()"/>
+
+                        <p:commandButton id="btnDuplicar" styleClass="button"   process="@this" update="growl"  actionListener="#{viewConfiguracionAlertas.duplicarAlerta()}" style="display:none">
+                            <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogoClonar}" update="growl" oncomplete="setHeight()"/>
+                        </p:commandButton>
                     </h:panelGrid>
                 </p:column>
             </p:row>
         </p:panelGrid>
+
+
+
+
+
 
 
       <!-- Data table -->
@@ -244,9 +261,26 @@
           <p:column headerText="#{msg['viewConfiguracionAlertas.intervalo']}" style="width:12% !important;" styleClass="grid-center" sortBy="#{dt.intervaloEvaluacion}">
               <h:outputText value="#{dt.intervaloEvaluacion}"/>
           </p:column>
-			<p:column headerText="#{msg['viewConfiguracionAlertas.periodo']}" style="width:20% !important;" sortBy="#{dt.periodoEvaluacion}">
+			<p:column headerText="#{msg['viewConfiguracionAlertas.periodo']}" style="width:10% !important;" styleClass="grid-center" sortBy="#{dt.periodoEvaluacion}">
 			<h:outputText value="#{viewConfiguracionAlertas.parseSecs(dt.periodoEvaluacion)}"/>
           </p:column>
+          // add column for activo
+            <p:column headerText="#{msg['viewConfiguracionAlertas.header.activo']}" style="width:4% !important;" styleClass="grid-center" sortBy="#{dt.activo}">
+                <p:selectBooleanCheckbox value="#{dt.activo}" readonly="true" disabled="true"/>
+            </p:column>
+          // tipo
+            <p:column headerText="#{msg['viewConfiguracionAlertas.header.tipo']}" style="width:8% !important;" styleClass="grid-center" sortBy="#{dt.tipo}">
+                <h:outputText value="#{viewConfiguracionAlertas.labelTipo(dt.tipo)}"/>
+            </p:column>
+            //ambito
+            <p:column headerText="#{msg['viewConfiguracionAlertas.ambito']}" style="width:10% !important;"  sortBy="#{viewConfiguracionAlertas.labelAmbito(dt)}">
+                <h:outputText value="#{viewConfiguracionAlertas.labelAmbito(dt)}"/>
+            </p:column>
+            // lista emails
+
+            <p:column headerText="#{msg['viewConfiguracionAlertas.emails']}" style="width:22% !important;" sortBy="#{viewConfiguracionAlertas.labelEmails(dt)}">
+                <h:outputText value="#{viewConfiguracionAlertas.labelEmails(dt)}"/>
+            </p:column>
 
       </p:dataTable></p:outputPanel>
 
@@ -278,19 +312,21 @@
 	      <p:contextMenu for=":work">
              <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
              <p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
+
         </p:contextMenu>
         <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
         <p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
               <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
           </pe:clipboard>
 
-		<p:contextMenu for=":form:dataTable" id="contextWork">
+		<p:contextMenu for=":form:dataTable" id="contextWork" beforeShow="opcVista();">
 			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyD"  process="@this :form:auxCopiar" update="growl" />
 			<p:separator/>
-			<p:menuitem id="mnuProbarAlerta" value="#{msg['viewConfiguracionAlertas.probarAlerta']}" onclick="document.getElementById('form:btnProbarAlerta').click();" process="@this" style="display:none;"/>
+			<p:menuitem id="mnuProbarAlerta" value="#{msg['viewConfiguracionAlertas.probarAlerta']}" icon="fa fa-feed" onclick="document.getElementById('form:btnProbarAlerta').click();" process="@this" style="display:none;"/>
 	      	<p:menuitem id="mnuNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" style="display:none;"/>
 	      	<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this"  style="display:none;"/>
 	      	<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" style="display:none;"/>
+            <p:menuitem id="duplicar" icon="fa fa-copy" onclick="document.getElementById('form:btnDuplicar').click();" value="#{msg['botones.duplicarAlerta']}"  process="@this" style="display:none;"/>
 	    </p:contextMenu>
 	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar">
 			<p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>

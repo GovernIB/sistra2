@@ -275,7 +275,7 @@
       </h:outputScript>
 
 
-        <p:contextMenu widgetVar="mainCm" id="mainCm" beforeShow="clickEl();" for=":work">
+        <p:contextMenu widgetVar="mainCm" id="mainCm" beforeShow="clickEl(); opcTramites();" for=":work">
              <p:menuitem id="mnuCopy"  value="#{msg['botones.copiar']}" icon="fa fa-clipboard" process="@this :form:auxCopiar" update="growl" style="display: none" />
 			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy2"  process="@this :form:auxCopiar" update=":form:growl"  onclick="clickMnuCopy('mnuCopy'); return false;" />
 			 <p:separator style="display:flex;" styleClass="separadorTramite"/>
@@ -405,7 +405,7 @@
 			  <p:ajax event="rowUnselectCheckbox"  onstart="funcionUnselectArea(event);"  listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this" oncomplete="refrescarHeight();"/>
 			  <p:ajax event="toggleSelect" onstart="funcionSelectArea(event);" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this"/>
 			  <p:ajax event="rowDblselect" onstart="funcionSelectArea(event);" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this"/>
-			  <p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbarArea" oncomplete="opcAreas();"/>
+			  <p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbarArea" />
 
 
 			  <p:column selectionBox="true" style="width:16px;text-align:center"/>
@@ -428,7 +428,7 @@
             </div>
               </f:facet>
           </p:dataTable>
-           <p:contextMenu for="areas" id="cMenuAreas" widgetVar="cMenuAreasWV" beforeShow="return true;">
+           <p:contextMenu for="areas" id="cMenuAreas" widgetVar="cMenuAreasWV" beforeShow="opcAreas();return true;">
             	<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyAreas"  process="@this :form:auxCopiar" update=":form:growl" style="display: none" />
 			   <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyAreas2"  process="@this :form:auxCopiar" update=":form:growl"  onclick="clickMnuCopy('mnuCopyAreas'); return false;" />
             	<p:separator styleClass="separadorArea"/>
@@ -565,7 +565,7 @@
 			 while(elAux!=null &amp;&amp; elAux!=document &amp;&amp; !elAux.classList.contains( 'ui-datatable' )){
 				elAux = elAux.parentNode;
 			}
-			var nuevId = elAux.id.replace('dataTableVersiones','')
+			var nuevId = elAux.id.replace('dataTableVersiones','');
 
           	if(document.getElementById("form:btnNuevaVersion")!=null){
           		document.getElementById(nuevId+"mnuNuevaVersionVer").style.display='block';
@@ -798,7 +798,7 @@
 
 		  <!-- Necesario para actualizar en controlador la fila seleccionada -->
             	   <p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T'); expandirContraer();"/>
-                   <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectVersionTramite}" process="@this" update="@form:toolbarTramites" oncomplete="opcTramites(); deseleccionar('T');"/>
+                   <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectVersionTramite}" process="@this" update="@form:toolbarTramites" oncomplete=" deseleccionar('T');"/>
 
                    <!-- <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/> -->
                    <!-- <p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/> -->
@@ -851,7 +851,7 @@
 							  rowKey="#{tdVersiones.codigo}"
 				>
                     <p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
-                    <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectTramite}" process="@this" update="@form:toolbarTramites" oncomplete="deseleccionar('V'); opcVersiones(); eliminarDupl();"/>
+                    <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectTramite}" process="@this" update="@form:toolbarTramites" oncomplete="deseleccionar('V'); eliminarDupl();"/>
                     <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersionDblClick}"/>
 
                     <!-- Columnas -->
@@ -893,7 +893,7 @@
                       </p:column>
 
                 </p:dataTable>
-                 <p:contextMenu for="dataTableVersiones" id="cMenuVers" widgetVar="cMenuVers" class="contextMenuVersiones">
+                 <p:contextMenu   for="dataTableVersiones" id="cMenuVers" widgetVar="cMenuVers"  beforeShow="opcVersiones();" class="contextMenuVersiones">
 					<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyVers"  process="@this :form:auxCopiar" update=":form:growl" style="display: none" />
 					<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyVers2"  process="@this :form:auxCopiar" update=":form:growl"  onclick="clickMnuCopy('mnuCopyVers'); return false;" />
 					<p:separator styleClass="separador"/>

@@ -339,4 +339,8 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
            }
            return texto.toString();
      }
+
+	 public String getDescripcion(){
+		 return this.getIdComponente();
+	 }
 }

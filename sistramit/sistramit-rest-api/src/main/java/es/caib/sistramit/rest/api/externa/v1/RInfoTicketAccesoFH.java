@@ -12,6 +12,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RInfoTicketAccesoFH", description = "Datos para la obtención de ticket de acceso para FH")
 public class RInfoTicketAccesoFH {
 
+	/** Identificador actuación en FH. Si se informa, tras finalizar el trámite se invocará a componente FH para indicar que se ha realizado registro.*/
+	@ApiModelProperty(value = "Identificador actuación en FH", required = false)
+	private String idActuacionFH;
+
 	/** Funcionario habilitado. */
 	@ApiModelProperty(value = "Funcionario habilitado", required = true)
 	private RFuncionarioHabilitadoInfo funcionarioHabilitado;
@@ -58,5 +62,13 @@ public class RInfoTicketAccesoFH {
 
 	public void setTramiteFH(RTramiteFH tramiteFH) {
 		this.tramiteFH = tramiteFH;
+	}
+
+	public String getIdActuacionFH() {
+		return idActuacionFH;
+	}
+
+	public void setIdActuacionFH(String idActuacionFH) {
+		this.idActuacionFH = idActuacionFH;
 	}
 }

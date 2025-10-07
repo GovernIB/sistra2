@@ -3,26 +3,14 @@
  */
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
-
-import org.primefaces.PrimeFaces;
-import org.primefaces.event.SelectEvent;
-
-import es.caib.sistrages.core.api.model.Script;
-import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
-import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.*;
 import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
+import es.caib.sistrages.core.api.model.types.TypeNivelSeguridad;
+import es.caib.sistrages.core.api.model.types.TypeNormativa;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -32,6 +20,16 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
+import org.primefaces.event.SelectEvent;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @ManagedBean
 @ViewScoped
@@ -40,6 +38,9 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/** Tramite service. */
 	@Inject
 	private TramiteService tramiteService;
+
+	@Inject
+	private EntidadService entidadService;
 
 	/** Id elemento a tratar. */
 	private Long id;
@@ -84,6 +85,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	private String tipoTramite;
 
+	private boolean permiteSustancialCertificado;
+
 	/**
 	 * Inicialización.
 	 */
@@ -113,6 +116,9 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		tiposAutenticacionPER = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_PERMANENTE.toString());
 		tiposAutenticacionMOV = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_MOVIL.toString());
 		tipoTramite = tramiteVersion.getTipoTramite();
+
+		Entidad entidad = entidadService.loadEntidadByArea(tramiteVersion.getIdArea());
+		permiteSustancialCertificado = entidad.isNivelSustancialCertificado();
 	}
 
 	/**
@@ -201,10 +207,86 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 					}
 				}
 			}
+			// Se actualizan los checks de firma de form y anexos si normativa es Específica y No autenticado marcado
+			if (tramiteVersion.getNormativa() != null) {
+				if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString())) {
+					List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());
+					FormularioTramite formActualizado = null;
+					for (TramitePaso paso : pasos) {
+						// Actualizamos check de firma de formulario con orden 1
+						if (paso.getTipo().equals(TypePaso.RELLENAR)) {
+							TramitePasoRellenar pasoRellenar = (TramitePasoRellenar) paso;
+							if (!pasoRellenar.getFormulariosTramite().isEmpty()) {
+								for (FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
+									if(form.getOrden() == 1) {
+										form.setDebeFirmarse(true);
+										formActualizado = form;
+									}
+								}
+							}
+						}
+					}
+					if (formActualizado != null) {
+						tramiteService.updateFormularioTramite(formActualizado);
+					}
+				}
+
+				List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());
+
+				if(tramiteVersion.getNormativa().equals(TypeNormativa.ESPECIFICA.toString()) &&
+					tramiteVersion.isNoAutenticado()) {
+
+//					List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());
+					for (TramitePaso paso : pasos) {
+						// Actualizamos checks de firma de formularios
+						if (paso.getTipo().equals(TypePaso.RELLENAR)) {
+							TramitePasoRellenar pasoRellenar = (TramitePasoRellenar) paso;
+							if (!pasoRellenar.getFormulariosTramite().isEmpty()) {
+								for (FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
+									form.setDebeFirmarse(false);
+									tramiteService.updateFormularioTramite(form);
+								}
+							}
+							// TODO: Revisar actualizar los formularios en conjunto, se desvinculan del trámite al usar updateTramitePaso
+							//tramiteService.updateTramitePaso(pasoRellenar);
+						}
+
+						// Actualizamos checks de firma de anexos
+						if (paso.getTipo().equals(TypePaso.ANEXAR)) {
+							TramitePasoAnexar pasoAnexar = (TramitePasoAnexar) paso;
+							if (!pasoAnexar.getDocumentos().isEmpty()) {
+								for (Documento documento : pasoAnexar.getDocumentos()) {
+									documento.setDebeAnexarFirmado(false);
+									documento.setDebeFirmarDigitalmente(false);
+									documento.setDebeValidarFirmantes(false);
+								}
+								tramiteService.updateTramitePaso(pasoAnexar);
+							}
+
+						}
+					}
+				}
+			}
 			if (cambios) {
 				tramiteService.actualizarFechaTramiteVersion(tramiteVersion.getCodigo(),
 						UtilJSF.getSessionBean().getUserName(), "Modificación propiedades");
 			}
+
+			List<Integer> nivelesSinValidarFirma = TramiteVersion.nivelesSeguridad.values().stream().filter(n-> ! n.isConfigurableVerificarFirmantesAnexo()).map(n->n.getNivelSeguridad().getValor()).collect(Collectors.toList());
+
+			if( nivelesSinValidarFirma.contains(tramiteVersion.getNivelSeguridad()) ) {
+				List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());
+				pasos.stream().filter(p->p.getTipo().equals(TypePaso.ANEXAR)).forEach(p->{
+					TramitePasoAnexar pasoAnexar = (TramitePasoAnexar)p;
+					if (!pasoAnexar.getDocumentos().isEmpty()) {
+						for (Documento documento : pasoAnexar.getDocumentos()) {
+							documento.setDebeValidarFirmantes(false);
+						}
+						tramiteService.updateTramitePaso(pasoAnexar);
+					}
+				});
+			}
+
 			tramiteService.updateTramiteVersion(tramiteVersion);
 		}
 
@@ -616,6 +698,9 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		} else if (!tramiteVersion.isPersistenciaInfinita()) {
 			valMin = 1;
 		}
+		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString())){
+			tramiteVersion.setNoAutenticado(false);
+		}
 	}
 
 	public boolean isServicioActivado() {
@@ -634,6 +719,18 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	 */
 	public final void setValMin(int valMin) {
 		this.valMin = valMin;
+	}
+
+	public List<Integer> getNivelesSeguridad() {
+
+		List<Integer> niveles = new ArrayList<>();
+		for( TypeNivelSeguridad nivelSeguridad : TypeNivelSeguridad.values()){
+			if( nivelSeguridad != TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO || permiteSustancialCertificado) {
+				niveles.add(nivelSeguridad.getValor());
+			}
+		}
+
+		return niveles;
 	}
 
 }

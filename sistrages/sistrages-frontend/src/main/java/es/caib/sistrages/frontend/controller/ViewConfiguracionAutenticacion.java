@@ -319,6 +319,13 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 		}
 	}
 
+	public void cambiarArea(){
+		area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+
+		buscar();
+	}
+
+
 	/**
 	 * Retorno dialogo.
 	 *

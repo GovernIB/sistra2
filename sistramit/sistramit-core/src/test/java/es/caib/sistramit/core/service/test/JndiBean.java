@@ -6,6 +6,8 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 import org.apache.commons.dbcp.datasources.SharedPoolDataSource;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
+import java.sql.Connection;
+
 public class JndiBean {
 
     public static void doSetup() {
@@ -16,10 +18,13 @@ public class JndiBean {
             final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
 
             cpds.setDriver("org.h2.Driver");
-            cpds.setUrl(
-                    "jdbc:h2:mem:test;INIT=CREATE SCHEMA IF NOT EXISTS test;DB_CLOSE_DELAY=-1");
+            //cpds.setUrl("jdbc:h2:mem:test;INIT=CREATE SCHEMA IF NOT EXISTS test;DB_CLOSE_DELAY=-1;MODE=Oracle");
+            cpds.setUrl("jdbc:h2:mem:test;INIT=CREATE SCHEMA IF NOT EXISTS test;DB_CLOSE_DELAY=-1;MODE=Oracle;LOCK_MODE=3;MULTI_THREADED=TRUE");
+
+
             cpds.setUser("");
             cpds.setPassword("");
+            cpds.setAccessToUnderlyingConnectionAllowed(true);
 
             final SharedPoolDataSource dataSource = new SharedPoolDataSource();
             dataSource.setConnectionPoolDataSource(cpds);
@@ -30,8 +35,9 @@ public class JndiBean {
             builder.bind("java:/es.caib.sistramit.db", dataSource);
             builder.activate();
 
-        } catch (NamingException | ClassNotFoundException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
+            throw new RuntimeException("Error en JndiBean", ex);
         }
     }
 }

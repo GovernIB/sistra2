@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Mapeo tabla STT_TRAFIN.
+ * Mapeo tabla STT_TRAETG.
  */
 @Entity
 @Table(name = "STT_TRAETG")
@@ -282,4 +282,5 @@ public final class HTramiteEntrega implements IModelApi {
     public void setFechaBloqueo(Date fechaBloqueo) {
         this.fechaBloqueo = fechaBloqueo;
     }
+
 }

@@ -18,5 +18,9 @@ public enum TypeModoAcceso {
 	/**
 	 * Consulta.
 	 */
-	CONSULTA;
+	CONSULTA,
+	/**
+	 * Duplicar.
+	 */
+	DUPLICAR
 }

@@ -11,8 +11,7 @@
   "dominios": [],
   "propiedades": {
     "autenticado": true,
-    "nivelQAA": 2,
-    "metodosAutenticacion": "CER;PIN;PER;MOV",
+    "nivelSeguridadAutenticado": 1,
     "noAutenticado": true,
     "idiomas": [
       "es",

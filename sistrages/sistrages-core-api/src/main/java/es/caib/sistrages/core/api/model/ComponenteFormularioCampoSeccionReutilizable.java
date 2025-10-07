@@ -70,6 +70,11 @@ public final class ComponenteFormularioCampoSeccionReutilizable extends Componen
 	}
 
 	@Override
+	public String getDescripcion() {
+		return this.getIdentificadorSeccionReutilizable();
+	}
+
+	@Override
 	public String toString() {
         return toString("","ca");
 	}

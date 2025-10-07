@@ -18,6 +18,12 @@
 		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
 		<p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeEvento" var="TypeEvento"/>
 
+		<style>
+			.rotar-icono .fa-sliders {
+				transform: rotate(90deg);
+			}
+		</style>
+
 		<h:form id="form" style="height:91%;">
 
 			<script type="text/javascript">
@@ -165,6 +171,16 @@
 			 }
 
 			</h:outputScript>
+            <h:outputScript>
+                $(function() {
+                    $('#form\\:panelFiltro input').on('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            $('#form\\:btnBuscar').click();
+                        }
+                    });
+                });
+            </h:outputScript>
 			<p:contextMenu for=":work">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
@@ -211,7 +227,7 @@
 	        		<p:calendar id="filtroFechaFin" value="#{viewEventosPlataforma.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 	        	</p:column>
 
-	        	<p:column columns="2" styleClass="noPadding columna-filtros" columnClasses="w31,w69" style="border-color:#f0f0f0" >
+	        	<p:column columns="3" styleClass="noPadding columna-filtros" columnClasses="w31,w69" style="border-color:#f0f0f0" >
 	        		<p:outputLabel for="filtroEvento" value="#{msg['viewEventosPlataforma.filtroEvento']}:" styleClass="padding-right-4"/>
 
 					<p:selectOneMenu id="filtroEvento" value="#{viewEventosPlataforma.filtros.evento}">
@@ -219,8 +235,15 @@
 					 	<f:selectItem itemLabel="#{msg['typeEvento.ERROR']}" itemValue="#{TypeEvento.ERROR}" />
 					 	<f:selectItem itemLabel="#{msg['typeEvento.TR_PUR']}" itemValue="#{TypeEvento.PROCESO_PURGA}" />
 					 	<f:selectItem itemLabel="#{msg['typeEvento.TR_VAL']}" itemValue="#{TypeEvento.VALORACION_TRAMITE}" />
+						<p:ajax event="change" process="@this" update="@this btnDialogErrores"/>
 					</p:selectOneMenu>
 
+					<p:commandButton id="btnDialogErrores" styleClass="rotar-icono" icon="fa fa-sliders"
+									 actionListener="#{viewEventosPlataforma.abrirDialogErrores}"
+									 process="@this" update="growl"
+									 disabled="#{viewEventosPlataforma.filtros.evento ne 'ERROR'}" >
+						<p:ajax event="dialogReturn" listener="#{viewEventosPlataforma.onDialogErroresReturn}" process="@this" update="growl"/>
+					</p:commandButton>
 	        	</p:column>
 
 				<p:column  styleClass=" noPadding columna-filtros-botones ">

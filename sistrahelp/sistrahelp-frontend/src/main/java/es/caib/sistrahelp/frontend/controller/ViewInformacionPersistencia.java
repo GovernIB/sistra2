@@ -69,6 +69,8 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		filtros = new FiltroPersistenciaAuditoria(convierteListaAreas());
+
+		filtros.setMostrarCaducados(true);
 	}
 
 	/**

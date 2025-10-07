@@ -53,6 +53,9 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	private String rolAcceso;
 
+	private List<String> tiposErrores;
+	private String textoTraza;
+
 	public FiltroEventoAuditoria() {
 		super();
 	}
@@ -276,5 +279,21 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public void setTiposEventos(List<TypeEvento> tiposEventos) {
 		this.tiposEventos = tiposEventos;
+	}
+
+	public List<String> getTiposErrores() {
+		return tiposErrores;
+	}
+
+	public void setTiposErrores(List<String> tiposErrores) {
+		this.tiposErrores = tiposErrores;
+	}
+
+	public String getTextoTraza() {
+		return textoTraza;
+	}
+
+	public void setTextoTraza(String textoTraza) {
+		this.textoTraza = textoTraza;
 	}
 }

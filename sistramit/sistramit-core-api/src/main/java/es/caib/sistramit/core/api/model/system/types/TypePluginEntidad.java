@@ -23,7 +23,9 @@ public enum TypePluginEntidad {
 	/** Plugin de validación de firma (Entidad). */
 	VALIDACION_FIRMA_SERVIDOR("S"),
 	/** Plugin de digitalización (Entidad). */
-	DIGITALIZACION("X");
+	DIGITALIZACION("X"),
+	/** Plugin funcionario habilitado (Entidad). */
+	FUNCIONARIO_HABILITADO("H");
 
 	/**
 	 * Valor como string.

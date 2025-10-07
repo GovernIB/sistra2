@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.service.EventoService;
+import es.caib.sistrahelp.frontend.model.NavegacionEventos;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
@@ -54,7 +55,7 @@ public class ViewAuditoriaTramitesParams extends ViewControllerBase {
 	/**
 	 * lista datos.
 	 */
-	private LazyDataModel<EventoAuditoriaTramitacion> listaDatos;
+	private EventoAuditoriaTramitacionLazyDataModel listaDatos;
 
 	/**
 	 * dato seleccionado.
@@ -170,6 +171,15 @@ public class ViewAuditoriaTramitesParams extends ViewControllerBase {
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO, datoSeleccionado);
 
+		NavegacionEventos navegacionEventos = new NavegacionEventos();
+
+		navegacionEventos.setEventos(listaDatos.getWrappedData());
+		navegacionEventos.setPageSize(listaDatos.getPageSize());
+		navegacionEventos.setFirst(listaDatos.getFirst());
+		navegacionEventos.setTotal(listaDatos.getRowCount());
+
+		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO_NAVEGACION, navegacionEventos);
+
 		// Muestra dialogo
 		UtilJSF.openDialog(DialogAuditoriaTramites.class, TypeModoAcceso.CONSULTA, null, true, 950, 750);
 	}
@@ -237,7 +247,7 @@ public class ViewAuditoriaTramitesParams extends ViewControllerBase {
 	 *
 	 * @return el valor de listaDatos
 	 */
-	public LazyDataModel<EventoAuditoriaTramitacion> getListaDatos() {
+	public EventoAuditoriaTramitacionLazyDataModel getListaDatos() {
 		return listaDatos;
 	}
 
@@ -246,7 +256,7 @@ public class ViewAuditoriaTramitesParams extends ViewControllerBase {
 	 *
 	 * @param listaDatos el nuevo valor de listaDatos
 	 */
-	public void setListaDatos(final LazyDataModel<EventoAuditoriaTramitacion> listaDatos) {
+	public void setListaDatos(final EventoAuditoriaTramitacionLazyDataModel listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 

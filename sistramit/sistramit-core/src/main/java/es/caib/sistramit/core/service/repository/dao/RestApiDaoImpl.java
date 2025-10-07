@@ -365,7 +365,10 @@ public final class RestApiDaoImpl implements RestApiDao {
 		final Join<HPaso, HDocumento> tableD = tableP.join("documentos", JoinType.LEFT);
 
 		Predicate predicate = builder.equal(tableT.get("sesionTramitacion"), tableS);
-		predicate = builder.and(predicate, builder.equal(tableP.get("tramitePersistencia"), tableT));
+//		predicate = builder.and(predicate, builder.equal(tableP.get("tramitePersistencia"), tableT));
+
+		predicate = builder.and(predicate, builder.isNotNull(tableP.get("tramitePersistencia") ) );
+
 		// predicate = builder.and(predicate, builder.equal(tableD.get("paso"),
 		// tableP));
 
@@ -810,6 +813,14 @@ public final class RestApiDaoImpl implements RestApiDao {
 					builder.like(tableT.get("idProcedimientoCP"), "%" + pFiltroBusqueda.getIdProcedimientoCP() + "%"));
 		}
 
+		if(pFiltroBusqueda.getTiposErrores() != null) {
+			predicate = builder.and(predicate, tableE.get("codigoError").in(pFiltroBusqueda.getTiposErrores()));
+		}
+
+		if(pFiltroBusqueda.getTextoTraza() != null) {
+			predicate = builder.and(predicate, builder.like(tableE.get("trazaError"), "%" + pFiltroBusqueda.getTextoTraza() + "%"));
+		}
+
 		query.where(predicate);
 
 		if (pCount) {
@@ -980,6 +991,14 @@ public final class RestApiDaoImpl implements RestApiDao {
 				).collect(Collectors.toList());
 				predicate = builder.and(predicate, builder.in( tableE.get("tipo")).value(lTiposEventos) );
 			}
+		}
+
+		if(pFiltroBusqueda.getTiposErrores() != null) {
+			predicate = builder.and(predicate, tableE.get("codigoError").in(pFiltroBusqueda.getTiposErrores()));
+		}
+
+		if(pFiltroBusqueda.getTextoTraza() != null) {
+			predicate = builder.and(predicate, builder.like(tableE.get("trazaError"), "%" + pFiltroBusqueda.getTextoTraza() + "%"));
 		}
 
 
@@ -2557,5 +2576,21 @@ public final class RestApiDaoImpl implements RestApiDao {
 		hsoporte.setEstado(estado.toString());
 		hsoporte.setComentarios(comentarios);
 		entityManager.merge(hsoporte);
+	}
+
+	@Override
+	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
+		String sql = "select distinct(e.LOG_ERRCOD) from STT_LOGINT e where e.LOG_EVETIP = 'ERROR' ";
+		if (!eventoPlataforma) {
+		    sql += "and e.LOG_CODSES is not null ";
+		} else {
+		    sql += "and e.LOG_CODSES is null ";
+		}
+		sql += "order by e.LOG_ERRCOD ASC";
+
+		Query query = entityManager.createNativeQuery(sql);
+		List<String> lista = query.getResultList();
+
+		return lista;
 	}
 }

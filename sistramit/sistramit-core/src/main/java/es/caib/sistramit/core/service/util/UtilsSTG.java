@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -815,5 +817,103 @@ public final class UtilsSTG {
 						"S'ha indicat un tipus de passa que no té formularis: " + paso.getTipo());
 		}
 		return res;
+	}
+
+	/**
+	 * Obtiene los métodos de autenticación según el nivel de seguridad autenticado.
+	 *
+	 * @param nivelSeguridadAutenticado Nivel de seguridad autenticado
+	 * @return Lista de métodos de autenticación
+	 */
+	public static List<TypeMetodoAutenticacion> obtenerMetodosAutenticacionNivelSeguridadAutenticado(Integer nivelSeguridadAutenticado) {
+		final List<TypeMetodoAutenticacion> res = new ArrayList<>();
+		if (nivelSeguridadAutenticado != null) {
+			switch (nivelSeguridadAutenticado) {
+				case 1: // BAJO
+					res.add(TypeMetodoAutenticacion.CLAVE_MOVIL);
+					res.add(TypeMetodoAutenticacion.CLAVE_PERMANENTE);
+					res.add(TypeMetodoAutenticacion.CLAVE_CERTIFICADO);
+					break;
+				case 2:	 // MEDIO
+					res.add(TypeMetodoAutenticacion.CLAVE_MOVIL);
+					res.add(TypeMetodoAutenticacion.CLAVE_PERMANENTE);
+					res.add(TypeMetodoAutenticacion.CLAVE_CERTIFICADO);
+					break;
+				case 3: // SUSTANCIAL CON CERTIFICADO
+					res.add(TypeMetodoAutenticacion.CLAVE_PERMANENTE);
+					res.add(TypeMetodoAutenticacion.CLAVE_CERTIFICADO);
+					break;
+				case 4: // ALTO
+					res.add(TypeMetodoAutenticacion.CLAVE_CERTIFICADO);
+					break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene los métodos de autenticación según el nivel de seguridad autenticado.
+	 *
+	 * @param nivelSeguridadAutenticado Nivel de seguridad autenticado
+	 * @return Lista de métodos de autenticación
+	 */
+	public static TypeQAA obtenerQAANivelSeguridadAutenticado(Integer nivelSeguridadAutenticado) {
+		TypeQAA res = null;
+		if (nivelSeguridadAutenticado != null) {
+			switch (nivelSeguridadAutenticado) {
+				case 1: // BAJO
+					res = TypeQAA.BAJO;
+					break;
+				case 2:	 // MEDIO
+					res = TypeQAA.MEDIO;
+					break;
+				case 3: // SUSTANCIAL CON CERTIFICADO
+					res = TypeQAA.MEDIO;
+					break;
+				case 4: // ALTO
+					res = TypeQAA.ALTO;
+					break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Convierte tipo nivel seguridad.
+	 *
+	 * @param nivelSeguridadAutenticado Nivel de seguridad trámite para autenticado
+	 * @return Tipo nivel seguridad
+	 */
+	public static TypeNivelSeguridad convertNivelSeguridad(Integer nivelSeguridadAutenticado) {
+		TypeNivelSeguridad res = null;
+		if (nivelSeguridadAutenticado != null) {
+			switch (nivelSeguridadAutenticado) {
+				case 1: // BAJO
+					res = TypeNivelSeguridad.BAJO;
+					break;
+				case 2:	 // MEDIO
+					res = TypeNivelSeguridad.SUSTANCIAL;
+					break;
+				case 3: // SUSTANCIAL CON CERTIFICADO
+					res = TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO;
+					break;
+				case 4: // ALTO
+					res = TypeNivelSeguridad.ALTO;
+					break;
+				default:
+					throw new TipoNoControladoException("Nivell de seguretat no controlat: " + nivelSeguridadAutenticado);
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene el nivel de seguridad autenticado del trámite.
+	 * @param pDefinicionTramite Definición trámite
+	 * @return Nivel de seguridad autenticado
+	 */
+	public static TypeNivelSeguridad obtenerNivelSeguridadAutenticado(DefinicionTramiteSTG pDefinicionTramite) {
+		TypeNivelSeguridad nivelSeguridadAutenticado = UtilsSTG.convertNivelSeguridad(pDefinicionTramite.getDefinicionVersion().getPropiedades().getNivelSeguridadAutenticado());
+		return nivelSeguridadAutenticado;
 	}
 }

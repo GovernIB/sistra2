@@ -1,12 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.List;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
-import org.springframework.util.StringUtils;
-
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
@@ -16,10 +9,16 @@ import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import org.springframework.util.StringUtils;
 
-@ManagedBean
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import java.io.Serializable;
+import java.util.List;
+
+@Named
 @ViewScoped
-public class DialogTraduccion extends DialogControllerBase {
+public class DialogTraduccion  extends DialogControllerBase implements Serializable{
 
 	/** Texto Catalan. **/
 	private String textoCa;

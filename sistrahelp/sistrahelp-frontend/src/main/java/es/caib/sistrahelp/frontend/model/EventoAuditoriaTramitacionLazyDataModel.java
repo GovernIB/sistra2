@@ -31,6 +31,8 @@ public class EventoAuditoriaTramitacionLazyDataModel extends LazyDataModel<Event
 
 	private List<EventoAuditoriaTramitacion> lista;
 
+	private int first;
+
 	public int count(Map<String, FilterMeta> filterBy) {
 		return helpDeskService.countAuditoriaEvento(filtros).intValue();
 	}
@@ -47,6 +49,8 @@ public class EventoAuditoriaTramitacionLazyDataModel extends LazyDataModel<Event
 			filtros.setSortField(sortMeta.getField());
 		}
 		setLista(helpDeskService.obtenerAuditoriaEvento(filtros, new FiltroPaginacion(first, pageSize)));
+
+		setFirst(first);
 
 		return getLista();
 
@@ -73,5 +77,13 @@ public class EventoAuditoriaTramitacionLazyDataModel extends LazyDataModel<Event
 
 	public void setLista(final List<EventoAuditoriaTramitacion> lista) {
 		this.lista = lista;
+	}
+
+	public int getFirst() {
+		return first;
+	}
+
+	public void setFirst(int first) {
+		this.first = first;
 	}
 }

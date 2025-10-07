@@ -99,6 +99,20 @@ public class AlertaServiceImpl implements AlertaService {
 
 	@Override
 	@NegocioInterceptor
+	public Alerta duplicarAlerta(Alerta alerta) {
+		Alerta duplicada = alerta.clone();
+		duplicada.setActivo(false);
+		duplicada.setNombre(" ");
+		duplicada.setCodigo(null);
+
+		Long codigo = alertaDao.add(duplicada);
+		duplicada.setCodigo(codigo);
+
+		return duplicada;
+	}
+
+	@Override
+	@NegocioInterceptor
 	public Alerta loadAlertaByNombre(String nombre) {
 		return alertaDao.getAlertaByNombre(nombre);
 	}

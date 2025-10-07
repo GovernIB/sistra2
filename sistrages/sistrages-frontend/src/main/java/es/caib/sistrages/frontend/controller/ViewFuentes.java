@@ -181,6 +181,12 @@ public class ViewFuentes extends ViewControllerBase {
 		}
 	}
 
+	public void cambiarArea(){
+		area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+
+		buscar(filtro);
+	}
+
 	/**
 	 * Abre dialogo para nuevo dato.
 	 */

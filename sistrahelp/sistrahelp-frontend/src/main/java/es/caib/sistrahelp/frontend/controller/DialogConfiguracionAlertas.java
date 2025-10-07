@@ -12,6 +12,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import es.caib.sistrahelp.core.api.model.types.TypeIdioma;
+import es.caib.sistrahelp.core.api.model.types.TypeModoEvaluacionAlerta;
 import es.caib.sistrahelp.core.api.service.EventoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,6 +128,12 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	private Integer version;
 
 	private boolean checkActivo;
+
+	private String idioma;
+
+	private Integer modoEvaluacion;
+
+	private List<String> idiomas;
 
 	@Inject
 	private AlertaService aService;
@@ -304,6 +312,14 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 						e.printStackTrace();
 					}
 				}
+
+				if(TypeModoAcceso.DUPLICAR.equals(modo)) {
+					data.setCodigo(null);
+//					data.setNombre(data.getNombre() + " " + UtilJSF.getLiteral("viewConfiguracionAlertas.copia"));
+					data.setNombre("");
+					data.setActivo(false);
+				}
+
 			}
 		}
 		if (!isResumenDiario()) {
@@ -328,6 +344,17 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		clickBotonAnyadir = false;
 		modoAnyadirDisp = true;
 		indexDisp = -1;
+
+		idiomas = new ArrayList<>();
+		idiomas.add(TypeIdioma.CASTELLANO.toString());
+		idiomas.add(TypeIdioma.CATALAN.toString());
+
+		idioma = data.getIdioma();
+
+		if(data.getModoEvaluacion() != null) {
+			modoEvaluacion = data.getModoEvaluacion().getCodigo();
+		}
+
 	}
 
 	public void valoresArea() {
@@ -638,7 +665,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		String eventosStr = "";
 		String condicion = "";
 
-		if (disparadorSeleccionado.getOpLogicoAND_OR().equals("null")) {
+		if ("null".equals(disparadorSeleccionado.getOpLogicoAND_OR())) {
 			disparadorSeleccionado.setOpLogicoAND_OR("OR");
 		}
 
@@ -1152,6 +1179,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
+		case DUPLICAR:
 			List<String> eventos = new ArrayList<String>();
 			for (DisparadorAlerta dA : disparadores) {
 				eventos.add(dA.getId() + ":" + dA.getGrupo() + ":" + dA.getOpLogicoAND_OR() + ":" + dA.isOpLogicoNOT() + ":" + dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias());
@@ -1162,6 +1190,9 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			data.setTipo(tipo);
 			data.setIdEntidad(UtilJSF.getSessionBean().getEntidad().getCodigoDIR3());
 			data.setActivo(checkActivo);
+
+			data.setIdioma(idioma);
+
 			if (!isResumenDiario()) {
 				data.setFecha(new Date());
 				switch(tipo) {
@@ -1223,10 +1254,14 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				String strDateHasta = dateFormat.format(fHasta);
 				data.setIntervaloEvaluacion(strDateDesd + "-" + strDateHasta);
 				data.setPeriodoEvaluacion((int) ((periodo.getTime() - f0.getTime()) / 1000));
+				TypeModoEvaluacionAlerta modoEvaluacionAlerta = modoEvaluacion != null? TypeModoEvaluacionAlerta.fromCodigo(modoEvaluacion) : null;
+				data.setModoEvaluacion(modoEvaluacionAlerta);
+
 			} else {
 				DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				data.setIntervaloEvaluacion(null);
 				data.setPeriodoEvaluacion(null);
+				data.setModoEvaluacion(null);
 				data.setTipo("E");
 				List<String> lisAreasAux = new ArrayList<String>();
 				for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
@@ -1237,6 +1272,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				data.setTramite(null);
 				data.setVersion(null);
 				data.setHoraResumen(dateFormat.format(horaEnvioRD));
+
 			}
 			Long codigo = alertaService.addAlerta(data);
 			if (codigo != null) {
@@ -1257,6 +1293,8 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			data.setTipo(tipo);
 			data.setIdEntidad(UtilJSF.getSessionBean().getEntidad().getCodigoDIR3());
 			data.setActivo(checkActivo);
+
+			data.setIdioma(idioma);
 
 			if (!isResumenDiario()) {
 				switch(tipo) {
@@ -1316,10 +1354,14 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				String strDateHasta = dateFormat.format(fHasta);
 				data.setIntervaloEvaluacion(strDateDesd + "-" + strDateHasta);
 				data.setPeriodoEvaluacion((int) ((periodo.getTime() - f0.getTime()) / 1000));
+				TypeModoEvaluacionAlerta modoEvaluacionAlerta = modoEvaluacion != null? TypeModoEvaluacionAlerta.fromCodigo(modoEvaluacion) : null;
+				data.setModoEvaluacion(modoEvaluacionAlerta);
+
 			} else {
 				DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				data.setIntervaloEvaluacion(null);
 				data.setPeriodoEvaluacion(null);
+				data.setModoEvaluacion(null);
 				data.setTipo("E");
 				List<String> lisAreasAux = new ArrayList<String>();
 				for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
@@ -1910,4 +1952,27 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		this.horaEnvioRD = horaEnvioRD;
 	}
 
+	public String getIdioma() {
+		return idioma;
+	}
+
+	public void setIdioma(String idioma) {
+		this.idioma = idioma;
+	}
+
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	public void setIdiomas(List<String> idiomas) {
+		this.idiomas = idiomas;
+	}
+
+	public Integer getModoEvaluacion() {
+		return modoEvaluacion;
+	}
+
+	public void setModoEvaluacion(Integer modoEvaluacion) {
+		this.modoEvaluacion = modoEvaluacion;
+	}
 }

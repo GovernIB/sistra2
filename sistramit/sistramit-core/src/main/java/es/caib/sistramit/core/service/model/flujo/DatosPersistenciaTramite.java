@@ -8,8 +8,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 
-import javax.persistence.Column;
-
 /**
  * Datos almacenados en base de datos para un trámite.
  *
@@ -34,6 +32,8 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Descripción trámite.
 	 */
 	private String descripcionTramite;
+	/** Id entidad. */
+	private String idEntidad;
 	/**
 	 * Codigo de áreas.
 	 */
@@ -157,6 +157,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 
 	/** Funcionario habilitado: Apellido 2. */
 	private String funcionarioHabilitadoApellido2;
+
+	/** Funcionario habilitado: Id actuación en FH. */
+	private String funcionarioHabilitadoIdActuacion;
 
 	/**
 	 * Método de acceso a idSesionTramitacion.
@@ -843,4 +846,37 @@ public final class DatosPersistenciaTramite implements Serializable {
 		this.funcionarioHabilitadoUsername = funcionarioHabilitadoUsername;
 	}
 
+	/**
+	 * Funcionario habilitado: Id actuación en FH.
+	 *
+	 * @return the idActuacionFH
+	 */
+	public String getFuncionarioHabilitadoIdActuacion() {
+		return funcionarioHabilitadoIdActuacion;
+	}
+
+	/**
+	 * Funcionario habilitado: Id actuación en FH.
+	 *
+	 * @param funcionarioHabilitadoIdActuacion the idActuacionFH to set
+	 */
+	public void setFuncionarioHabilitadoIdActuacion(String funcionarioHabilitadoIdActuacion) {
+		this.funcionarioHabilitadoIdActuacion = funcionarioHabilitadoIdActuacion;
+	}
+
+	/**
+	 * Devuelve el idEntidad.
+	 * @return idEntidad
+	 */
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * Establece el idEntidad.
+	 * @param idEntidad el nuevo idEntidad
+	 */
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
 }
