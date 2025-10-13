@@ -68,10 +68,14 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ManagedBean
 @ViewScoped
 public class DialogScript extends DialogControllerBase {
+
+	private static final Logger LOG = LoggerFactory.getLogger(DialogScript.class);
 
 	private static final long serialVersionUID = 20111020L;
 
@@ -141,7 +145,8 @@ public class DialogScript extends DialogControllerBase {
 	private String tipoDisenyo;
 	/** booleano que indica si es tipo form y tiene sr **/
 	private boolean tieneSR = false;
-
+	/** Variable que indica si tiene que mostrar el CodeMirror **/
+	private String sinCM;
 	/** Visible formulario. **/
 	private boolean visibleFormularios = true;
 	/** Visible herramientas. **/
@@ -528,7 +533,7 @@ public class DialogScript extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
-
+		LOG.error("DialogScript.Aceptar.INI");
 		if(verificarExtensionesAnexos()) {
 			return;
 		}
@@ -593,6 +598,8 @@ public class DialogScript extends DialogControllerBase {
 		} else {
 			result.setResult(this.data);
 		}
+		LOG.error("DialogScript.Aceptar.data.codigo:" + this.data.getCodigo());
+		LOG.error("DialogScript.Aceptar.data.contenido:" + this.data.getContenido());
 		UtilJSF.closeDialog(result);
 	}
 
@@ -1797,5 +1804,13 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setSb(SessionBean sb) {
 		this.sb = sb;
+	}
+
+	public String getSinCM() {
+		return sinCM;
+	}
+
+	public void setSinCM(String sinCM) {
+		this.sinCM = sinCM;
 	}
 }

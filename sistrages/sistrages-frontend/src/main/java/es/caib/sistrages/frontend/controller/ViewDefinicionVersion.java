@@ -67,7 +67,8 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Mantenimiento de definici&oacute;n de versi&oacute;n de tr&aacute;mites.
  *
@@ -77,6 +78,8 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ManagedBean
 @ViewScoped
 public class ViewDefinicionVersion extends ViewControllerBase {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ViewDefinicionVersion.class);
 
 	/** Service. */
 	@Inject
@@ -212,6 +215,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private boolean requiereFirma;
 
 	private boolean mostrarConvertirPDF;
+
+	private String sinCM;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -754,6 +759,17 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
+		LOG.error("Entra a viewDefinicionVersion.editarPropiedades");
+		// Útil si entras a la vista sin f:viewParam
+		Map<String, String> paramViewParam = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap();
+		if (paramViewParam != null && paramViewParam.get("sinCM") != null) {
+			LOG.error("sinCM:" + paramViewParam.get("sinCM"));
+			params.put("sinCM", params.get("sinCM"));// se pasa el parámetro sinCM
+		} else if (sinCM != null) {
+			LOG.error("sinCM2:" + sinCM);
+			params.put("sinCM", sinCM);// se pasa el parámetro sinCM
+		}
 		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1100, 680);
 	}
 
@@ -2632,5 +2648,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public void setMostrarConvertirPDF(boolean mostrarConvertirPDF) {
 		this.mostrarConvertirPDF = mostrarConvertirPDF;
+	}
+
+	public String getSinCM() {
+		return sinCM;
+	}
+
+	public void setSinCM(String sinCM) {
+		this.sinCM = sinCM;
 	}
 }

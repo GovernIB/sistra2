@@ -59,7 +59,10 @@ public enum TypePlugin {
 	 * Plugin de digitalización
 	 */
 	DIGITALIZACION("X"),
-	;
+	/**
+	 * Plugin de funcionario habilitado
+	 */
+	FUNCIONARIO_HABILITADO("H");
 
 	/** Valor. **/
 	private String valor;

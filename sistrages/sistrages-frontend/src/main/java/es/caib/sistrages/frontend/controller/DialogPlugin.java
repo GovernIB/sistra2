@@ -103,6 +103,7 @@ public class DialogPlugin extends DialogControllerBase {
 			tipos.add(TypePlugin.VALIDACION_FIRMA_SERVIDOR);
 			tipos.add(TypePlugin.ENVIO_REMOTO);
 			tipos.add(TypePlugin.DIGITALIZACION);
+			tipos.add(TypePlugin.FUNCIONARIO_HABILITADO);
 			// Permite plugins multiinstancia (pagos)
 			break;
 		default:

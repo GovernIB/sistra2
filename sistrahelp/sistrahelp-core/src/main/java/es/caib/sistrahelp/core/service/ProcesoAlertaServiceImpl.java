@@ -343,6 +343,24 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			params.put("expresionAlerta", expresionCorreoHistorial);
 			params.put("area", al.getListaAreas().get(0).split("\\.")[0]);
 			params.put("area2", sufArea != null ? sufArea : "");
+			if( TypeIdioma.CATALAN.toString().equals(al.getIdioma())) {
+
+				if (TypeModoEvaluacionAlerta.ACUMULADO.equals(al.getModoEvaluacion())) {
+					params.put("periodo", "el dia d'avui");
+				} else if (TypeModoEvaluacionAlerta.POR_INTERVALO.equals(al.getModoEvaluacion())) {
+					params.put("periodo", "els &uacute;ltims " + al.getPeriodoEvaluacion()/60 + " minutos del dia d'avui");
+
+				}
+			}else{
+				if (TypeModoEvaluacionAlerta.ACUMULADO.equals(al.getModoEvaluacion())) {
+					params.put("periodo", "el d&iacute;a de hoy");
+				} else if (TypeModoEvaluacionAlerta.POR_INTERVALO.equals(al.getModoEvaluacion())) {
+					params.put("periodo", "los &uacute;ltimos " + al.getPeriodoEvaluacion()/60 + " minutos  del d&iacute;a de hoy");
+
+				}
+			}
+
+
 
 
 
@@ -394,7 +412,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				"                  Este mensaje ha sido generado por el sistema de alertas de SISTRAHELP    " +
 				"          </h1><h2>La expresi&oacute;n: \"${expresionAlerta}\" de la alerta:     " +
 				"         \"${nombre2}\" (configurada por la entidad: ${area}) se ha evaluado como cierta.    " +
-				"           En esta expresi&oacute;n aparece entre corchetes el n&uacute;mero de veces que se ha producido el acontecimiento correspondiente durante el d&iacute;a de hoy.    </h2>" +
+				"           En esta expresi&oacute;n aparece entre corchetes el n&uacute;mero de veces que se ha producido el acontecimiento correspondiente durante ${periodo}.    </h2>" +
 				"              <!-- /continguts -->                        </div>    " +
 				"            <p class=\"auto\">MUY IMPORTANTE: Este correo se ha generado de forma autom&aacute;tica. Por favor no se tiene que responder a este correo.</p>            " +
 				"                    </div>          <!-- /contenidor -->                </body>            " +
@@ -436,7 +454,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				"                  Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP       " +
 				"          </h1><h2>L&#39;expressi&#243;: \"${expresionAlerta}\" de l&#39;Alerta:        " +
 				"          \"${nombre2}\" (configurada per l&#39;entitat: ${area}${area2}) s&#39;ha avaluat com a certa.       " +
-				"           &nbsp;En aquesta expressi&oacute; apareixen entre claud&agrave;tors el nombre de vegades que s'ha produ&iuml;t l'esdeveniment corresponent durant el dia d'avui.      </h2> " +
+				"           &nbsp;En aquesta expressi&oacute; apareixen entre claud&agrave;tors el nombre de vegades que s'ha produ&iuml;t l'esdeveniment corresponent durant ${periodo}.      </h2> " +
 				"              <!-- /continguts -->                        </div>    " +
 				"            <p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>               " +
 				"                    </div>          <!-- /contenidor -->                </body>            " +

@@ -624,7 +624,6 @@ public class UtilsFormularioInterno {
 	 */
 	public static ValorCampo obtenerValorCampo(final String identificador, final XmlFormulario xml) {
 		ValorCampo res = null;
-
 		// Obtiene valor campo
 		if (xml.getValores() != null && identificador != null) {
 			for (final ValorCampo valor : xml.getValores()) {

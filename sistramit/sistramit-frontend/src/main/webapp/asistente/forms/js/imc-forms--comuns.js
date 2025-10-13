@@ -26,7 +26,7 @@ $.fn.title = function(options) {
 				title_H = title_elm.outerHeight(),
 				title_W = title_elm.outerWidth(),
 				title_Padding = parseInt(title_elm.find("p").css("paddingLeft"), 10);
-
+				
 			if (settings.posicio === "dreta") {
 				element_L = element_L + element_W - 15;
 			}
@@ -89,7 +89,7 @@ $.fn.dataCompletar = function(options) {
 				dataMes = parseInt(data[1], 10),
 				dataAnyo = parseInt(data[2], 10),
 				data_error = false;
-
+			
 			if (dataAnyo == 0) {
 				data_error = true;
 			}
@@ -155,7 +155,7 @@ $.fn.toEm = function(options) {
 	}, options);
 	var elmValor = parseInt(this[0],10);
 	var capaTest = $('<div id="imc-toEm" style="display: none; font-size: 1.2em; font-family: arial, helvetica; margin: 0; padding:0; height: auto; line-height: 1; border:0;"> </div>').appendTo(settings.etiqueta);
-	var capaValor = parseInt($("#imc-toEm").innerHeight(),10);
+	var capaValor = parseInt($("#imc-toEm").innerHeight(),10); 
 	capaTest.remove();
 	return (elmValor / capaValor);// + 'em';
 };
@@ -242,7 +242,7 @@ $.fn.submenu = function(options) {
 						.css({ width: element_W+"px" });
 
 				}
-
+				
 				if ((element_T+element_H+submenu_H) > (window_H+window_T)) {
 
 					submenu_T = element_T-submenu_H+window_T;
@@ -266,7 +266,7 @@ $.fn.submenu = function(options) {
 				}
 
 				// mostrem
-
+					
 				submenu_elm
 					.css({ top: submenu_T+"px", left: submenu_L+"px" })
 					.attr("tabindex", "-1")
@@ -294,7 +294,7 @@ $.fn.submenu = function(options) {
 									.css({ top: (form_submenu_H-top_sub-10)+"px" });
 
 							}
-
+								
 						}
 
 					});
@@ -322,9 +322,9 @@ $.fn.submenu = function(options) {
 				element.removeClass("imc-select-on");
 				submenu_elm.removeClass("imc-submenu-on");
 				$(document).off("click.submenu").off("keydown.submenu");
-
+				
 				submenu_elm.find("a").removeClass("hover");
-
+				
 				if (!Modernizr.boxshadow) {
 					submenu_elm.hide();
 				} else {
@@ -333,12 +333,12 @@ $.fn.submenu = function(options) {
 			}
 		},
 		onKeyDown = function(e) {
-
+			
 			if (e.keyCode === 38 || e.keyCode === 40) { // amunt
 
 				var submenu_items = submenu_elm.find("li:not(.imc-select-seleccionat) a"),
 					submenu_item_marcat = submenu_elm.find("li:not(.imc-select-seleccionat) a.hover").length;
-
+				
 			}
 
 			if (e.keyCode === 38) { // amunt
@@ -351,7 +351,7 @@ $.fn.submenu = function(options) {
 						marcat_index = (marcat_index < 0) ? submenu_items.length - 1 : marcat_index_p - 1;
 					submenu_items.removeClass("hover").eq( marcat_index ).addClass("hover").focus();
 				}
-
+				
 				e.preventDefault();
 				return false;
 
@@ -372,11 +372,11 @@ $.fn.submenu = function(options) {
 
 		},
 		onFocus = function() {
-
+			
 			$(document)
 				.off(".onSelectFletxa")
 				.on("keyup.onSelectFletxa", onSelectFletxa);
-
+				
 			element
 				.off(".onSelectLletra")
 				.on("keyup.onSelectLletra", onSelectLletra);
@@ -385,36 +385,36 @@ $.fn.submenu = function(options) {
 		onSelectFletxa = function(e) {
 
 			if (e.keyCode === 40) { // amunt
-
+			
 				var elm = $(e.target);
-
+				
 				if (elm.is("A") && elm.hasClass("imc-select") && elm.parent().hasClass("imc-opcions")) {
 					onClick();
 					e.preventDefault();
 					return false;
 				}
-
+			
 			}
-
+			
 		},
 		onSelectLletra = function(e) {
 
 			console.log("va: ")
-
+			
 			if (element.find(".imc-select-submenu:first").hasClass("imc-submenu-on")) {
 				if (!element.hasClass("imc-el-index-marcant")) {
-
+					
 					element.addClass("imc-el-index-marcant");
-
+					
 					//console.log( String.fromCharCode(e.keyCode) );
 					situa( String.fromCharCode(e.keyCode) );
 
 				}
 			}
-
+			
 		},
 		situa = function(elm_text) {
-
+		
 			var opcio_llista_trobat = false,
 				opcio_llista_posicio = 0,
 				elm_trobat = false,
@@ -423,7 +423,7 @@ $.fn.submenu = function(options) {
 
 			var el_opcions_llista = element.find(".imc-select-submenu ul:first")
 				,el_opcions = el_opcions_llista.find("li");
-
+			
 			el_opcions
 				.each(function() {
 
@@ -450,18 +450,18 @@ $.fn.submenu = function(options) {
 				});
 
 			if (elm_trobat) {
-
+				
 				if (elm_trobats.length > 1) {
-
+					
 					if (elm_text != ultima_opcio) {
 						el_opcions_llista.find(".imc-alfabet-focus:first").removeClass("imc-alfabet-focus");
 					}
-
+					
 					var elm_trobats_size = elm_trobats.length,
 						elm_tro_posicio = 0,
 						elm_tro_trobat = false,
 						opcio_llista_posicio_suma = 0;
-
+					
 					for (var i=0; i<elm_trobats_size; i++) {
 						if (!elm_tro_trobat) {
 							opcio_llista_posicio_suma += $(elm_trobats[i]).outerHeight() + 2;
@@ -473,20 +473,20 @@ $.fn.submenu = function(options) {
 							elm_tro_trobat_enCap = true;
 						}
 					}
-
+					
 					if (elm_tro_posicio >= elm_trobats_size) {
 						elm_tro_posicio = 0;
 					}
-
+					
 					if (elm_tro_trobat && elm_tro_posicio !== 0) {
 						opcio_llista_posicio += opcio_llista_posicio_suma;
 					}
-
+					
 					elm_trobat = $(elm_trobats[elm_tro_posicio]);
-
+											
 				}
-
-
+				
+				
 				el_opcions_llista
 					.animate(
 						{
@@ -504,13 +504,13 @@ $.fn.submenu = function(options) {
 							);
 						}
 					);
-
+					
 			} else {
-
+				
 				element.removeClass("imc-el-index-marcant");
-
+				
 			}
-
+			
 		};
 
 		// events
@@ -540,27 +540,27 @@ $.fn.selectorIMC = function(options) {
 			seleccionat_span,
 			opcions_elm,
 			onClick = function(e) {
-
+				
 				var elm = $(this);
-
+				
 				if (elm.closest("ul").length && !elm.parent().hasClass("imc-select-seleccionat")) {
-
+					
 					element_selector = element.find("div.imc-select:first");
 					element_a = element_selector.find("a:first");
 					seleccionat_input = element_selector.find("input:first");
 					seleccionat_span = element_selector.find("span:first");
 					opcions_elm = element_selector.find("ul:first");
-
+					
 					seleccionat_input.val(elm.attr("data-value"));
 					element_a.html( $("<span>").text( elm.text() ) ).focus();
-
+					
 					opcions_elm.find("li").removeClass("imc-select-seleccionat");
 					elm.parent().addClass("imc-select-seleccionat");
-
+					
 					settings.alAcabar();
-
+					
 				}
-
+				
 			},
 			onMouseEnter = function() {
 				$(this).addClass("hover");
@@ -574,12 +574,12 @@ $.fn.selectorIMC = function(options) {
 				opcions_elm = element_selector.find("ul:first");
 				opcions_elm.find("a[data-value=\"" +seleccionat_input.val()+ "\"]").parent().addClass("imc-select-seleccionat");
 			};
-
+			
 		seleccionat();
-
+		
 		element
 			.submenu({ posicio: "position", amplariaIgual: true, tancarAlClicarDins: true });
-
+		
 		if(typeof Modernizr !== "undefined" && !Modernizr.cssanimations) {
 			element
 				.off('.selector')
@@ -590,7 +590,7 @@ $.fn.selectorIMC = function(options) {
 			element.off('.selector')
 				.on('click.selector', '.imc-select-submenu a', onClick);
 		}
-
+		
 	});
 	return this;
 }
@@ -604,7 +604,7 @@ function inputSelectSeleccionaValor(options) {
 		}, options),
 		element = settings.element,
 		valor = settings.valor;
-
+		
 	if (element !== "" && valor !== "") {
 		var text_nou, valor_nou;
 		element
@@ -612,7 +612,7 @@ function inputSelectSeleccionaValor(options) {
 			.find("ul a").each(function() {
 				var elm_a = $(this),
 					elm_a_valor = elm_a.attr("data-value");
-
+					
 				if (elm_a_valor === valor) {
 					text_nou = elm_a.text();
 					valor_nou = elm_a_valor;
@@ -635,38 +635,38 @@ $.fn.inputSelectForm = function(options) {
 			radio_elms = element.find("input[type=radio]"),
 			button_elm = element.find("button"),
 			onClick = function() {
-
+				
 				var radio_val = element.find("input.imc-dias").val(),
 					select_elm = element.closest(".imc-select-form");
-
+				
 				select_elm
 					.find("span:first").text( radio_val + " days" ).end()
 					.find("input:first").val( radio_val ).end()
 					.find("ul").removeAttr("class");
-
+				
 			},
 			onChange = function() {
-
+				
 				var radio_elm = element.find("input[type=radio]:checked"),
 					radio_val = radio_elm.val(),
 					select_elm = element.closest(".imc-select-form");
-
+				
 				if (radio_val === "o") {
-
+					
 					element
 						.find(".imc-set-duration").removeClass("imc-set-duration-on");
 					select_elm
 						.find("span:first").text( radio_elm.parent().text() ).end()
 						.find("input:first").val( radio_val );
-
+						
 				} else {
 					element.find(".imc-set-duration").addClass("imc-set-duration-on");
 				}
-
+				
 			};
 		radio_elms.off('.inputSelectForm').on('change.inputSelectForm', onChange);
 		button_elm.off('.inputSelectForm').on('click.inputSelectForm', onClick);
-
+		
 	});
 	return this;
 }
@@ -686,35 +686,35 @@ $.fn.inputSelectBuscador = function(options) {
 			cercador_elm = element.find(".imc-select-busca:first"),
 			onClick = function(e) {
 				var elm = $(e.target);
-
+				
 				if (elm.is("A") || (elm.is("SPAN") && elm.parent().is("A")) || (elm.is("STRONG") && elm.parent().is("A"))) {
-
+					
 					var elm_a = (elm.is("A")) ? elm : elm.parent();
-
+					
 					seleccionat_input.val(elm_a.attr("data-value"));
 					seleccionat_span.text(elm_a.attr("data-text") + " " + elm_a.find("span:last").text());
-
+					
 					var att_class = (elm_a.attr("class")) ? elm_a.attr("class") : "";
 					seleccionat_span.attr("class", att_class);
 
 					opcions_elm.find("li").removeClass("imc-select-seleccionat");
 					elm_a.parent().addClass("imc-select-seleccionat");
-
+					
 					elm_a
 						.closest(".imc-submenu-on").removeClass("imc-submenu-on")
 						.parent().find(".on:first").removeClass("on");
-
+						
 					var td_cantidad = elm_a.closest(".imc-tr").find(".imc-cantidad:first");
-
+					
 					td_cantidad
 						.find("input:first").val( elm_a.attr("data-quantity") ).end()
 						.removeClass("imc-cantidad-off");
-
+					
 					inputSelectSeleccionaValor({ element: td_cantidad.find(".imc-select:first"), valor: elm_a.attr("data-type") });
-
+					
 					elm_a.closest(".imc-tr").find(".imc-opcions-off").removeClass("imc-opcions-off");
 				}
-
+				
 			},
 			onMouseEnter = function() {
 				$(this).addClass("hover");
@@ -723,52 +723,52 @@ $.fn.inputSelectBuscador = function(options) {
 				$(this).removeClass("hover");
 			},
 			onKeyUp = function() {
-
+				
 				var input_elm = $(this),
 					input_val = input_elm.val();
-
+				
 				if (input_val.length >= 3) {
-					filtra(input_val);
+					filtra(input_val);	
 				} else {
-					mostraTot();
+					mostraTot();	
 				}
-
+				
 			},
 			filtra = function(input_val) {
-
+				
 				opcions_elm.find("a").each(function(i) {
 					var elm = $(this),
 						elm_data_text = elm.attr("data-text"),
 						elm_strong = elm.find("strong");
-
+					
 					if (elm_data_text.indexOf(input_val) !== -1) {
 						elm_data_text = elm_data_text.replace(input_val, "<span class=\"imc-resaltado\">" + input_val + "</span>");
 						elm_strong.html(elm_data_text);
 					} else {
-						elm.parent().addClass("imc-invisible");
+						elm.parent().addClass("imc-invisible");	
 					}
-
+					
 				});
-
+				
 			},
 			mostraTot = function() {
 				opcions_elm.find("li").each(function() {
 					var elm = $(this),
 						elm_a = elm.find("a"),
 						elm_strong = elm_a.find("strong");
-
+					
 					elm.removeClass("imc-invisible");
 					elm_strong.text( elm_a.attr("data-text") );
-
+					
 				});
 			};
-
+		
 		opcions_elm.off('.inputSelectBuscador').on('click.inputSelectBuscador', onClick);
 		cercador_elm.off('.inputSelectBuscador').on('keyup.inputSelectBuscador', onKeyUp);
 		if(typeof Modernizr !== "undefined" && !Modernizr.cssanimations) {
 			opcions_elm.find("a").off('.inputSelectBuscador').on('mouseenter.inputSelectBuscador', onMouseEnter).on('mouseleave.inputSelectBuscador', onMouseLeave);
 		}
-
+		
 	});
 	return this;
 }
@@ -836,15 +836,15 @@ $.fn.inputSelectAjax = function(options) {
 
 					return;
 				}
-
+				
 				var input_el_val = input_el.val();
-
+				
 				if (input_el_val.length >= 3) {
-					cerca(input_el_val);
+					cerca(input_el_val);	
 				} else {
 					elimina();
 				}
-
+				
 			},
 			elimina = function() {
 
@@ -929,7 +929,7 @@ $.fn.inputSelectAjax = function(options) {
 				posiciona();
 
 				// cerca
-
+				
 				var pag_data = { idioma: idioma, valor: input_el_val };
 
 				if (cercant) {
@@ -945,7 +945,7 @@ $.fn.inputSelectAjax = function(options) {
 						data: pag_data
 					})
 					.done(function( json ) {
-
+						
 						if (json.e === "error") {
 
 							error( json );
@@ -958,15 +958,15 @@ $.fn.inputSelectAjax = function(options) {
 
 					})
 					.fail(function(dades, tipus, errorThrown) {
-
+						
 						if (tipus !== "abort") {
-
+							
 							error(dades, tipus, errorThrown);
 
 						}
 
 					});
-
+			
 			},
 			pinta = function( json ) {
 
@@ -1032,7 +1032,7 @@ $.fn.inputSelectAjax = function(options) {
 				if (settings.amplariaIgual) {
 					resultats_el.css({ width: control_W+"px" });
 				}
-
+				
 				console.log((control_T+ " + " +control_H+ " + " +opcions_H) + " > " + (window_H+window_T));
 
 				if ((control_T+control_H+opcions_H) > (window_H+window_T)) {
@@ -1197,10 +1197,10 @@ $.fn.inputSelectAjax = function(options) {
 						.addClass("imc-el-error");
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -1254,12 +1254,12 @@ $.fn.inputNumero = function(options) {
 		var element = $(this),
 			element_maxlength = element.attr("maxlength") || "",
 			onKeydown = function(event) {
-
-				if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 ||
+				
+				if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || 
 					 	event.keyCode == 190 || // decimal (.)
-
+						 
 		             // Allow: Ctrl+A
-		            (event.keyCode == 65 && event.ctrlKey === true) ||
+		            (event.keyCode == 65 && event.ctrlKey === true) || 
 		             // Allow: home, end, left, right
 		            (event.keyCode >= 35 && event.keyCode <= 39)) {
 		                 // let it happen, don't do anything
@@ -1268,8 +1268,8 @@ $.fn.inputNumero = function(options) {
 		        else {
 		            // Ensure that it is a number and stop the keypress
 		            if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
-		                event.preventDefault();
-		            }
+		                event.preventDefault(); 
+		            }   
 		        }
 			};
 
@@ -1308,49 +1308,49 @@ function inputCursor(el) {
 
 // mostrarCapaEnviando
 function mostrarCapaEnviando() {
-
+	
 	var missatge_titol_elm = $("<p>").text(txtFormDinEnviantDades).addClass("imc-mi-titol"),
 		missatge_text_elm = $("<p>").text(txtFormDinEspere).addClass("imc-mi-text"),
 		missatge_elm = $("<div>").html( $("<div>").addClass("imc-missatge-contingut").append(missatge_titol_elm).append(missatge_text_elm) ).attr("id", "imc-missatge").addClass("imc-missatge imc-mi imc-mi-enviant"),
 		missatge_fons_elm = $("<div>").attr("id", "imc-missatge-fons").addClass("imc-missatge-fons");
-
+	
 	$("body").append(missatge_fons_elm).append(missatge_elm);
-
+	
 	$("#imc-missatge").fadeIn(200);
-
+	
 	var window_H = $(window).height(),
 		contenidor_H = imc_forms_contenidor.outerHeight();
-
+	
 	if (contenidor_H > window_H) {
 		$("#imc-missatge-fons").css("height", contenidor_H+"px");
 	}
-
+	
 }
 // /mostrarCapaEnviando
 
 
 // ocultarCapaEnviando
 function ocultarCapaEnviando() {
-
+	
 	$("#imc-missatge").stop().fadeOut(200, function() {
 		$(this).remove();
 	});
 	$("#imc-missatge-fons").remove();
-
+	
 }
 // /ocultarCapaEnviando
 
 
 // normalize
 var normalize = (function() {
-
+	
   var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
       to   = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
       mapping = {};
-
+ 
   for(var i = 0, j = from.length; i < j; i++ )
       mapping[ from.charAt( i ) ] = to.charAt( i );
-
+ 
   return function( str ) {
       var ret = [];
       for( var i = 0, j = str.length; i < j; i++ ) {
@@ -1362,7 +1362,7 @@ var normalize = (function() {
       }
       return ret.join( '' );
   }
-
+ 
 })();
 // /normalize
 
@@ -1456,10 +1456,10 @@ $.fn.appTitle = function(options) {
 						.attr("aria-hidden", "true");
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 
 	return this;

@@ -30,10 +30,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @ManagedBean
 @ViewScoped
 public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
+	private static final Logger LOG = LoggerFactory.getLogger(DialogDefinicionVersionPropiedades.class);
 
 	/** Tramite service. */
 	@Inject
@@ -44,6 +46,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	/** Id elemento a tratar. */
 	private Long id;
+
+	private String sinCM;
 
 	/** tramite version. */
 	private TramiteVersion tramiteVersion;
@@ -119,6 +123,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 		Entidad entidad = entidadService.loadEntidadByArea(tramiteVersion.getIdArea());
 		permiteSustancialCertificado = entidad.isNivelSustancialCertificado();
+
+
 	}
 
 	/**
@@ -430,11 +436,20 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		params.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(), UtilJSON.toJSON(typeScript));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), id.toString());
 		if (id == null || iScript == null) {
+			if (sinCM != null) {
+				LOG.error("Sin CM: " + sinCM);
+				params.put("sinCM", sinCM);
+			}
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
+
 		} else {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(iScript));
+			if (sinCM != null) {
+				LOG.error("Sin CM: " + sinCM);
+				params.put("sinCM", sinCM);
+			}
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 		}
 	}
@@ -733,4 +748,13 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		return niveles;
 	}
 
-}
+		public String getSinCM() {
+			return sinCM;
+		}
+
+		public void setSinCM(String sinCM) {
+			this.sinCM = sinCM;
+		}
+
+
+	}

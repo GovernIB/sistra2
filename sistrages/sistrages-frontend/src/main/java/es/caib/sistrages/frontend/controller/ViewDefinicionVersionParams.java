@@ -65,7 +65,8 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Mantenimiento de definici&oacute;n de versi&oacute;n de tr&aacute;mites.
  *
@@ -75,6 +76,7 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ManagedBean
 @ViewScoped
 public class ViewDefinicionVersionParams extends ViewControllerBase {
+	private static final Logger LOG = LoggerFactory.getLogger(ViewDefinicionVersionParams.class);
 
 	/** Service. */
 	@Inject
@@ -683,6 +685,16 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
+
+		LOG.error("Entra a ViewDefinicionVersionParams.editarPropiedades");
+		// Útil si entras a la vista sin f:viewParam
+		Map<String, String> paramViewParam = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap();
+		if (paramViewParam != null && paramViewParam.get("sinCM") != null) {
+			LOG.error("sinCM:" + paramViewParam.get("sinCM"));
+			params.put("sinCM", params.get("sinCM"));// se pasa el parámetro sinCM
+		}
+
 		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1100, 600);
 	}
 
