@@ -32,13 +32,9 @@
 
 	<h:form id="dialogConfiguracionAlertas" styleClass="margin-top-10">
 			<h:outputScript >
-			  PrimeFaces.locales ['es'] = {
-			        timeOnlyTitle: ''
-			    };
-			     PrimeFaces.locales ['ca'] = {
-			        timeOnlyTitle: ''
-			    };
 
+			  PrimeFaces.locales['ca'].timeOnlyTitle = '';
+			  PrimeFaces.locales['es'].timeOnlyTitle = '';
 
 				var arrayCm = [];
 
@@ -237,9 +233,11 @@
 						<p:outputLabel for="peri" value="#{msg['viewConfiguracionAlertas.periodo']}" />
 
 					<h:panelGroup>
-						<p:calendar id="peri" value="#{dialogConfiguracionAlertas.periodo}" pattern="HH:mm" stepMinute="10" timeOnly="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+						<p:calendar id="peri" value="#{dialogConfiguracionAlertas.periodo}" pattern="HH:mm"
+									stepMinute="10" timeOnly="true"
+									disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
 								<p:ajax event="change" process="@this"/>
-							</p:calendar>
+						</p:calendar>
 
 
 

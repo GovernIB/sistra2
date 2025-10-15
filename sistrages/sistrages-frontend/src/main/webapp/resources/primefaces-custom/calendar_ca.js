@@ -20,6 +20,7 @@ PrimeFaces.locales['ca'] = {
     week: 'Setmana',
     day: 'Dia',
     allDayText : 'Tot el dia',
+    closeText: 'Tancar',
     aria: {
         close: "Tancar",
         previous: "Anterior",

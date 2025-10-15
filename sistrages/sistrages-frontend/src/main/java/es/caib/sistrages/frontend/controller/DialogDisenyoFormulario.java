@@ -1303,7 +1303,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				}
 			}
 
-			if(componenteSeleccionado != null){
+			if(paginaComponente != null){
 				break;
 			}
 		}
@@ -1320,7 +1320,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			boolean isSR = navegacion.getTipoComponente().equals(TypeObjetoFormulario.SECCION_REUTILIZABLE);
 			Long seccionId = isSR ?	 ((ComponenteFormularioCampoSeccionReutilizable)componenteSeleccionado).getIdSeccionReutilizable() : null;
 
-			cambiarEdicionComponente(componenteSeleccionado.getCodigo() + "", false, seccionId, null);
+			if(navegacion.getTipoComponente().equals(TypeObjetoFormulario.LINEA)){
+				cambiarEdicionComponente("L" + componenteSeleccionado.getCodigo(), false, null, null);
+			} else {
+				cambiarEdicionComponente(componenteSeleccionado.getCodigo() + "", seccionId != null, seccionId, null);
+			}
+
 		}
 
 		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:formulario-panel");

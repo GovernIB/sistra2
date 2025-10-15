@@ -770,7 +770,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			LOG.error("sinCM2:" + sinCM);
 			params.put("sinCM", sinCM);// se pasa el parámetro sinCM
 		}
-		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1100, 680);
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1120, 680);
 	}
 
 	/**

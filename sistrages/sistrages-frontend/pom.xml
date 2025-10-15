@@ -94,11 +94,7 @@
 					<version>${primefacesExtensions.version}</version>
 			</dependency>
 
-			<dependency>
-					<groupId>org.primefaces.extensions</groupId>
-					<artifactId>resources-codemirror</artifactId>
-					<version>${primefacesResourcesCodemirror.version}</version>
-			</dependency>
+
 
 		<dependency>
 				<groupId>commons-fileupload</groupId>

@@ -40,10 +40,9 @@
 		<validation-api.version>1.1.0.Final</validation-api.version>
 		<jsf2.version>2.2.15</jsf2.version>
 		<jstl.version>1.2</jstl.version>
-		<primefaces.version>14.0.10</primefaces.version>
-		<primefacesExtensions.version>14.0.10</primefacesExtensions.version>
+		<primefaces.version>14.0.12</primefaces.version>
+		<primefacesExtensions.version>14.0.12</primefacesExtensions.version>
 		<primefaces.allThemes.version>1.1.0</primefaces.allThemes.version>
-		<primefacesResourcesCodemirror.version>6.1.0</primefacesResourcesCodemirror.version>
 		<jersey.version>2.27</jersey.version>
 		<!-- Da error en listas la version que viene con jersey 2.8.4 (con 2.9.4
 			devuelve list bien) -->

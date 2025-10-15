@@ -1,66 +1,58 @@
 <!DOCTYPE html>
 <html lang="#{sessionBean.lang}"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:pe="http://primefaces.org/ui/extensions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:p="http://primefaces.org/ui">
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	  xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAmbito" var="TypeAmbito" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAmbito" var="TypeAmbito" />
 
-<h:head>
-	<title><h:outputText value="#{msg['dialogScript.titulo']}"/>
-		   <h:outputText value=" - #{msg['dialogScript.campo']} #{dialogScript.nombreComponente}" rendered="#{not empty dialogScript.nombreComponente}" />
-	</title>
-	<style type="text/css">
-		.CodeMirror {
-			filter: invert(100%);
+	<h:head>
+		<title><h:outputText value="#{msg['dialogScript.titulo']}"/>
+			<h:outputText value=" - #{msg['dialogScript.campo']} #{dialogScript.nombreComponente}" rendered="#{not empty dialogScript.nombreComponente}" />
+		</title>
+		<style type="text/css">
+			#dialogScript\:panelPlugins_content > table > tbody > tr+tr {
+				border-top: 1px solid #CCC;
+			}
+
+			#dialogScript\:panelPlugins_content > table > tbody > tr > td {
+				padding: 0.2em;
+			}
+		</style>
+
+		<f:facet name="last">
+			<h:outputStylesheet library="css" name="style.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
+		</f:facet>
+	</h:head>
+	<script>
+
+		function anyadir_texto(texto) {
+			document.getElementById("dialogScript:hiddenNuevoTexto").value(texto);
+			document.getElementById("dialogScript:hiddenCommandActualizarTexto").click();
 		}
 
-		.CodeMirror-vscrollbar {
-			filter: invert(100%);
+		function ocultar_ayuda() {
+			document.getElementById("dialogScript:hiddenCommandOcultarAyuda").click();
 		}
 
-		#dialogScript\:panelPlugins_content > table > tbody > tr+tr {
-			border-top: 1px solid #CCC;
+		function mensaje_copy() {
+			document.getElementById("dialogScript:hiddenCommandMensajeCopy").click();
 		}
 
-		#dialogScript\:panelPlugins_content > table > tbody > tr > td {
-			padding: 0.2em;
-		}
-	</style>
+	</script>
 
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
-	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
-	  <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
-  </f:facet>
-</h:head>
-<script>
-
- 	function anyadir_texto(texto) {
-	    document.getElementById("dialogScript:hiddenNuevoTexto").value(texto);
- 		document.getElementById("dialogScript:hiddenCommandActualizarTexto").click();
- 	}
-
- 	function ocultar_ayuda() {
-	    document.getElementById("dialogScript:hiddenCommandOcultarAyuda").click();
- 	}
-
- 	function mensaje_copy() {
- 		document.getElementById("dialogScript:hiddenCommandMensajeCopy").click();
- 	}
-
-</script>
-
-<h:outputScript>
+	<h:outputScript>
 		/*
 		window.onload = function() {
 			$("#bodyScript").attr('style','scrollable:auto !important');
@@ -76,303 +68,375 @@
 		    $("div.CodeMirror ").attr('style', 'height: ' +(window.innerHeight - 185 )+ 'px !important');
 		      	//No hace falta --> $("div#divDer").attr('style', 'height: ' +(window.innerHeight - 185 )+ 'px !important');
 		} **/
-</h:outputScript>
-<h:body id="bodyScript" style="overflow:auto !important; height:100%; width: 99% !important;">
+	</h:outputScript>
+	<h:body id="bodyScript" style="overflow:auto !important; height:100%; width: 99% !important;">
 
-	<!-- Parametros dialogo -->
-	<f:metadata>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogScript.modoAcceso}"/>
-		<f:viewParam name="TIPO_SCRIPT_FLUJO" value="#{dialogScript.tipoScriptFlujo}"/>
-		<f:viewParam name="TIPO_SCRIPT_FORMULARIO" value="#{dialogScript.tipoScriptFormulario}"/>
-		<f:viewParam name="TIPO_SCRIPT_SECCION_REUTILIZABLE" value="#{dialogScript.tipoScriptSeccionReutilizable}"/>
-		<f:viewParam name="TRAMITEVERSION" value="#{dialogScript.idTramiteVersion}"/>
-		<f:viewParam name="TRAMITEPASO" value="#{dialogScript.idPasoActual}"/>
-		<f:viewParam name="FORMULARIO_ACTUAL" value="#{dialogScript.idFormularioActual}"/>
-		<f:viewParam name="FORM_INTERNO_ACTUAL" value="#{dialogScript.idFormularioInternoActual}"/>
-		<f:viewParam name="COMPONENTE" value="#{dialogScript.idComponente}"/>
-		<f:viewParam name="COMPONENTE_NOMBRE" value="#{dialogScript.nombreComponente}"/>
-		<f:viewParam name="PAGINA" value="#{dialogScript.idPagina}"/>
-		<f:viewParam name="LITERAL_HTML" required="false" value="#{dialogScript.literalHTML}"/>
-		<f:viewParam name="SECCION_REUTILIZABLE" required="false" value="#{dialogScript.identificadorSeccion}"/>
-		<f:viewParam name="PARAMETRO_DISENYO" value="#{dialogScript.tipoDisenyo}" />
-		<f:viewParam name="IFRAME" value="#{dialogScript.esIframe}" />
-		<f:viewParam name="sinCM" value="#{dialogScript.sinCM}" />
-		<f:viewAction action="#{dialogScript.checkLiteral}" />
-		<f:viewAction action="#{dialogScript.init}" />
+		<!-- Parametros dialogo -->
+		<f:metadata>
+			<f:viewParam name="MODO_ACCESO" value="#{dialogScript.modoAcceso}"/>
+			<f:viewParam name="TIPO_SCRIPT_FLUJO" value="#{dialogScript.tipoScriptFlujo}"/>
+			<f:viewParam name="TIPO_SCRIPT_FORMULARIO" value="#{dialogScript.tipoScriptFormulario}"/>
+			<f:viewParam name="TIPO_SCRIPT_SECCION_REUTILIZABLE" value="#{dialogScript.tipoScriptSeccionReutilizable}"/>
+			<f:viewParam name="TRAMITEVERSION" value="#{dialogScript.idTramiteVersion}"/>
+			<f:viewParam name="TRAMITEPASO" value="#{dialogScript.idPasoActual}"/>
+			<f:viewParam name="FORMULARIO_ACTUAL" value="#{dialogScript.idFormularioActual}"/>
+			<f:viewParam name="FORM_INTERNO_ACTUAL" value="#{dialogScript.idFormularioInternoActual}"/>
+			<f:viewParam name="COMPONENTE" value="#{dialogScript.idComponente}"/>
+			<f:viewParam name="COMPONENTE_NOMBRE" value="#{dialogScript.nombreComponente}"/>
+			<f:viewParam name="PAGINA" value="#{dialogScript.idPagina}"/>
+			<f:viewParam name="LITERAL_HTML" required="false" value="#{dialogScript.literalHTML}"/>
+			<f:viewParam name="SECCION_REUTILIZABLE" required="false" value="#{dialogScript.identificadorSeccion}"/>
+			<f:viewParam name="PARAMETRO_DISENYO" value="#{dialogScript.tipoDisenyo}" />
+			<f:viewParam name="IFRAME" value="#{dialogScript.esIframe}" />
+			<f:viewParam name="sinCM" value="#{dialogScript.sinCM}" />
+			<f:viewAction action="#{dialogScript.checkLiteral}" />
+			<f:viewAction action="#{dialogScript.init}" />
 
-	</f:metadata>
-	<h:form id="dialogScript" styleClass="margin-top-10" style="height:100%">
+		</f:metadata>
+
+		<h:outputScript >
+			function triggerCopiar() {
+
+				// Valor del nodo seleccionado
+				var valor = document.getElementsByClassName("ui-state-highlight")[0].innerText;
+
+				// Crea un campo de texto oculto
+				var aux = document.createElement("input");
+
+				// Asigna el contenido del elemento especificado al valor del campo
+				aux.setAttribute("value", valor);
+
+				// Anyade el campo a la pagina
+				document.body.appendChild(aux);
+
+				// Selecciona el contenido del campo
+				aux.select();
+
+				// Copia el texto seleccionado
+				document.execCommand("copy");
+
+				// Elimina el campo de la pagina
+				document.body.removeChild(aux);
+
+				document.getElementById("dialogScript:hiddenCommandMensajeCopy").click();
+			}
+
+			function copiarClipboardDominio(domIdentificador) {
+
+				// Crea un campo de texto oculto
+				var aux = document.createElement("input");
+
+				// Asigna el contenido del elemento especificado al valor del campo
+				aux.setAttribute("value", domIdentificador);
+
+				// Anyade el campo a la pagina
+				document.body.appendChild(aux);
+
+				// Selecciona el contenido del campo
+				aux.select();
+
+				// Copia el texto seleccionado
+				document.execCommand("copy");
+
+				// Elimina el campo de la pagina
+				document.body.removeChild(aux);
+			}
+		</h:outputScript>
+		<h:outputScript>
+			//<![CDATA[
+
+
+			// estado solo en cliente (no dependas del bean)
+			window.cmDark = !!window.cmDark;
+
+			function setFilter(el, val){ if(el) el.style.filter = val || ''; }
+
+			function invertirColores(){
+				try{
+					var w  = (typeof PF === 'function') ? PF('cm') : null;
+					var cm = w ? (w.instance || w.editor || (w.getEditor && w.getEditor())) : null;
+					if(!cm){ console.warn('CodeMirror no disponible'); return; }
+
+					var root        = cm.getWrapperElement && cm.getWrapperElement();
+					var scroll      = cm.getScrollerElement && cm.getScrollerElement();
+					var gutters     = root && root.querySelector('.CodeMirror-gutters');
+					var gutterFill  = root && root.querySelector('.CodeMirror-gutter-filler');
+					var vscroll     = root && root.querySelector('.CodeMirror-vscrollbar');
+					var hscroll     = root && root.querySelector('.CodeMirror-hscrollbar');
+
+					// Modo claro => invert(100%), modo oscuro => sin filtro
+					var val = window.cmDark ? '' : 'invert(100%)';
+
+					// Solo en el wrapper
+					setFilter(root, val);
+
+					// Asegura que los hijos NO tengan filtros propios (evita doble invert)
+					[scroll, gutters, gutterFill, vscroll, hscroll].forEach(function(e){ setFilter(e, ''); });
+
+					// Refresco para que CodeMirror repinte
+					if (cm.refresh) setTimeout(function(){ cm.refresh(); }, 0);
+				}catch(e){ console.error(e); }
+			}
+
+
+
+			function cmSaveIfPresent(){
+				console.log("cmSaveIfPresent");
+				var w = PF('cm');
+				console.log(w);
+				if (w && w.getEditor) {
+					w.getEditor().save();
+					console.log("guardado if1");
+				}
+				var cm = w ? (w.instance || w.editor || (w.getEditor && w.getEditor())) : null;
+				console.log("cm");
+				console.log(cm);
+				if (cm && typeof cm.save === 'function') {
+					cm.save();                    // vuelca el contenido al <textarea> oculto
+					console.log('guardado', cm.getValue());
+				}
+				console.log("fin cmSaveIfPresent");
+			}
+
+			(function(){
+				function onLoad(fn){
+					if (window.PrimeFaces && PrimeFaces.addOnload){
+						PrimeFaces.addOnload(fn);        // PF >= 8 y 14 incluido
+					} else if (document.readyState === 'complete' || document.readyState === 'interactive'){
+						setTimeout(fn, 0);               // documento ya listo
+					} else {
+						document.addEventListener('DOMContentLoaded', fn); // fallback nativo
+					}
+				}
+				onLoad(function(){ invertirColores(); });
+			})();
+			//]]>
+		</h:outputScript>
+
+		<h:form id="dialogScript" styleClass="margin-top-10" style="height:100%">
 
 			<p:growl id="growlScript" widgetVar="growlScript" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-						<p:panel id="panelTop" header="#{msg['script.' += dialogScript.tipoScript += '.titulo']}" toggleable="false" widgetVar="panel" style="padding:0px;position:relative;top:0px;width:100%">
-							<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 wpx200, padding-right-18 " columns = "2" cellpadding = "5" cellspacing = "0"  style="padding:0px; width:100%">
+			<p:panel id="panelTop" header="#{msg['script.' += dialogScript.tipoScript += '.titulo']}" toggleable="false" widgetVar="panel" style="padding:0px;position:relative;top:0px;width:100%">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 wpx200, padding-right-18 " columns = "2" cellpadding = "5" cellspacing = "0"  style="padding:0px; width:100%">
 
-								<h:outputLabel value="#{msg['dialogScript.sirve']}"></h:outputLabel>
-								<h:outputLabel value="#{msg['script.' += dialogScript.tipoScript += '.sirve']}"></h:outputLabel>
+					<h:outputLabel value="#{msg['dialogScript.sirve']}"></h:outputLabel>
+					<h:outputLabel value="#{msg['script.' += dialogScript.tipoScript += '.sirve']}"></h:outputLabel>
 
-								<h:outputLabel value="#{msg['dialogScript.ejecuta']}"></h:outputLabel>
-								<h:outputLabel value="#{msg['script.' += dialogScript.tipoScript += '.ejecuta']}"></h:outputLabel>
+					<h:outputLabel value="#{msg['dialogScript.ejecuta']}"></h:outputLabel>
+					<h:outputLabel value="#{msg['script.' += dialogScript.tipoScript += '.ejecuta']}"></h:outputLabel>
 
-								<h:outputLabel value="#{msg['dialogScript.devuelve']}"></h:outputLabel>
-								<h:outputLabel value="#{msg['script.' += dialogScript.tipoScript += '.devuelve']}"></h:outputLabel>
+					<h:outputLabel value="#{msg['dialogScript.devuelve']}"></h:outputLabel>
+					<h:outputLabel value="#{msg['script.' += dialogScript.tipoScript += '.devuelve']}"></h:outputLabel>
 
-							</h:panelGrid>
-						</p:panel>
-						<h:panelGrid id="panelLeft" columns="2" columnClasses="w50 va-top , w50 va-top" styleClass="w100" style="position:relative;top:10px;height:100%"  >
+				</h:panelGrid>
+			</p:panel>
+			<h:panelGrid id="panelLeft" columns="2" columnClasses="w50 va-top , w50 va-top" styleClass="w100" style="position:relative;top:10px;height:100%"  >
 
-								<pe:codeMirror
-												id="codeMirror"
-												widgetVar="cm"
-			        							mode="javascript"
-			        							theme="blackboard"
-			    								value="#{dialogScript.data.contenido}"
-			    								keyMap="default"
-			    								lineNumbers="true"
-			    								matchBrackets="true"
-			    								readonly="#{dialogScript.isConsulta()}"
-												rendered="#{empty dialogScript.sinCM or fn:toUpperCase(dialogScript.sinCM) ne 'S'}"
-				    							styleClass="w100 h100" />
+				<pe:codeMirror
+						id="codeMirror"
+						widgetVar="cm"
+						mode="javascript"
+						theme="blackboard"
+						value="#{dialogScript.data.contenido}"
+						keyMap="default"
+						lineNumbers="true"
+						matchBrackets="true"
+						readonly="#{dialogScript.isConsulta()}"
+						rendered="#{empty dialogScript.sinCM or fn:toUpperCase(dialogScript.sinCM) ne 'S'}"
+						styleClass="w100 h100" />
 
-								<p:inputTextarea
-									id="codeMirrorTextArea"
-									value="#{dialogScript.data.contenido}"
-									autoResize="false"
-									rows="30"
-									readonly="#{dialogScript.isConsulta()}"
-									styleClass="w100 h100"
-									rendered="#{not empty dialogScript.sinCM and fn:toUpperCase(dialogScript.sinCM) eq 'S'}" />
+				<p:inputTextarea
+						id="codeMirrorTextArea"
+						value="#{dialogScript.data.contenido}"
+						autoResize="false"
+						rows="30"
+						readonly="#{dialogScript.isConsulta()}"
+						styleClass="w100 h100"
+						rendered="#{not empty dialogScript.sinCM and fn:toUpperCase(dialogScript.sinCM) eq 'S'}" />
 
-								<p:column  id="columnaRight">
-									<p:column id="columnaIframe" rendered="#{dialogScript.mostrarLateralAyuda}" style="text-align:center">
-										<iframe src="#{dialogScript.urlIframe}" width="100%" height="400px" />
-										<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@form"  action="#{dialogScript.ocultarAyuda()}"  update="@form" style="margin-left:4px;" icon="fa fa-eye-slash" oncomplete="invertirColores()" />
+				<p:column  id="columnaRight">
+					<p:column id="columnaIframe" rendered="#{dialogScript.mostrarLateralAyuda}" style="text-align:center">
+						<iframe src="#{dialogScript.urlIframe}" width="100%" height="400px" />
+						<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@form"  action="#{dialogScript.ocultarAyuda()}"  update="@form" style="margin-left:4px;" icon="fa fa-eye-slash" oncomplete="invertirColores()" />
 
-									</p:column>
+					</p:column>
 
-									<p:panel id="panelPlugins" header="#{msg['dialogScript.plugins.header']}" toggleable="true" widgetVar="panelPlugins"  collapsed="#{dialogScript.visibleHerramientas}" styleClass="w100 sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda}">
+					<p:panel id="panelPlugins" header="#{msg['dialogScript.plugins.header']}" toggleable="true" widgetVar="panelPlugins"  collapsed="#{dialogScript.visibleHerramientas}" styleClass="w100 sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda}">
 
-										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
-										<h:dataTable var="plugin" value="#{dialogScript.plugins}" rowClasses="" columnClasses=", wpx100" styleClass="w100" style="border-collapse: collapse !important">
-										    <h:column>
-										        <h:outputText value="#{plugin.name()}"/>
-										    </h:column>
-										    <h:column>
-										    	<p:commandButton icon="fa fa-question" actionListener="#{dialogScript.mostrarAyuda(plugin)}" process="@form" update="@form:columnaIframe @form:panelLeft @form:panelDominios @form:panelFormularios @form:columnaRight" style="color:#c4bc20;" oncomplete="invertirColores()"/>
-										    </h:column>
-										</h:dataTable>
-									</p:panel>
+						<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
+						<h:dataTable var="plugin" value="#{dialogScript.plugins}" rowClasses="" columnClasses=", wpx100" styleClass="w100" style="border-collapse: collapse !important">
+							<h:column>
+								<h:outputText value="#{plugin.name()}"/>
+							</h:column>
+							<h:column>
+								<p:commandButton icon="fa fa-question" actionListener="#{dialogScript.mostrarAyuda(plugin)}" process="@form" update="@form:columnaIframe @form:panelLeft @form:panelDominios @form:panelFormularios @form:columnaRight" style="color:#c4bc20;" oncomplete="invertirColores()"/>
+							</h:column>
+						</h:dataTable>
+					</p:panel>
 
-									<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left" >
+					<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left" >
 
-											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
-											<div style="text-align:right;margin-bottom:4px">
-												<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogScript.nuevoMensaje}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}" >
-								        				<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript panelPlugins panelMensajes panelDominios panelFormularios"/>
-								        		</p:commandButton>
-	      			   							<p:commandButton value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogScript.editarMensaje()}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}">
-				        								<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript panelPlugins panelMensajes panelDominios panelFormularios"/>
-				        						</p:commandButton>
-	      			   							<p:commandButton value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{dialogScript.eliminarMensaje}" process="@this" update="panelPlugins panelMensajes panelDominios panelFormularios growlScript" rendered="#{dialogScript.isPermiteEditar()}">
-		        									<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-		        								</p:commandButton>
-		        								<p:commandButton value="#{msg['botones.consultar']}"  icon="fa fa-eye" actionListener="#{dialogScript.editarMensaje()}" process="@this" update="growlScript" rendered="#{!dialogScript.isPermiteEditar()}"/>
-	      			   						</div>
-
-
-	      			   						 <p:dataTable id="mensaje" var="mensaje" value="#{dialogScript.data.mensajes}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="240"
-										   		selection="#{dialogScript.mensajeSeleccionado}" rowKey="#{mensaje.identificador}" selectionMode="single" >
-
-												<p:ajax event="rowSelect" global="false" />
-
-										        <p:column headerText="#{msg['dialogScript.mensaje.headerIdentificador']}" sortBy="#{mensaje.identificador}">
-										        	<h:outputText value="#{mensaje.identificador}" />
-										        </p:column>
-
-												<p:column headerText="#{msg['dialogScript.mensaje.headerDescripcion']}" sortBy="#{mensaje.literal.getTraduccion(sessionBean.lang,dialogScript.idiomas)}">
-										        	<h:outputText value="#{mensaje.literal.getTraduccion(sessionBean.lang,dialogScript.idiomas)}" />
-										        </p:column>
-
-										    </p:dataTable>
+						<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
+						<div style="text-align:right;margin-bottom:4px">
+							<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogScript.nuevoMensaje}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}" >
+								<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript panelPlugins panelMensajes panelDominios panelFormularios"/>
+							</p:commandButton>
+							<p:commandButton value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{dialogScript.editarMensaje()}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}">
+								<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript panelPlugins panelMensajes panelDominios panelFormularios"/>
+							</p:commandButton>
+							<p:commandButton value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{dialogScript.eliminarMensaje}" process="@this" update="panelPlugins panelMensajes panelDominios panelFormularios growlScript" rendered="#{dialogScript.isPermiteEditar()}">
+								<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+							</p:commandButton>
+							<p:commandButton value="#{msg['botones.consultar']}"  icon="fa fa-eye" actionListener="#{dialogScript.editarMensaje()}" process="@this" update="growlScript" rendered="#{!dialogScript.isPermiteEditar()}"/>
+						</div>
 
 
-									 </p:panel>
+						<p:dataTable id="mensaje" var="mensaje" value="#{dialogScript.data.mensajes}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="240"
+									 selection="#{dialogScript.mensajeSeleccionado}" rowKey="#{mensaje.identificador}" selectionMode="single" >
 
-									 <p:panel id="panelDominios" header="#{msg['dialogScript.dominios.header']}" toggleable="true" widgetVar="panelDominios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleDominios}"  styleClass="sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda}">
+							<p:ajax event="rowSelect" global="false" />
 
-											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
+							<p:column headerText="#{msg['dialogScript.mensaje.headerIdentificador']}" sortBy="#{mensaje.identificador}">
+								<h:outputText value="#{mensaje.identificador}" />
+							</p:column>
 
-											<p:commandButton value="#{msg['botones.anyadir']}" icon="fa fa-plus"
-												actionListener="#{dialogScript.anyadirDominio()}" process="@this"
-												rendered="#{dialogScript.isPermiteEditar() and not dialogScript.tipoDisenyo.equals('PARAMETRO_DISENYO_SECCION') }" style="margin-bottom:10px;margin-top:10px"
-												update="growlScript">
-													<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoDominio}" update="growlScript tableDominios"/>
-											</p:commandButton>
-											<p:dataTable id="tableDominios"
-												var="dominio" value="#{dialogScript.dominios}" emptyMessage="#{msg['error.emptyRows']}"  scrollable="true" scrollHeight="270"
-										   		 >
+							<p:column headerText="#{msg['dialogScript.mensaje.headerDescripcion']}" sortBy="#{mensaje.literal.getTraduccion(sessionBean.lang,dialogScript.idiomas)}">
+								<h:outputText value="#{mensaje.literal.getTraduccion(sessionBean.lang,dialogScript.idiomas)}" />
+							</p:column>
 
-												<p:ajax event="rowSelect" global="false" />
-												<p:column styleClass="wpx35">
-										        	<p:commandButton id="commandCopiarDominio"  value=" " style="width:30px;height:30px" process="@this" styleClass="button margin-top-3"   onclick="copiarClipboardDominio('#{dominio.identificadorCompuesto}');" icon="fa fa-copy" />
-										        	<p:tooltip value="#{msg['botones.copiar']} #{dominio.identificadorCompuesto}" for="commandCopiarDominio" ></p:tooltip>
-										        </p:column>
+						</p:dataTable>
 
-										        <p:column headerText="#{msg['dialogScript.mensaje.headerIdentificador']}" styleClass="w30" style="word-wrap: break-word;" sortBy="#{dominio.identificadorCompuesto}">
-										        	<h:outputText value="#{dominio.identificadorCompuesto}"   />
-										        </p:column>
 
-												<p:column headerText="#{msg['dialogScript.mensaje.headerDescripcion']}"  styleClass="w40" sortBy="#{dominio.descripcion}">
-										        	<h:outputText value="#{dominio.descripcion}" />
-										        </p:column>
+					</p:panel>
 
-												<p:column headerText=""  styleClass="w20">
-													<p:commandButton id="btnCons" value="#{msg['botones.consultar']}"  icon="fa fa-eye"  actionListener="#{dialogScript.consultarDominio(dominio)}" process="@this" style="width:100px" />
+					<p:panel id="panelDominios" header="#{msg['dialogScript.dominios.header']}" toggleable="true" widgetVar="panelDominios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleDominios}"  styleClass="sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda}">
 
-													<p:spacer width="6" height="1"/>
+						<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
 
-													<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{dialogScript.ping(dominio.codigo)}" process="@this" style="width:100px" />
-												</p:column>
-										    </p:dataTable>
-									  </p:panel>
+						<p:commandButton value="#{msg['botones.anyadir']}" icon="fa fa-plus"
+										 actionListener="#{dialogScript.anyadirDominio()}" process="@this"
+										 rendered="#{dialogScript.isPermiteEditar() and not dialogScript.tipoDisenyo.equals('PARAMETRO_DISENYO_SECCION') }" style="margin-bottom:10px;margin-top:10px"
+										 update="growlScript">
+							<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoDominio}" update="growlScript tableDominios"/>
+						</p:commandButton>
+						<p:dataTable id="tableDominios"
+									 var="dominio" value="#{dialogScript.dominios}" emptyMessage="#{msg['error.emptyRows']}"  scrollable="true" scrollHeight="270"
+						>
 
-								 	  <p:panel id="panelFormularios" header="#{msg['dialogScript.formularios.header']}" toggleable="true" widgetVar="panelFormularios" collapsed="#{dialogScript.visibleFormularios}"  styleClass="sin-bordes noPadding grid-left" style="margin-bottom:2px" rendered="#{!dialogScript.mostrarLateralAyuda and dialogScript.treeFormularios.getChildCount() != 0}">
+							<p:ajax event="rowSelect" global="false" />
+							<p:column styleClass="wpx35">
+								<p:commandButton id="commandCopiarDominio"  value=" " style="width:30px;height:30px" process="@this" styleClass="button margin-top-3"   onclick="copiarClipboardDominio('#{dominio.identificadorCompuesto}');" icon="fa fa-copy" />
+								<p:tooltip value="#{msg['botones.copiar']} #{dominio.identificadorCompuesto}" for="commandCopiarDominio" ></p:tooltip>
+							</p:column>
 
-											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR"  />
-											<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes w100" style="height: 320px;" selectionMode="single" selection="#{dialogScript.selectedNode}" widgetVar="arbol" >
-												<p:treeNode  styleClass="nodoComponente">
-													<i class="#{node.srcIcono()}" style="margin-right:4px" ></i>
-													<h:outputText value="#{node.getName()}" />
-												</p:treeNode>
+							<p:column headerText="#{msg['dialogScript.mensaje.headerIdentificador']}" styleClass="w30" style="word-wrap: break-word;" sortBy="#{dominio.identificadorCompuesto}">
+								<h:outputText value="#{dominio.identificadorCompuesto}"   />
+							</p:column>
 
-												<p:ajax event="select" update="dialogScript:commandCopiarNodo"  />
+							<p:column headerText="#{msg['dialogScript.mensaje.headerDescripcion']}"  styleClass="w40" sortBy="#{dominio.descripcion}">
+								<h:outputText value="#{dominio.descripcion}" />
+							</p:column>
 
-											</p:tree>
-											<div class="w100 grid-center">
-												<p:commandButton id="commandCopiarNodo" value="#{msg['botones.copiar']}" process="@this" styleClass="button margin-top-3" disabled="#{dialogScript.isDisabledBoton()}" onclick="triggerCopiar();" icon="fa fa-copy" />
-											</div>
-									</p:panel>
+							<p:column headerText=""  styleClass="w20">
+								<p:commandButton id="btnCons" value="#{msg['botones.consultar']}"  icon="fa fa-eye"  actionListener="#{dialogScript.consultarDominio(dominio)}" process="@this" style="width:100px" />
 
-									 <p:panel id="panelSR" header="#{msg['cabecera.opciones.scripts_secciones_reutilizables']}" toggleable="true" widgetVar="panelSR" style="margin-bottom:2px" collapsed="#{dialogScript.visibleScriptSR}"  styleClass="sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda and dialogScript.tieneSR}">
+								<p:spacer width="6" height="1"/>
 
-											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
+								<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{dialogScript.ping(dominio.codigo)}" process="@this" style="width:100px" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
 
-											<p:dataTable id="tableScriptSR"
-												var="sr" value="#{dialogScript.srL}" emptyMessage="#{msg['error.emptyRows']}"  scrollable="true" scrollHeight="270"
-										   		 >
+					<p:panel id="panelFormularios" header="#{msg['dialogScript.formularios.header']}" toggleable="true" widgetVar="panelFormularios" collapsed="#{dialogScript.visibleFormularios}"  styleClass="sin-bordes noPadding grid-left" style="margin-bottom:2px" rendered="#{!dialogScript.mostrarLateralAyuda and dialogScript.treeFormularios.getChildCount() != 0}">
 
-												<p:ajax event="rowSelect" global="false" />
-												<p:column headerText="#{msg['dialogSeccionesReutilizables.identificador']} #{msg['dialogSeccionesReutilizables.titulo']}" styleClass="wpx35" sortBy="#{dialogScript.identificadorSR(sr)}">
-										        	<h:outputText value="#{dialogScript.identificadorSR(sr)}"/>
-										        </p:column>
+						<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR"  />
+						<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes w100" style="height: 320px;" selectionMode="single" selection="#{dialogScript.selectedNode}" widgetVar="arbol" >
+							<p:treeNode  styleClass="nodoComponente">
+								<i class="#{node.srcIcono()}" style="margin-right:4px" ></i>
+								<h:outputText value="#{node.getName()}" />
+							</p:treeNode>
 
-										        <p:column headerText="#{msg['viewDefinicionVersionAnexarDocumentos.activarSubsanacion']} #{msg['typeListaValores.S']}" styleClass="w30" style="word-wrap: break-word;" sortBy="#{dialogScript.scrSrNoVacio(sr)}">
-										        	<p:selectBooleanCheckbox id="activarScriptSR" itemLabel=""  value="#{dialogScript.scrSrNoVacio(sr)}" disabled="true" />
-										        </p:column>
+							<p:ajax event="select" update="dialogScript:commandCopiarNodo"  />
 
-												<p:column headerText=""  styleClass="w40">
-										        	<p:commandButton value="#{msg['botones.consultar']}" icon="fa fa-eye" disabled="#{!dialogScript.scrSrNoVacio(sr)}" actionListener="#{dialogScript.verScript(sr)}" process="@this" styleClass="#{not empty td.script.contenido ? 'boton-azul' : ''}"/>
-										        </p:column>
+						</p:tree>
+						<div class="w100 grid-center">
+							<p:commandButton id="commandCopiarNodo" value="#{msg['botones.copiar']}" process="@this" styleClass="button margin-top-3" disabled="#{dialogScript.isDisabledBoton()}" onclick="triggerCopiar();" icon="fa fa-copy" />
+						</div>
+					</p:panel>
 
-										    </p:dataTable>
-									  </p:panel>
-			    				</p:column>
-						</h:panelGrid>
+					<p:panel id="panelSR" header="#{msg['cabecera.opciones.scripts_secciones_reutilizables']}" toggleable="true" widgetVar="panelSR" style="margin-bottom:2px" collapsed="#{dialogScript.visibleScriptSR}"  styleClass="sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda and dialogScript.tieneSR}">
 
-						<h:outputScript >
-							function triggerCopiar() {
+						<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
 
-								// Valor del nodo seleccionado
-								var valor = document.getElementsByClassName("ui-state-highlight")[0].innerText;
+						<p:dataTable id="tableScriptSR"
+									 var="sr" value="#{dialogScript.srL}" emptyMessage="#{msg['error.emptyRows']}"  scrollable="true" scrollHeight="270"
+						>
 
-								// Crea un campo de texto oculto
-								var aux = document.createElement("input");
+							<p:ajax event="rowSelect" global="false" />
+							<p:column headerText="#{msg['dialogSeccionesReutilizables.identificador']} #{msg['dialogSeccionesReutilizables.titulo']}" styleClass="wpx35" sortBy="#{dialogScript.identificadorSR(sr)}">
+								<h:outputText value="#{dialogScript.identificadorSR(sr)}"/>
+							</p:column>
 
-								// Asigna el contenido del elemento especificado al valor del campo
-								aux.setAttribute("value", valor);
+							<p:column headerText="#{msg['viewDefinicionVersionAnexarDocumentos.activarSubsanacion']} #{msg['typeListaValores.S']}" styleClass="w30" style="word-wrap: break-word;" sortBy="#{dialogScript.scrSrNoVacio(sr)}">
+								<p:selectBooleanCheckbox id="activarScriptSR" itemLabel=""  value="#{dialogScript.scrSrNoVacio(sr)}" disabled="true" />
+							</p:column>
 
-								// Anyade el campo a la pagina
-								document.body.appendChild(aux);
+							<p:column headerText=""  styleClass="w40">
+								<p:commandButton value="#{msg['botones.consultar']}" icon="fa fa-eye" disabled="#{!dialogScript.scrSrNoVacio(sr)}" actionListener="#{dialogScript.verScript(sr)}" process="@this" styleClass="#{not empty td.script.contenido ? 'boton-azul' : ''}"/>
+							</p:column>
 
-								// Selecciona el contenido del campo
-								aux.select();
+						</p:dataTable>
+					</p:panel>
+				</p:column>
+			</h:panelGrid>
+			<p:commandButton id="hiddenCommandActualizarTexto" styleClass="button" process="@this"  action="#{dialogScript.anyadirTexto()}"  style="display:none" />
+			<p:commandButton id="hiddenCommandOcultarAyuda"    styleClass="button" process="@this"  action="#{dialogScript.ocultarAyuda()}"  style="display:none" update="@form" />
+			<p:commandButton id="hiddenCommandMensajeCopy"     styleClass="button" process="@this"  action="#{dialogScript.mensajeCopy()}"  style="display:none" update="growlScript" />
+			<h:inputText     id="hiddenNuevoTexto" 		onblur="this.value = this.value.trim();"	value="#{dialogScript.nuevoTexto}"  style="display:none" />
 
-								// Copia el texto seleccionado
-								document.execCommand("copy");
-
-								// Elimina el campo de la pagina
-								document.body.removeChild(aux);
-
-								document.getElementById("dialogScript:hiddenCommandMensajeCopy").click();
-							}
-
-                            function copiarClipboardDominio(domIdentificador) {
-
-    							// Crea un campo de texto oculto
-    							var aux = document.createElement("input");
-
-                                // Asigna el contenido del elemento especificado al valor del campo
-								aux.setAttribute("value", domIdentificador);
-
-                                // Anyade el campo a la pagina
-								document.body.appendChild(aux);
-
-                                // Selecciona el contenido del campo
-								aux.select();
-
-                                // Copia el texto seleccionado
-								document.execCommand("copy");
-
-                                // Elimina el campo de la pagina
-								document.body.removeChild(aux);
-							}
-
-                            function invertirColores() {
-    							var editor = document.getElementsByClassName("CodeMirror")[0];
-                                var editorScroll = document.getElementsByClassName("CodeMirror-vscrollbar")[0];
-								if(#{dialogScript.colorEditorOscuro}){
-									editor.style.filter="invert(0%)";
-									editorScroll.style.filter="invert(0%)";
-								} else {
-									editor.style.filter="invert(100%)";
-									editorScroll.style.filter="invert(100%)";
-								}
-							}
-						</h:outputScript>
-
-						<p:commandButton id="hiddenCommandActualizarTexto" styleClass="button" process="@this"  action="#{dialogScript.anyadirTexto()}"  style="display:none" />
-	      			   	<p:commandButton id="hiddenCommandOcultarAyuda"    styleClass="button" process="@this"  action="#{dialogScript.ocultarAyuda()}"  style="display:none" update="@form" />
-	      			   	<p:commandButton id="hiddenCommandMensajeCopy"     styleClass="button" process="@this"  action="#{dialogScript.mensajeCopy()}"  style="display:none" update="growlScript" />
-	      			   	<h:inputText     id="hiddenNuevoTexto" 		onblur="this.value = this.value.trim();"	value="#{dialogScript.nuevoTexto}"  style="display:none" />
-
-						<p:toolbar id="toolbarScript" style="position:fixed;bottom:0px;width:99%;">
-							<f:facet name="right">
-								<p:commandButton id="btnInvCol" value="#{msg['botones.invertirColores']}" actionListener="#{dialogScript.switchColorEditor()}" process="@form" update="@form growlScript"  onstart="if(PF('cm')) PF('cm').save();" oncomplete="invertirColores()" />
-								<c:choose>
-									<c:when test="#{dialogScript.esIframe}">
-										<p:commandButton value="#{msg['botones.cerrar']}" onclick="parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')[parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1].click()" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
-									</c:when>
-									<c:otherwise>
-										<p:commandButton value="#{msg['botones.cerrar']}"  onstart="if(PF('cm')) PF('cm').save();" actionListener="#{dialogScript.cancelar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
-									</c:otherwise>
-								</c:choose>
-								<p:commandButton id="btnAceptar" value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}">
-								</p:commandButton>
-								<p:commandButton id="btnEliminar" value="#{msg['botones.borrar']}" icon="fa fa-trash" actionListener="#{dialogScript.borrar()}" process="@this" update="growlScript" styleClass="boton-rojo" rendered="#{dialogScript.isEdicion()}" >
-									<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-								</p:commandButton>
-								<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogScript.cancelar()}" process="@this"  rendered="#{dialogScript.isEdicion()}"  />
-								<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogScript.ayuda()}" process="@this" update="growlScript"/>
-							</f:facet>
-						</p:toolbar>
+			<p:toolbar id="toolbarScript" style="position:fixed;bottom:0px;width:99%;z-index: 1000;">
+				<f:facet name="right">
+					<p:commandButton id="btnInvCol"
+									 value="#{msg['botones.invertirColores']}"
+									 actionListener="#{dialogScript.switchColorEditor()}"
+									 process="@this"
+									 update="@none"
+									 onstart="cmSaveIfPresent(); window.cmDark = !window.cmDark;"
+									 oncomplete="invertirColores();" />
+					<c:choose>
+						<c:when test="#{dialogScript.esIframe}">
+							<p:commandButton value="#{msg['botones.cerrar']}" onclick="parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')[parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1].click()" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
+						</c:when>
+						<c:otherwise>
+							<p:commandButton value="#{msg['botones.cerrar']}"
+											 onstart="cmSaveIfPresent();"
+											 actionListener="#{dialogScript.cancelar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
+						</c:otherwise>
+					</c:choose>
+					<p:commandButton id="btnAceptar"
+									 value="#{msg['botones.aceptar']}"
+									 actionListener="#{dialogScript.aceptar()}"
+									 process="@this codeMirror codeMirrorTextArea"
+									 update="@none"
+									 onstart="cmSaveIfPresent();"
+									 styleClass="boton-azul"
+									 rendered="#{dialogScript.isEdicion()}"/>
+					<p:commandButton id="btnEliminar" value="#{msg['botones.borrar']}" icon="fa fa-trash" actionListener="#{dialogScript.borrar()}" process="@this" update="growlScript" styleClass="boton-rojo" rendered="#{dialogScript.isEdicion()}" >
+						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+					</p:commandButton>
+					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogScript.cancelar()}" process="@this"  rendered="#{dialogScript.isEdicion()}"  />
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogScript.ayuda()}" process="@this" update="growlScript"/>
+				</f:facet>
+			</p:toolbar>
 
 			<p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
-		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
+					<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+					<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
-		    </p:confirmDialog>
-	</h:form>
-</h:body>
+			</p:confirmDialog>
+		</h:form>
+	</h:body>
 
 </f:view>
 </html>
