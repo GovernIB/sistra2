@@ -45,7 +45,12 @@ public enum TypePropiedadConfiguracion {
 	/** Sistramit rest url. **/
 	SISTRAMIT_REST_APIEXTERNA_URL("sistramit.rest.externa.url"),
 	/** Motor de scripting. */
-	SCRIPT_ENGINE("scriptEngine");
+	SCRIPT_ENGINE("scriptEngine"),
+	/** Depurar los datos mostrando los logs de xhtml y java **/
+	DEBUG_MOSTRAR("debug.activo"),
+	/** Desactivar el codeMirror **/
+	CODEMIRROR_DESACTIVAR("codemirror.desactivar");
+	;
 
 	/**
 	 * Valor como string.

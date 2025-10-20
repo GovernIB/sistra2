@@ -32,12 +32,24 @@
               $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
           }
 
+          function ajustarHeaderScroll() {
+				var header = document.querySelector('.ui-datatable-scrollable-header-box');
+				var body = document.querySelector('.ui-datatable-scrollable-body');
+				var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+				if (!isFirefox &amp;&amp; body &amp;&amp; body.scrollHeight > body.clientHeight) {
+					var scrollWidth = body.offsetWidth - body.clientWidth;
+					header.style.marginRight = scrollWidth + 'px';
+				} else if (header) {
+					header.style.marginRight = '0px';
+				}
+			}
+
           jQuery(document).ready(function() {
               $(window).resize(function() {
-                  setTimeout(function(){  setHeight(); }, 100);
+                  setTimeout(function(){  setHeight(); ajustarHeaderScroll();}, 100);
               });
 
-              setTimeout(function(){  setHeight(); }, 1000);
+              setTimeout(function(){  setHeight(); ajustarHeaderScroll();}, 1000);
           });
       </script>
 
@@ -264,7 +276,7 @@
 			</p:column>
 			<p:column styleClass="noPadding columna-filtros-botones" style="border-style:inherit  !important;">
 	        	<h:panelGrid id="panelBotones" columns="1" styleClass="w100, noPadding">
-	       			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewConsultaIncidencias.filtrar()}" process="@form:panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight()"/>
+	       			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewConsultaIncidencias.filtrar()}" process="@form:panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight();ajustarHeaderScroll();"/>
 	       			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConsultaIncidencias.ayuda()}"/>
 				</h:panelGrid>
 			</p:column>

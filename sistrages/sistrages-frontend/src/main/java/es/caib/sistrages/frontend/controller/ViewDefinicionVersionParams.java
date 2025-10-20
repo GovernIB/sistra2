@@ -688,12 +688,6 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 		LOG.error("Entra a ViewDefinicionVersionParams.editarPropiedades");
 		// Útil si entras a la vista sin f:viewParam
-		Map<String, String> paramViewParam = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap();
-		if (paramViewParam != null && paramViewParam.get("sinCM") != null) {
-			LOG.error("sinCM:" + paramViewParam.get("sinCM"));
-			params.put("sinCM", params.get("sinCM"));// se pasa el parámetro sinCM
-		}
 
 		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1100, 600);
 	}

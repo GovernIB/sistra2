@@ -216,7 +216,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	private boolean mostrarConvertirPDF;
 
-	private String sinCM;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -763,13 +762,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Útil si entras a la vista sin f:viewParam
 		Map<String, String> paramViewParam = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap();
-		if (paramViewParam != null && paramViewParam.get("sinCM") != null) {
-			LOG.error("sinCM:" + paramViewParam.get("sinCM"));
-			params.put("sinCM", params.get("sinCM"));// se pasa el parámetro sinCM
-		} else if (sinCM != null) {
-			LOG.error("sinCM2:" + sinCM);
-			params.put("sinCM", sinCM);// se pasa el parámetro sinCM
-		}
 		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1120, 680);
 	}
 
@@ -2650,11 +2642,4 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		this.mostrarConvertirPDF = mostrarConvertirPDF;
 	}
 
-	public String getSinCM() {
-		return sinCM;
-	}
-
-	public void setSinCM(String sinCM) {
-		this.sinCM = sinCM;
-	}
 }

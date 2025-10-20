@@ -145,8 +145,6 @@ public class DialogScript extends DialogControllerBase {
 	private String tipoDisenyo;
 	/** booleano que indica si es tipo form y tiene sr **/
 	private boolean tieneSR = false;
-	/** Variable que indica si tiene que mostrar el CodeMirror **/
-	private String sinCM;
 	/** Visible formulario. **/
 	private boolean visibleFormularios = true;
 	/** Visible herramientas. **/
@@ -200,6 +198,9 @@ public class DialogScript extends DialogControllerBase {
 
 	private SessionBean sb;
 
+	private boolean mostrarCodeMirror = true;
+
+	private boolean mostrarDebug = false;
 	/**
 	 * Constructor vacio.
 	 */
@@ -353,7 +354,19 @@ public class DialogScript extends DialogControllerBase {
 		} else {
 			colorEditorOscuro = true;
 		}
+
 		PrimeFaces.current().executeScript("invertirColores()");
+
+		//Obtenemos la configuración global.
+		String codeMirror = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.CODEMIRROR_DESACTIVAR.toString());
+		if (codeMirror != null && (codeMirror.equalsIgnoreCase("true") || codeMirror.equalsIgnoreCase("S"))) {
+			mostrarCodeMirror = false;
+		}
+
+		String debug = 	systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.DEBUG_MOSTRAR.toString());
+		if (debug != null && (debug.equalsIgnoreCase("true") || debug.equalsIgnoreCase("S"))) {
+			mostrarDebug = true;
+		}
 	}
 
 	public ScriptSeccionReutilizable getScriptSR(ComponenteFormulario cf) {
@@ -533,7 +546,9 @@ public class DialogScript extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
-		LOG.error("DialogScript.Aceptar.INI");
+		if (mostrarDebug) {
+			LOG.error("DialogScript.Aceptar.INI");
+		}
 		if(verificarExtensionesAnexos()) {
 			return;
 		}
@@ -598,8 +613,10 @@ public class DialogScript extends DialogControllerBase {
 		} else {
 			result.setResult(this.data);
 		}
-		LOG.error("DialogScript.Aceptar.data.codigo:" + this.data.getCodigo());
-		LOG.error("DialogScript.Aceptar.data.contenido:" + this.data.getContenido());
+		if (mostrarDebug) {
+			LOG.error("DialogScript.Aceptar.data.codigo:" + this.data.getCodigo());
+			LOG.error("DialogScript.Aceptar.data.contenido:" + this.data.getContenido());
+		}
 		UtilJSF.closeDialog(result);
 	}
 
@@ -1806,11 +1823,19 @@ public class DialogScript extends DialogControllerBase {
 		this.sb = sb;
 	}
 
-	public String getSinCM() {
-		return sinCM;
+	public boolean isMostrarCodeMirror() {
+		return mostrarCodeMirror;
 	}
 
-	public void setSinCM(String sinCM) {
-		this.sinCM = sinCM;
+	public void setMostrarCodeMirror(boolean mostrarCodeMirror) {
+		this.mostrarCodeMirror = mostrarCodeMirror;
+	}
+
+	public boolean isMostrarDebug() {
+		return mostrarDebug;
+	}
+
+	public void setMostrarDebug(boolean mostrarDebug) {
+		this.mostrarDebug = mostrarDebug;
 	}
 }

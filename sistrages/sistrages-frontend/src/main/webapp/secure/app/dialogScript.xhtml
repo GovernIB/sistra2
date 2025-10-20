@@ -53,21 +53,9 @@
 	</script>
 
 	<h:outputScript>
-		/*
-		window.onload = function() {
-			$("#bodyScript").attr('style','scrollable:auto !important');
-		}
-
-		window.onscroll = function() {
-			console.log('scrolloing');
-			console.log($("#dialogScript\\:toolbarScript").length);
-			$("#dialogScript\\:toolbarScript").attr('style','position:absolute;bottom:0px;width:99%');
-		}
-
-		window.onresize = function() {
-		    $("div.CodeMirror ").attr('style', 'height: ' +(window.innerHeight - 185 )+ 'px !important');
-		      	//No hace falta --> $("div#divDer").attr('style', 'height: ' +(window.innerHeight - 185 )+ 'px !important');
-		} **/
+		//<![CDATA[
+		window.depurarDatos = #{dialogScript.mostrarDebug};
+		//]]>
 	</h:outputScript>
 	<h:body id="bodyScript" style="overflow:auto !important; height:100%; width: 99% !important;">
 
@@ -88,7 +76,6 @@
 			<f:viewParam name="SECCION_REUTILIZABLE" required="false" value="#{dialogScript.identificadorSeccion}"/>
 			<f:viewParam name="PARAMETRO_DISENYO" value="#{dialogScript.tipoDisenyo}" />
 			<f:viewParam name="IFRAME" value="#{dialogScript.esIframe}" />
-			<f:viewParam name="sinCM" value="#{dialogScript.sinCM}" />
 			<f:viewAction action="#{dialogScript.checkLiteral}" />
 			<f:viewAction action="#{dialogScript.init}" />
 
@@ -181,21 +168,33 @@
 
 
 			function cmSaveIfPresent(){
-				console.log("cmSaveIfPresent");
+                if (window.depurarDatos) {
+					console.log("cmSaveIfPresent");
+                }
 				var w = PF('cm');
-				console.log(w);
+				if (window.depurarDatos) {
+					console.log(w);
+                }
 				if (w && w.getEditor) {
 					w.getEditor().save();
-					console.log("guardado if1");
+					if (window.depurarDatos) {
+						console.log("guardado if1");
+                    }
 				}
 				var cm = w ? (w.instance || w.editor || (w.getEditor && w.getEditor())) : null;
-				console.log("cm");
-				console.log(cm);
+				if (window.depurarDatos) {
+					console.log("cm");
+					console.log(cm);
+                }
 				if (cm && typeof cm.save === 'function') {
 					cm.save();                    // vuelca el contenido al <textarea> oculto
-					console.log('guardado', cm.getValue());
+					if (window.depurarDatos) {
+						console.log('guardado', cm.getValue());
+                    }
 				}
-				console.log("fin cmSaveIfPresent");
+				if (window.depurarDatos) {
+					console.log("fin cmSaveIfPresent");
+                }
 			}
 
 			(function(){
@@ -242,7 +241,7 @@
 						lineNumbers="true"
 						matchBrackets="true"
 						readonly="#{dialogScript.isConsulta()}"
-						rendered="#{empty dialogScript.sinCM or fn:toUpperCase(dialogScript.sinCM) ne 'S'}"
+						rendered="#{dialogScript.mostrarCodeMirror}"
 						styleClass="w100 h100" />
 
 				<p:inputTextarea
@@ -252,7 +251,7 @@
 						rows="30"
 						readonly="#{dialogScript.isConsulta()}"
 						styleClass="w100 h100"
-						rendered="#{not empty dialogScript.sinCM and fn:toUpperCase(dialogScript.sinCM) eq 'S'}" />
+						rendered="#{!dialogScript.mostrarCodeMirror}" />
 
 				<p:column  id="columnaRight">
 					<p:column id="columnaIframe" rendered="#{dialogScript.mostrarLateralAyuda}" style="text-align:center">

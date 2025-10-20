@@ -17,6 +17,16 @@
 			border: none;
 			background: none;
 		}
+
+		.dialog-nivel-seguridad .ui-widget-content {
+			background: #ffffff !important;
+			border: 1px solid #dddddd;
+			color: #333333;
+		}
+
+		.dialog-nivel-seguridad .ui-dialog-buttonpane {
+			margin-top: 0 !important;
+		}
 	</h:outputStylesheet>
 	<h:head>
 		<title>
@@ -27,7 +37,6 @@
 		<f:metadata>
 			<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionPropiedades.modoAcceso}" />
 			<f:viewParam name="ID" value="#{dialogDefinicionVersionPropiedades.id}" />
-			<f:viewParam name="sinCM" value="#{dialogDefinicionVersionPropiedades.sinCM}" />
 			<f:viewAction action="#{dialogDefinicionVersionPropiedades.init}" />
 		</f:metadata>
 		<style>
@@ -224,11 +233,10 @@
 
 								<p:spacer width="8" height="1"/>
 
-						        <p:selectOneMenu id="nivelQAA" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.nivelSeguridad}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" style="margin-top: -5px;" >
+						        <p:selectOneMenu id="nivelQAA" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.nivelSeguridad}" valueChangeListener="#{dialogDefinicionVersionPropiedades.prepararCambioNivelSeguridad}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" style="margin-top: -5px;" >
                                     <f:selectItems value="#{dialogDefinicionVersionPropiedades.nivelesSeguridad}" var="nivel" itemLabel="#{msg['nivelSeguridad.' += nivel]}" />
 
-						            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this tiposAutenticacion" update="@this @form tiposAutenticacion"
-											 />
+						            <p:ajax event="change" process="@this tiposAutenticacion" update="@this @form tiposAutenticacion growlDialog"/>
 						        </p:selectOneMenu>
 
 								<p:spacer width="16" height="1"/>
@@ -242,8 +250,8 @@
 					<p:row>
 						<p:column styleClass="noPadding-left">
 							<div id="sinAutenticacionDiv">
-								<p:selectBooleanCheckbox id="sinAutenticacion"  itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.noAutenticado}" style="width:170px" disabled="#{dialogDefinicionVersionPropiedades.tramiteVersion.normativa.equals(TypeNormativa.GENERAL.toString())}">
-									<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
+								<p:selectBooleanCheckbox id="sinAutenticacion" itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.noAutenticado}" style="width:170px" disabled="#{dialogDefinicionVersionPropiedades.tramiteVersion.normativa.equals(TypeNormativa.GENERAL.toString())}">
+									<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.abrirDialogoConfirmarNoAutenticado()}" process="@this" update="@this"/>
 								</p:selectBooleanCheckbox>
 							</div>
 						</p:column>
@@ -305,6 +313,23 @@
 
 			<p:commandButton id="hidden2" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionPropiedades.lanzarAviso2()}" process="@this" update="growlDialog" style="display:none;"/>
 
+            <p:confirmDialog id="confirmDialogNivelSeguridad" widgetVar="confirmDialogNivelSeguridad" message="#{dialogDefinicionVersionPropiedades.mensajeCambioDialogoConfirmacion}" header="#{msg['confirm.titulo']}" icon="fa fa-question-circle fa-3x confirmar_icono" styleClass="dialog-nivel-seguridad">
+                <p:outputPanel styleClass="confirmar_botonera">
+                    <p:commandButton value="#{msg['botones.aceptar']}" icon="fa fa-check" styleClass="ui-confirmdialog-yes boton-azul"
+                                     actionListener="#{dialogDefinicionVersionPropiedades.cambiarNivelSeguridad}" onclick="PF('confirmDialogNivelSeguridad').hide();" process="@this" update="@form tiposAutenticacion nivelQAA growlDialog" />
+                    <p:commandButton value="#{msg['botones.cancelar']}" icon="fa fa-times" styleClass="ui-confirmdialog-no"
+                                     actionListener="#{dialogDefinicionVersionPropiedades.cancelarCambioNivelSeguridad}" onclick="PF('confirmDialogNivelSeguridad').hide();" process="@this" update="@form tiposAutenticacion nivelQAA growlDialog" />
+                </p:outputPanel>
+            </p:confirmDialog>
+
+			<p:confirmDialog id="confirmDialogNoAutenticado" widgetVar="confirmDialogNoAutenticado" message="#{msg['confirm.noAutenticado']}" header="#{msg['confirm.titulo']}" icon="fa fa-question-circle fa-3x confirmar_icono" styleClass="dialog-nivel-seguridad">
+				<p:outputPanel styleClass="confirmar_botonera">
+					<p:commandButton value="#{msg['botones.aceptar']}" icon="fa fa-check" styleClass="ui-confirmdialog-yes boton-azul"
+									 actionListener="#{dialogDefinicionVersionPropiedades.cambiarNoAutenticado}" onclick="PF('confirmDialogNoAutenticado').hide();" process="@this" update="sinAutenticacion" />
+					<p:commandButton value="#{msg['botones.cancelar']}" icon="fa fa-times" styleClass="ui-confirmdialog-no"
+									 actionListener="#{dialogDefinicionVersionPropiedades.cancelarCambioNoAutenticado}" onclick="PF('confirmDialogNoAutenticado').hide();" process="@this" update="sinAutenticacion" />
+				</p:outputPanel>
+			</p:confirmDialog>
 		</h:form>
 	</h:body>
 					         	<!-- <p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />

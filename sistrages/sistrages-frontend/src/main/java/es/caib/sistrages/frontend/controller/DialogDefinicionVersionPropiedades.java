@@ -20,10 +20,12 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +48,6 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	/** Id elemento a tratar. */
 	private Long id;
-
-	private String sinCM;
 
 	/** tramite version. */
 	private TramiteVersion tramiteVersion;
@@ -90,6 +90,11 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	private String tipoTramite;
 
 	private boolean permiteSustancialCertificado;
+
+	String mensajeCambioDialogoConfirmacion;
+
+	int nivelSeguridadAnterior;
+	int nivelSeguridadNuevo;
 
 	/**
 	 * Inicialización.
@@ -311,6 +316,56 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	}
 
 	/**
+	 * Preparar cambio nivel seguridad.
+	 */
+	public void prepararCambioNivelSeguridad(ValueChangeEvent event) {
+		this.nivelSeguridadAnterior = (Integer) event.getOldValue();
+		this.nivelSeguridadNuevo = (Integer) event.getNewValue();
+
+		if (nivelSeguridadNuevo == 1 || nivelSeguridadNuevo == 2) {
+			mensajeCambioDialogoConfirmacion = UtilJSF.getLiteral("confirm.nivelSeguridad.bajoOsustancial");
+		} else if (nivelSeguridadNuevo == 3 || nivelSeguridadNuevo == 4) {
+			mensajeCambioDialogoConfirmacion = UtilJSF.getLiteral("confirm.nivelSeguridad.sustancialCertOalto");
+		}
+
+		PrimeFaces.current().executeScript("PF('confirmDialogNivelSeguridad').show();");
+	}
+
+	/**
+	 * Cambiar nivel seguridad.
+	 */
+	public void cambiarNivelSeguridad() {
+		tramiteVersion.setNivelSeguridad(nivelSeguridadNuevo);
+		setCambios();
+	}
+
+	/**
+	 * Cancelar cambio nivel seguridad.
+	 */
+	public void cancelarCambioNivelSeguridad() {
+		tramiteVersion.setNivelSeguridad(nivelSeguridadAnterior);
+	}
+
+	/**
+	 * Abrir dialogo confirmar no autenticado.
+	 */
+	public void abrirDialogoConfirmarNoAutenticado() {
+		if(tramiteVersion.isNoAutenticado()) {
+			PrimeFaces.current().executeScript("PF('confirmDialogNoAutenticado').show();");
+		} else {
+			setCambios();
+		}
+	}
+
+	public void cambiarNoAutenticado() {
+		setCambios();
+	}
+
+	public void cancelarCambioNoAutenticado() {
+		tramiteVersion.setNoAutenticado(false);
+	}
+
+	/**
 	 * Cancelar.
 	 */
 	public void cancelar() {
@@ -436,20 +491,12 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		params.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(), UtilJSON.toJSON(typeScript));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), id.toString());
 		if (id == null || iScript == null) {
-			if (sinCM != null) {
-				LOG.error("Sin CM: " + sinCM);
-				params.put("sinCM", sinCM);
-			}
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		} else {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(iScript));
-			if (sinCM != null) {
-				LOG.error("Sin CM: " + sinCM);
-				params.put("sinCM", sinCM);
-			}
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 		}
 	}
@@ -748,13 +795,27 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		return niveles;
 	}
 
-		public String getSinCM() {
-			return sinCM;
-		}
-
-		public void setSinCM(String sinCM) {
-			this.sinCM = sinCM;
-		}
-
-
+	public String getMensajeCambioDialogoConfirmacion() {
+		return mensajeCambioDialogoConfirmacion;
 	}
+
+	public void setMensajeCambioDialogoConfirmacion(String mensajeCambioDialogoConfirmacion) {
+		this.mensajeCambioDialogoConfirmacion = mensajeCambioDialogoConfirmacion;
+	}
+
+	public int getNivelSeguridadAnterior() {
+		return nivelSeguridadAnterior;
+	}
+
+	public void setNivelSeguridadAnterior(int nivelSeguridadAnterior) {
+		this.nivelSeguridadAnterior = nivelSeguridadAnterior;
+	}
+
+	public int getNivelSeguridadNuevo() {
+		return nivelSeguridadNuevo;
+	}
+
+	public void setNivelSeguridadNuevo(int nivelSeguridadNuevo) {
+		this.nivelSeguridadNuevo = nivelSeguridadNuevo;
+	}
+}

@@ -34,12 +34,24 @@
                 $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
             }
 
+            function ajustarHeaderScroll() {
+				var header = document.querySelector('.ui-datatable-scrollable-header-box');
+				var body = document.querySelector('.ui-datatable-scrollable-body');
+				var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+				if (!isFirefox &amp;&amp; body &amp;&amp; body.scrollHeight > body.clientHeight) {
+					var scrollWidth = body.offsetWidth - body.clientWidth;
+					header.style.marginRight = scrollWidth + 'px';
+				} else if (header) {
+					header.style.marginRight = '0px';
+				}
+			}
+
             jQuery(document).ready(function() {
                 $(window).resize(function() {
-                    setTimeout(function(){  setHeight(); }, 100);
+                    setTimeout(function(){  setHeight(); ajustarHeaderScroll();}, 100);
                 });
 
-                setTimeout(function(){  setHeight(); }, 1000);
+                setTimeout(function(){  setHeight(); ajustarHeaderScroll();}, 1000);
             });
         </script>
       <h:outputScript>
@@ -186,7 +198,7 @@
           		document.getElementById("form:mnuEliminar").style.display='none';
           	}
 
-            if(document.getElementById("form:btnDuplicar")!=null){
+            if(document.getElementById("form:btnDuplicarAlerta")!=null){
                 document.getElementById("form:duplicar").style.display='block';
             }else{
                 document.getElementById("form:duplicar").style.display='none';
@@ -207,21 +219,18 @@
             <p:row style="justify-content: flex-end;">
                 <p:column>
                     <h:panelGrid id="panelBotones" columns="6" cellspacing="5" styleClass="table-rightaligned">
-                    <p:commandButton value="#{msg['viewConfiguracionAlertas.probarAlerta']}" id="btnProbarAlerta" actionListener="#{viewConfiguracionAlertas.probarAlerta()}" process="@this" update="growl"/>
+                    <p:commandButton value="#{msg['botones.duplicarAlerta']}" id="btnDuplicarAlerta" icon="fa fa-copy" actionListener="#{viewConfiguracionAlertas.duplicarAlerta()}" process="@this" update="growl" oncomplete="setHeight();ajustarHeaderScroll();"/>
+                    <p:commandButton value="#{msg['viewConfiguracionAlertas.probarAlerta']}" id="btnProbarAlerta" icon="fa fa-feed" actionListener="#{viewConfiguracionAlertas.probarAlerta()}" process="@this" update="growl"/>
                     <p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewConfiguracionAlertas.nuevo()}" process="@this" update="growl">
-                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight()"/>
+                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight();ajustarHeaderScroll();"/>
                     </p:commandButton>
                     <p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConfiguracionAlertas.editar()}" process="@this" update="growl">
-                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight()"/>
+                        <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight();ajustarHeaderScroll();"/>
                     </p:commandButton>
                     <p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewConfiguracionAlertas.eliminar()}" process="@this" update="growl dataTable">
-                        <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" oncomplete="setHeight()"/>
+                        <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" oncomplete="setHeight();ajustarHeaderScroll();"/>
                     </p:commandButton>
-                    <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConfiguracionAlertas.ayuda}" oncomplete="setHeight()"/>
-
-                        <p:commandButton id="btnDuplicar" styleClass="button"   process="@this" update="growl"  actionListener="#{viewConfiguracionAlertas.duplicarAlerta()}" style="display:none">
-                            <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogoClonar}" update="growl" oncomplete="setHeight()"/>
-                        </p:commandButton>
+                    <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewConfiguracionAlertas.ayuda}" oncomplete="setHeight();ajustarHeaderScroll();"/>
                     </h:panelGrid>
                 </p:column>
             </p:row>
@@ -289,8 +298,8 @@
               $('#form\\:btnEditarHidden').click();
           }
         </h:outputScript>
-        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConfiguracionAlertas.rcDobleClick()}" process="@this" update=":form:growl" style="display:none" oncomplete="setHeight();">
-           <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight()"/>
+        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewConfiguracionAlertas.rcDobleClick()}" process="@this" update=":form:growl" style="display:none" oncomplete="setHeight();ajustarHeaderScroll();">
+           <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable" oncomplete="setHeight();ajustarHeaderScroll();"/>
         </p:commandButton>
         <h:outputScript >
           document.getElementsByName("form:dataTable_rppDD")[0].addEventListener("change", refrescarPaginacion);
@@ -326,7 +335,7 @@
 	      	<p:menuitem id="mnuNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" style="display:none;"/>
 	      	<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('form:btnEditar').click();" process="@this"  style="display:none;"/>
 	      	<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" style="display:none;"/>
-            <p:menuitem id="duplicar" icon="fa fa-copy" onclick="document.getElementById('form:btnDuplicar').click();" value="#{msg['botones.duplicarAlerta']}"  process="@this" style="display:none;"/>
+            <p:menuitem id="duplicar" icon="fa fa-copy" onclick="document.getElementById('form:btnDuplicarAlerta').click();" value="#{msg['botones.duplicarAlerta']}"  process="@this" style="display:none;"/>
 	    </p:contextMenu>
 	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar">
 			<p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>

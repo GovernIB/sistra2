@@ -154,7 +154,7 @@
 				</p:selectOneMenu>
 
 				<p:outputLabel for="tramites" value="#{msg['dialogTramiteClonar.headerTramites']}"  />
-				<p:selectOneMenu id="tramites" styleClass="w90"  value="#{dialogTramiteClonar.tramiteID}" >
+				<p:selectOneMenu id="tramites" styleClass="w90"  value="#{dialogTramiteClonar.tramiteID}" style="min-width: 200px !important;">
 					     <f:selectItems value="#{dialogTramiteClonar.tramites}" var="tramite" itemLabel="#{tramite.identificador}" itemValue="#{tramite.codigo}"  />
 				</p:selectOneMenu >
 

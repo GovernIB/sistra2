@@ -1317,13 +1317,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		if(componenteSeleccionado != null) {
 
-			boolean isSR = navegacion.getTipoComponente().equals(TypeObjetoFormulario.SECCION_REUTILIZABLE);
-			Long seccionId = isSR ?	 ((ComponenteFormularioCampoSeccionReutilizable)componenteSeleccionado).getIdSeccionReutilizable() : null;
-
 			if(navegacion.getTipoComponente().equals(TypeObjetoFormulario.LINEA)){
 				cambiarEdicionComponente("L" + componenteSeleccionado.getCodigo(), false, null, null);
 			} else {
-				cambiarEdicionComponente(componenteSeleccionado.getCodigo() + "", seccionId != null, seccionId, null);
+				cambiarEdicionComponente(componenteSeleccionado.getCodigo() + "",  false,null, null);
 			}
 
 		}
