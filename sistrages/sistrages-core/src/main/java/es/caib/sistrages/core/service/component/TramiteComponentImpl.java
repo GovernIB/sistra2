@@ -12,6 +12,7 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
@@ -230,10 +231,10 @@ public class TramiteComponentImpl implements TramiteComponent {
 	}
 
 	@Override
-	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
+	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso, final String normativa) {
 		// Primero creamos el formulario interno y luego el formulario tramite.
 		final Long idFormularioInterno = formularioInternoDao.addFormulario(formularioTramite);
-		return tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso, idFormularioInterno);
+		return tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso, idFormularioInterno, normativa);
 	}
 
 }

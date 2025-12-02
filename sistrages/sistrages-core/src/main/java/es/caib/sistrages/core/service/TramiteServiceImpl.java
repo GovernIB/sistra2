@@ -546,12 +546,12 @@ public class TramiteServiceImpl implements TramiteService {
 	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#addFormularioTramite(es.
-	 * caib.sistrages.core.api.model.FormularioTramite, java.lang.Long)
+	 * caib.sistrages.core.api.model.FormularioTramite, java.lang.Long, java.lang.String)
 	 */
 	@Override
 	@NegocioInterceptor
-	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
-		return tramiteComponent.addFormularioTramite(formularioTramite, idTramitePaso);
+	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso, final String normativa) {
+		return tramiteComponent.addFormularioTramite(formularioTramite, idTramitePaso, normativa);
 	}
 
 	/*

@@ -54,6 +54,14 @@ public class FormularioTramite extends ModelApi {
 	 * Indica si se debe firmar digitalmente (para idFormularioInterno tipo Tramite)
 	 */
 	private boolean debeFirmarse;
+	private boolean debeFirmarseAntesDelIntercambio;
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	/**
 	 * Permite establecer quién debe firmar el idFormularioInterno (para
@@ -381,6 +389,20 @@ public class FormularioTramite extends ModelApi {
 		this.formularioGestorExterno = formularioGestorExterno;
 	}
 
+	/**
+	 * @return the debeFirmarseAntesDelIntercambio
+	 */
+	public boolean isDebeFirmarseAntesDelIntercambio() {
+		return debeFirmarseAntesDelIntercambio;
+	}
+
+	/**
+	 * @param debeFirmarseAntesDelIntercambio the debeFirmarseAntesDelIntercambio to set
+	 */
+	public void setDebeFirmarseAntesDelIntercambio(boolean debeFirmarseAntesDelIntercambio) {
+		this.debeFirmarseAntesDelIntercambio = debeFirmarseAntesDelIntercambio;
+	}
+
 	@Override
 	public String toString() {
         return toString("","ca");
@@ -404,6 +426,7 @@ public class FormularioTramite extends ModelApi {
            texto.append(tabulacion +"\t IdFormulariIntern:" + idFormularioInterno + "\n");
            texto.append(tabulacion +"\t IdFormulariExtern:" + idFormularioExterno + "\n");
            texto.append(tabulacion +"\t debeFirmarse:" + debeFirmarse + "\n");
+           texto.append(tabulacion +"\t debeFirmarseAntesDelIntercambio:" + debeFirmarseAntesDelIntercambio + "\n");
            texto.append(tabulacion +"\t Obligatorietat:" + obligatoriedad + "\n");
            if (scriptObligatoriedad != null) {
         	   texto.append(tabulacion +"\t ScriptObligatorietat:\n");

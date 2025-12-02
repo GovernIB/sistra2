@@ -224,9 +224,11 @@ public interface TramiteService {
 	 *
 	 * @param formularioTramite
 	 * @param idTramitePaso
+	 * @param normativa
 	 * @return Id del formulario
+	 *
 	 */
-	public FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
+	public FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso, String normativa);
 
 	/**
 	 * Actualiza formulario.

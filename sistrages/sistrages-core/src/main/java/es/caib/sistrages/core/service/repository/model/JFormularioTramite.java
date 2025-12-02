@@ -87,6 +87,9 @@ public class JFormularioTramite implements IModelApi {
 	@Column(name = "FTR_FIRDIG", precision = 1, scale = 0)
 	private Boolean firmarDigitalmente;
 
+	@Column(name = "FTR_FIRDIGAIT", precision = 1, scale = 0)
+	private Boolean firmarDigitalmenteAntesDelIntercambio;
+
 	@Column(name = "FTR_TIPFOR", nullable = false, length = 1)
 	private String tipoFormulario;
 
@@ -215,6 +218,14 @@ public class JFormularioTramite implements IModelApi {
 		this.firmarDigitalmente = firmarDigitalmente;
 	}
 
+	public Boolean getFirmarDigitalmenteAntesDelIntercambio() {
+		return this.firmarDigitalmenteAntesDelIntercambio;
+	}
+
+	public void setFirmarDigitalmenteAntesDelIntercambio(final Boolean firmarDigitalmenteAntesDelIntercambio) {
+		this.firmarDigitalmenteAntesDelIntercambio = firmarDigitalmenteAntesDelIntercambio;
+	}
+
 	public String getTipoFormulario() {
 		return this.tipoFormulario;
 	}
@@ -286,6 +297,7 @@ public class JFormularioTramite implements IModelApi {
 		if (formulario != null) {
 			jformularioTramite.setCodigo(formulario.getCodigo());
 			jformularioTramite.setFirmarDigitalmente(formulario.isDebeFirmarse());
+			jformularioTramite.setFirmarDigitalmenteAntesDelIntercambio(formulario.isDebeFirmarseAntesDelIntercambio());
 			jformularioTramite.setDescripcion(JLiteral.fromModel(formulario.getDescripcion()));
 			jformularioTramite.setIdentificador(formulario.getIdentificador());
 			if (formulario.getFormularioGestorExterno() != null) {
@@ -319,6 +331,7 @@ public class JFormularioTramite implements IModelApi {
 
 		mformulario.setCodigo(this.getCodigo());
 		mformulario.setDebeFirmarse(this.getFirmarDigitalmente());
+		mformulario.setDebeFirmarseAntesDelIntercambio(this.getFirmarDigitalmenteAntesDelIntercambio());
 		if (this.getDescripcion() != null) {
 			mformulario.setDescripcion(this.getDescripcion().toModel());
 		}
@@ -369,6 +382,7 @@ public class JFormularioTramite implements IModelApi {
 			jformularioTramite.setCodigo(null);
 			jformularioTramite.setCodigoClonado(formularioTramite.getCodigo());
 			jformularioTramite.setFirmarDigitalmente(formularioTramite.getFirmarDigitalmente());
+			jformularioTramite.setFirmarDigitalmenteAntesDelIntercambio(formularioTramite.getFirmarDigitalmenteAntesDelIntercambio());
 			jformularioTramite.setDescripcion(JLiteral.clonar(formularioTramite.getDescripcion()));
 			jformularioTramite.setIdentificador(formularioTramite.getIdentificador());
 			jformularioTramite.setIdFormularioExterno(formularioTramite.getIdFormularioExterno());

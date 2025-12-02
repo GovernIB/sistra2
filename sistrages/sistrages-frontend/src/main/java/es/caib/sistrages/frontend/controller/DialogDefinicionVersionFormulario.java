@@ -90,6 +90,20 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		gestores = gestorFormularioExternoService.listFormularioExterno(Long.valueOf(area), UtilJSF.getIdioma(), null);
 		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
+
+	}
+
+	/**
+	 * Listener que se ejecuta cuando el usuario cambia manualmente el checkbox de firma.
+	 * Actualiza la variable auxiliar para mantener el estado original.
+	 */
+	public void onFirmaCheckboxChange() {
+	    // Primero ejecutar el método original de cambios si existe
+	    setCambios();
+
+	    if (data != null && tramiteVersion != null) {
+	        data.setDebeFirmarseAntesDelIntercambio(data.isDebeFirmarse());
+	    }
 	}
 
 	/**

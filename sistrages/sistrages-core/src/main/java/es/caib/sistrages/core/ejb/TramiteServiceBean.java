@@ -216,8 +216,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
-		return tramiteService.addFormularioTramite(formularioTramite, idTramitePaso);
+	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso, final String normativa) {
+		return tramiteService.addFormularioTramite(formularioTramite, idTramitePaso, normativa);
 	}
 
 	@Override

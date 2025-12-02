@@ -285,7 +285,21 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 			List<Integer> nivelesSinValidarFirma = TramiteVersion.nivelesSeguridad.values().stream().filter(n-> ! n.isConfigurableVerificarFirmantesAnexo()).map(n->n.getNivelSeguridad().getValor()).collect(Collectors.toList());
 
-			if( nivelesSinValidarFirma.contains(tramiteVersion.getNivelSeguridad()) ) {
+			if (tramiteVersion.getNivelSeguridad() == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO.getValor() ||
+					tramiteVersion.getNivelSeguridad() == TypeNivelSeguridad.ALTO.getValor()) {
+				List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());
+				pasos.stream()
+					.filter(p -> p.getTipo().equals(TypePaso.ANEXAR))
+					.forEach(p -> {
+						TramitePasoAnexar pasoAnexar = (TramitePasoAnexar) p;
+						if (!pasoAnexar.getDocumentos().isEmpty()) {
+							for (Documento documento : pasoAnexar.getDocumentos()) {
+								documento.setDebeValidarFirmantes(documento.isDebeAnexarFirmado() && documento.isDebeFirmarDigitalmente());
+							}
+							tramiteService.updateTramitePaso(pasoAnexar);
+						}
+					});
+			} else if( nivelesSinValidarFirma.contains(tramiteVersion.getNivelSeguridad()) ) {
 				List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());
 				pasos.stream().filter(p->p.getTipo().equals(TypePaso.ANEXAR)).forEach(p->{
 					TramitePasoAnexar pasoAnexar = (TramitePasoAnexar)p;

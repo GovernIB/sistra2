@@ -8,6 +8,7 @@
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeNormativa" var="TypeNormativa"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeNivelSeguridad" var="TypeNivelSeguridad"/>
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -305,7 +306,9 @@
 							</p:selectBooleanCheckbox>
 							<p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes"
 													 value="#{dialogDefinicionVersionAnexo.data.debeValidarFirmantes}"
-													 disabled="#{not dialogDefinicionVersionAnexo.data.debeAnexarFirmado or not dialogDefinicionVersionAnexo.verificableFirmantesAnexo}"
+													 disabled="#{(not dialogDefinicionVersionAnexo.data.debeAnexarFirmado or not dialogDefinicionVersionAnexo.verificableFirmantesAnexo)
+													 				or (dialogDefinicionVersionAnexo.tramiteVersion.nivelSeguridad.equals(TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO.getValor())
+													 					or dialogDefinicionVersionAnexo.tramiteVersion.nivelSeguridad.equals(TypeNivelSeguridad.ALTO.getValor())) }"
 													 style="margin-top: 6px !important;">
 								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this"
 										update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:btnScriptFirma"/>

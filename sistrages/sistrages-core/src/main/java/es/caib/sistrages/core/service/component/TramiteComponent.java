@@ -87,9 +87,10 @@ public interface TramiteComponent {
 	 *
 	 * @param formularioTramite formulario tramite
 	 * @param idTramitePaso     id tramite paso
+	 * @param normativa			indica la normativa aplicable al tramite
 	 * @return formulario tramite
 	 */
-	FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
+	FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso, String normativa);
 
 	TramiteVersion createTramiteVersionMigracion(Integer pNumVersion, String pIdiomasSoportados);
 

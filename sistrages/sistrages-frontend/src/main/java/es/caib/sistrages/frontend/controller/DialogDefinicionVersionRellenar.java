@@ -123,7 +123,8 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 			return;
 		}
 
-		final FormularioTramite formularioAlta = tramiteService.addFormularioTramite(data, Long.valueOf(idTramitePaso));
+		final String normativa = tramiteVersion.getNormativa();
+		final FormularioTramite formularioAlta = tramiteService.addFormularioTramite(data, Long.valueOf(idTramitePaso), normativa);
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();

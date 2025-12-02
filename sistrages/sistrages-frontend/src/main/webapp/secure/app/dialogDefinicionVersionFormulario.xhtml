@@ -191,13 +191,16 @@
            <p:panelGrid styleClass="noBorders">
                <p:row>
                  <p:column styleClass="noPadding-left">
-            <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"
-									 disabled="#{(dialogDefinicionVersionFormulario.tramiteVersion.normativa.equals(TypeNormativa.ESPECIFICA.toString())
-									 		and dialogDefinicionVersionFormulario.tramiteVersion.noAutenticado == true)
-									 	or (dialogDefinicionVersionFormulario.tramiteVersion.normativa.equals(TypeNormativa.GENERAL.toString())
-									 		and dialogDefinicionVersionFormulario.data.orden == 1)}">
-            	<p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}" process="@this" update="@this"/>
-            </p:selectBooleanCheckbox>
+			<p:selectBooleanCheckbox id="firmardigitalmente" 
+			                         value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" 
+			                         itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"
+			                         disabled="#{(dialogDefinicionVersionFormulario.tramiteVersion.normativa.equals(TypeNormativa.ESPECIFICA.toString())
+			                                 and dialogDefinicionVersionFormulario.tramiteVersion.noAutenticado == true)}">
+			    <p:ajax event="change" 
+			            listener="#{dialogDefinicionVersionFormulario.onFirmaCheckboxChange}" 
+			            process="@this" 
+			            update="@this"/>
+			</p:selectBooleanCheckbox>
              </p:column>
              <p:column>
                <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionFormulario.data.scriptFirma)}"

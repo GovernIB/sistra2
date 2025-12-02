@@ -216,6 +216,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	private boolean mostrarConvertirPDF;
 
+	private boolean firmarForm2;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -570,6 +571,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private void recuperarDatos() {
 
 		/* recuperamos los datos */
+
 		tramiteVersion = tramiteService.getTramiteVersion(id);
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		area = tramiteService.getAreaTramite(tramiteVersion.getIdTramite());
@@ -1016,11 +1018,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 */
 	public void nuevoFormulario() {
+
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
 				getTramitePasoRELLSeleccionado().getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionRellenar.class, TypeModoAcceso.ALTA, params, true, 600, 200);
+
 	}
 
 	/**
@@ -1135,8 +1139,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) && posicion == 1) {
 			FormularioTramite formPosicion1 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(0);
 			FormularioTramite formPosicion2 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(1);
-			formPosicion1.setDebeFirmarse(false);
+
+			formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
 			formPosicion2.setDebeFirmarse(true);
+
 			tramiteService.updateFormularioTramite(formPosicion1);
 			tramiteService.updateFormularioTramite(formPosicion2);
 		}
@@ -1178,8 +1184,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) && posicion == 0) {
 			FormularioTramite formPosicion1 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(0);
 			FormularioTramite formPosicion2 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(1);
-			formPosicion1.setDebeFirmarse(false);
+
+			formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
 			formPosicion2.setDebeFirmarse(true);
+
 			tramiteService.updateFormularioTramite(formPosicion1);
 			tramiteService.updateFormularioTramite(formPosicion2);
 		}
@@ -2640,6 +2648,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public void setMostrarConvertirPDF(boolean mostrarConvertirPDF) {
 		this.mostrarConvertirPDF = mostrarConvertirPDF;
+	}
+
+	/**
+	 * @return the firmarForm2
+	 */
+	public boolean isFirmarForm2() {
+		return firmarForm2;
+	}
+
+	/**
+	 * @param firmarForm2 the firmarForm2 to set
+	 */
+	public void setFirmarForm2(boolean firmarForm2) {
+		this.firmarForm2 = firmarForm2;
 	}
 
 }

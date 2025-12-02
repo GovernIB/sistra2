@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.types.*;
 import es.caib.sistrages.core.api.service.EntidadService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,11 +21,6 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.types.TypeExtension;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
-import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
-import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -37,7 +33,6 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.SystemService;
-import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 
 /**
  * Mantenimiento de definici&oacute;n de versi&oacute;n Anexo.
@@ -708,6 +703,11 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			this.data.setExtensionSeleccion(TypeExtension.PERSONALIZADAS);
 			this.data.setExtensiones("pdf;");
 			this.data.setDebeConvertirPDF(false);
+		}
+
+		if (tramiteVersion.getNivelSeguridad() == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO.getValor() ||
+				tramiteVersion.getNivelSeguridad() == TypeNivelSeguridad.ALTO.getValor()) {
+			this.data.setDebeValidarFirmantes(isRequiereFirma());
 		}
 	}
 
