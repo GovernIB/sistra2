@@ -163,14 +163,22 @@ $.fn.appTextareaAmplaria = function() {
 				// HTML contador
 
 				var contador_html = "<div class=\"imc--textarea-contador\"></div>"
-					,pare_ = element.closest(".imc-element");
+					,pare_ = element.closest(".imc-element")
+                    ,etiqueta_ = element.closest(".imc-el-etiqueta");
 
-				pare_
-					.find(".imc-el-etiqueta")
+                if (etiqueta_.length) {
+
+                    // si hi ha etiqueta on posar el contador
+
+                    etiqueta_
 						.append( contador_html );
 
 				var contador_ = pare_.find(".imc--textarea-contador")[0]
 					,amplaria_max = parseInt( element.attr("data-amplaria"), 10);
+
+                    if (contador_.style.position ===  "absolute") {
+                        return;
+                    }
 
                 contador_
 				    .innerHTML = txtFormDinTextareaAmplariaMaxima;
@@ -193,6 +201,14 @@ $.fn.appTextareaAmplaria = function() {
 
 				limitTextareaChars(element[0], amplaria_max, contador_);
 
+                } else {
+
+                    // si no hi ha etiqueta, activem i au
+
+                    limitTextareaChars(element[0], amplaria_max);
+                    
+                }
+
 			};
 
 		// prepara
@@ -205,40 +221,3 @@ $.fn.appTextareaAmplaria = function() {
 }
 
 // /appTextareaAmplaria
-
-
-
-/*
-const textarea = document.getElementById('oracle-textarea');
-const charCount = document.getElementById('char-count');
-const MAX_CHARS = 100; // Ajusta esto según tu columna VARCHAR2(N CHAR)
-const segmenter = new Intl.Segmenter(); // Funciona en navegadores modernos
- 
-function getOracleCharCount(text) {
-
-	return [...segmenter.segment(text)].length;
-
-}
- 
-function truncateToOracleLimit(text, maxChars) {
-
-	const segments = [...segmenter.segment(text)];
-
-	return segments.slice(0, maxChars).map(seg => seg.segment).join('');
-
-}
- 
-textarea
-	.addEventListener('input', () => {
-
-		const count = getOracleCharCount(textarea.value);
-
-		if (count > MAX_CHARS) {
-			textarea.value = truncateToOracleLimit(textarea.value, MAX_CHARS);
-		}
-
-		charCount
-			.textContent = `Caracteres usados: ${Math.min(count, MAX_CHARS)} / ${MAX_CHARS}`;
-
-	});
-*/
