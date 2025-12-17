@@ -112,7 +112,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		//map.add(LITERAL_TAMANYO, TAMANYO_MAXIMO);
 		//map.add(LITERAL_FILTRO_PAGINACION, "{\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}");
 		//map.add(LITERAL_IDIOMA, idioma);
-		map.add(LITERAL_FILTRO, "{\"idPlataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\", \"filtroPaginacion\" : {\"page\" : \"0\"}}");
+		map.add(LITERAL_FILTRO, "{\"plataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\", \"filtroPaginacion\" : {\"page\" : \"0\"}}");
 
 		final RServicioRolsac servicioRolsac = getRServicioRolsac(idServicioCP, map, idioma)[0];
 
@@ -696,12 +696,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		//	vigentes = " \"vigente\":\"1\", ";
 		//}
 		if (version == null) {
-			map.add(LITERAL_FILTRO, "{\"idTramite\":\"" + idTramite + "\", \"idPlataforma\" : \""
+			map.add(LITERAL_FILTRO, "{\"idTramite\":\"" + idTramite + "\", \"plataforma\" : \""
 					+ getIdentificadorPlafaformaSistra2() + "\", \"filtroPaginacion\" : {\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}}");
 		} else {
 			map.add(LITERAL_FILTRO,
 					"{\"idTramite\":\"" + idTramite + "\", \"version\" : \"" + version
-							+ "\", \"idPlataforma\" : \"" + getIdentificadorPlafaformaSistra2()
+							+ "\", \"plataforma\" : \"" + getIdentificadorPlafaformaSistra2()
 								+ "\", \"filtroPaginacion\" : {\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}}");
 		}
 

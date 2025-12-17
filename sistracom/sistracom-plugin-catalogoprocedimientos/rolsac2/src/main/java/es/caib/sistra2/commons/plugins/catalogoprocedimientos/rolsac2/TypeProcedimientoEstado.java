@@ -9,33 +9,23 @@ public enum TypeProcedimientoEstado {
     /**
      * <P>ESTADO MODIFICACON</P>
      **/
-    MODIFICACION("MODIFICACION"),
-
+    MODIFICACION("M"),
     /**
      * <P>ESTADO MODIFICACIÓN PENDIENTE SUBIR</P>
      */
-    PENDIENTE_PUBLICAR("PENDIENTE_PUBLICAR"),
+    PENDIENTE_PUBLICAR("PV"),
     /**
      * <P>PENDIENTE RESERVAR</P>
      */
-    PENDIENTE_RESERVAR("PENDIENTE_RESERVAR"),
-    /**
-     * <P>PENDIENTE RESERVAR</P>
-     */
-    PENDIENTE_BORRAR("PENDIENTE_BORRAR"),
+    PENDIENTE_CERRAR("PT"),
     /**
      * <P>PUBLICADO</P>
      */
-    PUBLICADO("PUBLICADO"),
+    PUBLICADO("P"),
     /**
-     * <P>BORRADO</P>
+     * <P>CERRAR</P>
      */
-    BORRADO("BORRADO"),
-
-    /**
-     * <P>RESERVA</P>
-     */
-    RESERVA("RESERVA");
+    CERRADO("T");
 
     String perfil;
 
