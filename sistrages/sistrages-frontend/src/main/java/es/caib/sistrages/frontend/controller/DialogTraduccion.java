@@ -59,6 +59,8 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 	private String filas;
 	private String columnas;
 
+	private String origen;
+
 	/** Parametro de entrada. **/
 	private Literal data;
 	/**
@@ -92,6 +94,14 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 			data = new Literal();
 		} else {
 			data = (Literal) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_LITERALES);
+		}
+
+		Object origenObj = UtilJSF.getSessionBean().getMochilaDatos().get("CLAVE_MOCHILA_ORIGEN");
+		String origenActual = (origenObj != null) ? origenObj.toString() : null;
+
+		if ("DialogDisenyoFormulario".equals(origenActual)) {
+			this.tamanyoMax = null;
+			this.caracteresNoPermitidos = null;
 		}
 
 		if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {
@@ -185,12 +195,15 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 		}
 
 		if (opcional == null || !"S".equals(opcional) || isAlgunLiteralRelleno) {
+
+			boolean verificarHTML = caracteresNoPermitidos != null && caracteresNoPermitidos.isEmpty();
+
 			if (visibleCa) {
 				if (textoCa == null || textoCa.isEmpty()) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
-				if (contieneEtiquetaHTML(textoCa)) {
+				if (verificarHTML && contieneEtiquetaHTML(textoCa)) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 					return;
 				}
@@ -210,7 +223,7 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
-				if (contieneEtiquetaHTML(textoEs)) {
+				if (verificarHTML && contieneEtiquetaHTML(textoEs)) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 					return;
 				}
@@ -231,6 +244,10 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
+				if (verificarHTML && contieneEtiquetaHTML(textoEn)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+					return;
+				}
 				if (excedeLongitud(textoEn)) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
 					return;
@@ -248,7 +265,7 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
-				if (contieneEtiquetaHTML(textoDe)) {
+				if (verificarHTML && contieneEtiquetaHTML(textoDe)) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 					return;
 				}
@@ -535,6 +552,20 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 	 */
 	public final void setTamanyoMax(String tamanyoMax) {
 		this.tamanyoMax = tamanyoMax;
+	}
+
+	/**
+	 * Getter para el origen.
+	 */
+	public String getOrigen() {
+		return origen;
+	}
+
+	/**
+	 * @param origen the origin of the call
+	 */
+	public void setOrigen(String origen) {
+		this.origen = origen;
 	}
 
 	/**

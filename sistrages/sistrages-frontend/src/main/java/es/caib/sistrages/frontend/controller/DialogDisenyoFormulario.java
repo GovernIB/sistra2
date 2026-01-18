@@ -1173,8 +1173,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void editarTraduccionesTexto() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
 		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso),
-				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccionDisenyo(TypeModoAcceso.valueOf(modoAcceso),
+				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas,
+				true, codigoObjFormularioDestino, codigoObjFormularioDestino);
 	}
 
 	/**
@@ -1183,8 +1184,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void consultarTraduccionesTexto() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
 		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA,
-				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccionDisenyo(TypeModoAcceso.CONSULTA,
+				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas,
+				true, codigoObjFormularioDestino, codigoObjFormularioDestino);
 	}
 
 	/**
@@ -1233,7 +1235,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void editarTraduccionesAyuda() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
 		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getAyuda();
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas,
+		UtilTraducciones.openDialogTraduccionDisenyo(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas,
 				true, codigoObjFormularioDestino, codigoObjFormularioDestino);
 	}
 
@@ -1243,7 +1245,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void consultarTraduccionesAyuda() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
 		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getAyuda();
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, traduccionesEdit, idiomas, idiomas, true,
+		UtilTraducciones.openDialogTraduccionDisenyo(TypeModoAcceso.CONSULTA, traduccionesEdit, idiomas, idiomas, true,
 				codigoObjFormularioDestino, codigoObjFormularioDestino);
 	}
 

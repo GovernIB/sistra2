@@ -107,6 +107,24 @@ public final class UtilTraducciones {
 	}
 
 	/**
+	 * Llama al padre pasando el origen "DialogDisenyoFormulario".
+	 */
+	public static void openDialogTraduccionDisenyo(final TypeModoAcceso modoAcceso, final Literal traducciones,
+			final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional,
+			final String caractNoPerm, String tamanyoMax) {
+		UtilTraducciones.openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomasObligatorios, opcional, caractNoPerm, tamanyoMax, "DialogDisenyoFormulario");
+	}
+
+	/**
+     * Método sobrecarga
+     */
+    public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, final Literal traducciones,
+            final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional,
+            final String caractNoPerm, String tamanyoMax) {
+        UtilTraducciones.openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomasObligatorios, opcional, caractNoPerm, tamanyoMax, null);
+    }
+
+	/**
 	 * Abre un dialog de tipo traduccion (es el método PADRE que realmente crea el
 	 * dialog).
 	 *
@@ -121,13 +139,20 @@ public final class UtilTraducciones {
 	 */
 	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, final Literal traducciones,
 			final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional,
-			final String caractNoPerm, String tamanyoMax) {
+			final String caractNoPerm, String tamanyoMax, String origen) {
 
 		final Map<String, String> params = new HashMap<>();
 		if (traducciones == null) {
 			UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_LITERALES);
 		} else {
 			UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_LITERALES, traducciones);
+		}
+
+		if (origen != null) {
+			UtilJSF.getSessionBean().getMochilaDatos().put("CLAVE_MOCHILA_ORIGEN", origen);
+		} else {
+			// Si es null limpiamos para que no afecte a futuras llamadas
+			UtilJSF.getSessionBean().getMochilaDatos().remove("CLAVE_MOCHILA_ORIGEN");
 		}
 
 		if (idiomas != null) {
