@@ -331,11 +331,14 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente())+" " + dataSeccionReutilizable, escribeCodigo(pCF.getCodigo(), true),
 				escribeObligatorio(campo, pModoEdicion), escribeTieneScripts(campo, pModoEdicion),
 				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
-
+		
+		// Etiqueta: si no hay que mostrar texto, mostramos cadena vacia
+		String textoEtiqueta = "&nbsp;";
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
-			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
-					"\">", trataLiteral(campo.getTexto().getTraduccion(pLang)), "</label></div>", 6);
+			textoEtiqueta = trataLiteral(campo.getTexto().getTraduccion(pLang));
 		}
+		escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
+				"\">", textoEtiqueta, "</label></div>", 6);
 
 		if (tipo != null && !"textarea".equals(tipo)) {
 			// Cambiamos en modo editor a tipo text para que no saque el calendario al hacer

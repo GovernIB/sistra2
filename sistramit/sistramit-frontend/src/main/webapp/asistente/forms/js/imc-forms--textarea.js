@@ -35,9 +35,6 @@ function limitTextareaChars(textarea, maxLength = 4000, counter = null) {
     function updateCounter(current, max) {
         if (counter) {
 
-			//counter
-			//	.innerHTML = txtFormDinTextareaAmplariaMaxima;
-
 			counter
 				.querySelector("strong")
 					.textContent = `${max}`;
@@ -148,40 +145,38 @@ function limitTextareaChars(textarea, maxLength = 4000, counter = null) {
 
 $.fn.appTextareaAmplaria = function() {
 
-	this.each(function(){
+    var element = $(this)
+        ,prepara = function() {
 
-		var element = $(this)
-			,prepara = function() {
+            // només TEXTAREA (per ara)
 
-				// només TEXTAREA (per ara)
-
-				if (element[0].nodeName !== "TEXTAREA") {
-					return;
-				}
+            if (element[0].nodeName !== "TEXTAREA" || !element.attr("data-amplaria") ) {
+                return;
+            }
 
 
-				// HTML contador
+            // HTML contador
 
-				var contador_html = "<div class=\"imc--textarea-contador\"></div>"
-					,pare_ = element.closest(".imc-element")
-                    ,etiqueta_ = element.closest(".imc-el-etiqueta");
+            var contador_html = "<div class=\"imc--textarea-contador\"></div>"
+                ,pare_ = element.closest(".imc-element")
+                ,etiqueta_ = pare_.find(".imc-el-etiqueta");
 
-                if (etiqueta_.length) {
+            // si hi ha etiqueta on posar el contador, si no hi ha, el posem baix del textarea
 
-                    // si hi ha etiqueta on posar el contador
+            var contenidor_cont_ = (etiqueta_.length) ? etiqueta_ : pare_;
 
-                    etiqueta_
-						.append( contador_html );
+            contenidor_cont_
+                .append( contador_html );
 
-				var contador_ = pare_.find(".imc--textarea-contador")[0]
-					,amplaria_max = parseInt( element.attr("data-amplaria"), 10);
+            var contador_ = pare_.find(".imc--textarea-contador")[0]
+                ,amplaria_max = parseInt( element.attr("data-amplaria"), 10);
 
-                    if (contador_.style.position ===  "absolute") {
-                        return;
-                    }
+            contador_
+                .innerHTML = txtFormDinTextareaAmplariaMaxima;
 
-                contador_
-				    .innerHTML = txtFormDinTextareaAmplariaMaxima;
+            // si està en l'etiqueta, revisem l'alçada per posar el format reduït
+
+            if (etiqueta_.length) {
 
                 let contador_rect = contador_.getBoundingClientRect()
                     ,etiqueta_rect = pare_[0].querySelector("label").getBoundingClientRect();
@@ -189,35 +184,26 @@ $.fn.appTextareaAmplaria = function() {
                 if (etiqueta_rect.height > (contador_rect.height + 3) ) {
 
                     contador_
-				        .innerHTML = "<p>(<span></span>/<strong></strong>)</p>";
+                        .innerHTML = "<p>(<span></span>/<strong></strong>)</p>";
 
                     contador_
                         .setAttribute("title", "");
 
                 }
 
+            }
 
-				// activa
+            // activa
 
-				limitTextareaChars(element[0], amplaria_max, contador_);
+            limitTextareaChars(element[0], amplaria_max, contador_);
 
-                } else {
 
-                    // si no hi ha etiqueta, activem i au
+        };
 
-                    limitTextareaChars(element[0], amplaria_max);
-                    
-                }
+    // prepara
 
-			};
+    prepara();
 
-		// prepara
-
-		prepara();
-
-	});
-
-	return this;
 }
 
 // /appTextareaAmplaria

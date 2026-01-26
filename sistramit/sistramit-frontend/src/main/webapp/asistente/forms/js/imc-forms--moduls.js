@@ -992,6 +992,13 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										el_iti
 											.setNumber( val_valor );
+									} else if (elm_input[0].nodeName === "TEXTAREA") {
+
+										// si és textarea
+
+										elm_input
+											.val( val_valor )
+											.appTextareaAmplaria();
 
 									} else {
 
@@ -999,16 +1006,6 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										elm_input
 											.val( val_valor );
-
-									}
-
-
-									// si es textarea
-
-									if (elm_input[0].nodeName === "TEXTAREA" && elm_input.attr("maxlength")) {
-
-										elm_input
-											.appTextareaAmplaria();
 
 									}
 
