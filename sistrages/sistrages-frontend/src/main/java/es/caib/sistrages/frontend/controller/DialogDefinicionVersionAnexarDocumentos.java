@@ -2,11 +2,14 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
 
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.event.SelectEvent;
+import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Literal;
@@ -46,6 +49,10 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 
 	/** Id Tramite Paso. **/
 	private String idTramitePaso;
+
+	private String errorCopiar;
+
+	private String portapapeles;
 
 	/** Idiomas. **/
 	private List<String> idiomas;
@@ -189,6 +196,47 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 
 	public void setIdTramitePaso(final String idTramitePaso) {
 		this.idTramitePaso = idTramitePaso;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr(AjaxBehaviorEvent event) {
+
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr(AjaxBehaviorEvent event) {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

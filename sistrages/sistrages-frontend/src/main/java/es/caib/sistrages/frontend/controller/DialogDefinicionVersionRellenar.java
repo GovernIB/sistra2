@@ -2,11 +2,14 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
 
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.event.SelectEvent;
+import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
@@ -42,6 +45,10 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	private String idTramiteVersion;
 
 	private String idTramitePaso;
+
+	private String portapapeles;
+
+	private String errorCopiar;
 
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
@@ -123,8 +130,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 			return;
 		}
 
-		final String normativa = tramiteVersion.getNormativa();
-		final FormularioTramite formularioAlta = tramiteService.addFormularioTramite(data, Long.valueOf(idTramitePaso), normativa);
+		final FormularioTramite formularioAlta = tramiteService.addFormularioTramite(data, Long.valueOf(idTramitePaso));
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
@@ -198,6 +204,53 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
 	public void setIdTramitePaso(final String idTramitePaso) {
 		this.idTramitePaso = idTramitePaso;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr(AjaxBehaviorEvent event) {
+
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr(AjaxBehaviorEvent event) {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

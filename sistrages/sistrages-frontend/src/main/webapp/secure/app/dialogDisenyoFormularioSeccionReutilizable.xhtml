@@ -8,7 +8,7 @@
 
 	<h:form id="formDisenyoTextbox" styleClass="h100">
 		<h3 class="margin-top-3 margin-bottom-3">
-			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.SC']}"/>
+			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.SR']}"/>
 		</h3>
 
 		<p:panel id="panelPropietats" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" toggleable="true" widgetVar="panel"  collapsed="#{dialogDisenyoFormulario.visiblePropiedades}">
@@ -16,13 +16,6 @@
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats" />
 
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}"  columnClasses="w30,w70" styleClass="w100">
-	         	<h:column rendered="#{!empty dialogDisenyoFormulario.objetoFormularioEdit.letra}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.letra']}" /></h:column>
-	         	<h:column rendered="#{!empty dialogDisenyoFormulario.objetoFormularioEdit.letra}">
-	         		<p:inputText onblur="this.value = this.value.trim();" value="#{dialogDisenyoFormulario.objetoFormularioEdit.letra}" maxlength="2" readonly="#{dialogDisenyoFormulario.consulta}">
-	         			<p:ajax event="blur" process="@this" />
-	         			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
-	         		</p:inputText>
-	         	</h:column>
 
 	         	<h:column rendered="#{!empty dialogDisenyoFormulario.objetoFormularioEdit.texto}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column rendered="#{!empty dialogDisenyoFormulario.objetoFormularioEdit.texto}">

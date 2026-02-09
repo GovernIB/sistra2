@@ -70,7 +70,7 @@ public interface TramitePasoDao {
 	 * @param FormularioInterno
 	 */
 	FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso,
-			Long idFormularioInterno, String normativa);
+			Long idFormularioInterno);
 
 	/**
 	 * Actualiza un formulario a trámite paso.

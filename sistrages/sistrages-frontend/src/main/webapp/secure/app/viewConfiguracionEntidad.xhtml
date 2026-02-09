@@ -157,6 +157,15 @@
                }
 			 }
 
+			 function ocultarContextMenu() {
+			 	 ['mainCm','mainCmH','mainCmF'].forEach(function(widget) {
+			 		 var menu = PF(widget);
+			 		 if (menu &amp;&amp; menu.isVisible()) {
+			 			 menu.hide();
+			 		 }
+			  	 });
+			  }
+
 			</h:outputScript>
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
@@ -279,11 +288,14 @@
 
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.tabAyuda']}">
 	        				<h:panelGrid styleClass="noBorders" columns="3" cellpadding="10">
-		           				<p:selectBooleanCheckbox id="checkEmail" required="true" value="#{viewConfiguracionEntidad.data.emailHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+		           				<p:selectBooleanCheckbox id="checkEmail" required="true" value="#{viewConfiguracionEntidad.data.emailHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
+								    <p:ajax event="change" update="inputEmail" />
+								</p:selectBooleanCheckbox>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.email']}" />
-							    <p:inputText value="#{viewConfiguracionEntidad.data.email}" size="70" onblur="this.value = this.value.trim();" maxlength="500" readonly="#{!viewConfiguracionEntidad.permiteEditar}" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}">
-							    	<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"  />
-							    </p:inputText>
+								<p:inputText id="inputEmail" value="#{viewConfiguracionEntidad.data.email}" size="70" onblur="this.value = this.value.trim();" maxlength="500" readonly="#{!viewConfiguracionEntidad.permiteEditar}" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}">
+								    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"
+								                     disabled="#{!viewConfiguracionEntidad.data.emailHabilitado}" />
+								</p:inputText>
 
 								<p:selectBooleanCheckbox id="checkTelefonSuport"  value="#{viewConfiguracionEntidad.data.telefonoHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.telSuport']}"  />
@@ -412,10 +424,10 @@
 				 	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{viewConfiguracionEntidad.ayuda()}" process="@this" update="growl"/>
 				</f:facet>
 			</p:toolbar>
-			<p:contextMenu for=":work">
+			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
 		    </p:contextMenu>
-		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewConfiguracionEntidad.copiadoCorr}" process="@this" update="@this growl"/>
             	<p:ajax event="error" listener="#{viewConfiguracionEntidad.copiadoErr}" update="@this growl"/>
         	</pe:clipboard>
@@ -423,7 +435,7 @@
         	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
 				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewConfiguracionEntidad.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{viewConfiguracionEntidad.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>
@@ -431,7 +443,7 @@
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
 				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewConfiguracionEntidad.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{viewConfiguracionEntidad.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>

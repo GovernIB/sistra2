@@ -3,8 +3,13 @@ package es.caib.sistrahelp.frontend.controller;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
+import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -26,6 +31,10 @@ public class DialogListadoPagos extends DialogControllerBase {
 	private String identificador;
 
 	private String mensaje;
+
+	private String errorCopiar;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -98,6 +107,47 @@ public class DialogListadoPagos extends DialogControllerBase {
 	 */
 	public final void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr(AjaxBehaviorEvent event) {
+
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr(AjaxBehaviorEvent event) {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewAuditoriaTramites.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

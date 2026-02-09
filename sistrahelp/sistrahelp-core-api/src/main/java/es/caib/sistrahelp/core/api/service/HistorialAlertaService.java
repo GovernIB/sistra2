@@ -61,4 +61,6 @@ public interface HistorialAlertaService {
 	 */
 	public List<HistorialAlerta> listHistorialAlerta(Date desde, Date hasta);
 
+	public HistorialAlerta getSiguienteHistorialAlerta(Long codigoAviso, Date fechaUltimaEjecucion);
+
 }

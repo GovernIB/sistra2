@@ -4,20 +4,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.event.SelectEvent;
+import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypeNormativa;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -84,14 +89,70 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
 	/** Init. **/
 	public void init() {
+        data = tramiteService.getFormulario(Long.valueOf(id));
+        dataI = tramiteService.getFormulario(Long.valueOf(id));
+        tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+       	gestores = gestorFormularioExternoService.listFormularioExterno(Long.valueOf(area), UtilJSF.getIdioma(), null);
+       	setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
 
-		data = tramiteService.getFormulario(Long.valueOf(id));
-		dataI = tramiteService.getFormulario(Long.valueOf(id));
-		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		gestores = gestorFormularioExternoService.listFormularioExterno(Long.valueOf(area), UtilJSF.getIdioma(), null);
-		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
+        boolean esPrimero = calcularEsPrimeraPosicion();
+        boolean esNormativaGeneral = TypeNormativa.GENERAL.toString().equals(tramiteVersion.getNormativa());
 
-	}
+        if (esPrimero) {
+            if (esNormativaGeneral) {
+                // Caso: General + Primero -> Forzamos firma y bloqueará el UI
+                data.setDebeFirmarse(true);
+                data.setDebeFirmarseAntesDelIntercambio(true);
+            } else {
+                // Caso: Específica + Primero -> Sugerimos firma (solo si es ALTA)
+                // Si es EDICION, respetamos lo que venga de BD (dataI)
+                if (TypeModoAcceso.ALTA.toString().equals(modoAcceso)) {
+                    data.setDebeFirmarse(true);
+                    data.setDebeFirmarseAntesDelIntercambio(true);
+                }
+            }
+        }
+    }
+
+	/**
+     * Método auxiliar para saber si el formulario actual es (o será) el primero de la lista.
+     */
+	private boolean calcularEsPrimeraPosicion() {
+		if (idPaso != null) {
+			TramitePaso paso = tramiteService.getTramitePaso(Long.valueOf(idPaso));
+            if (paso instanceof TramitePasoRellenar) {
+            	List<FormularioTramite> lista = ((TramitePasoRellenar) paso).getFormulariosTramite();
+
+                if (lista == null || lista.isEmpty()) {
+                	// Si la lista está vacía, el nuevo será el primero
+                    return true;
+                } else {
+                	// Si estamos editando (tenemos ID), comprobamos si el ID del primero coincide con este
+                    if (id != null) {
+                    	Long idFormularioActual = Long.valueOf(id);
+                        return lista.get(0).getCodigo().equals(idFormularioActual);
+                    } else {
+                    	// Si es ALTA (id == null), y la lista NO está vacía, el nuevo irá al final
+                    	// por tanto NO será el primero.
+                        return false;
+                    }
+                }
+            }
+		}
+
+        return false;
+    }
+
+    /**
+     * Calcula la condición.
+     */
+    public boolean isFirmaBloqueada() {
+        // Bloqueado si: Normativa es GENERAL Y es la Primera Posición
+        if (tramiteVersion != null && TypeNormativa.GENERAL.toString().equals(tramiteVersion.getNormativa())) {
+            return calcularEsPrimeraPosicion();
+        }
+        return false;
+    }
 
 	/**
 	 * Listener que se ejecuta cuando el usuario cambia manualmente el checkbox de firma.
@@ -444,10 +505,10 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -470,7 +531,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
+	public void copiadoErr(AjaxBehaviorEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 

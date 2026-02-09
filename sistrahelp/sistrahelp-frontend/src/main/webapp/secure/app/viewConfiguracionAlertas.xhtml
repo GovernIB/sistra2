@@ -173,6 +173,15 @@
 
        }
 
+		function ocultarContextMenu() {
+			['mainCm','workCm','mainCmH','mainCmF'].forEach(function(widget) {
+				var menu = PF(widget);
+			 	if (menu &amp;&amp; menu.isVisible()) {
+			 		menu.hide();
+		 		}
+		  	});
+		}
+
 		 function opcVista(){
 		 	if(document.getElementById("form:btnProbarAlerta")!=null){
           		document.getElementById("form:mnuProbarAlerta").style.display='block';
@@ -318,17 +327,16 @@
 		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
-	      <p:contextMenu for=":work">
+	      <p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
              <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
              <p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
-
         </p:contextMenu>
-        <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
-        <p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
-              <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
+        <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
+        	<p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
+            <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
           </pe:clipboard>
 
-		<p:contextMenu for=":form:dataTable" id="contextWork" beforeShow="opcVista();">
+		<p:contextMenu for=":form:dataTable" id="contextWork" widgetVar="workCm" beforeShow="opcVista();">
 			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyD"  process="@this :form:auxCopiar" update="growl" />
 			<p:separator/>
 			<p:menuitem id="mnuProbarAlerta" value="#{msg['viewConfiguracionAlertas.probarAlerta']}" icon="fa fa-feed" onclick="document.getElementById('form:btnProbarAlerta').click();" process="@this" style="display:none;"/>
@@ -337,7 +345,7 @@
 	      	<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" style="display:none;"/>
             <p:menuitem id="duplicar" icon="fa fa-copy" onclick="document.getElementById('form:btnDuplicarAlerta').click();" value="#{msg['botones.duplicarAlerta']}"  process="@this" style="display:none;"/>
 	    </p:contextMenu>
-	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar">
+	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 			<p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
 	         <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
 	    </pe:clipboard>
@@ -345,7 +353,7 @@
       <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
         <p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
       </p:contextMenu>
-      <pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+      <pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
         <p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
         <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
       </pe:clipboard>
@@ -353,7 +361,7 @@
        <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
         <p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
       </p:contextMenu>
-      <pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+      <pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
         <p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
         <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
       </pe:clipboard>

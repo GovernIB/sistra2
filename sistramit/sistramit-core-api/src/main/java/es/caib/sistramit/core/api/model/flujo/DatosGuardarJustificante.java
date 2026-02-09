@@ -36,6 +36,11 @@ public final class DatosGuardarJustificante implements ModelApi {
 	private TypeDescargaJustificante descarga = TypeDescargaJustificante.FICHERO;
 
 	/**
+	 * Email de notificación.
+	 */
+	private String email;
+
+	/**
 	 * Asunto.
 	 */
 	private String asunto;
@@ -253,6 +258,26 @@ public final class DatosGuardarJustificante implements ModelApi {
 	 */
 	public void setMostrarDocumentos(final TypeSiNo mostrarDocumentos) {
 		this.mostrarDocumentos = mostrarDocumentos;
+	}
+
+
+	/**
+	 * Método de acceso a email.
+	 *
+	 * @return email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * Método para establecer email.
+	 *
+	 * @param pEmail
+	 *            email a establecer
+	 */
+	public void setEmail(final String pEmail) {
+		email = pEmail;
 	}
 
 }

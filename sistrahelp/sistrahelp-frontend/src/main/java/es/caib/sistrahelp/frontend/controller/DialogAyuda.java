@@ -2,8 +2,11 @@ package es.caib.sistrahelp.frontend.controller;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
@@ -25,6 +28,8 @@ public class DialogAyuda extends DialogControllerBase {
 
 	/** Url iframe. **/
 	private String urlIframe;
+
+	private boolean esIframe = false;
 
 	private String portapapeles;
 
@@ -70,10 +75,10 @@ public class DialogAyuda extends DialogControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -96,7 +101,7 @@ public class DialogAyuda extends DialogControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
+	public void copiadoErr(AjaxBehaviorEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewAuditoriaTramites.copiar"));
 	}
 
@@ -112,6 +117,14 @@ public class DialogAyuda extends DialogControllerBase {
 	 */
 	public final void setPortapapeles(String portapapeles) {
 		this.portapapeles = portapapeles;
+	}
+
+	public boolean isEsIframe() {
+		return esIframe;
+	}
+
+	public void setEsIframe(boolean esIframe) {
+		this.esIframe = esIframe;
 	}
 
 }

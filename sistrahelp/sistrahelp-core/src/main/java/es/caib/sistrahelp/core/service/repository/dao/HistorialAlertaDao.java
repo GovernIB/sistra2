@@ -49,6 +49,8 @@ public interface HistorialAlertaDao {
 	 */
 	HistorialAlerta getHistorialAlertaByAlerta(Long codigoAviso);
 
+	HistorialAlerta getSiguienteHistorialAlerta(Long codigoAviso, Date fechaUltimaEjecucion);
+
 	/**
 	 * Elimina.
 	 *

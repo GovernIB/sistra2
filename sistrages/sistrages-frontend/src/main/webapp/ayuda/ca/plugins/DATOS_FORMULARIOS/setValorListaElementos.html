@@ -67,6 +67,22 @@ if (numeroElementos != null) {<br>
   var e = lel.addElemento();<br>
   e.addValor('LTX1', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX1'));<br>
   e.addValor('LTX2', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX2'));<br>
+
+  var compDom = PLUGIN_DATOSFORMULARIO.getValorElementoCompuesto('FORM1','LEL2',i,'LELUNICAHORIZONTAL');
+  e.addValorCompuesto('LEL4COMPUESTO', compDom.getCodigo(), compDom.getDescripcion());
+
+  var total = PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple('FORM1','LEL2',i,'LELMULTIPLEDOMINIO');
+  if (total > 0) {
+    var cont = 0;
+    var multiple = DATOS_FORMULARIOS.crearValorMultiple();
+    while(cont < total){
+      var aux = PLUGIN_FORMULARIOS.getValorElementoMultiple('FORM1','LEL2',i,'LELMULTIPLEDOMINIO',cont);
+      multiple.addValor(aux.getCodigo(), aux.getDescripcion());
+      cont = cont+1;
+    }
+    e.addValorMultiple('LEL4MULTIPLE', multiple);
+  }
+
   i++;<br>
  }<br>
  DATOS_FORMULARIOS.setValorListaElementos('FORM-2', 'LEL2', lel);<br>

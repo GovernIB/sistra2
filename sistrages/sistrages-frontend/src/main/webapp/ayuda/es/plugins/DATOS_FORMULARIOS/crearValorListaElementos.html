@@ -14,9 +14,9 @@
 <div class="seccionBreadcrumb">
   	<ul>
   		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
-  		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_DATOSFORMULARIO">DATOS_FORMULARIOS</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FORMULARIOS">DATOS_FORMULARIOS</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_DATOSFORMULARIO&metodo=crearValorListaElementos">crearValorListaElementos</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FORMULARIOS&metodo=crearValorListaElementos">crearValorListaElementos</a></li>
   	</ul>
 </div>
 
@@ -46,10 +46,18 @@
 <p>Por ejemplo, para generar una serie de valores para una lista de elementos: </p>
  <p class="codigoScript">
 var datos = DATOS_FORMULARIOS.crearValorListaElementos();<br />
-<p>De esta manera podemos añadir los nuevos valores a la variable usando el método "addValor(codigo, descripcion)", donde el primer parámetro indica el código y el segundo parámetro el valor:</p>
+<p>De esta manera podemos añadir los nuevos valores a la variable usando los métodos:
+	<ul>
+    	<li>'addValor(codigo, descripcion)', donde el primer parámetro indica el código y el segundo parámetro el valor.</li>
+    	<li>'addValorCompuesto(campo, codigo, descripcion)', donde el primer parámetro indica el campo al que se desea asignar el valor, el segundo parámetro el código que se desea asignar al campo y el tercero el valor.</li>
+    	<li>'addValorMultiple(campo, valor)', donde el primer parámetro indica el campo al que se desea asignar el valor y el segundo parámetro el valor siendo este una variable múltiple.</li>
+	</ul>
+</p>
 <p class="codigoScript">
-datos.addValor('codigo', '07073');
-datos.addValor('descripcion', 'Mallorca');
+datos.addValor('codigo', '07073'); <br>
+datos.addValor('descripcion', 'Mallorca'); <br>
+datos.addValorCompuesto('provincia', '07', 'Islas Baleares'); <br>
+datos.addValorMultiple('datosGeografico', multiple); <br>
 </p>
 </body>
 </html>

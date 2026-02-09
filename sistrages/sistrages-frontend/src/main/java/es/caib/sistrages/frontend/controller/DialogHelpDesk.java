@@ -33,6 +33,10 @@ public class DialogHelpDesk extends DialogControllerBase {
 	/** version trámite a buscar */
 	private String version;
 
+	private String errorCopiar;
+
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -96,6 +100,47 @@ public class DialogHelpDesk extends DialogControllerBase {
 	 */
 	public final void setVersion(String version) {
 		this.version = version;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

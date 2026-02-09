@@ -198,6 +198,25 @@ public final class PaginaFormulario extends ModelApi {
 		return res;
 	}
 
+	public ComponenteFormularioCampoSeccionReutilizable getCampoSeccionReutilizable(final Long idSeccionReutilizable) {
+		if (lineas != null) {
+			for (final LineaComponentesFormulario lc : lineas) {
+				if (lc.getComponentes() != null) {
+					for (final ComponenteFormulario cf : lc.getComponentes()) {
+						if (cf instanceof ComponenteFormularioCampoSeccionReutilizable) {
+
+							ComponenteFormularioCampoSeccionReutilizable cfr = (ComponenteFormularioCampoSeccionReutilizable) cf;
+							if( cfr.getIdSeccionReutilizable().equals(idSeccionReutilizable)) {
+								return cfr;
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Obtiene el valor de componente.
 	 *

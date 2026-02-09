@@ -202,10 +202,12 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
 }
 
 .imc-form .imc-element.imc-borde-seccion-reutilizable {
-	color:red;
-	border-color: red;
+	color:#009688;
+	border-color: #009688;
 	border-width: 1px !important;
 	border-style: solid;
+	margin-top: .3em;
+	margin-bottom: .3em;
 }
 
 .imc-form .imc-element.imc-sep-salt-carro {
@@ -213,6 +215,17 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
 	position: relative;
 	width: 100%;
 	height: .1em;
+}
+
+.imc-form .imc-element.imc-borde-seccion-reutilizable.imc-sep-salt-carro::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: -1em;
+	left: -0.5em;
+	width: 1em;
+	height: 0em !important;
+	background: none !important;
 }
 
 .imc-form .imc-element.imc-sep-salt-carro::after {
@@ -224,6 +237,20 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
 	width: 1em;
 	height: 2em;
 	background: #f2f2f2 url(../imgs/icones/ico_salt_carro.svg) no-repeat center center / auto .7em;
+}
+
+/*.imc-form .imc-borde-seccion-reutilizable + .imc-element.imc-sep-salt-carro.imc--el-seleccionat{*/
+/*	outline: none;*/
+/*	background-color: #009688 !important;*/
+/*}*/
+
+.imc-form .imc-element.imc-borde-seccion-reutilizable.imc-sep-salt-carro.imc--el-seleccionat {
+	outline: none;
+	background-color: #009688 !important;
+}
+
+.imc-form .imc-element.imc-borde-seccion-reutilizable.imc-sep-salt-carro.imc--el-seleccionat::after {
+	outline: none !important;
 }
 
 .imc-form .imc-element.imc-sep-salt-carro.imc--el-seleccionat {

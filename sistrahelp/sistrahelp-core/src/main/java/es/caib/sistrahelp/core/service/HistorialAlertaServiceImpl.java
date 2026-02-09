@@ -97,4 +97,10 @@ public class HistorialAlertaServiceImpl implements HistorialAlertaService {
 	public HistorialAlerta loadHistorialAlertaByAlerta(Long codAlerta) {
 		return historialAlertaDao.getHistorialAlertaByAlerta(codAlerta);
 	}
+
+	@Override
+	@NegocioInterceptor
+	public HistorialAlerta getSiguienteHistorialAlerta(Long codigoAviso, Date fechaUltimaEjecucion) {
+		return historialAlertaDao.getSiguienteHistorialAlerta(codigoAviso, fechaUltimaEjecucion);
+	}
 }

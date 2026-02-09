@@ -636,7 +636,23 @@ public class ViewTramites extends ViewControllerBase {
 		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
 				&& verificarFilaSeleccionadaArea()) {
 
-			actualizarPermisosCacheados(listaAreasSeleccionadas.get(0).getCodigo());
+			Long idAreaAVerificar = null;
+
+			//Si hay un trámite seleccionado, usamos ese área
+			if (tramiteSeleccionada != null) {
+				idAreaAVerificar = tramiteSeleccionada.getTramite().getIdArea();
+			}
+
+			//Si hay una versión seleccionada, usamos ese área
+			else if (versionSeleccionada != null) {
+				idAreaAVerificar = versionSeleccionada.getIdArea();
+			}
+
+			else {
+				return tienePotencialmentePermisosEnAlgunaArea();
+			}
+
+			actualizarPermisosCacheados(idAreaAVerificar);
 
 			retorno = permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
 					|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA);
@@ -645,6 +661,18 @@ public class ViewTramites extends ViewControllerBase {
 			retorno = false;
 		}
 		return retorno;
+	}
+
+	private boolean tienePotencialmentePermisosEnAlgunaArea() {
+		for (Area area : listaAreasSeleccionadas) {
+			List <TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
+
+			if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+					|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -659,7 +687,23 @@ public class ViewTramites extends ViewControllerBase {
 		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
 				&& verificarFilaSeleccionadaArea()) {
 
-			actualizarPermisosCacheados(listaAreasSeleccionadas.get(0).getCodigo());
+			Long idAreaAVerificar = null;
+
+			//Si hay un trámite seleccionado, usamos ese área
+			if (tramiteSeleccionada != null) {
+				idAreaAVerificar = tramiteSeleccionada.getTramite().getIdArea();
+			}
+
+			//Si hay una versión seleccionada, usamos ese área
+			else if (versionSeleccionada != null) {
+				idAreaAVerificar = versionSeleccionada.getIdArea();
+			}
+
+			else {
+				return tienePotencialmentePermisosConsultaEnAlgunaArea();
+			}
+
+			actualizarPermisosCacheados(idAreaAVerificar);
 
 			retorno = permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
 					|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA)
@@ -671,6 +715,20 @@ public class ViewTramites extends ViewControllerBase {
 		return retorno;
 	}
 
+	private boolean tienePotencialmentePermisosConsultaEnAlgunaArea() {
+	    for (Area area : listaAreasSeleccionadas) {
+	        List<TypeRolePermisos> permisos = securityService
+	            .getPermisosDesarrolladorEntidadByArea(area.getCodigo());
+
+	        if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+	                || permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+	                || permisos.contains(TypeRolePermisos.CONSULTA)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
 	/**
 	 * Actualiza los permisos si no está cacheado los permisos del area.
 	 *
@@ -679,7 +737,7 @@ public class ViewTramites extends ViewControllerBase {
 	private void actualizarPermisosCacheados(final Long idArea) {
 		if (this.idAreaCacheado == null || idArea.compareTo(idAreaCacheado) != 0) {
 			permisosCacheados = securityService
-					.getPermisosDesarrolladorEntidadByArea(listaAreasSeleccionadas.get(0).getCodigo());
+					.getPermisosDesarrolladorEntidadByArea(idArea);
 			idAreaCacheado = idArea;
 		}
 	}

@@ -27,6 +27,27 @@
 			body {
 				background-color: #FFF;
 			}
+
+			.barra-herramientas-disenyo {
+				display: inline-flex !important;
+				align-items: center !important;
+				white-space: nowrap !important;
+				flex-shrink: 0 !important;
+			}
+
+			.barra-herramientas-disenyo .ui-button {
+				margin: 0 1px !important;
+			}
+
+			.ui-separator {
+				margin: 0 6px !important;
+				flex-shrink: 0 !important;
+			}
+
+			.barra-herramientas-disenyo, .ui-separator {
+				margin-top: 2px;
+				margin-bottom: 2px;
+			}
 		</h:outputStylesheet>
     </f:facet>
 	<!-- Parametros dialogo -->
@@ -48,95 +69,93 @@
 	<h:form id="dialogDisenyoFormulario"  styleClass="h100, margin-top-10">
 		<h:outputScript >
 
-			  var arrayCm = [];
+		var arrayCm = [];
 
-				  window.onload=function(){
-			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-				onVisible(contextMenu, () => eliminarResaltar());
+		window.onload=function(){
+			let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			onVisible(contextMenu, () => eliminarResaltar());
 
-				document.addEventListener('contextmenu', function(ev) {
-			    	ev.preventDefault();
-			    	getPos();
-			    	return false;
+			document.addEventListener('contextmenu', function(ev) {
+				ev.preventDefault();
+				getPos();
+				return false;
 				}, false);
-			  }
+		}
 
-				function eliminarResaltar(){
-					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-			  		let elementos = document.getElementsByClassName('resaltar');
-			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
-						for(let i = 0; i &lt; elementos.length; i++){
-							elementos[i].classList.remove('resaltar');
-						}
-			  		}
-				}
-
-				function onVisible(element, callback) {
-				  new IntersectionObserver((entries, observer) => {
-				    entries.forEach(entry => {
-				      if(entry.intersectionRatio == 0) {
-				        callback(element);
-				      }
-				    });
-				  }).observe(element);
-				}
-
-			  function getPos(){
-			 	var e = window.event;
-
-			    var posX = e.clientX;
-			    var posY = e.clientY;
-			    var el = document.elementFromPoint(posX, posY);
-
-			    let elementos = document.getElementsByClassName('resaltar');
-			  		if(elementos.length &gt; 0){
-						for(let i = 0; i &lt; elementos.length; i++){
-							elementos[i].classList.remove('resaltar');
-						}
-			  		}
-
-				el.classList.add("resaltar");
-				var aux = document.getElementById("dialogDisenyoFormulario:auxCopiar");
-				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
-					aux.value = el.textContent;
-				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
-					aux.value = el.firstChild.value;
-				}else if(el.value!=null &amp;&amp; el.value!=''){
-					aux.value = el.value;
-				}else{
-		          aux.value = '';
-		        }
-
-				  if(aux.value!='' ){
-            var multiple = false;
-            var hijos = el.children;
-			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
-		            multiple = true;
-		                  }else if(hijos.length &gt;= 1 ){
-		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
-		                  		hijos = hijos[0].children;
-		                  	}
-			                    for(i=0;i&lt;hijos.length;i++){
-					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
-					                multiple=true;
-					              }
-			                    }
-
-		                  }
-                  var listaCm = document.getElementsByClassName('ui-contextmenu');
-                  if(multiple){
-                    for(i=0;i&lt;listaCm.length;i++){
-                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-                    		arrayCm.push(listaCm[i]);
-                    	}
-	                	listaCm[i].classList.add("d-none");
+		function onVisible(element, callback) {
+			new IntersectionObserver((entries, observer) => {
+				entries.forEach(entry => {
+					if(entry.intersectionRatio == 0) {
+						callback(element);
 					}
-                  }else{
-                  	for(i=0;i&lt;listaCm.length;i++){
-                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-                    		arrayCm.push(listaCm[i]);
-                    	}
-	                	listaCm[i].classList.remove("d-none");
+				});
+			}).observe(element);
+		}
+
+		function eliminarResaltar(){
+			let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			let elementos = document.getElementsByClassName('resaltar');
+			if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+				for(let i = 0; i &lt; elementos.length; i++){
+					elementos[i].classList.remove('resaltar');
+				}
+			}
+		}
+
+		function getPos(){
+			var e = window.event;
+			debugger;
+			var posX = e.clientX;
+			var posY = e.clientY;
+			var el = document.elementFromPoint(posX, posY);
+			let elementos = document.getElementsByClassName('resaltar');
+			if(elementos.length &gt; 0){
+				for(let i = 0; i &lt; elementos.length; i++){
+					elementos[i].classList.remove('resaltar');
+				}
+			}
+
+			el.classList.add("resaltar");
+			var aux = document.getElementById("dialogDisenyoFormulario:auxCopiar");
+			if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
+				aux.value = el.textContent;
+			}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+				aux.value = el.firstChild.value;
+			}else if(el.value!=null &amp;&amp; el.value!=''){
+				aux.value = el.value;
+			}else{
+				aux.value = '';
+			}
+
+			if(aux.value!='' ){
+				var multiple = false;
+				var hijos = el.children;
+				if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
+					multiple = true;
+				}else if(hijos.length &gt;= 1 ){
+					if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
+						hijos = hijos[0].children;
+					}
+					for(i=0;i&lt;hijos.length;i++){
+						if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+							multiple=true;
+						}
+					}
+				}
+				var listaCm = document.getElementsByClassName('ui-contextmenu');
+				if(multiple){
+					for(i=0;i&lt;listaCm.length;i++){
+						if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+							arrayCm.push(listaCm[i]);
+						}
+						listaCm[i].classList.add("d-none");
+					}
+				}else{
+					for(i=0;i&lt;listaCm.length;i++){
+						if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+							arrayCm.push(listaCm[i]);
+						}
+						listaCm[i].classList.remove("d-none");
 					}
 					if(arrayCm.length&gt;1){
 						arrayCm.pop();
@@ -145,15 +164,24 @@
 						}
 					}
 					arrayCm = [];
-                  }
+				}
+			}
+		}
 
-               }
-			 }
+		function ocultarContextMenu() {
+		  ['mainCm'].forEach(function(widget) {
+			  var menu = PF(widget);
+			  if (menu &amp;&amp; menu.isVisible()) {
+				  menu.hide();
+			  }
+		  });
+		}
 
-			</h:outputScript>
+
+		</h:outputScript>
 		<!--  Toolbar -->
 		<p:toolbar id="panelBotonesSuperiores">
-			<p:toolbarGroup align="left">
+			<p:toolbarGroup align="left" style="width: 100%; display: flex; align-items: center; flex-wrap: wrap;">
 
 				<h:outputText value="&#160;" rendered="#{dialogDisenyoFormulario.isTipoSeccion()}" style="margin-left:5px" />
 				<p:commandButton id="btnFormulario" value="#{msg['dialogDisenyoFormulario.formulario']}" icon="fa fa-file" actionListener="#{dialogDisenyoFormulario.abrirPropiedadesFormulario}" process="@this" update="growlDisenyoFormulario" title="#{msg['dialogDisenyoFormulario.title.formulario']}" rendered="#{dialogDisenyoFormulario.isTipoTramite()}">
@@ -182,7 +210,7 @@
 
 				</h:panelGroup>
 
-	       		<h:panelGroup class="ui-separator margin-right-10" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
+	       		<h:panelGroup class="ui-separator" style="margin: 0 8px;" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
                 	<span class="ui-icon ui-icon-grip-dotted-vertical" />
            		</h:panelGroup>
 
@@ -194,7 +222,7 @@
             		</p:selectOneButton>
 				</h:panelGroup>
 
-	       		<h:panelGroup class="ui-separator margin-right-10" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
+	       		<h:panelGroup class="ui-separator" style="margin: 0 8px;" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
                 	<span class="ui-icon ui-icon-grip-dotted-vertical" />
            		</h:panelGroup>
 
@@ -203,15 +231,18 @@
 					<p:commandButton icon="fa fa-chevron-left"  id="MoverObjIzq" 	actionListener="#{dialogDisenyoFormulario.moverObjetoIzq}" 	process="@this" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjIzq}"   title="#{msg['dialogDisenyoFormulario.title.moverIzq']}"/>
 					<p:commandButton icon="fa fa-chevron-right" id="MoverObjDer" 	actionListener="#{dialogDisenyoFormulario.moverObjetoDer}" 	process="@this" update="growlDisenyoFormulario"				     disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjDer}"   title="#{msg['dialogDisenyoFormulario.title.moverDer']}"/>
 					<p:commandButton icon="fa fa-copy"  		id="btnCopy"  		actionListener="#{dialogDisenyoFormulario.copy}"  			process="@this" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjCopy}"  title="#{msg['dialogDisenyoFormulario.title.copy']}"/>
-					<p:commandButton icon="fa fa-times"   		id="btnCut"   		actionListener="#{dialogDisenyoFormulario.cut}"   			process="@this" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjPaste}" title="#{msg['dialogDisenyoFormulario.title.cut']}"/>
-					<p:commandButton icon="fa fa-clone" 		id="btnPaste" 		actionListener="#{dialogDisenyoFormulario.paste}" 			process="@form" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjCut}"   title="#{msg['dialogDisenyoFormulario.title.paste']}"  />
+					<p:commandButton icon="fa fa-cut"   		id="btnCut"   		actionListener="#{dialogDisenyoFormulario.cut}"   			process="@this" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjPaste}" title="#{msg['dialogDisenyoFormulario.title.cut']}"/>
+					<p:commandButton icon="fa fa-paste" 		id="btnPaste" 		actionListener="#{dialogDisenyoFormulario.paste}" 			process="@form" update="growlDisenyoFormulario" 				 disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjCut}"   title="#{msg['dialogDisenyoFormulario.title.paste']}"  />
 					<p:commandButton icon="fa fa-trash" 		id="btnBorrar"		actionListener="#{dialogDisenyoFormulario.validarEliminarObjetoFormulario}"  process="@this" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjDel}"   title="#{msg['dialogDisenyoFormulario.title.borrar']}" rendered="#{dialogDisenyoFormulario.isNotConsulta()}"  />
 
 				</h:panelGroup>
 
-			</p:toolbarGroup>
-			<p:toolbarGroup align="right">
+				<h:panelGroup class="ui-separator" style="margin: 0 8px;" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
+                	<span class="ui-icon ui-icon-grip-dotted-vertical" />
+           		</h:panelGroup>
+
 				<p:commandButton id="btnHelp" title="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogDisenyoFormulario.ayuda}" process="@this" update="growlDisenyoFormulario"/>
+
 			</p:toolbarGroup>
 		</p:toolbar>
 
@@ -317,10 +348,10 @@
 				</p:outputPanel>
 			</p:panelGrid>
 		</p:outputPanel>
-		<p:contextMenu>
+			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogDisenyoFormulario:auxCopiar" update="growlDisenyoFormulario" />
 		    </p:contextMenu>
-		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+		    <pe:clipboard id="clipContextCopy" trigger="dialogDisenyoFormulario:mnuCopy" action="copy" target="dialogDisenyoFormulario:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{dialogDisenyoFormulario.copiadoCorr}" process="@this" update="@this growlDisenyoFormulario"/>
             	<p:ajax event="error" listener="#{dialogDisenyoFormulario.copiadoErr}" update="@this growlDisenyoFormulario"/>
         	</pe:clipboard>

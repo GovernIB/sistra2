@@ -12,7 +12,7 @@
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAutenticacion" var="TypeAutenticacion"/>
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeNormativa" var="TypeNormativa"/>
 
-	<h:outputStylesheet>
+	<h:outputStylesheet target="head">
 		.ui-widget-content {
 			border: none;
 			background: none;
@@ -26,6 +26,20 @@
 
 		.dialog-nivel-seguridad .ui-dialog-buttonpane {
 			margin-top: 0 !important;
+		}
+
+		.dialog-nivel-seguridad .ui-confirm-dialog-message {
+			display: inline !important;
+		}
+
+		#formDialogDefinicionVersionPropiedades\:tipo label.ui-state-disabled {
+			color: #999 !important;
+		    opacity: 0.6 !important;
+		    cursor: not-allowed !important;
+		}
+
+		#formDialogDefinicionVersionPropiedades\:tipo .ui-radiobutton-box.ui-state-disabled {
+			opacity: 0.5 !important;
 		}
 	</h:outputStylesheet>
 	<h:head>
@@ -60,124 +74,114 @@
 		<h:form id="formDialogDefinicionVersionPropiedades">
 			<h:outputScript >
 
-			  var arrayCm = [];
+			var arrayCm = [];
 
-				  window.onload=function(){
-			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			window.onload=function(){
+				let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
 
-				document.getElementById("formDialogDefinicionVersionPropiedades:tipo").addEventListener('click', function(ev) {
-			    	var targetElement = event.target || event.srcElement;
-        			if(#{!dialogDefinicionVersionPropiedades.isServicioActivado()}){
-        				while(targetElement.tagName!="TD"){
-        					targetElement = targetElement.parentNode;
-        				}
-        				var el = targetElement.children[0].children[0].children[0];
-        				if(el.id=="formDialogDefinicionVersionPropiedades:tipo:1"){
-        					document.getElementById('formDialogDefinicionVersionPropiedades:hidden2').click();
-        				}
-        			}
-				}, false);
-
 				document.addEventListener('contextmenu', function(ev) {
-			    	ev.preventDefault();
-			    	getPos();
-			    	return false;
-				}, false);
-			  }
+					ev.preventDefault();
+					getPos();
+					return false;
+					}, false);
+			}
 
-				function eliminarResaltar(){
-					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-			  		let elementos = document.getElementsByClassName('resaltar');
-			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
-						for(let i = 0; i &lt; elementos.length; i++){
-							elementos[i].classList.remove('resaltar');
+			function onVisible(element, callback) {
+				new IntersectionObserver((entries, observer) => {
+					entries.forEach(entry => {
+						if(entry.intersectionRatio == 0) {
+							callback(element);
 						}
-			  		}
+					});
+				}).observe(element);
+			}
+
+			function eliminarResaltar(){
+				let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				let elementos = document.getElementsByClassName('resaltar');
+				if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+					for(let i = 0; i &lt; elementos.length; i++){
+						elementos[i].classList.remove('resaltar');
+					}
 				}
+			}
 
-				function onVisible(element, callback) {
-				  new IntersectionObserver((entries, observer) => {
-				    entries.forEach(entry => {
-				      if(entry.intersectionRatio == 0) {
-				        callback(element);
-				      }
-				    });
-				  }).observe(element);
+			function getPos(){
+				var e = window.event;
+				debugger;
+				var posX = e.clientX;
+				var posY = e.clientY;
+				var el = document.elementFromPoint(posX, posY);
+				let elementos = document.getElementsByClassName('resaltar');
+				if(elementos.length &gt; 0){
+					for(let i = 0; i &lt; elementos.length; i++){
+						elementos[i].classList.remove('resaltar');
+					}
 				}
-
-			  function getPos(){
-			 	var e = window.event;
-
-			    var posX = e.clientX;
-			    var posY = e.clientY;
-			    var el = document.elementFromPoint(posX, posY);
-
-			    let elementos = document.getElementsByClassName('resaltar');
-			  		if(elementos.length &gt; 0){
-						for(let i = 0; i &lt; elementos.length; i++){
-							elementos[i].classList.remove('resaltar');
-						}
-			  		}
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("formDialogDefinicionVersionPropiedades:auxCopiar");
-				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+				if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
 				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
 				}else{
-		          aux.value = '';
-		        }
+					aux.value = '';
+				}
 
-				  if(aux.value!='' ){
-            var multiple = false;
-            var hijos = el.children;
-			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
-		            multiple = true;
-		                  }else if(hijos.length &gt;= 1 ){
-		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
-		                  		hijos = hijos[0].children;
-		                  	}
-			                    for(i=0;i&lt;hijos.length;i++){
-					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
-					                multiple=true;
-					              }
-			                    }
-
-		                  }
-                  var listaCm = document.getElementsByClassName('ui-contextmenu');
-                  if(multiple){
-                    for(i=0;i&lt;listaCm.length;i++){
-                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-                    		arrayCm.push(listaCm[i]);
-                    	}
-	                	listaCm[i].classList.add("d-none");
-					}
-                  }else{
-                  	for(i=0;i&lt;listaCm.length;i++){
-                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-                    		arrayCm.push(listaCm[i]);
-                    	}
-	                	listaCm[i].classList.remove("d-none");
-					}
-					if(arrayCm.length&gt;1){
-						arrayCm.pop();
-						for(let i=0; i&lt;arrayCm.length; i++){
-							arrayCm[i].style.display='none';
+				if(aux.value!='' ){
+					var multiple = false;
+					var hijos = el.children;
+					if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
+						multiple = true;
+					}else if(hijos.length &gt;= 1 ){
+						if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
+							hijos = hijos[0].children;
+						}
+						for(i=0;i&lt;hijos.length;i++){
+							if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+								multiple=true;
+							}
 						}
 					}
-					arrayCm = [];
-                  }
+					var listaCm = document.getElementsByClassName('ui-contextmenu');
+					if(multiple){
+						for(i=0;i&lt;listaCm.length;i++){
+							if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+								arrayCm.push(listaCm[i]);
+							}
+							listaCm[i].classList.add("d-none");
+						}
+					}else{
+						for(i=0;i&lt;listaCm.length;i++){
+							if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+								arrayCm.push(listaCm[i]);
+							}
+							listaCm[i].classList.remove("d-none");
+						}
+						if(arrayCm.length&gt;1){
+							arrayCm.pop();
+							for(let i=0; i&lt;arrayCm.length; i++){
+								arrayCm[i].style.display='none';
+							}
+						}
+						arrayCm = [];
+					}
+				}
+			}
 
-               }
-			 }
+			function ocultarContextMenu() {
+			  ['mainCm'].forEach(function(widget) {
+				  var menu = PF(widget);
+				  if (menu &amp;&amp; menu.isVisible()) {
+					  menu.hide();
+				  }
+			  });
+			}
 
-			 function metodo(el){
-			 	console.log(el);
-			 }
 
 			</h:outputScript>
 			<!-- Growl mensajes -->
@@ -199,7 +203,7 @@
                         <p:column styleClass="col-md-3">
                             <p:selectOneRadio id="tipo" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.tipoTramite}">
                                 <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
-                                <f:selectItem id="opcServicio" itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S" itemDisabled="#{!dialogDefinicionVersionPropiedades.isServicioActivado()}" style="width:fit-content;"/>
+                                <f:selectItem id="opcServicio" itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S" itemDisabled="#{dialogDefinicionVersionPropiedades.isServicioDesactivado()}"/>
                                 <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@form"/>
                             </p:selectOneRadio>
                         </p:column>
@@ -301,10 +305,10 @@
 					</f:facet>
 				</p:toolbar>
 			</p:outputPanel>
-				<p:contextMenu>
+			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formDialogDefinicionVersionPropiedades:auxCopiar" update="growlDialog" />
 		    </p:contextMenu>
-		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+		    <pe:clipboard id="clipContextCopy" trigger="formDialogDefinicionVersionPropiedades:mnuCopy" action="copy" target="formDialogDefinicionVersionPropiedades:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{dialogDefinicionVersionPropiedades.copiadoCorr}" process="@this" update="@this growlDialog"/>
             	<p:ajax event="error" listener="#{dialogDefinicionVersionPropiedades.copiadoErr}" update="@this growlDialog"/>
         	</pe:clipboard>
@@ -313,7 +317,7 @@
 
 			<p:commandButton id="hidden2" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionPropiedades.lanzarAviso2()}" process="@this" update="growlDialog" style="display:none;"/>
 
-            <p:confirmDialog id="confirmDialogNivelSeguridad" widgetVar="confirmDialogNivelSeguridad" message="#{dialogDefinicionVersionPropiedades.mensajeCambioDialogoConfirmacion}" header="#{msg['confirm.titulo']}" icon="fa fa-question-circle fa-3x confirmar_icono" styleClass="dialog-nivel-seguridad">
+            <p:confirmDialog id="confirmDialogNivelSeguridad" closable="false" style="max-width: 800px" widgetVar="confirmDialogNivelSeguridad" message="#{dialogDefinicionVersionPropiedades.mensajeCambioDialogoConfirmacion}" header="#{msg['confirm.titulo']}" icon="fa fa-question-circle fa-3x confirmar_icono" styleClass="dialog-nivel-seguridad">
                 <p:outputPanel styleClass="confirmar_botonera">
                     <p:commandButton value="#{msg['botones.aceptar']}" icon="fa fa-check" styleClass="ui-confirmdialog-yes boton-azul"
                                      actionListener="#{dialogDefinicionVersionPropiedades.cambiarNivelSeguridad}" onclick="PF('confirmDialogNivelSeguridad').hide();" process="@this" update="@form tiposAutenticacion nivelQAA growlDialog" />
@@ -322,7 +326,7 @@
                 </p:outputPanel>
             </p:confirmDialog>
 
-			<p:confirmDialog id="confirmDialogNoAutenticado" widgetVar="confirmDialogNoAutenticado" message="#{msg['confirm.noAutenticado']}" header="#{msg['confirm.titulo']}" icon="fa fa-question-circle fa-3x confirmar_icono" styleClass="dialog-nivel-seguridad">
+			<p:confirmDialog id="confirmDialogNoAutenticado" closable="false" widgetVar="confirmDialogNoAutenticado" message="#{msg['confirm.noAutenticado']}" header="#{msg['confirm.titulo']}" icon="fa fa-question-circle fa-3x confirmar_icono" styleClass="dialog-nivel-seguridad">
 				<p:outputPanel styleClass="confirmar_botonera">
 					<p:commandButton value="#{msg['botones.aceptar']}" icon="fa fa-check" styleClass="ui-confirmdialog-yes boton-azul"
 									 actionListener="#{dialogDefinicionVersionPropiedades.cambiarNoAutenticado}" onclick="PF('confirmDialogNoAutenticado').hide();" process="@this" update="sinAutenticacion" />

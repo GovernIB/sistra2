@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple(idFormulario,campoListaElementos,campo)');
+		copiarPortapeles('PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple(idFormulario,campoListaElementos,numElemento,campo)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -22,7 +22,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	getNumeroValoresValorElementoMultiple(idFormulario,campoListaElementos,campo): int
+	getNumeroValoresValorElementoMultiple(idFormulario,campoListaElementos,numElemento,campo): int
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
@@ -39,6 +39,7 @@
 	<ul>
 		<li><b>idFormulario</b>: Identificador del formulari. </li>
 		<li><b>campoListaElementos</b>: Identificador del camp llista d'elements. </li>
+		<li><b>numElemento</b>: Número de l'element a la llista d'elements. </li>
 		<li><b>campo</b>: Identificador del camp dins del formulari de la llista d'elements. </li>
 	</ul>
 </p>
@@ -53,9 +54,9 @@
  <p>
 	<b>Exemple</b>
  </p>
-<p> Si es desitja obtenir el nombre d'elements que té internament un camp associat a una llista d'elements a un formulari concret, utilitzarem la funció de la següent forma (suposant que l'identificador de la llista d'elements és 'LLISTA_ELEM1' i que dins té un component selector amb l'identificador 'SELECT1'):</p>
+<p> Si es desitja obtenir el nombre d'elements que té internament un camp associat a una llista d'elements a un formulari concret, utilitzarem la funció de la següent forma (suposant que l'identificador de la llista d'elements és 'LLISTA_ELEM1', que dins té un component selector amb l’identificador 'SELECT1' i que volem obtenir els valors per a la fila 'i' de la llista d’elements):</p>
  <p class="codigoScript">
-	var numeroElementos = PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple('FORM1','LISTA_ELEM1', 'SELECT1'); <br />
+	var numeroElementos = PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple('FORM1','LISTA_ELEM1', i, 'SELECT1'); <br />
  </p>
  <p>
   La funció getNumeroValoresValorElementoMultiple() retornarà el total d'elements que té aquest camp dins de la llista d'elements. En cas de no tenir cap, retornarà 'null'.

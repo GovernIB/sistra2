@@ -5,6 +5,9 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
 
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
+import org.apache.commons.lang3.StringUtils;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -46,6 +49,10 @@ public class DialogDefinicionVersionDominios extends DialogControllerBase {
 	 * dato seleccionado.
 	 */
 	private Dominio datoSeleccionado;
+
+	private String portapapeles;
+
+	private String errorCopiar;
 
 	/**
 	 * lista dominiosId.
@@ -219,6 +226,54 @@ public class DialogDefinicionVersionDominios extends DialogControllerBase {
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
+	}
+
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr(AjaxBehaviorEvent event) {
+
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr(AjaxBehaviorEvent event) {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

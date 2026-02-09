@@ -3,6 +3,8 @@ package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.flujo.*;
+import es.caib.sistramit.core.api.model.flujo.types.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,20 +17,6 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.AvisoUsuario;
-import es.caib.sistramit.core.api.model.flujo.DatosInteresado;
-import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
-import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
-import es.caib.sistramit.core.api.model.flujo.LopdCampo;
-import es.caib.sistramit.core.api.model.flujo.LopdTabla;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.Persona;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
-import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
-import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
-import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
-import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
@@ -309,9 +297,10 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		final List<DocumentosRegistroPorTipo> docsRegPorTipo = UtilsFlujo.buscarDocumentosParaRegistrar(getDao(),
 				pVariablesFlujo);
 
-		// Calculamos aviso finalizar
+		// Calculamos aviso finalizar (obligatorio si descarga es por email)
+		boolean avisoObligatorio = (this.registroComponent.descargaJustificantes(pDefinicionTramite.getDefinicionVersion().getIdEntidad()) == TypeDescargaJustificante.EMAIL);
 		final AvisoUsuario avisoFinalizar = ControladorPasoRegistrarHelper.getInstance()
-				.ejecutarScriptAvisoFinalizar(pIdPaso, pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
+				.ejecutarScriptAvisoFinalizar(pIdPaso, pDefinicionTramite, pVariablesFlujo, getScriptFlujo(), avisoObligatorio);
 
 		// Creamos detalle paso
 		final DetallePasoRegistrar dpr = new DetallePasoRegistrar();
@@ -639,10 +628,10 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		if (pDipa.getResultadoRegistro().isPreregistro()) {
 			ddj.setPreregistro(TypeSiNo.SI);
 		}
-
-		// TODO Ver cuando fichero justificante es necesario ¿prereregistro?
-		// ddj.setFichero(pDipa.getResultadoRegistro().getReferenciaJustificante());
-
+		DetallePasoRegistrar dpr = (DetallePasoRegistrar) pDipa.getDetallePaso();
+		if (dpr.getAvisoFinalizar() != null) {
+			ddj.setEmailAviso(dpr.getAvisoFinalizar().getEmail());
+		}
 		return ddj;
 	}
 

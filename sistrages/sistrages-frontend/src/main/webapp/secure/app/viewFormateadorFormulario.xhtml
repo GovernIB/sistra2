@@ -58,7 +58,7 @@
 				<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
 				<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
             </p:contextMenu>
-            <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+            <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
                 <p:ajax event="success" listener="#{viewFormateadorFormulario.copiadoCorr}" process="@this" update="@this growl"/>
                 <p:ajax event="error" listener="#{viewFormateadorFormulario.copiadoErr}" update="@this growl"/>
             </pe:clipboard>
@@ -66,7 +66,7 @@
 			<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
 				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewFormateadorFormulario.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{viewFormateadorFormulario.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>
@@ -74,7 +74,7 @@
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
 				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewFormateadorFormulario.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{viewFormateadorFormulario.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>
@@ -180,7 +180,7 @@
 				<p:menuitem id="mnuEditarFormateador" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
 				<p:menuitem id="mnuEliminarFormateador" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
             </p:contextMenu>
-            <pe:clipboard id="clipContextCopyFormateadores" trigger="mnuCopyFormateador" action="copy" target="auxCopiar">
+            <pe:clipboard id="clipContextCopyFormateadores" trigger="mnuCopyFormateador" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
                 <p:ajax event="success" listener="#{viewFormateadorFormulario.copiadoCorr}" process="@this" update="@this growl"/>
                 <p:ajax event="error" listener="#{viewFormateadorFormulario.copiadoErr}" update="@this growl"/>
             </pe:clipboard>
@@ -302,6 +302,15 @@
 
                }
              }
+
+             function ocultarContextMenu() {
+			 	 ['mainCm','mainCmH','mainCmF','cMenuFormateadoresWV'].forEach(function(widget) {
+			 		 var menu = PF(widget);
+			 		 if (menu &amp;&amp; menu.isVisible()) {
+			 			 menu.hide();
+			 		 }
+			  	 });
+			  }
 
             </h:outputScript>
 		</h:form>

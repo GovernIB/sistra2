@@ -3,15 +3,13 @@ package es.caib.sistramit.core.service.component.flujo.pasos.pagar;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
-import es.caib.sistramit.core.api.model.flujo.DatosSesionPago;
-import es.caib.sistramit.core.api.model.flujo.DetallePasoPagar;
-import es.caib.sistramit.core.api.model.flujo.Pago;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
@@ -63,7 +61,7 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
 		final DatosSesionPago sesionPago = pDipa.recuperarSesionPago(idPago);
 
 		// Validaciones previas a iniciar pago
-		validacionesPago(pDipa, pago, pVariablesFlujo.isDebugEnabled());
+		PagoVerificacion vp = validacionesPago(pDipa, pago, pVariablesFlujo.isDebugEnabled());
 
 		// Actualiza detalle
 		actualizarDetallePago(pDipa, idPago);
@@ -77,6 +75,7 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
 		// Devolvemos respuesta
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
 		rp.addParametroRetorno("sesionPago", sesionPago);
+		rp.addParametroRetorno("verificacion", vp);
 		final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
 		rep.setRespuestaAccionPaso(rp);
 		return rep;
@@ -86,14 +85,14 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
 	/**
 	 * Realiza validaciones previas al pago.
 	 *
-	 * @param pDipa
-	 *                         Datos interno paso pago
-	 * @param pPago
-	 *                         Datos pago
-	 * @param debugEnabled
-	 *                         Debug enabled
+	 * @param pDipa        Datos interno paso pago
+	 * @param pPago        Datos pago
+	 * @param debugEnabled Debug enabled
+	 * @return
 	 */
-	private void validacionesPago(final DatosInternosPasoPagar pDipa, final Pago pPago, final boolean debugEnabled) {
+	private PagoVerificacion validacionesPago(final DatosInternosPasoPagar pDipa, final Pago pPago, final boolean debugEnabled) {
+
+		PagoVerificacion pv = null;
 
 		final DatosSesionPago sesionPago = pDipa.recuperarSesionPago(pPago.getId());
 
@@ -122,11 +121,19 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
 				// TODO PAGO -- MEJORAR CONTROL ERROR PARA INDICAR QUE EL PAGO YA SE HA REALIZADO (SALE ERROR GENERAL)
 				throw new AccionPasoNoPermitidaException("El pagament està completat");
 			}
+			// Indicamos que verificación se ha realizado
+			pv = new PagoVerificacion();
+			pv.setVerificado(TypeSiNo.fromBoolean(dvp.isVerificado()));
+			pv.setRealizado(TypeSiNo.fromBoolean(dvp.isPagado()));
+			pv.setEstadoIncorrecto(pPago.getEstadoIncorrecto());
+			pv.setMetodoPago(dvp.getMetodoPago());
+			pv.setLocalizador(dvp.getLocalizador());
 			break;
 		default:
 			throw new AccionPasoNoPermitidaException("Tipus presentació no reconeguda");
 		}
 
+		return pv;
 	}
 
 	/**

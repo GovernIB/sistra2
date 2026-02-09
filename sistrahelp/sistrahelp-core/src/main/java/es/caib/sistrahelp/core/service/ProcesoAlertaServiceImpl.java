@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,6 +86,9 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 
 	@Autowired
 	private ConfiguracionComponent configuracionComponent;
+
+	@Autowired
+	private MessageSource messageSource;
 
 	private int tramIni;
 
@@ -278,13 +283,13 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			if (al.getListaAreas() != null && !al.getListaAreas().isEmpty()
 					&& al.getListaAreas().get(0) != null) {
 				//Entidad entidad = sistragesApiComponent.obtenerDatosEntidad(alert.getListaAreas().get(0));
-				logo = sistramitApiComponent.urlLogoEntidad(al.getIdEntidad());
+				/*logo = sistramitApiComponent.urlLogoEntidad(al.getIdEntidad());
 				try {
 					imageBytes = sistragesApiComponent.urlLogoEntidad(al.getIdEntidad());
 				} catch (Exception e) {
 					log.error("ALERTAS STH: Revisar porque puede que la id entidad esté mal (tiene que ser dir3, no id): " + al.getIdEntidad());
 					log.error("ALERTAS STH: Error obteniendo la imagen" , e);
-				}
+				}*/
 				Entidad entidad = sistragesApiComponent.obtenerDatosEntidad(al.getIdEntidad());
 				if (entidad.getNombre() != null) {
 					nombre = entidad.getNombre().getTraduccion(al.getIdioma());
@@ -360,7 +365,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				}
 			}
 
-
+			params.put("urlHistorial", getUrlHistorialAlerta(al.getCodigo(), al.getFecha(), al.getIdioma()));
 
 
 
@@ -412,7 +417,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				"                  Este mensaje ha sido generado por el sistema de alertas de SISTRAHELP    " +
 				"          </h1><h2>La expresi&oacute;n: \"${expresionAlerta}\" de la alerta:     " +
 				"         \"${nombre2}\" (configurada por la entidad: ${area}) se ha evaluado como cierta.    " +
-				"           En esta expresi&oacute;n aparece entre corchetes el n&uacute;mero de veces que se ha producido el acontecimiento correspondiente durante ${periodo}.    </h2>" +
+				"           En esta expresi&oacute;n aparece entre corchetes el n&uacute;mero de veces que se ha producido el acontecimiento correspondiente durante ${periodo}.    <h2> " +
+				" 			Si desea conocer el detalle y eventos asociados a la alerta lanzada, pulse <a href=\"${urlHistorial}\">aqu&iacute;</a>.</h2> " +
 				"              <!-- /continguts -->                        </div>    " +
 				"            <p class=\"auto\">MUY IMPORTANTE: Este correo se ha generado de forma autom&aacute;tica. Por favor no se tiene que responder a este correo.</p>            " +
 				"                    </div>          <!-- /contenidor -->                </body>            " +
@@ -454,7 +460,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				"                  Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP       " +
 				"          </h1><h2>L&#39;expressi&#243;: \"${expresionAlerta}\" de l&#39;Alerta:        " +
 				"          \"${nombre2}\" (configurada per l&#39;entitat: ${area}${area2}) s&#39;ha avaluat com a certa.       " +
-				"           &nbsp;En aquesta expressi&oacute; apareixen entre claud&agrave;tors el nombre de vegades que s'ha produ&iuml;t l'esdeveniment corresponent durant ${periodo}.      </h2> " +
+				"           &nbsp;En aquesta expressi&oacute; apareixen entre claud&agrave;tors el nombre de vegades que s'ha produ&iuml;t l'esdeveniment corresponent durant ${periodo}.      </h2><h2> " +
+				" 			Si desitja con&egrave;ixer el detall i esdeveniments associats a l&#39;alerta llan&ccedil;ada, premi <a href=\"${urlHistorial}\">aqu&iacute;</a>.</h2> " +
 				"              <!-- /continguts -->                        </div>    " +
 				"            <p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>               " +
 				"                    </div>          <!-- /contenidor -->                </body>            " +
@@ -463,13 +470,29 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 		return sb.toString();
 		
 	}
-	
+
+	private String getUrlHistorialAlerta(Long codigo, Date fecha, String idioma) {
+		String fechaStr = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(fecha);
+		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAHELP_VIEW_URL)
+										+ "/dialogHistorialAlertas.xhtml?codigoAlertaCorreo=" + codigo + "&fechaAnteriorCorreo=" + fechaStr + "&langCorreo=" + idioma;
+	}
 
 	private void anadirHistorial(Alerta al, String expresionCorreoHistorial) {
 		HistorialAlerta hA = new HistorialAlerta();
 		hA.setAlerta(al);
 		hA.setEvento(expresionCorreoHistorial);
 		hA.setFecha(new Date());
+		hA.setNombre(al.getNombre());
+		hA.setListaAreas(al.getListaAreas());
+		hA.setTramite(al.getTramite());
+		hA.setVersion(al.getVersion());
+		hA.setTipo(al.getTipo());
+		hA.setIdEntidad(al.getIdEntidad());
+		hA.setEmail(al.getEmail());
+		hA.setIntervaloEvaluacion(al.getPeriodoEvaluacion());
+		hA.setPeriodoEvaluacion(al.getIntervaloEvaluacion());
+		hA.setModoEvaluacion(al.getModoEvaluacion());
+		hA.setIdioma(al.getIdioma());
 		historialAlertaDao.add(hA);
 	}
 
@@ -566,7 +589,9 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				}
 			}
 
-			String msg = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">" + "   <head>"
+			Locale localeUsuario = new Locale(alert.getIdioma());
+
+			String msg = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" + alert.getIdioma() +"\" lang=\"" + alert.getIdioma() + "\">" + "   <head>"
 					+ "      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">" + "      <title>"
 					+ nombre + "</title>" + "      <!-- css -->" + "   </head>" + "   <body>"
 					+ "      <!-- contenidor --> 	"
@@ -589,27 +614,35 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "         <div id=\"continguts\" style=\"padding: 1em;border: 1em solid #f2f2f2;\">"
 					+ "            <!-- titol --> 			"
 					+ "            <h1 style=\"font-size: 1.4em;margin-top: 0;margin-bottom: 1em;\">"
-					+ "               Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP y ofereix un resum dels events recogits al Quadre de comandament de SISTRAHELP, pel "
-					+ "               " + parseFecha(getYesterday()) + ": 			" + "            </h1>"
+					+ "				" + messageSource.getMessage("resumen.diario.mail.rango", Arrays.asList(parseFecha(getYesterday()), parseFecha(getNow())).toArray(), new Locale(alert.getIdioma()))
+					+ "             </h1>"
+					+ "            <h2 style=\"font-size: 1.1em;margin: .8em 0;\">"
+					+ "               Si desitja con&egrave;ixer el detall i esdeveniments associats a aquest resum diari, premi <a href=\"" + getUrlCM(getYesterday()) + "\">aqu&iacute;</a>."
+					+ "            </h2> 			"
 					+ "            </div><div style=\"height:20px;\"></div>"
 					+ "            <table id=\"form:tablaCuadroMando\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"
 					+ "               <tbody>" + "                  <tr>"
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">ACCIONS</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.titulo", null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\"></td>"
-					+ "                                 <td style=\"background-color: lightgrey; border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Iniciats</span></td>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Finalitzats</span></td>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Percen&shy;tatge d&#39;accions<wbr> no<wbr> finali&shy;zades</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey; border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.header.iniciados", null, new Locale(alert.getIdioma()))+ "</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.header.finalizados", null, new Locale(alert.getIdioma())) + "</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.header.porcentaje_no_finalizados", null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\"></td>"
 					+ "                              </tr>" + "                              <tr>"
-					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Emplenar formulari</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.linea.rellenar_formulario", null, new Locale(alert.getIdioma())) +"</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ formIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -619,7 +652,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ nivelGravedad(formPor) + "</td>" + "                              </tr>"
 					+ "                              <tr>"
-					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Firmar</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.linea.firmar", null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -629,7 +663,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ nivelGravedad(firmaPor) + "</td>" + "                              </tr>"
 					+ "                              <tr>"
-					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Pagar</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.linea.pagar", null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ pagIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -639,7 +674,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ nivelGravedad(pagosPor) + "</td>" + "                              </tr>"
 					+ "                              <tr>"
-					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Registrar</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.linea.registrar", null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ regIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -653,7 +689,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\">Tr&#224;mits</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.tramites.titulo",null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>"
@@ -661,12 +698,16 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\"></td>"
-					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Iniciades</span></td>"
-					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Finalitzades</span></td>"
-					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Percen&shy;tatge de tr&#224;mits<wbr> no<wbr> finali&shy;tzats</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.tramites.header.iniciados", null, new Locale(alert.getIdioma())) + "</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.tramites.header.finalizados", null, new Locale(alert.getIdioma())) + "</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.tramites.header.porcentaje_no_finalizados", null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\"></td>"
 					+ "                              </tr>" + "                              <tr>"
-					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Tr&#224;mits</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">"
+					+ messageSource.getMessage("resumen.diario.mail.acciones.tramites.linea.tramites", null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ tramIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -683,25 +724,33 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">NOMBRE TOTAL D&#39;ERRORS (TRAMITACI&#211; + PLATAFORMA)</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.titulo.plataforma", null, localeUsuario)  + messageSource.getMessage("resumen.diario.mail.errores.titulo.plataforma", null, localeUsuario) + "</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ errTot + "</td>" + "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-top: .5em;\"><span style=\"font-weight: bold; \"><u>Errors de tramitaci&#243; (Errors per Tr&#224;mit):</u></span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-top: .5em;\"><span style=\"font-weight: bold; \"><u>"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_tramite", null, localeUsuario) + "</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                    <td style=\"font-weight: bold;\">"
 					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                          <tbody>" + "                             <tr>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions finalitzades</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions<wbr> no<wbr> finalitzades</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Percen&shy;tatge de sessions<wbr> no<wbr> finali&shy;tzades</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_tramite.tramite", null, localeUsuario) + "</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_tramite.version", null, localeUsuario) +"</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_tramite.sesiones_finalizadas", null, localeUsuario) +"</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_tramite.sesiones_no_finalizadas", null, localeUsuario) +"</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_tramite.porcentaje_sesiones_no_finalizadas", null, localeUsuario) +"</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_tramite.suma_errores", null, localeUsuario) +"</span></td>"
 					+ "                             </tr>";
 			if (listaErrores != null && !listaErrores.isEmpty()) {
 				for (ErroresPorTramiteCM lerr : listaErrores) {
@@ -722,7 +771,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				}
 			} else {
 				msg += "                             <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
-						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> No hi ha registres al dia d'ahir</td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">" +
+						" " + messageSource.getMessage("resumen.diario.mail.errores.no_registro", null, new Locale(alert.getIdioma())) + "</td>"
 						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
@@ -735,15 +785,19 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			msg += " <tr>" + "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-top: .5em;\"><span style=\"font-weight: bold; \"><u>Errors de tramitaci&#243; (Tr&#224;mits per Error):</u></span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-top: .5em;\"><span style=\"font-weight: bold; \"><u>"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_error" , null, new Locale(alert.getIdioma())) + "</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                    <td style=\"font-weight: bold;\">"
 					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                          <tbody>" + "                             <tr>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Error</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Percen&shy;tatge d&#39;errors</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_error.error" , null, new Locale(alert.getIdioma())) + "</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_error.suma" , null, new Locale(alert.getIdioma())) + "</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_error.porcentaje" , null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                             </tr>";
 			if (listaTramErrores != null && !listaTramErrores.isEmpty()) {
 				for (EventoCM ltrerr : listaTramErrores) {
@@ -757,7 +811,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				}
 			} else {
 				msg += "                             <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
-						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> No hi ha registres al dia d'ahir</td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> "
+						+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_error" , null, new Locale(alert.getIdioma())) + "</td>"
 						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                             </tr>";
@@ -767,15 +822,19 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>Errors de Plataforma</u></span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>"
+					+ messageSource.getMessage("resumen.diario.mail.errores.plataforma" , null, new Locale(alert.getIdioma())) + "</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                            <tbody>" + "                               <tr>"
-					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Error</span></td>"
-					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
-					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Percen&shy;tatge d&#39;errors</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.plataforma.error" , null, new Locale(alert.getIdioma())) +"</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.plataforma.suma" , null, new Locale(alert.getIdioma())) +"</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.plataforma.porcentaje" , null, new Locale(alert.getIdioma())) +"</span></td>"
 					+ "                               </tr>";
 			if (listaErrPlat != null && !listaErrPlat.isEmpty()) {
 				for (EventoCM lerrp : listaErrPlat) {
@@ -789,7 +848,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				}
 			} else {
 				msg += "                               <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
-						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> No hi ha registres al dia d'ahir</td>"
+						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> "
+						+ messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_error" , null, new Locale(alert.getIdioma())) + "</td>"
 						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>  "
 						+ "                               </tr>";
@@ -802,16 +862,20 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">TR&#192;MITS<wbr> NO<wbr> FINALI&shy;TZATS<wbr> SENSE<wbr> ERRORS</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramite.no_finalizados" , null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>"
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                            <tbody>" + "                               <tr>"
-					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
-					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
-					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions<wbr> no<wbr> finali&shy;tzades</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramite.no_finalizados.tramite" , null, new Locale(alert.getIdioma())) + "</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramite.no_finalizados.version" , null, new Locale(alert.getIdioma())) + "</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
+					+ messageSource.getMessage("resumen.diario.mail.errores.tramite.no_finalizados.sesiones_no_finalizadas" , null, new Locale(alert.getIdioma())) + "</span></td>"
 					+ "                               </tr>";
 			if (listaInacabados != null && !listaInacabados.isEmpty()) {
 				for (ErroresPorTramiteCM lerri : listaInacabados) {
@@ -825,7 +889,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				}
 			} else {
 				msg += "                               <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
-						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> No hi ha registres al dia d'ahir</td>"
+						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> " + messageSource.getMessage("resumen.diario.mail.errores.no_registro", null, new Locale(alert.getIdioma())) + "</td>"
 						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>  "
 						+ "                               </tr>";
@@ -867,7 +931,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 	//				+ "                    </td>" + "                 </tr>" + "               </tbody>"
 	//				+ "            </table>" + "            "
 					+ "         </div>"
-					+ "         <p style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
+					+ "         <p style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">" + messageSource.getMessage("resumen.diario.mail.nota.importante", null, new Locale(alert.getIdioma())) + "</p>"
 					+ "      </div>" + "   </body>" + "</html>";
 			log.debug("ALERTAS STH: Resumen diario enviado");
 			//enviarEmail(msg, DatatypeConverter.printBase64Binary(imageBytes));
@@ -1103,6 +1167,13 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 	private String parseFechaHistorial(Date fecha) {
 		DateFormat sourceFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		return sourceFormat.format(fecha);
+	}
+
+	private String getUrlCM(Date fechaDesde) {
+		String fechaStr = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(fechaDesde);
+		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAHELP_VIEW_URL)
+				+ "/viewCuadroMando.xhtml?tipoFechaMail=iv"
+				+ "&fechaDesdeMail=" + fechaStr;
 	}
 
 	private Properties recuperarConfiguracionProperties() {

@@ -108,8 +108,6 @@
 								<f:selectItems value="#{TypeTamanyo.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeTamanyo.' += tipo]}" />
 							</p:selectOneRadio>
 
-<!--							<p:selectBooleanCheckbox id="convertirpdf" disabled="true" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeConvertirPDF}" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}"-->
-<!--													 rendered="#{viewDefinicionVersionParams.mostrarConvertirPDF}" style="display: inline; margin-top: 6px !important;"/>-->
 							<p:selectBooleanCheckbox id="convertirpdf" disabled="true" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeConvertirPDF}" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}"
 													 style="display: inline; margin-top: 6px !important;"/>
 						</p:column>

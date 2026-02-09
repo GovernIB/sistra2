@@ -67,4 +67,10 @@ public class HistorialAlertaServiceBean implements HistorialAlertaService {
 		return historialAlertaService.loadHistorialAlertaByAlerta(al);
 	}
 
+	@Override
+	@PermitAll
+	public HistorialAlerta getSiguienteHistorialAlerta(Long codigoAviso, Date fechaUltimaEjecucion) {
+		return historialAlertaService.getSiguienteHistorialAlerta(codigoAviso, fechaUltimaEjecucion);
+	}
+
 }

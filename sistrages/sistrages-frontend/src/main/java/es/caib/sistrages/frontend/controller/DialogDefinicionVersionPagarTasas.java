@@ -2,11 +2,14 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
 
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.event.SelectEvent;
+import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tasa;
@@ -145,10 +148,10 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -171,7 +174,7 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
+	public void copiadoErr(AjaxBehaviorEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 

@@ -170,7 +170,7 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 		// caso de que el acceso sea autenticado)
 		if (pVariablesFlujo.getNivelAutenticacion() != TypeAutenticacion.ANONIMO && !pVariablesFlujo.getUsuario()
 				.getNif().equals(pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif())) {
-			throw new AccionPasoNoPermitidaException("El tràmite ha de ser registrat pel presentador ("
+			throw new AccionPasoNoPermitidaException("El tràmit ha de ser registrat pel presentador ("
 					+ pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif() + ")");
 		}
 		// Verificar si los documentos estan firmados

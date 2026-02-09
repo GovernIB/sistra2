@@ -34,7 +34,7 @@
 					<p:column styleClass="col-md-3">
 						<p:selectOneRadio id="tipo" value="#{viewDefinicionVersion.tramiteVersion.tipoTramite}" disabled="true">
 							<f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T" />
-							<f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S" disabled="#{!viewDefinicionVersion.isServicioActivado()}" />
+							<f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S" disabled="#{viewDefinicionVersion.isServicioDesactivado()}" />
 						</p:selectOneRadio>
 					</p:column>
 
@@ -67,21 +67,7 @@
 					</p:column>
 
 					<p:column styleClass="col-md-6">
-<!--						<p:selectBooleanCheckbox id="ckTipoAutenticacionCER" itemLabel="#{msg['tiposAutenticacion.CER.' += viewDefinicionVersion.tramiteVersion.getSubtiposAutenticacion('CER')]}"-->
-<!--												 value="true" rendered="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('CER')}"-->
-<!--												 disabled="true" />-->
-<!--&lt;!&ndash;						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.PIN']}"&ndash;&gt;-->
-<!--&lt;!&ndash;												 value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('PIN')}"&ndash;&gt;-->
-<!--&lt;!&ndash;												 disabled="true" />&ndash;&gt;-->
-<!--						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.PER.' += viewDefinicionVersion.tramiteVersion.getSubtiposAutenticacion('PER')]}"-->
-<!--												 value="true" rendered="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('PER')}"-->
-<!--												 disabled="true" />-->
-<!--						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.MOV.' += viewDefinicionVersion.tramiteVersion.getSubtiposAutenticacion('MOV')]}"-->
-<!--												 value="true" rendered="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('MOV')}"-->
-<!--												 disabled="true" />-->
-
 						<p:outputLabel id="tipoAutenticacion" value="#{msg['seguridad.tiposAutenticacion.nivel.' += viewDefinicionVersion.tramiteVersion.nivelSeguridad ]}" escape="false" style="opacity: .65;" />
-
 					</p:column>
 				</p:row>
 
@@ -96,11 +82,15 @@
 			</p:panelGrid>
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
-			<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
-				<ui:repeat var="idioma" value="#{sessionBean.idiomas}">
-					<p:selectBooleanCheckbox disabled="true" value="#{viewDefinicionVersion.idiomas.contains(idioma)}"  itemLabel="#{msg[idioma]}" required="true"/>
-				</ui:repeat>
-			</p:panelGrid>
+			<h:panelGroup layout="block" style="display:flex; gap:16px;">
+			    <ui:repeat var="idioma" value="#{sessionBean.idiomas}">
+			        <p:selectBooleanCheckbox
+			            disabled="true"
+			            value="#{viewDefinicionVersion.idiomas.contains(idioma)}"
+			            itemLabel="#{msg[idioma]}" />
+			    </ui:repeat>
+			</h:panelGroup>
+
 
 
 			<p:outputLabel for="scriptpersonalizacion" value="#{msg['script.SCRIPT_PERSONALIZACION_TRAMITE.titulo']}" />

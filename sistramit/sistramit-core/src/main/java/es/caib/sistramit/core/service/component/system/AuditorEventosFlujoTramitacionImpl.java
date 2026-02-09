@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.system;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -395,6 +396,17 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 					eventoPago = TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO;
 				}
 				final EventoAuditoria eventoPagoTramite = crearEventoPago(eventoPago, idSesionTramitacion, sp);
+				// Para no realizado añadimos localizador y metodo pago
+				if (pv.getRealizado() == TypeSiNo.NO ) {
+					if (StringUtils.isNotBlank(pv.getMetodoPago())) {
+						eventoPagoTramite.getPropiedadesEvento().addPropiedad(TypeParametroEvento.PAGO_METODO.toString(),
+								pv.getMetodoPago());
+					}
+					if (StringUtils.isNotBlank(pv.getLocalizador())) {
+						eventoPagoTramite.getPropiedadesEvento().addPropiedad(TypeParametroEvento.PAGO_LOCALIZADOR.toString(),
+								pv.getLocalizador());
+					}
+				}
 				// Añade mensaje error pasarela
 				if (pv.getEstadoIncorrecto() != null) {
 					eventoPagoTramite.getPropiedadesEvento().addPropiedad(TypeParametroEvento.PAGO_ERROR.toString(), pv.getEstadoIncorrecto().getCodigoErrorPasarela() + "-" + pv.getEstadoIncorrecto().getMensajeErrorPasarela());
@@ -411,8 +423,19 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			// Cancelar pago
 			if (((TypeAccionPasoPagar) accionPaso) == TypeAccionPasoPagar.CANCELAR_PAGO_INICIADO) {
 				final DatosSesionPago sp = (DatosSesionPago) respuestaAccionPaso.getParametroRetorno("sesionPago");
+				final PagoVerificacion pv = (PagoVerificacion) respuestaAccionPaso.getParametroRetorno("verificacion");
 				final EventoAuditoria eventoPagoTramite = crearEventoPago(TypeEvento.PAGO_CANCELADO,
 						idSesionTramitacion, sp);
+				if (pv != null && pv.getRealizado() == TypeSiNo.NO ) {
+					if (StringUtils.isNotBlank(pv.getMetodoPago())) {
+						eventoPagoTramite.getPropiedadesEvento().addPropiedad(TypeParametroEvento.PAGO_METODO.toString(),
+								pv.getMetodoPago());
+					}
+					if (StringUtils.isNotBlank(pv.getLocalizador())) {
+						eventoPagoTramite.getPropiedadesEvento().addPropiedad(TypeParametroEvento.PAGO_LOCALIZADOR.toString(),
+								pv.getLocalizador());
+					}
+				}
 				eventos.add(eventoPagoTramite);
 			}
 		}
@@ -432,9 +455,13 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 		eventoPagoTramite.setPropiedadesEvento(propiedadesEvento);
 		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_ID_SESION.toString(), sp.getIdentificadorPago());
 		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_PASARELA.toString(), sp.getPasarelaId());
-		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), sp.getImporte() + "");
+		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), String.format(Locale.US, "%.2f", sp.getImporte() / 100.0));
+		// Metodo pago y localizador solo se guardan en sesion pago cuando se verifica pago
 		if (StringUtils.isNotBlank(sp.getMetodoPagoSeleccionado())) {
 			propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_METODO.toString(), sp.getMetodoPagoSeleccionado());
+		}
+		if (StringUtils.isNotBlank(sp.getLocalizador())) {
+			propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_LOCALIZADOR.toString(), sp.getLocalizador());
 		}
 		return eventoPagoTramite;
 	}

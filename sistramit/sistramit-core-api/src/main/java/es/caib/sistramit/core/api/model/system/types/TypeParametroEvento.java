@@ -65,6 +65,10 @@ public enum TypeParametroEvento {
 	 */
 	PAGO_METODO("PAGMET"),
 	/**
+	 * Pago: Localizador pago en pasarela.
+	 */
+	PAGO_LOCALIZADOR("PAGLOC"),
+	/**
 	 * Valoración trámite: puntuación.
 	 */
 	VALORACION_PUNTUACION("VALPUN"),

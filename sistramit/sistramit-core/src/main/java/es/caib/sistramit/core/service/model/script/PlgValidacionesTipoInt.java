@@ -252,6 +252,26 @@ public interface PlgValidacionesTipoInt {
 	boolean esHora(final String hora, String formato);
 
 	/**
+	 * Verifica que el String sea tranformable a hora.
+	 *
+	 * @param formato
+	 *                    Formato fecha a Validar
+	 * @return true, si es satisfactorio true Si es un formato fecha valido false Si no es
+	 *         un formato fecha valido
+	 */
+	boolean esFormatoFecha(final String formato);
+
+	/**
+	 * Verifica que el String sea un formato válido de hora.
+	 *
+	 * @param formato
+	 *                    Formato hora a Validar
+	 * @return true, si es satisfactorio true Si es un formato hora valido false Si no es
+	 *         un formato hora valido
+	 */
+	boolean esFormatoHora(final String formato);
+
+	/**
 	 * Verifica que el String sea un importe valido.
 	 *
 	 * @param importe

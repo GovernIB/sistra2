@@ -57,7 +57,7 @@
              		<p:column>
                			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
               				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma eq null or viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma.estaVacio()}"
-              				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma)}"
+              				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma)} btn-no-line-break" style="white-space: nowrap;"
               				process="@this" update="growl"/>
           			</p:column>
         		</p:row>

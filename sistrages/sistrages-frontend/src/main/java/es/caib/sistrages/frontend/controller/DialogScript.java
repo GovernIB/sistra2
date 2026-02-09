@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
@@ -159,6 +160,10 @@ public class DialogScript extends DialogControllerBase {
 	private boolean permiteEditar = false;
 	/** Indica si hay que mostrar el editor html */
 	private String literalHTML;
+
+	private String errorCopiar;
+
+	private String portapapeles;
 
 	/**
 	 * Indicaría el texto que se añade al codeMirror pero de momento desactivado.
@@ -1838,4 +1843,46 @@ public class DialogScript extends DialogControllerBase {
 	public void setMostrarDebug(boolean mostrarDebug) {
 		this.mostrarDebug = mostrarDebug;
 	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
 }

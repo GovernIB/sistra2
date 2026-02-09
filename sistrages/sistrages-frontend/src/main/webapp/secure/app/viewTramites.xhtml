@@ -289,7 +289,7 @@
             <p:menuitem id="mnuEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" style="display:none;"/>
 
         </p:contextMenu>
-        <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();">
+        <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
         	<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
              <p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this growl"/>
         </pe:clipboard>
@@ -298,7 +298,7 @@
 			<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" style="display: none" />
 			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyH2"  process="@this :form:auxCopiar" update=":form:growl"  onclick="clickMnuCopy('mnuCopyH'); return false;" />
 		</p:contextMenu>
-		<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();">
+		<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 			<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
 			<p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this growl"/>
 		</pe:clipboard>
@@ -307,7 +307,7 @@
 			<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" style="display: none" />
 			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyF2"  process="@this :form:auxCopiar" update=":form:growl"  onclick="clickMnuCopy('mnuCopyF'); return false;" />
 		</p:contextMenu>
-		<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();">
+		<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 			<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
 			<p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this growl"/>
 		</pe:clipboard>
@@ -437,7 +437,7 @@
             	<p:menuitem id="mnuEditarArea" value="#{msg['botones.editar']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-pencil ui-btn-icon-bottom" onclick="document.getElementById('form:btnEditarArea').click();" process="@this"/>
         		<p:menuitem id="mnuEliminarArea" value="#{msg['botones.eliminar']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminarArea').click();" process="@this"/>
         	</p:contextMenu>
-	        <pe:clipboard id="clipContextCopyAreas" trigger="mnuCopyAreas" action="copy" target=":form:auxCopiar" onsuccess="ocultarContextMenu();">
+	        <pe:clipboard id="clipContextCopyAreas" trigger="mnuCopyAreas" action="copy" target=":form:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 	        	<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this :form:growl"/>
 	             <p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this :form:growl"/>
 	        </pe:clipboard>
@@ -748,7 +748,7 @@
                     <p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isServiciosEstables())}" />
 
                     <p:separator rendered="#{viewTramites.tramiteSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}" />
-                    <p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{(viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null) and viewTramites.tienePermisosAreaConsulta}" />
+                    <p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{(viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null) and viewTramites.tienePermisosArea}" />
 
                 <p:separator rendered="#{viewTramites.tienePermisosAreaConsulta}"/>
                     <p:menuitem id="btnVarArea" value="#{msg['botones.variablesArea']}" icon="fa fa-table" actionListener="#{viewTramites.varArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
@@ -759,8 +759,8 @@
                 	<p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-send" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta and viewTramites.isServicioActivado()}" />
                 <p:separator rendered="#{viewTramites.tienePermisosArea}"/>
                 <p:menuitem id="btnImportar" value="#{msg['botones.importarTramite']}" icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" rendered="#{(viewTramites.isDesarrollo() or viewTramites.isServiciosEstables()) and viewTramites.tienePermisosArea}"></p:menuitem>
-                <p:menuitem id="btnExportar" value="#{msg['botones.exportarVersion']}" icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}" process="@this" update="growl"/>
-                    <p:menuitem id="btnProcesarCuadernoCarga" value="#{msg['botones.procesarCC']}" icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;" rendered="#{(!viewTramites.isDesarrollo() and !viewTramites.isServiciosEstables()) and viewTramites.tienePermisosArea}"></p:menuitem>
+                <p:menuitem id="btnExportar" value="#{msg['botones.exportarVersion']}" icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosArea}" process="@this" update="growl"/>
+                <p:menuitem id="btnProcesarCuadernoCarga" value="#{msg['botones.procesarCC']}" icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;" rendered="#{(!viewTramites.isDesarrollo() and !viewTramites.isServiciosEstables()) and viewTramites.tienePermisosArea}"></p:menuitem>
                 <p:menuitem id="btnGenerarCuadernoCarga" value="#{msg['botones.generarCC']}" icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and ((viewTramites.isDesarrollo() or viewTramites.isServiciosEstables()) or viewTramites.isPreproduccion()) and viewTramites.tienePermisosArea}" process="@this" update="growl" />
                 <p:menuitem id="btnGenerarScripts" value="#{msg['botones.generarScripts']}" icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isServiciosEstables()) and viewTramites.tienePermisosArea}" process="@this" update="growl" />
                 <p:separator  />
@@ -918,7 +918,7 @@
                 	<p:menuitem id="mnuGenerarCuadernoCargaVer"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" onclick="document.getElementById('form:btnGenerarCuadernoCarga').click();" process="@this"  />
                		<p:menuitem id="mnuGenerarScriptsVer"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" onclick="document.getElementById('form:btnGenerarScripts').click();" process="@this" />
 		        </p:contextMenu>
-		        <pe:clipboard id="clipContextCopyVers" trigger="mnuCopyVers" action="copy" target=":form:auxCopiar" onsuccess="ocultarContextMenu();">
+		        <pe:clipboard id="clipContextCopyVers" trigger="mnuCopyVers" action="copy" target=":form:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 		        	<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this :form:growl" />
 		             <p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this :form:growl"/>
 		        </pe:clipboard>

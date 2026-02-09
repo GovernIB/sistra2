@@ -22,11 +22,15 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 
+
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -518,10 +522,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -544,7 +548,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
+	public void copiadoErr(AjaxBehaviorEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
@@ -781,6 +785,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	public boolean isServicioActivado() {
 		return UtilJSF.isServicioActivado();
+	}
+
+	public boolean isServicioDesactivado() {
+		return !isServicioActivado();
 	}
 
 	/**

@@ -224,11 +224,10 @@ public interface TramiteService {
 	 *
 	 * @param formularioTramite
 	 * @param idTramitePaso
-	 * @param normativa
 	 * @return Id del formulario
 	 *
 	 */
-	public FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso, String normativa);
+	public FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
 
 	/**
 	 * Actualiza formulario.
@@ -521,10 +520,10 @@ public interface TramiteService {
 	 * Comprueba si el identificador de area está repetido.
 	 *
 	 * @param identificador
-	 * @param codigo
+	 * @param codigoEntidad
 	 * @return true, si existe
 	 */
-	public boolean checkIdentificadorAreaRepetido(String identificador, Long codigo);
+	public boolean checkIdentificadorAreaRepetido(String identificador, Long codigoEntidad, Long codigo);
 
 	/**
 	 * Métod que se encarga de importar un trámite.

@@ -54,9 +54,9 @@
  <p>
 	<b>Ejemplo</b>
  </p>
-<p> Obtener el último valor del campo múltiple 'campoTitulaciones' del primer elemento de la lista de elementos. Para eso, primero se ha de obtener el total de valores:</p>
+<p> Obtener el último valor del campo múltiple 'campoTitulaciones' del primer elemento de la lista de elementos. Para eso, primero se ha de obtener el total de valores del primer elemento (elemento 0):</p>
 <p class="codigoScript">
-	var total = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple('LISTA_ELEM1', 'campoTitulaciones'); 
+	var total = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple('LISTA_ELEM1', 0, 'campoTitulaciones');
 </p>
 <p>
 	La función getNumeroValoresValorElementoMultiple retornará 8 (total de valores de este campo). Con este valor podemos calcular el índex del último elemento de la siguiente manera:

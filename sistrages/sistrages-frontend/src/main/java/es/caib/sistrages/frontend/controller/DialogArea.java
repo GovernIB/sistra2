@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -11,6 +12,8 @@ import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
+import org.apache.commons.lang3.StringUtils;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -72,7 +75,7 @@ public class DialogArea extends DialogControllerBase {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
-		if (areaService.checkIdentificadorAreaRepetido(data.getIdentificador(), data.getCodigo())) {
+		if (areaService.checkIdentificadorAreaRepetido(data.getIdentificador(), sessionBean.getEntidad().getCodigo(), data.getCodigo())) {
 			addMessageContext(TypeNivelGravedad.INFO, "ERROR",
 					UtilJSF.getLiteral("dialogArea.error.identificadorDuplicado"));
 			return;
@@ -127,10 +130,10 @@ public class DialogArea extends DialogControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -153,7 +156,7 @@ public class DialogArea extends DialogControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
+	public void copiadoErr(AjaxBehaviorEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 

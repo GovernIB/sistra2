@@ -8,8 +8,11 @@ import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import java.util.*;
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 
 @ManagedBean
 @ViewScoped
@@ -119,10 +122,10 @@ public class DialogFiltroErrores extends DialogControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -145,7 +148,7 @@ public class DialogFiltroErrores extends DialogControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
+	public void copiadoErr(AjaxBehaviorEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewAuditoriaTramites.copiar"));
 	}
 

@@ -14,14 +14,15 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador:</span> código unívoco que identifica al anexo en la aplicación. Cualquier referencia al anexo en los scripts de la versión se realizará utilizando este código.</li>
 		<li><span class="nombreCampo">Descripción:</span> texto multiidioma de presentación del anexo en el asistente de tramitación. Esta será la denominación del anexo que visualizará el tramitador en el asistente de tramitación.</li>
-		<li><span class="boton">Obligatoriedad:</span> permite configurar la obligatoriedad de anexar el documento en el asistente de tramitación. Los valores posibles son:</li>
+		<li><span class="nombreCampo">Tipo Documento ENI:</span> indica el tipo de documento clasificado dentro del Esquema Nacional de Interoperabilidad (ENI). Cada tipo TD corresponde a una categoría definida por el ENI para clasificar documentos administrativos electrónicos, garantizando interoperabilidad y trazabilidad entre sistemas públicos.</li>
+		<li><span class="nombreCampo">Obligatoriedad:</span> permite configurar la obligatoriedad de anexar el documento en el asistente de tramitación. Los valores posibles son:</li>
 		<ul class="detalle">
 		<li><span class="boton">Obligatorio:</span> si se marca esta opción, será obligatorio el anexado del documento en el asistente. En caso contrario, no se podrá con la cumplimentación del trámite.</li>
 		<li><span class="boton">Opcional:</span> si se marca esta opción, el anexado del documento será opcional.</li>
 		<li><span class="boton">Depende:</span> si se marca esta opción, la obligatoriedad de anexado del documento dependerá del script 'Establecer dependencia'.</li>
 		<li><span class="boton">Establecer dependencia:</span> script que permite establecer la obligatoriedad de un documento según otros datos del trámite (dominios, datos de un formulario previo, datos de sesión, etc.). Únicamente se tendrá en cuenta el valor de este script si se ha fijado previamente la obligatoriedad 'Depende'.</li>
 		</ul>
-		<li><span class="boton">Ayuda:</span> en este apartado se configura la información relativa al documento anexo, que se mostrará al ciudadano en el asistente de tramitación para facilitar la aportación:</li>
+		<li><span class="nombreCampo">Ayuda:</span> en este apartado se configura la información relativa al documento anexo, que se mostrará al ciudadano en el asistente de tramitación para facilitar la aportación:</li>
 		<ul class="detalle">
 		<li><span class="boton">Fichero:</span> esta opción permite al desarrollador adjuntar un documento que se mostrará en el asistente de tramitación a modo de plantilla del documento a anexar.</li>
 		<li><span class="boton">URL:</span> permite indicar un enlace de la que el ciudadano pueda descargar, desde el asistente de tramitación, un documento a modo de plantilla del documento a anexar.</li>

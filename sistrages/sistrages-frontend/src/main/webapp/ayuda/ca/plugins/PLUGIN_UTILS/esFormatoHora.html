@@ -1,0 +1,90 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esFormatoHora(formatoHora)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=esFormatoHora">esFormatoHora</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	esFormatoHora(String formatoHora): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Verifica que el format d’hora introduït no sigui nul ni buit i sigui vàlid.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>formatoHora</b>: Format de l'hora. Els formats vàlids són HH:mm i HH:mm:ss.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si el format d’hora és vàlid i false si el format no és vàlid.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Validar una cadena de caràcters buida '' </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFormatoHora('');
+</p>
+<p>La funció esFormatoHora retorna 'false', a causa que el valor indicat no és un format vàlid.</p>
+<br />
+
+<p><b>Exemple 2</b> Validar una cadena de caràcters nul·la. </p>
+ <p class="codigoScript">
+	var hora;<br />
+	var valido = PLUGIN_UTILS.esFormatoHora(null);
+</p>
+<p>La funció esFormatoHora retorna 'false', a causa que el valor indicat no és un format vàlid.</p>
+<br />
+
+<p><b>Exemple 3</b> Validar la cadena de caràcters 'HH:mm'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFormatoHora('HH:mm');
+</p>
+<p>La funció esFormatoHora retorna 'true', degut a que el valor indicat és un format d'hora vàlid.</p>
+<br />
+
+<p><b>Exemple 4</b> Validar la cadena de caràcters 'HH:mm:ss'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFormatoHora('HH:mm:ss');
+</p>
+<p>La funció esFormatoHora retorna 'true', degut a que el valor indicat és un format d'hora vàlid.</p>
+<br />
+
+<p><b>Exemple 5</b> Validar la cadena de caràcters 'HH-mm'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFormatoHora('HH-mm');
+	</p>
+<p>La funció esFormatoHora retorna 'false', a causa que el valor indicat no és un format vàlid.</p>
+<br />
+</body>
+</html>

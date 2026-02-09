@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.formulario.interno.utils;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.formulario.*;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +50,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 
 		boolean validacionCorrecta = true;
 		String idCampoError = null;
+		ValorCampo valorCampoError = null;
 
 		final PaginaData paginaActual = pDatosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
 
@@ -97,15 +99,20 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 			// Si se ha producido un error de validacion paramos de validar
 			if (!validacionCorrecta) {
 				idCampoError = configuracion.getId();
+				valorCampoError = vc;
 				break;
 			}
 
 		}
 
-		// En caso de que se haya producido error de validacion devolvemos error
-		// generico
+		// En caso de que se haya producido error de validacion devolvemos error generico
 		String errorMsg = null;
 		if (!validacionCorrecta) {
+			ListaPropiedades detallesError = new ListaPropiedades();
+			detallesError.addPropiedad("idForm", paginaActual.getIdFormulario());
+			detallesError.addPropiedad("pagina", paginaActual.getIdentificador());
+			detallesError.addPropiedad("idCampo", idCampoError);
+			detallesError.addPropiedad("valorCampo", valorCampoError.print());
 			errorMsg = literales.getLiteral(Literales.GESTOR_FORMULARIOS_INTERNO, "validacion.servidor.incorrecta",
 					new String[] { idCampoError }, pDatosSesion.getDatosInicioSesion().getIdioma());
 			throw new ErrorConfiguracionException(errorMsg);

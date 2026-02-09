@@ -336,10 +336,8 @@ public class MigracionServiceImpl implements MigracionService {
 
 					formulario.setScriptRetorno(createScript(documSistra.getScriptPostGuardar()));
 
-					String normativa = tramiteVersion.getNormativa();
-
 					final FormularioTramite formularioAlta = tramiteComponent.addFormularioTramite(formulario,
-							pasoRellenar.getCodigo(), normativa);
+							pasoRellenar.getCodigo());
 
 					// creamos el diseño de formulario
 					LOG.info("inicio: createDisenyoFormulario");

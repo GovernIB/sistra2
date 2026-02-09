@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple(campoListaElementos,campo)');
+		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple(campoListaElementos,numElemento,campo)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -22,7 +22,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	getNumeroValoresValorElementoMultiple(campoListaElementos,campo): int
+	getNumeroValoresValorElementoMultiple(campoListaElementos,numElemento,campo): int
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
@@ -38,6 +38,7 @@
 <p>
 	<ul>
 		<li><b>campoListaElementos</b>: Identificador del camp llista d'elements. </li>
+		<li><b>numElemento</b>: Número de l'element dins de la llista d'elements.</li>
 		<li><b>campo</b>: Identificador del camp dins del formulari de la llista d'elements. </li>
 	</ul>
 </p>
@@ -52,9 +53,9 @@
  <p>
 	<b>Exemple</b>
  </p>
-<p> Si es desitja obtenir el nombre d'elements que té internament un camp associat a una llista d'elements utilitzarem la funció de la següent forma (suposant que l'identificador de la llista d'elements és 'LLISTA_ELEM1' i que dins té un component selector amb l'identificador 'SELECT1'):</p>
+<p> Si es desitja obtenir el nombre d'elements que té internament un camp associat a una llista d'elements utilitzarem la funció de la següent forma (suponent que l'identificador de la llista d'elements és 'LISTA_ELEM1', que dins té un component selector amb l'identificador 'SELECT1' i que es volen obtenir els valors per al número d'element 'i'):</p>
  <p class="codigoScript">
-	var numeroElementos = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple('LISTA_ELEM1', 'SELECT1'); <br />
+	var numeroElementos = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple('LISTA_ELEM1', i, 'SELECT1'); <br />
  </p>
  <p>
   La funció getNumeroValoresValorElementoMultiple() retornarà el total d'elements que té aquest camp dins de la llista d'elements. En cas de no tenir cap, retornarà 'null'.

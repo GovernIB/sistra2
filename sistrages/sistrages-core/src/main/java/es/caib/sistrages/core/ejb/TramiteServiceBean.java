@@ -216,8 +216,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso, final String normativa) {
-		return tramiteService.addFormularioTramite(formularioTramite, idTramitePaso, normativa);
+	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
+		return tramiteService.addFormularioTramite(formularioTramite, idTramitePaso);
 	}
 
 	@Override
@@ -447,8 +447,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public boolean checkIdentificadorAreaRepetido(final String identificador, final Long codigo) {
-		return tramiteService.checkIdentificadorAreaRepetido(identificador, codigo);
+	public boolean checkIdentificadorAreaRepetido(final String identificador, final Long codigoEntidad, Long codigo) {
+		return tramiteService.checkIdentificadorAreaRepetido(identificador, codigoEntidad, codigo);
 	}
 
 	@Override

@@ -128,6 +128,7 @@ var HTML_PAS_LITERALS = {
 			,txtAnarAlJustificant: txtAnarAlJustificant
 			,txtObriFinestra: txtObriFinestra
 			,txtDesauInfo: txtDesauInfo
+			,txtDesauInfoEmail: txtDesauInfoEmail
 			,txtNumeroRegistre: txtNumeroRegistre
 			,txtDesauDocumentacio: txtDesauDocumentacio
 			,txtDesauDocumentacioInfo: txtDesauDocumentacioInfo
@@ -626,6 +627,7 @@ $.fn.appPas = function(options) {
 					HTML_PAS_LITERALS[pas_tipus]["jsonNumeroRegistre"] = pas_json.datos.actual.justificante.numero;
 
 					HTML_PAS_LITERALS[pas_tipus]["jsonJustificantDescarrega"] = pas_json.datos.actual.justificante.descarga;
+					HTML_PAS_LITERALS[pas_tipus]["jsonJustificantCorreu"] = pas_json.datos.actual.justificante.email || "";
 					HTML_PAS_LITERALS[pas_tipus]["jsonCarpetaURL"] = APP_JSON_TRAMIT_E.urlCarpeta;
 
 					HTML_PAS_LITERALS[pas_tipus]["jsonDocumentsMostra"] = pas_json.datos.actual.justificante.mostrarDocumentos;

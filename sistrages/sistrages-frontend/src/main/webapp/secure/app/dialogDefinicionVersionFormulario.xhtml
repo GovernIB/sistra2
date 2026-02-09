@@ -12,6 +12,7 @@
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioGestor" var="TypeFormularioGestor"/>
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeNormativa" var="TypeNormativa"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeNivelSeguridad" var="TypeNivelSeguridad"/>
 
 <h:head>
   <title><h:outputText value="#{msg['dialogDefinicionVersionFormulario.titulo']}"/></title>
@@ -191,25 +192,28 @@
            <p:panelGrid styleClass="noBorders">
                <p:row>
                  <p:column styleClass="noPadding-left">
-			<p:selectBooleanCheckbox id="firmardigitalmente" 
-			                         value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" 
-			                         itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"
-			                         disabled="#{(dialogDefinicionVersionFormulario.tramiteVersion.normativa.equals(TypeNormativa.ESPECIFICA.toString())
-			                                 and dialogDefinicionVersionFormulario.tramiteVersion.noAutenticado == true)}">
-			    <p:ajax event="change" 
-			            listener="#{dialogDefinicionVersionFormulario.onFirmaCheckboxChange}" 
-			            process="@this" 
-			            update="@this"/>
-			</p:selectBooleanCheckbox>
+			<p:selectBooleanCheckbox id="firmardigitalmente"
+                                     value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}"
+                                     itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"
+                                     disabled="#{dialogDefinicionVersionFormulario.firmaBloqueada}">
+
+                <p:ajax event="change"
+                        listener="#{dialogDefinicionVersionFormulario.onFirmaCheckboxChange}"
+                        process="@this"
+                        update="@this"/>
+            </p:selectBooleanCheckbox>
              </p:column>
              <p:column>
-               <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionFormulario.data.scriptFirma)}"
-								value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
+                <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionFormulario.data.scriptFirma)}"
+			 					value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
               			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptFirma)} btn-no-line-break"
+              			disabled="#{!dialogDefinicionVersionFormulario.data.debeFirmarse
+              						or dialogDefinicionVersionFormulario.tramiteVersion.nivelSeguridad.equals(TypeNivelSeguridad.BAJO.getValor())
+              						or dialogDefinicionVersionFormulario.tramiteVersion.nivelSeguridad.equals(TypeNivelSeguridad.SUSTANCIAL.getValor())}"
                       process="@this" update="growl">
-		                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoFirma}" update="growl scriptFirma" />
-		            </p:commandButton>
-		          </p:column>
+			 		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoFirma}" update="growl scriptFirma" />
+			 	</p:commandButton>
+			 </p:column>
 		        </p:row>
            </p:panelGrid>
 

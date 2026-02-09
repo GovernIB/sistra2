@@ -84,6 +84,8 @@ public final class AccionVerificarPagoPasarela implements AccionPaso {
 		pv.setVerificado(TypeSiNo.fromBoolean(dvp.isVerificado()));
 		pv.setRealizado(TypeSiNo.fromBoolean(dvp.isPagado()));
 		pv.setEstadoIncorrecto(pago.getEstadoIncorrecto());
+		pv.setMetodoPago(dvp.getMetodoPago());
+		pv.setLocalizador(dvp.getLocalizador());
 
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
 		rp.addParametroRetorno("verificacion", pv);

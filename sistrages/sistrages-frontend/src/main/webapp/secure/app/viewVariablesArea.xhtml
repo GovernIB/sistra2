@@ -164,10 +164,19 @@
                }
 			 }
 
+			 function ocultarContextMenu() {
+			 	 ['mainCm','mainCmH','mainCmF','mainCmDT'].forEach(function(widget) {
+			 		 var menu = PF(widget);
+			 		 if (menu &amp;&amp; menu.isVisible()) {
+			 			 menu.hide();
+			 		 }
+			  	 });
+			  }
+
 			</h:outputScript>
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"/>
-			<p:contextMenu  for=":work">
+			<p:contextMenu  id="mainCm" widgetVar="mainCm" styleClass="context-menu">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update=":form:growl" />
        			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewVariablesArea.getPermiteEditar()}"/>
@@ -175,7 +184,7 @@
         		<p:menuitem id="mnuConsultarMain" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteConsultar()}" />
         		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteEditar()}"/>
 		    </p:contextMenu>
-		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextmenu();">
 				<p:ajax event="success" listener="#{viewVariablesArea.copiadoCorr}" process="@this" update="@this :form:growl"/>
             	<p:ajax event="error" listener="#{viewVariablesArea.copiadoErr}" update="@this :form:growl"/>
         	</pe:clipboard>
@@ -183,7 +192,7 @@
         	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
 				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update=":form:growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextmenu();">
 				<p:ajax event="success" listener="#{viewVariablesArea.copiadoCorr}" process="@this" update="@this :form:growl"/>
 				<p:ajax event="error" listener="#{viewVariablesArea.copiadoErr}" update="@this :form:growl"/>
 			</pe:clipboard>
@@ -191,7 +200,7 @@
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
 				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update=":form:growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextmenu();">
 				<p:ajax event="success" listener="#{viewVariablesArea.copiadoCorr}" process="@this" update="@this :form:growl"/>
 				<p:ajax event="error" listener="#{viewVariablesArea.copiadoErr}" update="@this :form:growl"/>
 			</pe:clipboard>
@@ -289,7 +298,7 @@
 
 			</p:dataTable>
 
-			<p:contextMenu for=":form:dataTable">
+			<p:contextMenu for=":form:dataTable" id="mainCmDT" widgetVar="mainCmDT">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update=":form:growl" />
        			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewVariablesArea.getPermiteEditar()}"/>
@@ -297,7 +306,7 @@
         		<p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteConsultar()}" />
         		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteEditar()}"/>
 		    </p:contextMenu>
-		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextmenu();">
 				<p:ajax event="success" listener="#{viewVariablesArea.copiadoCorr}" process="@this" update="@this :form:growl"/>
             	<p:ajax event="error" listener="#{viewVariablesArea.copiadoErr}" update="@this :form:growl"/>
         	</pe:clipboard>

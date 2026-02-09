@@ -8,6 +8,8 @@
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
+		<f:viewParam name="tipoFechaMail" value="#{viewCuadroMando.tipoFechaMail}"/>
+		<f:viewParam name="fechaDesdeMail" value="#{viewCuadroMando.fechaDesdeMail}"/>
 		<f:viewAction action="#{viewCuadroMando.init}" />
 	</f:metadata>
 
@@ -166,6 +168,7 @@
 			<p:poll id="poll" interval="#{viewCuadroMando.minutosRefresco * 60}" listener="#{viewCuadroMando.filtrar()}" widgetVar="currentTimePoller" process="@this" update="@form:panelFiltro @form:tablaCuadroMando"/>
 
 			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-pencil" actionListener="#{viewCuadroMando.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
+			<p:commandButton id="btnConsultarHistAlert" actionListener="#{viewCuadroMando.abrirDialogoHistorialAlerta()}" process="@this" update="growl" style="display:none"/>
 
 			<!-- Tabla -->
 			<h:panelGrid id="tablaCuadroMando" columns="1" cellspacing="0" cellpadding="0" style="width:100% !important;  border-collapse: collapse !important; display:flex; padding:0px !important; justify-content:center; margin-top:10px;">
@@ -580,13 +583,15 @@
 						rows="#{sessionBean.paginacion}"
 						scrollHeight="100%" rowIndexVar="rowIndexAl" emptyMessage="#{msg['error.emptyRows']}"
 						paginator="true" paginatorPosition="bottom"
+						 selection="#{viewCuadroMando.seleccionadoHistAlerta}" selectionMode="single"
 						 scrollable="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30,50,75,100" rowKey="#{tdAlerta.id}"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100" rowKey="#{tdAlerta.codigo}"
 						widgetVar="myWidgetAlert" style="width:75%; margin:auto;">
 
 						<p:ajax event="page" listener="#{sessionBean.setPaginacionCm(true)}" />
+                        <p:ajax event="rowDblselect" oncomplete="abrirDialogHistAl();"/>
 
 						<p:column headerText="#{msg['viewCuadroMando.alerta']}" style="font-weight:bold; text-align: left; padding-left:5px;">
 				            <h:outputText value="#{tdAlerta.alerta.nombre} - #{tdAlerta.evento}" />
@@ -750,9 +755,22 @@
 		               }
 			 }
 
+		      function ocultarContextMenu() {
+			 	 ['mainCm','mainCmH','mainCmF'].forEach(function(widget) {
+			 		 var menu = PF(widget);
+			 		 if (menu &amp;&amp; menu.isVisible()) {
+			 			 menu.hide();
+			 		 }
+			  	 });
+			  }
+
 			  function triggerDblClick() {
 		        	$('#form\\:btnEditarHidden').click();
 		      }
+
+			  function abrirDialogHistAl() {
+				  $('#form\\:btnConsultarHistAlert').click();
+			  }
 
 		      function selectExpanded(){
 		      	var selecc = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-state-highlight');
@@ -795,13 +813,13 @@
 
 		   </h:outputScript>
 
-			<p:contextMenu for=":work">
+			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
 				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard"
 					styleClass="w90" id="mnuCopy" process="@this :form:auxCopiar"
 					update="growl" url="javascript:void(0)" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy"
-				target="auxCopiar">
+				target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewCuadroMando.copiadoCorr}"
 					process="@this" update="@this growl" />
 				<p:ajax event="error" listener="#{viewCuadroMando.copiadoErr}"
@@ -815,7 +833,7 @@
 					url="javascript:void(0)" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy"
-				target="auxCopiar">
+				target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewCuadroMando.copiadoCorr}"
 					process="@this" update="@this growl" />
 				<p:ajax event="error" listener="#{viewCuadroMando.copiadoErr}"
@@ -829,7 +847,7 @@
 					url="javascript:void(0)" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy"
-				target="auxCopiar">
+				target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewCuadroMando.copiadoCorr}"
 					process="@this" update="@this growl" />
 				<p:ajax event="error" listener="#{viewCuadroMando.copiadoErr}"

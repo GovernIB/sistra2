@@ -129,6 +129,16 @@ public final class PlgUtils implements PlgUtilsInt {
 	}
 
 	@Override
+	public boolean esFormatoFecha(final String formato) {
+		return ValidacionesTipo.getInstance().esFormatoFecha(getFormatoFecha(formato));
+	}
+
+	@Override
+	public boolean esFormatoHora(final String formato) {
+		return ValidacionesTipo.getInstance().esFormatoHora(getFormatoHora(formato));
+	}
+
+	@Override
 	public boolean esImporte(final String importe) {
 		return ValidacionesTipo.getInstance().esImporte(importe);
 	}

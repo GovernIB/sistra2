@@ -1045,6 +1045,10 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								} else if (elm_input_tipus === "selector" && elm_input_contingut === "m") {
 
+									elm
+										.find("input")
+										.prop("checked", false);
+
 									$(val_valor)
 										.each(function() {
 
@@ -1054,15 +1058,16 @@ $.fn.appFormsConfiguracio = function(options) {
 											setTimeout(
 												function() {
 
-													elm
-														.find("input[value='"+selec_val+"']:first")
-															.prop("checked", true);
+													var check_ = elm.find("input[value='"+selec_val+"']:first");
+
+													check_
+														.prop("checked", true);
 
 													if (elm.attr("data-lectura") === "s") {
 
-														elm
+														check_
 															.find("input")
-																.attr("disabled", "disabled");
+															.attr("disabled", "disabled");
 
 													}
 

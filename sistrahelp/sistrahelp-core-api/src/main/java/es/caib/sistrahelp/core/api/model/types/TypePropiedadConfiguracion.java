@@ -29,6 +29,8 @@ public enum TypePropiedadConfiguracion {
 	/** STG Url. */
 	SISTRAGES_VIEW_URL("sistrages.view.url"),
 	/** STG Url. */
+	SISTRAHELP_VIEW_URL("sistrahelp.view.url"),
+	/** STG Url. */
 	SISTRAGES_USR("sistrages.rest.user"),
 	/** Prefijo plugin. */
 	PLUGINS_PREFIJO("plugins.prefix"),

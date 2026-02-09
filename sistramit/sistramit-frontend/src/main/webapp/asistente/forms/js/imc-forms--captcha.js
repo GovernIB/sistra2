@@ -154,20 +154,36 @@ $.fn.appFormsCaptcha = function(options) {
 				}
 
 			}
+			,audios = {}
 			,btSo_sona = function() {
 
-				if (!audio) {
+				var botoId = element.attr("data-id");
 
-					audio = new Audio( app_json_captcha_so + '?id=' + element.attr("data-id") + "&ts=" + new Date().getTime() + "&" + headerIdSessio + "=" + tokenIdSessio );
-        		
+				// crea audio
+
+				if (!audios[botoId]) {
+					audios[botoId] = new Audio(app_json_captcha_so + '?id=' + botoId + "&ts=" + Date.now() + "&" + headerIdSessio + "=" + tokenIdSessio);
+				}
+
+				const audio = audios[botoId];
+
+				// Pausar els demés
+
+				Object
+					.keys(audios)
+						.forEach(id => {
+							if (id !== botoId && !audios[id].paused) {
+								audios[id].pause();
+							}
+						});
+
+				// audio actual
+
+				if (audio.paused) {
+
 					audio
 						.play();
-
-				} else if (audio && audio.paused ) {
-
-					audio
-						.play();
-
+					
 				} else {
 
 					audio
@@ -194,6 +210,8 @@ $.fn.appFormsCaptcha = function(options) {
 				}
 
 				refresca(timestamp, camp_id);
+
+				audios = {};
 
 			}
 			,refresca = function(timestamp, camp_id) {

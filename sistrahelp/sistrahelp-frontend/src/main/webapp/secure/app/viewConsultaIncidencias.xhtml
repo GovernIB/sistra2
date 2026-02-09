@@ -197,6 +197,16 @@
                }
 
       	 }
+
+      	 function ocultarContextMenu() {
+			['mainCm','mainCmH','mainCmF'].forEach(function(widget) {
+			 		var menu = PF(widget);
+			 		if (menu &amp;&amp; menu.isVisible()) {
+			 			menu.hide();
+				}
+			});
+		}
+
 		</h:outputScript>
 
       	<!-- Growl mensajes -->
@@ -230,13 +240,13 @@
 		        	</h:panelGrid>
 	        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
 			        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
-			        	<p:inputText id="filtroNif" value="#{viewConsultaIncidencias.filtros.nif}" size="22" maxlength="12" style="margin-left: 8px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+			        	<p:inputText id="filtroNif" value="#{viewConsultaIncidencias.filtros.nif}" size="22" maxlength="9" style="margin-left: 8px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 		        	</h:panelGrid>
 		        </p:column>
 				<p:column styleClass="noPadding columna-filtros"  style="border-style:inherit  !important;">
 					<h:panelGrid columns="4" styleClass="w100, noPadding" >
 		        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
-		        		<p:inputText id="filtroTramite" value="#{viewConsultaIncidencias.filtros.idTramite}" size="15" maxlength="20" onkeyup="capitalize(this)" onblur="trim(this)">
+		        		<p:inputText id="filtroTramite" value="#{viewConsultaIncidencias.filtros.idTramite}" size="15" maxlength="50" onkeyup="capitalize(this)" onblur="trim(this)">
 			        		<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
 			        	</p:inputText>
 			        	<p:outputLabel value=" / "/>
@@ -261,7 +271,7 @@
 					</h:panelGrid>
 		        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
 			        	<p:outputLabel for="filtroMail" value="#{msg['viewConsultaIncidencias.correo']}:"/>
-			        	<p:inputText id="filtroMail" value="#{viewConsultaIncidencias.filtros.email}" size="20" maxlength="12" style="margin-left:20px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+			        	<p:inputText id="filtroMail" value="#{viewConsultaIncidencias.filtros.email}" size="20" maxlength="255" style="margin-left:20px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 		        	</h:panelGrid>
 	        	</p:column>
 				<p:column styleClass="noPadding columna-filtros" style="border-style:inherit  !important;">
@@ -362,36 +372,42 @@
               document.getElementById("form:paginacion").blur();
           }
         </h:outputScript>
-      <p:inputText id="paginacion" value="#{viewConsultaIncidencias.paginacion}" style="opacity:0">
-        <p:ajax event="blur" update="@form" process="@this"/>
-      </p:inputText>
+
+		<p:inputText id="paginacion" value="#{viewConsultaIncidencias.paginacion}" style="opacity:0">
+			<p:ajax event="blur" update="@form" process="@this"/>
+		</p:inputText>
+		<h:outputScript >
+			function capitalize(element){
+				element.value = element.value.toUpperCase();
+			}
+
+			function trim(element){
+				element.value = element.value.trim();
+			}
+		</h:outputScript>
       <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
 		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
       </p:confirmDialog>
-        <p:contextMenu for="dataTable" id="contextMenuDB">
-             <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
-             <p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
-             <p:menuitem id="consultaSesion" icon="fa fa-window-maximize" onclick="consultarSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}" process="@this"/>
-        	 <p:menuitem id="consultaNif" icon="fa fa-window-maximize" onclick="consultarNif();" value="#{msg['viewConsultaIncidencias.eventos.nif']}" process="@this"/>
-		</p:contextMenu>
-        <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
-        <p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
-              <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
-          </pe:clipboard>
 
-	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar">
+        <p:contextMenu for="dataTable" id="contextMenuDB" widgetVar="mainCm" style="width: 15em;">
+        	<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
+	    	<p:separator/>
+	    	<p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
+	    	<p:menuitem id="consultaSesion" icon="fa fa-window-maximize" onclick="consultarSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}" process="@this"/>
+	    	 <p:menuitem id="consultaNif" icon="fa fa-window-maximize" onclick="consultarNif();" value="#{msg['viewConsultaIncidencias.eventos.nif']}" process="@this"/>
+		</p:contextMenu>
+		<pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 			<p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
-	         <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
-	    </pe:clipboard>
+			<p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
+		</pe:clipboard>
 
       <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
         <p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
       </p:contextMenu>
-
-      <pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+      <pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
         <p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
         <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
       </pe:clipboard>
@@ -399,7 +415,7 @@
        <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
         <p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
       </p:contextMenu>
-      <pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+      <pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
         <p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
         <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
       </pe:clipboard>

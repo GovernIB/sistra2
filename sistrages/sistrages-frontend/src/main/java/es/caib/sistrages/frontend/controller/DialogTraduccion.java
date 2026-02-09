@@ -90,6 +90,8 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 	 */
 	public void init() {
 
+		resetearEstado();
+
 		if (UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_LITERALES) == null) {
 			data = new Literal();
 		} else {
@@ -134,9 +136,27 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 	}
 
 	/**
+	 * Resetea las variables de control a su estado inicial.
+	 */
+	private void resetearEstado() {
+	    // Resetear visibilidad
+	    this.visibleCa = false;
+	    this.visibleEs = false;
+	    this.visibleEn = false;
+	    this.visibleDe = false;
+
+	    // Resetear obligatoriedad
+	    this.requiredCa = false;
+	    this.requiredEs = false;
+	    this.requiredEn = false;
+	    this.requiredDe = false;
+	}
+
+	/**
 	 * Inicializa los textos, la visiblidad y obligatoriedad.
 	 */
 	private void inicializarTextosPermisos() {
+
 		for (final String idioma : idiomasPosibles) {
 
 			final TypeIdioma idiomaType = TypeIdioma.fromString(idioma);
@@ -188,6 +208,7 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 	 */
 	public void aceptar() {
 
+
 		boolean isAlgunLiteralRelleno = true;
 		// Si es opcional, o está to do escrito o nada.
 		if (opcional != null && "S".equals(opcional)) {
@@ -199,86 +220,92 @@ public class DialogTraduccion  extends DialogControllerBase implements Serializa
 			boolean verificarHTML = caracteresNoPermitidos != null && caracteresNoPermitidos.isEmpty();
 
 			if (visibleCa) {
-				if (textoCa == null || textoCa.isEmpty()) {
+				if (requiredCa && (textoCa == null || textoCa.isEmpty())) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
-				if (verificarHTML && contieneEtiquetaHTML(textoCa)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
-					return;
+				if (textoCa != null && !textoCa.isEmpty()) {
+					if (verificarHTML && contieneEtiquetaHTML(textoCa)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+						return;
+					}
+					if (excedeLongitud(textoCa)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+						return;
+					}
+					if (contieneCharNoPermitido(textoCa)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
+						return;
+					}
+					textoCa = replaceComillas(textoCa);
+					data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 				}
-				if (excedeLongitud(textoCa)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
-					return;
-				}
-				if (contieneCharNoPermitido(textoCa)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
-					return;
-				}
-				textoCa = replaceComillas(textoCa);
-				data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 			}
 			if (visibleEs) {
-				if (textoEs == null || textoEs.isEmpty()) {
+				if (requiredEs && (textoEs == null || textoEs.isEmpty())) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
-				if (verificarHTML && contieneEtiquetaHTML(textoEs)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
-					return;
+				if (textoEs != null && !textoEs.isEmpty() ) {
+					if (verificarHTML && contieneEtiquetaHTML(textoEs)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+						return;
+					}
+					if (excedeLongitud(textoEs)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+						return;
+					}
+					if (contieneCharNoPermitido(textoEs)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
+						return;
+					}
+					textoEs = replaceComillas(textoEs);
+					data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 				}
-
-				if (excedeLongitud(textoEs)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
-					return;
-				}
-				if (contieneCharNoPermitido(textoEs)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
-					return;
-				}
-				textoEs = replaceComillas(textoEs);
-				data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 			}
 			if (visibleEn) {
-				if (textoEn == null || textoEn.isEmpty()) {
+				if (requiredEn && (textoEn == null || textoEn.isEmpty())) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
-				if (verificarHTML && contieneEtiquetaHTML(textoEn)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
-					return;
+				if (textoEn != null && !textoEn.isEmpty()) {
+					if (verificarHTML && contieneEtiquetaHTML(textoEn)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+						return;
+					}
+					if (excedeLongitud(textoEn)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+						return;
+					}
+					if (contieneCharNoPermitido(textoEn)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
+						return;
+					}
+					textoEn = replaceComillas(textoEn);
+					data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 				}
-				if (excedeLongitud(textoEn)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
-					return;
-				}
-				if (contieneCharNoPermitido(textoEn)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
-					return;
-				}
-				textoEn = replaceComillas(textoEn);
-				data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
-
 			}
 			if (visibleDe) {
-				if (textoDe == null || textoDe.isEmpty()) {
+				if (requiredDe && (textoDe == null || textoDe.isEmpty())) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
-				if (verificarHTML && contieneEtiquetaHTML(textoDe)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
-					return;
+				if (textoDe != null && !textoDe.isEmpty()) {
+					if (verificarHTML && contieneEtiquetaHTML(textoDe)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+						return;
+					}
+					if (excedeLongitud(textoDe)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+						return;
+					}
+					if (contieneCharNoPermitido(textoDe)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
+						return;
+					}
+					textoDe = replaceComillas(textoDe);
+					data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
 				}
-				if (excedeLongitud(textoDe)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
-					return;
-				}
-				if (contieneCharNoPermitido(textoDe)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
-					return;
-				}
-				textoDe = replaceComillas(textoDe);
-				data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
 			}
 		}
 

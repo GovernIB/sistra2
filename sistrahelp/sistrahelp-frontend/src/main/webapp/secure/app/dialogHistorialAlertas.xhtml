@@ -1,0 +1,323 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="#{dialogHistorialAlertas.layout}">
+
+	<f:metadata>
+		<f:viewParam name="ID" value="#{dialogHistorialAlertas.id}"/>
+		<f:viewParam name="codigoAlertaCorreo" value="#{dialogHistorialAlertas.codigoAlertaMail}"/>
+		<f:viewParam name="fechaAnteriorCorreo" value="#{dialogHistorialAlertas.fechaAntAlertaMail}"/>
+		<f:viewParam name="langCorreo" value="#{dialogHistorialAlertas.idiomaMail}"/>
+		<f:viewAction action="#{dialogHistorialAlertas.init}" />
+	</f:metadata>
+
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
+	</f:facet>
+
+	<ui:define name="content">
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+
+		<c:choose>
+			<c:when test="#{dialogHistorialAlertas.codigoAlertaMail == null}">
+				<style>
+					body.body-color {
+						overflow: auto;
+					}
+
+					#work {
+						overflow: visible !important;
+					}
+
+					.ui-tabs-panels .ui-helper-hidden {
+						display: none !important;
+					}
+
+					#work > h2:nth-child(1) {
+						display: none !important;
+					}
+
+					.tabEvento iframe {
+						height: 455px !important;
+					}
+				</style>
+			</c:when>
+			<c:otherwise>
+				<style>
+					#work {
+						overflow: visible !important;
+					}
+
+					.ui-tabs-panels .ui-helper-hidden {
+						display: none !important;
+					}
+
+					.tabEvento iframe {
+						height: 360px !important;
+					}
+				</style>
+			</c:otherwise>
+		</c:choose>
+
+		<h:form id="dialogHistorialAlertas" styleClass="margin-top-10">
+			<h:outputScript >
+				var arrayCm = [];
+
+				window.onload=function(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					onVisible(contextMenu, () => eliminarResaltar());
+
+					document.addEventListener('contextmenu', function(ev) {
+						ev.preventDefault();
+						getPos();
+						return false;
+					}, false);
+				}
+
+				function onVisible(element, callback) {
+					new IntersectionObserver((entries, observer) => {
+						entries.forEach(entry => {
+							if(entry.intersectionRatio == 0) {
+								callback(element);
+							}
+						});
+					}).observe(element);
+				}
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					let elementos = document.getElementsByClassName('resaltar');
+					if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+				}
+
+				function getPos(){
+					var e = window.event;
+					debugger;
+					var posX = e.clientX;
+					var posY = e.clientY;
+					var el = document.elementFromPoint(posX, posY);
+					let elementos = document.getElementsByClassName('resaltar');
+					if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+
+					el.classList.add("resaltar");
+					var aux = document.getElementById("dialogHistorialAlertas:auxCopiar");
+					if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
+						aux.value = el.textContent;
+					}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+						aux.value = el.firstChild.value;
+					}else if(el.value!=null &amp;&amp; el.value!=''){
+						aux.value = el.value;
+					}else{
+						aux.value = '';
+					}
+
+					if(aux.value!='' ){
+						var multiple = false;
+						var hijos = el.children;
+						if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
+							multiple = true;
+						}else if(hijos.length &gt;= 1 ){
+							if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
+								hijos = hijos[0].children;
+							}
+							for(i=0;i&lt;hijos.length;i++){
+								if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+									multiple=true;
+								}
+							}
+						}
+						var listaCm = document.getElementsByClassName('ui-contextmenu');
+						if(multiple){
+							for(i=0;i&lt;listaCm.length;i++){
+								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+									arrayCm.push(listaCm[i]);
+								}
+								listaCm[i].classList.add("d-none");
+							}
+						}else{
+							for(i=0;i&lt;listaCm.length;i++){
+								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+									arrayCm.push(listaCm[i]);
+								}
+								listaCm[i].classList.remove("d-none");
+							}
+							if(arrayCm.length&gt;1){
+								arrayCm.pop();
+								for(let i=0; i&lt;arrayCm.length; i++){
+									arrayCm[i].style.display='none';
+								}
+							}
+							arrayCm = [];
+						}
+					}
+				}
+
+				function ocultarContextMenu() {
+					['mainCm'].forEach(function(widget) {
+						var menu = PF(widget);
+						if (menu &amp;&amp; menu.isVisible()) {
+							menu.hide();
+						}
+					});
+				}
+			</h:outputScript>
+				<p:outputPanel>
+					<!-- Contenido dialogo -->
+					<!-- Growl mensajes -->
+					<p:growl id="growlDialog" widgetVar="growlDialog" />
+
+					<p:outputLabel value="" style="margin-top:10px" />
+					<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-5 w15," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+						<p:outputLabel for="check" value="#{msg['dialogConfiguracionAlertas.checkResumen']}" rendered="#{dialogHistorialAlertas.isResumenDiario()}"/>
+						<p:outputLabel value="" rendered="#{!dialogHistorialAlertas.isResumenDiario()}"/>
+						<h:panelGrid columns = "2" cellspacing = "0"  width="100%">
+							<p:selectBooleanCheckbox id="check" value="#{dialogHistorialAlertas.check}"
+													 rendered="#{dialogHistorialAlertas.isResumenDiario()}" styleClass="margin-right-10" disabled="true"/>
+							<h:panelGrid columns = "3" cellspacing = "0">
+								<p:outputLabel for="horaEnvioRD" value="#{msg['dialogConfiguracionAlertas.horaEnvioRD']}" rendered="#{dialogHistorialAlertas.check}" styleClass="margin-right-10"/>
+								<p:calendar id="horaEnvioRD" value="#{dialogHistorialAlertas.historialAlerta.fecha}"
+												pattern="HH:mm" timeOnly="true" rendered="#{dialogHistorialAlertas.check}" inputStyle="width: 35px !important;" disabled="true"/>
+								<h:outputText id="avisoRD" value="#{msg['dialogConfiguracionAlertas.avisoRD']}" rendered="#{dialogHistorialAlertas.check}"/>
+							</h:panelGrid>
+						</h:panelGrid>
+
+						<p:outputLabel for="nombre" value="#{msg['viewConfiguracionAlertas.nombre']}"/>
+						<p:inputText id="nombre" onblur="this.value = this.value.trim();"
+										value="#{dialogHistorialAlertas.historialAlerta.nombre}"  size="20" maxlength="20" style="width:39%;" disabled="true"/>
+
+						<p:outputLabel for="tipo" value="#{msg['viewInformacionPersistencia.filtroTipo']}"/>
+						<p:inputText id="tipo" styleClass="margin-right-10"
+									 value="#{dialogHistorialAlertas.historialAlerta.tipo == 'E' ? msg['dialogInformacionPagos.entidadId'] :
+												dialogHistorialAlertas.historialAlerta.tipo == 'A' ? msg['viewAuditoriaTramites.headArea'] :
+												dialogHistorialAlertas.historialAlerta.tipo == 'T' ? msg['viewPerdidaClave.headTramite'] :
+												dialogHistorialAlertas.historialAlerta.tipo == 'V' ? msg['viewAuditoriaTramites.headVersion'] : ''}"
+									 disabled="true"
+									 style="width:150px"/>
+
+						<p:outputLabel for="scope" value="#{msg['viewConfiguracionAlertas.ambito']}" rendered="#{!dialogHistorialAlertas.isResumenDiario()}"/>
+						<h:panelGrid id="scope" columns = "4" cellspacing = "0"  width="100%" >
+							<p:outputLabel for="entidad" value="#{msg['dialogInformacionPagos.entidadId']}" rendered="#{!dialogHistorialAlertas.isResumenDiario()}" style="width:50px"/>
+							<p:inputText id="entidad" value="#{dialogHistorialAlertas.entidad}"
+										 rendered="#{!dialogHistorialAlertas.isResumenDiario()}"
+										 disabled="true" style="width:150px"/>
+
+							<p:outputLabel for="area" value="#{msg['viewAuditoriaTramites.headArea']}" style="width:50px" rendered="#{!dialogHistorialAlertas.isResumenDiario() and (dialogHistorialAlertas.historialAlerta.tipo == 'A' or dialogHistorialAlertas.historialAlerta.tipo == 'T' or dialogHistorialAlertas.historialAlerta.tipo == 'V')}"/>
+							<p:inputText id="area" value="#{dialogHistorialAlertas.area}"
+										 disabled="true" style="width:150px"
+										 rendered="#{!dialogHistorialAlertas.isResumenDiario() and (dialogHistorialAlertas.historialAlerta.tipo == 'A' or dialogHistorialAlertas.historialAlerta.tipo == 'T' or dialogHistorialAlertas.historialAlerta.tipo == 'V')}" />
+
+							<p:outputLabel for="tramite" value="#{msg['viewPerdidaClave.headTramite']}" style="width:50px" rendered="#{!dialogHistorialAlertas.isResumenDiario() and (dialogHistorialAlertas.historialAlerta.tipo == 'T' or dialogHistorialAlertas.historialAlerta.tipo == 'V')}"/>
+							<p:inputText id="tramite" value="#{dialogHistorialAlertas.tramite}"
+										 disabled="true" style="width:150px"
+										 rendered="#{!dialogHistorialAlertas.isResumenDiario() and (dialogHistorialAlertas.historialAlerta.tipo == 'T' or dialogHistorialAlertas.historialAlerta.tipo == 'V')}" />
+
+							<p:outputLabel for="version" value="#{msg['viewAuditoriaTramites.headVersion']}" style="width:50px" rendered="#{!dialogHistorialAlertas.isResumenDiario() and dialogHistorialAlertas.historialAlerta.tipo == 'V'}"/>
+							<p:inputText id="version" value="#{dialogHistorialAlertas.version}"
+										 disabled="true" style="width:150px"
+										 rendered="#{!dialogHistorialAlertas.isResumenDiario() and dialogHistorialAlertas.historialAlerta.tipo == 'V'}" />
+						</h:panelGrid>
+
+						<p:outputLabel for="email" value="#{msg['viewConfiguracionAlertas.emails']}" />
+						<h:panelGrid columns = "1" cellspacing = "0"  width="100%">
+							<h:panelGroup>
+								<p:inputText id="email" onblur="this.value = this.value.trim();" value="#{dialogHistorialAlertas.emails}" maxlength="1024" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}" style="width:39%;" disabled="true"/>
+
+
+									<p:outputLabel for="idioma" value="#{msg['dialogConfiguracionAlertas.idioma']}" style="margin-left:16px; margin-right:16px;"/>
+									<p:inputText id="idioma" value="#{dialogHistorialAlertas.historialAlerta.idioma}"
+												 styleClass="center-vertical" style="margin-right:16px;" disabled="true"/>
+
+							</h:panelGroup>
+
+							<p:outputLabel for="aviso" value=" " />
+							<h:outputText id="aviso" value="#{msg['dialogConfiguracionAlertas.avisoCorreos']}" />
+
+
+						</h:panelGrid>
+
+
+							<p:outputLabel for="peri" value="#{msg['viewConfiguracionAlertas.periodo']}" />
+
+						<h:panelGroup>
+							<p:calendar id="peri" value="#{dialogHistorialAlertas.periodo}" pattern="HH:mm"
+										stepMinute="10" timeOnly="true"
+										disabled="true" />
+
+
+
+
+							<p:outputLabel for="peri" value="#{msg['dialogConfiguracionAlertas.modoEvaluacion']}" style="margin-left:32px;margin-right:16px;"/>
+							<p:inputText id="modoEvaluacion"
+										 value="#{dialogHistorialAlertas.historialAlerta.modoEvaluacion.getCodigo() == '1' ? msg['dialogConfiguracionAlertas.modoEvaluacion.acumulado'] :
+													dialogHistorialAlertas.historialAlerta.modoEvaluacion.getCodigo() == '2' ? msg['dialogConfiguracionAlertas.modoEvaluacion.intervalo'] : ''}"
+										 styleClass="center-vertical"
+										 style="margin-right:16px;"
+										 disabled="true" />
+
+
+						</h:panelGroup>
+
+						<p:outputLabel for="interv" value="#{msg['viewConfiguracionAlertas.intervalo']}" />
+						<h:panelGrid columns = "5" cellspacing = "0"  width="100%" id="interv" columnClasses="wpx50,wpx200,wpx50," >
+							<p:outputLabel for="fDesde" value="#{msg['viewEventosPlataforma.filtroFechaInicio']}" />
+							<p:calendar id="fDesde" value="#{dialogHistorialAlertas.fDesde}" pattern="HH:mm" timeOnly="true" disabled="true" />
+							<p:outputLabel for="fHasta" value="#{msg['viewEventosPlataforma.filtroFechaFin']}"  />
+							<p:calendar id="fHasta" value="#{dialogHistorialAlertas.fHasta}" pattern="HH:mm"  timeOnly="true" disabled="true" />
+						</h:panelGrid>
+
+						<p:outputLabel for="condicion" value="#{msg['dialogHistorialAlertas.condicion']}:" styleClass="margin-right-10" />
+						<p:outputLabel id="condicion" value="#{dialogHistorialAlertas.historialAlerta.evento}" maxlength="255" style="width:100px" />
+
+					</h:panelGrid>
+
+					<p:outputPanel>
+						<p:tabView id="tabView" styleClass="tabEvento" value="#{dialogHistorialAlertas.listaEventos}" var="tab" width="100%" activeIndex="0" dynamic="true" >
+							<p:tab title="#{dialogHistorialAlertas.generaTituloTab(tab)}">
+								<iframe src="#{dialogHistorialAlertas.urlAuditoriaTramites(tab)}"
+										width="100%" frameborder="0">
+									<p>Tu navegador no soporta iframes.</p>
+								</iframe>
+							</p:tab>
+						</p:tabView>
+					</p:outputPanel>
+
+					<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
+						<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogHistorialAlertas:auxCopiar" update="growlDialog" />
+					</p:contextMenu>
+					<pe:clipboard id="clipContextCopy" trigger="dialogHistorialAlertas:mnuCopy" action="copy" target="dialogHistorialAlertas:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
+						<p:ajax event="success" listener="#{dialogHistorialAlertas.copiadoCorr}" process="@this" update="@this growlDialog"/>
+						<p:ajax event="error" listener="#{dialogHistorialAlertas.copiadoErr}" update="@this growlDialog"/>
+					</pe:clipboard>
+
+					<p:inputText id="auxCopiar" value="#{dialogHistorialAlertas.portapapeles}" style="padding:0; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
+				</p:outputPanel>
+				<p:outputPanel styleClass="botonera" rendered="#{dialogHistorialAlertas.codigoAlertaMail == null}">
+					<p:toolbar>
+						<f:facet name="right">
+							<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogHistorialAlertas.cancelar()}" process="@this"/>
+							<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogHistorialAlertas.ayuda()}" process="@this"/>
+						</f:facet>
+					</p:toolbar>
+				</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

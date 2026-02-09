@@ -4,10 +4,10 @@
 	  xmlns:f="http://java.sun.com/jsf/core"
 	  xmlns:h="http://java.sun.com/jsf/html"
 	  xmlns:ui="http://java.sun.com/jsf/facelets"
-	  xmlns:pe="http://primefaces.org/ui/extensions"
 	  xmlns:c="http://java.sun.com/jsp/jstl/core"
 	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	  xmlns:p="http://primefaces.org/ui">
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -212,7 +212,121 @@
 			//]]>
 		</h:outputScript>
 
-		<h:form id="dialogScript" styleClass="margin-top-10" style="height:100%">
+		<h:form id="formScript" styleClass="margin-top-10" style="height:100%">
+
+				<h:outputScript >
+
+				var arrayCm = [];
+
+				window.onload=function(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					onVisible(contextMenu, () => eliminarResaltar());
+
+					document.addEventListener('contextmenu', function(ev) {
+						ev.preventDefault();
+						getPos();
+						return false;
+						}, false);
+				}
+
+				function onVisible(element, callback) {
+					new IntersectionObserver((entries, observer) => {
+						entries.forEach(entry => {
+							if(entry.intersectionRatio == 0) {
+								callback(element);
+							}
+						});
+					}).observe(element);
+				}
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					let elementos = document.getElementsByClassName('resaltar');
+					if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+				}
+
+				function getPos(){
+					var e = window.event;
+		            debugger;
+					var posX = e.clientX;
+					var posY = e.clientY;
+					var el = document.elementFromPoint(posX, posY);
+					let elementos = document.getElementsByClassName('resaltar');
+					if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+
+					el.classList.add("resaltar");
+					debugger;
+					var aux = document.getElementById("formScript:auxCopiar");
+					if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
+						aux.value = el.textContent;
+					}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+						aux.value = el.firstChild.value;
+					}else if(el.value!=null &amp;&amp; el.value!=''){
+						aux.value = el.value;
+					}else{
+						aux.value = '';
+					}
+
+					if(aux.value!='' ){
+						var multiple = false;
+						var hijos = el.children;
+						if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
+							multiple = true;
+						}else if(hijos.length &gt;= 1 ){
+							if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
+								hijos = hijos[0].children;
+							}
+							for(i=0;i&lt;hijos.length;i++){
+								if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+									multiple=true;
+								}
+							}
+						}
+						var listaCm = document.getElementsByClassName('ui-contextmenu');
+						if(multiple){
+							for(i=0;i&lt;listaCm.length;i++){
+								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+									arrayCm.push(listaCm[i]);
+								}
+								listaCm[i].classList.add("d-none");
+							}
+						}else{
+							for(i=0;i&lt;listaCm.length;i++){
+								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+									arrayCm.push(listaCm[i]);
+								}
+								listaCm[i].classList.remove("d-none");
+							}
+							if(arrayCm.length&gt;1){
+								arrayCm.pop();
+								for(let i=0; i&lt;arrayCm.length; i++){
+									arrayCm[i].style.display='none';
+								}
+							}
+							arrayCm = [];
+						}
+					}
+		        }
+
+		        function ocultarContextMenu() {
+					  ['mainCm'].forEach(function(widget) {
+						  var menu = PF(widget);
+						  if (menu &amp;&amp; menu.isVisible()) {
+							  menu.hide();
+						  }
+					  });
+				  }
+
+
+			</h:outputScript>
 
 			<p:growl id="growlScript" widgetVar="growlScript" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 			<p:panel id="panelTop" header="#{msg['script.' += dialogScript.tipoScript += '.titulo']}" toggleable="false" widgetVar="panel" style="padding:0px;position:relative;top:0px;width:100%">
@@ -355,7 +469,7 @@
 								<h:outputText value="#{node.getName()}" />
 							</p:treeNode>
 
-							<p:ajax event="select" update="dialogScript:commandCopiarNodo"  />
+							<p:ajax event="select" update="formScript:commandCopiarNodo"  />
 
 						</p:tree>
 						<div class="w100 grid-center">
@@ -429,11 +543,23 @@
 			</p:toolbar>
 
 			<p:confirmDialog global="true" >
+
 				<p:outputPanel styleClass="confirmar_botonera">
 					<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
 					<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
 				</p:outputPanel>
 			</p:confirmDialog>
+
+			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
+		    	<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formScript:auxCopiar" update="growlScript" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopy" trigger="formScript:mnuCopy" action="copy" target="formScript:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
+				<p:ajax event="success" listener="#{dialogScript.copiadoCorr}" process="@this" update="@this growlScript"/>
+		    	<p:ajax event="error" listener="#{dialogScript.copiadoErr}" update="@this growlScript"/>
+		    </pe:clipboard>
+
+			<p:inputText id="auxCopiar" value="#{dialogScript.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
 		</h:form>
 	</h:body>
 

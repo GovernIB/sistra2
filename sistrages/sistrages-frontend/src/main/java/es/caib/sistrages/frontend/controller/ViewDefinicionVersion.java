@@ -10,14 +10,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import es.caib.sistrages.core.api.model.types.*;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -1136,15 +1139,18 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void subirFormulario() {
         final int posicion = posicionFormulario(this.formularioSeleccionado);
 
-		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) && posicion == 1) {
-			FormularioTramite formPosicion1 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(0);
-			FormularioTramite formPosicion2 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(1);
+        if (posicion == 1) {
+        	FormularioTramite formPosicion1 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(0);
+        	FormularioTramite formPosicion2 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(1);
 
-			formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
-			formPosicion2.setDebeFirmarse(true);
+        	if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) || tramiteVersion.getNormativa().equals(TypeNormativa.ESPECIFICA.toString())) {
 
-			tramiteService.updateFormularioTramite(formPosicion1);
-			tramiteService.updateFormularioTramite(formPosicion2);
+        		formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
+        		formPosicion2.setDebeFirmarse(true);
+
+        		tramiteService.updateFormularioTramite(formPosicion1);
+        		tramiteService.updateFormularioTramite(formPosicion2);
+        	}
 		}
 
         tramiteService.intercambiarFormularios(this.formularioSeleccionado.getCodigo(),
@@ -1181,15 +1187,17 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void bajarFormulario() {
         final int posicion = posicionFormulario(this.formularioSeleccionado);
 
-		if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) && posicion == 0) {
+		if(posicion == 0) {
 			FormularioTramite formPosicion1 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(0);
 			FormularioTramite formPosicion2 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(1);
 
-			formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
-			formPosicion2.setDebeFirmarse(true);
+			if (tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) || tramiteVersion.getNormativa().equals(TypeNormativa.ESPECIFICA.toString())) {
+				formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
+				formPosicion2.setDebeFirmarse(true);
 
-			tramiteService.updateFormularioTramite(formPosicion1);
-			tramiteService.updateFormularioTramite(formPosicion2);
+				tramiteService.updateFormularioTramite(formPosicion1);
+				tramiteService.updateFormularioTramite(formPosicion2);
+			}
 		}
 
 		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getCodigo(),
@@ -2217,9 +2225,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+	public void copiadoCorr(AjaxBehaviorEvent event) {
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -2242,8 +2250,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
+	public void copiadoErr(AjaxBehaviorEvent event) {
+        UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {
@@ -2573,6 +2581,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public boolean isServicioActivado() {
 		return UtilJSF.isServicioActivado();
+	}
+
+	public boolean isServicioDesactivado() {
+		return !isServicioActivado();
 	}
 
 	/**

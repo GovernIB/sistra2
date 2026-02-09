@@ -44,10 +44,10 @@
   </f:metadata>
   <h:form styleClass="margin-top-10" id="form">
 
-      <p:contextMenu id="mainCm" widgetVar="mainCm">
+      <p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
                 <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" />
             </p:contextMenu>
-            <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+            <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
                 <p:ajax event="success" listener="#{dialogPropiedadesFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>
                 <p:ajax event="error" listener="#{dialogPropiedadesFormulario.copiadoErr}" update="@this growlDialog"/>
             </pe:clipboard>
@@ -336,6 +336,15 @@
 
                }
 
+				function ocultarContextMenu() {
+					['mainCm','cMenuPaginasWV','cMenuPlantillasWV'].forEach(function(widget) {
+						var menu = PF(widget);
+						if (menu &amp;&amp; menu.isVisible()) {
+							menu.hide();
+						}
+					});
+				}
+
                function opcPagina(){
                  if(document.getElementById("form:btnNuevaPagina")!=null){
             document.getElementById("form:mnuNuevaPagina").style.display='block';
@@ -390,16 +399,15 @@
 
             </h:outputScript>
 
-      <p:contextMenu for="dataTablePaginas" id="cMenuPaginas" widgetVar="cMenuPaginasWV" beforeShow="opcPagina()">
-                <p:menuitem id="mnuCopyPagina" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" />
-                <p:separator/>
-        <p:menuitem id="mnuNuevaPagina" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevaPagina').click();" />
-        <p:menuitem id="mnuEditarPagina" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditarPagina').click();"/>
-        <p:menuitem id="mnuEliminarPagina" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminarPagina').click();" />
-
-        <p:menuitem id="mnuConsultarPagina" value="#{msg['botones.consultar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnConsultarPagina').click();" />
-            </p:contextMenu>
-            <pe:clipboard id="clipContextCopyPaginas" trigger="mnuCopyPagina" action="copy" target="auxCopiar">
+		<p:contextMenu for="dataTablePaginas" id="cMenuPaginas" widgetVar="cMenuPaginasWV" beforeShow="opcPagina()">
+            <p:menuitem id="mnuCopyPagina" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" />
+            <p:separator/>
+        	<p:menuitem id="mnuNuevaPagina" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevaPagina').click();" />
+        	<p:menuitem id="mnuEditarPagina" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditarPagina').click();"/>
+        	<p:menuitem id="mnuEliminarPagina" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminarPagina').click();" />
+        	<p:menuitem id="mnuConsultarPagina" value="#{msg['botones.consultar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnConsultarPagina').click();" />
+		</p:contextMenu>
+            <pe:clipboard id="clipContextCopyPaginas" trigger="mnuCopyPagina" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
                 <p:ajax event="success" listener="#{dialogPropiedadesFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>
                 <p:ajax event="error" listener="#{dialogPropiedadesFormulario.copiadoErr}" update="@this growlDialog"/>
             </pe:clipboard>
@@ -407,14 +415,13 @@
             <p:contextMenu for="dataTablePlantillas" id="cMenuPlantillas" widgetVar="cMenuPlantillasWV" beforeShow="opcPlantilla()">
                 <p:menuitem id="mnuCopyPlantilla" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" />
                 <p:separator/>
-        <p:menuitem id="mnuNuevaPlantilla" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevaPlantilla').click();" />
-        <p:menuitem id="mnuEditarPlantilla" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditarPlantilla').click();"/>
-        <p:menuitem id="mnuEliminarPlantilla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminarPlantilla').click();" />
-
-        <p:menuitem id="mnuConsultarPlantilla" value="#{msg['botones.consultar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnConsultarPlantilla').click();" />
-        <p:menuitem id="mnuFilesPlantilla" value="#{msg['dialogPropiedadesFormulario.botonIdioma']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:filesPlantilla').click();" />
+        		<p:menuitem id="mnuNuevaPlantilla" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevaPlantilla').click();" />
+        		<p:menuitem id="mnuEditarPlantilla" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('form:btnEditarPlantilla').click();"/>
+        		<p:menuitem id="mnuEliminarPlantilla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnEliminarPlantilla').click();" />
+        		<p:menuitem id="mnuConsultarPlantilla" value="#{msg['botones.consultar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:btnConsultarPlantilla').click();" />
+        		<p:menuitem id="mnuFilesPlantilla" value="#{msg['dialogPropiedadesFormulario.botonIdioma']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('form:filesPlantilla').click();" />
             </p:contextMenu>
-            <pe:clipboard id="clipContextCopyPlantillas" trigger="mnuCopyPlantilla" action="copy" target="auxCopiar">
+            <pe:clipboard id="clipContextCopyPlantillas" trigger="mnuCopyPlantilla" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
                 <p:ajax event="success" listener="#{dialogPropiedadesFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>
                 <p:ajax event="error" listener="#{dialogPropiedadesFormulario.copiadoErr}" update="@this growlDialog"/>
             </pe:clipboard>

@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.api.exception;
 
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 
 /**
@@ -26,6 +27,16 @@ public final class ErrorConfiguracionException
      */
     public ErrorConfiguracionException(final String pMessage) {
         super(pMessage);
+    }
+
+    /**
+     * Constructor ErrorConfiguracionException.
+     *
+     * @param pMessage
+     *            Mensaje de error.
+     */
+    public ErrorConfiguracionException(final String pMessage, final ListaPropiedades detalles) {
+        super(pMessage, detalles);
     }
 
 }

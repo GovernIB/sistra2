@@ -131,6 +131,16 @@
                }
 			 }
 
+
+		    function ocultarContextMenu() {
+				  ['mainCm','mainCmDTV'].forEach(function(widget) {
+					  var menu = PF(widget);
+					  if (menu &amp;&amp; menu.isVisible()) {
+						  menu.hide();
+					  }
+				  });
+			}
+
 			</h:outputScript>
 		<p:outputPanel>
 			<!-- Growl mensajes -->
@@ -162,14 +172,14 @@
 
 					</p:dataTable>
 
-					<p:contextMenu for=":dialogValoraciones:dataTableValoraciones">
+					<p:contextMenu for=":dialogValoraciones:dataTableValoraciones" id="mainCmDTV" widgetVar="mainCmDTV">
 		       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogValoraciones:auxCopiar" update="growlDialog" />
 		       			<p:separator/>
 		       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogValoraciones:btnNuevaValoracion').click();" process="@this"  rendered="#{!dialogValoraciones.consulta}"/>
 		        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-pencil" onclick="document.getElementById('dialogValoraciones:btnEditarValoracion').click();" process="@this" rendered="#{!dialogValoraciones.consulta}"/>
 		        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash" onclick="document.getElementById('dialogValoraciones:btnEliminarValoracion').click();" process="@this" rendered="#{!dialogValoraciones.consulta}"/>
 				    </p:contextMenu>
-				    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 						<p:ajax event="success" listener="#{dialogValoraciones.copiadoCorr}" process="@this" update="@this growlDialog"/>
 		            	<p:ajax event="error" listener="#{dialogValoraciones.copiadoErr}" update="@this growlDialog"/>
 		        	</pe:clipboard>
@@ -217,10 +227,10 @@
             </p:outputPanel>
         </p:confirmDialog>
 
-		<p:contextMenu>
+		<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
       		<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogValoraciones:auxCopiar" update="growlDialog" />
 	    </p:contextMenu>
-	    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+	    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 			<p:ajax event="success" listener="#{dialogValoraciones.copiadoCorr}" process="@this" update="@this growlDialog"/>
            	<p:ajax event="error" listener="#{dialogValoraciones.copiadoErr}" update="@this growlDialog"/>
        	</pe:clipboard>

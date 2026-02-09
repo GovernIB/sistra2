@@ -128,4 +128,23 @@ public class HistorialAlertaDaoImpl implements HistorialAlertaDao {
 		}
 		return resultado;
 	}
+
+	@Override
+	public HistorialAlerta getSiguienteHistorialAlerta(Long codigoAviso, Date fechaUltimaEjecucion) {
+		final StringBuilder sql = new StringBuilder(
+				"SELECT d FROM JHistorialAlerta d WHERE d.alerta.codigo = :codigoAviso AND d.fecha > :fechaUltimaEjecucion ORDER BY d.fecha ASC"
+		);
+
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("codigoAviso", codigoAviso);
+		query.setParameter("fechaUltimaEjecucion", fechaUltimaEjecucion);
+
+		query.setMaxResults(1);
+		List<JHistorialAlerta> resultados = query.getResultList();
+
+		if (resultados != null && !resultados.isEmpty()) {
+			return resultados.get(0).toModel();
+		}
+		return null;
+	}
 }

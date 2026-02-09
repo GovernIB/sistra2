@@ -28,7 +28,9 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -507,7 +509,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarComponente(final boolean check) {
 
-		if (check && isModificadoSinGuardar(TypeAccionFormulario.SELECCIONAR_OTRO_COMPONENTE)) {
+		if (!this.desactivarAplicarCambios && check && isModificadoSinGuardar(TypeAccionFormulario.SELECCIONAR_OTRO_COMPONENTE)) {
 			return;
 		}
 
@@ -579,7 +581,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			} else if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 				pagina = "/secure/app/dialogDisenyoFormularioLinea.xhtml";
 			}
+
+			if(objetoFormularioEdit instanceof ComponenteFormularioSeccion && isTipoSeccion){
+				ComponenteFormularioCampoSeccionReutilizable componenteSR =formulario.getPaginas().get(paginaActual - 1).getCampoSeccionReutilizable(seccionID);
+				((ComponenteFormularioSeccion) objetoFormularioEdit).setLetra(componenteSR.getLetra());
+			}
 		}
+
+
 
 		panelPropiedadesUrl = pagina;
 		generaNumColumnas();
@@ -828,8 +837,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						addMessageContext(TypeNivelGravedad.ERROR,
 								UtilJSF.getLiteral("dialogDisenyoFormulario.iban.errorNumColumnas"));
 					}else {
-						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"),
-							true);
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"),true);
 					}
 					return false;
 				}
@@ -871,25 +879,36 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					}
 
 					if (TypeCampoTexto.NUMERO.equals(campo.getTipoCampoTexto())
-							&& (campo.getNumeroDigitosEnteros() == null || campo.getNumeroDigitosEnteros() <= 0)
-							|| ((campo.isPermiteRango() && (campo.getNumeroDigitosDecimales() == null || campo.getNumeroDigitosDecimales() <= 0)))) {
-						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero"),
-								true);
+					    && ((campo.getNumeroDigitosEnteros() == null || campo.getNumeroDigitosEnteros() <= 0)
+					    || (campo.getNumeroSeparador() != TypeSeparadorNumero.SIN_FORMATO
+					    && (campo.getNumeroDigitosDecimales() == null || campo.getNumeroDigitosDecimales() <= 0)))) {
+					    addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero"),true);
+					    return false;
+					}
+
+					if (TypeCampoTexto.NUMERO.equals(campo.getTipoCampoTexto())
+							&& campo.isPermiteRango() && (campo.getNumeroRangoMinimo() == null || campo.getNumeroRangoMinimo() == 0)
+							&& (campo.getNumeroRangoMaximo() == null || campo.getNumeroRangoMaximo() == 0)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero.rango"),true);
 						return false;
 					}
 
 					if (TypeCampoTexto.NUMERO.equals(campo.getTipoCampoTexto())
-							&& campo.isPermiteRango() && (campo.getNumeroRangoMinimo() == null || campo.getNumeroRangoMinimo() <= 0)
-							&& (campo.getNumeroRangoMaximo() == null || campo.getNumeroRangoMaximo() <= 0)) {
-						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero.rango"),
-								true);
+							&& campo.isPermiteRango() && (campo.getNumeroRangoMaximo() != null && campo.getNumeroRangoMinimo() != null)
+						&& (campo.getNumeroRangoMinimo() > campo.getNumeroRangoMaximo())) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero.rango.menor"),true);
 						return false;
+					}
+
+					if (TypeCampoTexto.NUMERO.equals(campo.getTipoCampoTexto())
+							&& !campo.isNumeroConSigno() && (campo.getNumeroRangoMinimo() != null && campo.getNumeroRangoMinimo() < 0)) {
+					    addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero.rango.negativo"),true);
+					    return false;
 					}
 
 					if (TypeCampoTexto.TELEFONO.equals(campo.getTipoCampoTexto()) && !campo.isTelefonoFijo()
 							&& !campo.isTelefonoMovil()) {
-						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.telefono"),
-								true);
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.telefono"),true);
 						return false;
 					}
 
@@ -907,8 +926,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 					if (TypeCampoTexto.EXPRESION.equals(campo.getTipoCampoTexto())
 							&& StringUtils.isEmpty(campo.getExpresionRegular())) {
-						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.expresion"),
-								true);
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.expresion"),true);
 						return false;
 					}
 
@@ -992,8 +1010,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						objetoFormularioEdit.getCodigo(),
 						((ComponenteFormulario) objetoFormularioEdit).getIdComponente());
 				if (isDuplicado) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.identificador.duplicado"),
-							true);
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.identificador.duplicado"),true);
 					return false;
 				}
 			}
@@ -1195,7 +1212,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void editarTraduccionesTextoOpcional() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
 		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
-		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.valueOf(modoAcceso),
+		TypeModoAcceso tipoModoAcceso = this.desactivarAplicarCambios ? TypeModoAcceso.CONSULTA : TypeModoAcceso.valueOf(modoAcceso);
+		UtilTraducciones.openDialogTraduccionOpcional(tipoModoAcceso,
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
 	}
 
@@ -2936,10 +2954,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -2962,7 +2980,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
+	public void copiadoErr(AjaxBehaviorEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 

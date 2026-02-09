@@ -18,7 +18,11 @@ public enum TypeDescargaJustificante {
 	/**
 	 * Redirección a carpeta (Código String: car).
 	 */
-	CARPETA_CIUDADANA("car");
+	CARPETA_CIUDADANA("car"),
+	/**
+	 *  Los datos del justificante se han enviado por un email, no hay descarga (Código String: ema).
+	 */
+	EMAIL("ema");
 
 	/**
 	 * Valor como string.

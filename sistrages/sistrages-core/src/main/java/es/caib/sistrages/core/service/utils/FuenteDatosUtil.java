@@ -39,8 +39,7 @@ public class FuenteDatosUtil {
 		// Estructura
 		// SELECT campo (, campo)*
 		// FROM fuenteDatos
-		// WHERE expresion ( [AND | OR] expresion ] )* expresion: campo [= |
-		// LIKE] :parametro
+		// WHERE expresion ( [AND | OR] expresion ] )* expresion: campo [= | LIKE] :parametro
 		// ORDER BY campo
 
 		final ConsultaFuenteDatos cfd = new ConsultaFuenteDatos();

@@ -46,10 +46,18 @@
 <p>Per exemple, per a generar una sèrie de valors per a una llista d'elements: </p>
  <p class="codigoScript">
 var datos = DATOS_VALORESINICIALES.crearValorListaElementos();<br />
-<p>D'aquesta manera podem afegir els nous valors a la variable fent servir el mètode "addValor(codigo, descripcion)", on el primer paràmetre indica el codi i el segon paràmetre el valor:</p>
+<p>D'aquesta manera podem afegir els nous valors a la variable fent servir els mètodes:
+	<ul>
+		<li>'addValor(codi, descripció)', on el primer paràmetre indica el codi i el segon paràmetre el valor.</li>
+		<li>'addValorCompuesto(camp, codi, descripció)', on el primer paràmetre indica el camp al qual es vol assignar el valor, el segon paràmetre el codi que es vol assignar al camp i el tercer el valor.</li>
+		<li>'addValorMultiple(camp, valor)', on el primer paràmetre indica el camp al qual es vol assignar el valor i el segon paràmetre el valor sent aquest una variable múltiple.
+	</ul>
+</p>
 <p class="codigoScript">
-datos.addValor('codigo', '07073');
-datos.addValor('descripcion', 'Mallorca');
+datos.addValor('codi', '07073'); <br>
+datos.addValor('descripcio', 'Mallorca'); <br>
+datos.addValorCompuesto('provincia', '07', 'Illes Balears'); <br>
+datos.addValorMultiple('datosGeografico', multiple); <br>
 </p>
 </body>
 </html>

@@ -546,12 +546,12 @@ public class TramiteServiceImpl implements TramiteService {
 	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#addFormularioTramite(es.
-	 * caib.sistrages.core.api.model.FormularioTramite, java.lang.Long, java.lang.String)
+	 * caib.sistrages.core.api.model.FormularioTramite, java.lang.Long)
 	 */
 	@Override
 	@NegocioInterceptor
-	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso, final String normativa) {
-		return tramiteComponent.addFormularioTramite(formularioTramite, idTramitePaso, normativa);
+	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
+		return tramiteComponent.addFormularioTramite(formularioTramite, idTramitePaso);
 	}
 
 	/*
@@ -1214,8 +1214,9 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public boolean checkIdentificadorAreaRepetido(final String identificador, final Long codigo) {
-		return areaDao.checkIdentificadorRepetido(identificador, codigo);
+	public boolean checkIdentificadorAreaRepetido(final String identificador, final Long codEntidad, Long codigo) {
+
+		return areaDao.checkIdentificadorRepetido(identificador, codEntidad, codigo);
 	}
 
 	@Override

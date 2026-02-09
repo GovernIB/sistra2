@@ -38,117 +38,120 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growldialogEnviarMailData" widgetVar="growldialogEnviarMailData" />
-				<h:outputScript >
 
-					  var arrayCm = [];
+		<h:outputScript >
 
-				  window.onload=function(){
-					    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-						onVisible(contextMenu, () => eliminarResaltar());
+		var arrayCm = [];
 
-						document.addEventListener('contextmenu', function(ev) {
-					    	ev.preventDefault();
-					    	getPos();
-					    	return false;
-						}, false);
-					  }
+		window.onload=function(){
+			let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			onVisible(contextMenu, () => eliminarResaltar());
 
-						function eliminarResaltar(){
-							let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-					  		let elementos = document.getElementsByClassName('resaltar');
-					  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
-								for(let i = 0; i &lt; elementos.length; i++){
-									elementos[i].classList.remove('resaltar');
-								}
-					  		}
+			document.addEventListener('contextmenu', function(ev) {
+				ev.preventDefault();
+				getPos();
+				return false;
+				}, false);
+		}
+
+		function onVisible(element, callback) {
+			new IntersectionObserver((entries, observer) => {
+				entries.forEach(entry => {
+					if(entry.intersectionRatio == 0) {
+						callback(element);
+					}
+				});
+			}).observe(element);
+		}
+
+		function eliminarResaltar(){
+			let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			let elementos = document.getElementsByClassName('resaltar');
+			if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+				for(let i = 0; i &lt; elementos.length; i++){
+					elementos[i].classList.remove('resaltar');
+				}
+			}
+		}
+
+		function getPos(){
+			var e = window.event;
+            debugger;
+			var posX = e.clientX;
+			var posY = e.clientY;
+			var el = document.elementFromPoint(posX, posY);
+			let elementos = document.getElementsByClassName('resaltar');
+			if(elementos.length &gt; 0){
+				for(let i = 0; i &lt; elementos.length; i++){
+					elementos[i].classList.remove('resaltar');
+				}
+			}
+
+			el.classList.add("resaltar");
+			var aux = document.getElementById("formdialogEnviarMail:auxCopiar");
+			if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
+				aux.value = el.textContent;
+			}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+				aux.value = el.firstChild.value;
+			}else if(el.value!=null &amp;&amp; el.value!=''){
+				aux.value = el.value;
+			}else{
+				aux.value = '';
+			}
+
+			if(aux.value!='' ){
+				var multiple = false;
+				var hijos = el.children;
+				if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
+					multiple = true;
+				}else if(hijos.length &gt;= 1 ){
+					if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
+						hijos = hijos[0].children;
+					}
+					for(i=0;i&lt;hijos.length;i++){
+						if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+							multiple=true;
 						}
-
-						function onVisible(element, callback) {
-						  new IntersectionObserver((entries, observer) => {
-						    entries.forEach(entry => {
-						      if(entry.intersectionRatio == 0) {
-						        callback(element);
-						      }
-						    });
-						  }).observe(element);
+					}
+				}
+				var listaCm = document.getElementsByClassName('ui-contextmenu');
+				if(multiple){
+					for(i=0;i&lt;listaCm.length;i++){
+						if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+							arrayCm.push(listaCm[i]);
 						}
-
-						function consultar(){
-							let elemento = document.getElementsByClassName('resaltar')[0];
-							elemento.click();
-							$('#formdialogEnviarMail\\:btnEditarHidden').click();
+						listaCm[i].classList.add("d-none");
+					}
+				}else{
+					for(i=0;i&lt;listaCm.length;i++){
+						if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+							arrayCm.push(listaCm[i]);
 						}
+						listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+				}
+			}
+        }
 
-					  function getPos(){
-					 	var e = window.event;
+        function ocultarContextMenu() {
+			  ['mainCm'].forEach(function(widget) {
+				  var menu = PF(widget);
+				  if (menu &amp;&amp; menu.isVisible()) {
+					  menu.hide();
+				  }
+			  });
+		  }
 
-					    var posX = e.clientX;
-					    var posY = e.clientY;
-					    var el = document.elementFromPoint(posX, posY);
 
-					    let elementos = document.getElementsByClassName('resaltar');
-					  		if(elementos.length &gt; 0){
-								for(let i = 0; i &lt; elementos.length; i++){
-									elementos[i].classList.remove('resaltar');
-								}
-					  		}
+		</h:outputScript>
 
-						el.classList.add("resaltar");
-						var aux = document.getElementById("formdialogEnviarMail:auxCopiar");
-						if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
-							aux.value = el.textContent;
-						}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
-							aux.value = el.firstChild.value;
-						}else if(el.value!=null &amp;&amp; el.value!=''){
-							aux.value = el.value;
-						}else{
-				          aux.value = '';
-				        }
-
-						  if(aux.value!='' ){
-				            var multiple = false;
-				            var hijos = el.children;
-							if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
-						            multiple = true;
-						                  }else if(hijos.length &gt;= 1 ){
-						                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
-						                  		hijos = hijos[0].children;
-						                  	}
-							                    for(i=0;i&lt;hijos.length;i++){
-									              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
-									                multiple=true;
-									              }
-							                    }
-
-						                  }
-				                  var listaCm = document.getElementsByClassName('ui-contextmenu');
-				                  if(multiple){
-				                    for(i=0;i&lt;listaCm.length;i++){
-				                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-				                    		arrayCm.push(listaCm[i]);
-				                    	}
-					                	listaCm[i].classList.add("d-none");
-									}
-				                  }else{
-				                  	for(i=0;i&lt;listaCm.length;i++){
-				                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-				                    		arrayCm.push(listaCm[i]);
-				                    	}
-					                	listaCm[i].classList.remove("d-none");
-									}
-									if(arrayCm.length&gt;1){
-										arrayCm.pop();
-										for(let i=0; i&lt;arrayCm.length; i++){
-											arrayCm[i].style.display='none';
-										}
-									}
-									arrayCm = [];
-				                  }
-
-				               }
-					 }
-
-					</h:outputScript>
 			 	<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="email" value="#{msg['viewConfiguracionAlertas.emails']}" />
@@ -159,10 +162,10 @@
 				</h:panelGrid>
 
 
-					<p:contextMenu>
+					<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
 		       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formdialogEnviarMail:auxCopiar" update="growldialogEnviarMailData" />
 				    </p:contextMenu>
-				    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				    <pe:clipboard id="clipContextCopy" trigger="formdialogEnviarMail:mnuCopy" action="copy" target="formdialogEnviarMail:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 						<p:ajax event="success" listener="#{dialogEnviarMail.copiadoCorr}" process="@this" update="@this growldialogEnviarMailData"/>
 		            	<p:ajax event="error" listener="#{dialogEnviarMail.copiadoErr}" update="@this growldialogEnviarMailData"/>
 		        	</pe:clipboard>

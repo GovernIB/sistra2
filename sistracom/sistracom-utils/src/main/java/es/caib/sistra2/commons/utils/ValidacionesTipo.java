@@ -115,7 +115,7 @@ public final class ValidacionesTipo {
 		patronTelefonoInternacional = Pattern.compile("^\\+[1-9]\\d{10,14}$");
 		patronImporte = Pattern.compile("^[0-9]+(,[0-9]{1,2})?$");
 		patronEmail = Pattern.compile(
-				"^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,4}$");
+				"^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,10}$");
 		patronHora = Pattern.compile("^([01]?[0-9]|2[0-3]):[0-5][0-9]$");
 	}
 
@@ -454,6 +454,28 @@ public final class ValidacionesTipo {
 		return res;
 	}
 
+	public boolean esFormatoFecha(final String formato) {
+	    if (formato == null || formato.isEmpty()) {
+	        return false;
+	    }
+
+	    if (!formato.equals(formato.trim()) || formato.contains(" ")) {
+	        return false;
+	    }
+	    return formato.equals("dd/MM/yyyy") || formato.equals("yyyy-MM-dd");
+	}
+
+	public boolean esFormatoHora(final String formato) {
+	    if (formato == null || formato.isEmpty()) {
+	        return false;
+	    }
+
+	    if (!formato.equals(formato.trim()) || formato.contains(" ")) {
+	        return false;
+	    }
+	    return formato.equals("HH:mm") || formato.equals("HH:mm:ss");
+	}
+
 	public boolean esImporte(final String importe) {
 		return (!esCadenaVacia(importe) && compruebaRegExp(importe, patronImporte));
 	}
@@ -620,19 +642,45 @@ public final class ValidacionesTipo {
 	 *                                     Excepcion validacion
 	 */
 	public int validaFechaFin(final String fechaUno, final String fechaDos, final String iformatoFecha)
-			throws ValidacionTipoException {
-		if (fechaUno == null || fechaDos == null) {
-			throw new ValidacionTipoException("Se está pasando una fecha vacía.");
-		}
-		try {
-			final SimpleDateFormat formatoFecha = new SimpleDateFormat(iformatoFecha);
-			formatoFecha.setLenient(false);
-			final Date fUno = formatoFecha.parse(fechaUno);
-			final Date fDos = formatoFecha.parse(fechaDos);
-			return validaFechaFin(fUno, fDos);
-		} catch (final ParseException e) {
-			throw new ValidacionTipoException("El formato de fecha no es correcta. Debe ser " + iformatoFecha + ".", e);
-		}
+	        throws ValidacionTipoException {
+
+	    if (fechaUno == null || fechaDos == null) {
+	        throw new ValidacionTipoException("Se está pasando una fecha vacía.");
+	    }
+
+	    try {
+	        String f1Normalizada = fechaUno;
+	        String f2Normalizada = fechaDos;
+	        // Si el formato esperado es internacional (yyyy-MM-dd HH:mm:ss)
+	        // pero las fechas vienen en formato español (dd/MM/yyyy HH:mm o dd/MM/yyyy HH:mm:ss)
+	        if (iformatoFecha.equals("yyyy-MM-dd HH:mm:ss")) {
+	            // --- Normalizamos fechaUno ---
+	            if (fechaUno.matches("\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}$")) {
+	                Date parsed = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(fechaUno);
+	                f1Normalizada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(parsed);
+	            } else if (fechaUno.matches("\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}:\\d{2}$")) {
+	                Date parsed = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fechaUno);
+	                f1Normalizada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(parsed);
+	            }
+	            // --- Normalizamos fechaDos ---
+	            if (fechaDos.matches("\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}$")) {
+	                Date parsed = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(fechaDos);
+	                f2Normalizada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(parsed);
+	            } else if (fechaDos.matches("\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}:\\d{2}$")) {
+	                Date parsed = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fechaDos);
+	                f2Normalizada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(parsed);
+	            }
+	        }
+
+	        final SimpleDateFormat formatoFecha = new SimpleDateFormat(iformatoFecha);
+	        formatoFecha.setLenient(false);
+	        final Date fUno = formatoFecha.parse(f1Normalizada);
+	        final Date fDos = formatoFecha.parse(f2Normalizada);
+	        return validaFechaFin(fUno, fDos);
+
+	    } catch (final ParseException e) {
+	        throw new ValidacionTipoException("El formato de fecha no es correcta. Debe ser " + iformatoFecha + ".", e);
+	    }
 	}
 
 	/**
@@ -646,20 +694,31 @@ public final class ValidacionesTipo {
 	 * @throws ValidacionTipoException
 	 */
 	public int validaFechaActual(final String fecha, final String formato) throws ValidacionTipoException {
-		final SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
-		formatoFecha.setLenient(false);
-		if (fecha == null) {
-			throw new ValidacionTipoException("Se está pasando una fecha vacía.");
-		}
-		Date fechaActual = new Date();
-		final String fechaActualStr = formatoFecha.format(fechaActual);
-		try {
-			fechaActual = formatoFecha.parse(fechaActualStr);
-			final Date f = formatoFecha.parse(fecha);
-			return validaFechaFin(f, fechaActual);
-		} catch (final ParseException e) {
-			throw new ValidacionTipoException("El formato de fecha no es correcto. Debe ser " + formato + ".", e);
-		}
+	    if (fecha == null) {
+	        throw new ValidacionTipoException("Se está pasando una fecha vacía.");
+	    }
+	    String fechaNormalizada = fecha;
+	    // Si el formato esperado es internacional y la fecha tiene formato español:
+	    if (formato.equals("yyyy-MM-dd HH:mm:ss") && fecha.matches("\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}$")) {
+	        try {
+	            // Convertimos "08/11/2025 18:39" → "2025-11-08 18:39:00"
+	            Date parsed = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(fecha);
+	            fechaNormalizada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(parsed);
+	        } catch (ParseException e) {
+	            throw new ValidacionTipoException("No se pudo convertir la fecha al formato esperado.", e);
+	        }
+	    }
+
+	    final SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
+	    formatoFecha.setLenient(false);
+
+	    try {
+	        Date fechaActual = formatoFecha.parse(formatoFecha.format(new Date()));
+	        final Date f = formatoFecha.parse(fechaNormalizada);
+	        return validaFechaFin(f, fechaActual);
+	    } catch (final ParseException e) {
+	        throw new ValidacionTipoException("El formato de fecha no es correcto. Debe ser " + formato + ".", e);
+	    }
 	}
 
 	public String formateaNombreApellidos(final String formato, final String nombre, final String apellido1,

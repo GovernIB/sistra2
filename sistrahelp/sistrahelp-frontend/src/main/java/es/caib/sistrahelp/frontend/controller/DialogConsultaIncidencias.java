@@ -8,11 +8,14 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
 
@@ -49,6 +52,8 @@ public class DialogConsultaIncidencias extends DialogControllerBase {
 
 	@Inject
 	private HelpDeskService hService;
+
+	private String errorCopiar;
 
 	private String portapapeles;
 
@@ -104,10 +109,10 @@ public class DialogConsultaIncidencias extends DialogControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -200,9 +205,22 @@ public class DialogConsultaIncidencias extends DialogControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	public void copiadoErr(AjaxBehaviorEvent event) {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewAuditoriaTramites.copiar"));
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	public String getId() {

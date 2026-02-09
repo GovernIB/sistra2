@@ -20,11 +20,15 @@
 		<f:viewParam name="fechaHasta" value="#{viewAuditoriaTramites.fechaHastaECM}"/>
 		<f:viewParam name="horaDesde" value="#{viewAuditoriaTramites.horaDesdeECM}"/>
 		<f:viewParam name="excepcion" value="#{viewAuditoriaTramites.excepcionECM}"/>
+        <f:viewParam name="esDialogHA" value="#{viewAuditoriaTramites.esDialogHA}"/>
+        <f:viewParam name="eventoHA" value="#{viewAuditoriaTramites.eventoHA}"/>
+        <f:viewParam name="fechaDesdeHA" value="#{viewAuditoriaTramites.fechaDesdeHA}"/>
+        <f:viewParam name="fechaHastaHA" value="#{viewAuditoriaTramites.fechaHastaHA}"/>
 
 	</f:metadata>
 
 	<c:choose>
-		    <c:when test="#{viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams}">
+		    <c:when test="#{viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA or viewAuditoriaTramites.esDialogParams}">
 		         <title><h:outputText value = "a" /></title>
 
 		    </c:when>
@@ -107,9 +111,47 @@
 					#work {
 						height: 98% !important;
 					}
-
 				</style>
 		    </c:when>
+			<c:when test="#{viewAuditoriaTramites.esDialogHA}">
+		        <style>
+					.ui-panelgrid .ui-panelgrid-cell{
+						border-color:#f0f0f0;
+					}
+
+					#form{
+						height:93% !important;
+					}
+
+					.ui-datatable-scrollable-body{
+						height:90% !important;
+					}
+
+					.ui-datatable-scrollable {
+						height:90% !important;
+					}
+
+					body{
+						height:97vh !important;
+					}
+
+					#work h2 {
+						display: none !important;
+					}
+
+					#mainLayout {
+						height: 100% !important;
+					}
+
+					#work {
+						height: 98% !important;
+					}
+
+					#form\:paginacion {
+						display: none !important;
+					}
+				</style>
+			</c:when>
 		    <c:otherwise>
 		    		<style>
 						.ui-panelgrid .ui-panelgrid-cell{
@@ -136,12 +178,12 @@
 			<!-- Toolbar -->
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<c:choose>
-			    <c:when test="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
+			    <c:when test="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA or viewAuditoriaTramites.esDialogParams)}">
 			       <p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 ,showcase-text-align-center">
 				       <p:column styleClass=" noPadding columna-filtros">
 			        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
 				        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
-					        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtros.idSesionTramitacion}" size="40" maxlength="40" style="width:250px;" onkeyup="capitalize(this)" onblur="trim(this)"/>
+					        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtros.idSesionTramitacion}" size="40" maxlength="50" style="width:250px;" onkeyup="capitalize(this)" onblur="trim(this)"/>
 				        	</h:panelGrid>
 
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
@@ -152,13 +194,13 @@
 			        	<p:column styleClass=" noPadding columna-filtros">
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding">
 					        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
-					        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="22" maxlength="12" style="margin-left: 70px;"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+					        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="22" maxlength="9" style="margin-left: 70px;"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 				        	</h:panelGrid>
 
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding">
 				        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
 				        		<h:panelGroup>
-					        		<p:inputText id="filtroTramite" value="#{viewAuditoriaTramites.filtros.idTramite}" size="15" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
+					        		<p:inputText id="filtroTramite" value="#{viewAuditoriaTramites.filtros.idTramite}" size="15" maxlength="50"  onkeyup="capitalize(this)" onblur="trim(this)">
 					        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
 					        		</p:inputText>
 					        		<p:outputLabel value=" / "/>
@@ -171,7 +213,7 @@
 			        	<p:column styleClass=" noPadding columna-filtros">
 							<h:panelGrid columns="2" styleClass="w100, noPadding" >
 				        		<p:outputLabel for="filtroArea" value="#{msg['viewAuditoriaTramites.headArea']}:"/>
-				        		<p:inputText id="filtroArea" value="#{viewAuditoriaTramites.filtroArea}" size="24" maxlength="24"  onkeyup="capitalize(this)" onblur="trim(this)">
+				        		<p:inputText id="filtroArea" value="#{viewAuditoriaTramites.filtroArea}" size="24" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
 				        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
 				        		</p:inputText>
 							</h:panelGrid>
@@ -345,7 +387,7 @@
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false"/>
 	        	<c:choose>
-				    <c:when test="#{!viewAuditoriaTramites.esDialog}">
+				    <c:when test="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA)}">
 						<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" />
 				    </c:when>
 				    <c:otherwise>
@@ -556,6 +598,15 @@
                }
 			 }
 
+		      function ocultarContextMenu() {
+			 	 ['nifCm','mainCmH','mainCmF'].forEach(function(widget) {
+			 		 var menu = PF(widget);
+			 		 if (menu &amp;&amp; menu.isVisible()) {
+			 			 menu.hide();
+			 		 }
+			  	 });
+			  }
+
 			  function triggerDblClick() {
 		        	$('#form\\:btnDetalle').click();
 		      }
@@ -596,30 +647,30 @@
 
 
 
-		    <p:contextMenu for="dataTable" id="contextMenuNif" widgetVar="nifCm">
+		    <p:contextMenu for="dataTable" id="contextMenuNif" widgetVar="nifCm" style="width: 15em;">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
        			<p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
        			<p:menuitem id="sesion" icon="fa fa-window-maximize" onclick="pantallaSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}"  process="@this"/>
        			<p:menuitem id="nif" icon="fa fa-window-maximize" onclick="pantallaNif();" value="#{msg['viewConsultaIncidencias.eventos.nif']}"  process="@this"/>
 		    </p:contextMenu>
-		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>
             	<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
         	</pe:clipboard>
 
-			<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
+			<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA or viewAuditoriaTramites.esDialogParams)}">
 				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA or viewAuditoriaTramites.esDialogParams)}" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>
 
-			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
+			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA or viewAuditoriaTramites.esDialogParams)}">
 				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA or viewAuditoriaTramites.esDialogParams)}" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>

@@ -19,10 +19,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,6 +102,14 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	private String excepcionECM;
 
+	private String eventoHA;
+
+	private String fechaDesdeHA;
+
+	private String fechaHastaHA;
+
+	private Boolean esDialogHA;
+
 	private Boolean esDialog;
 
 	private Boolean esDialogParams;
@@ -127,6 +137,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 		esDialog = esDialog == null ? false : esDialog;
 		esDialogParams = esDialogParams == null ? false : esDialogParams;
+		esDialogHA = esDialogHA != null && esDialogHA;
 
 		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false);
 
@@ -198,7 +209,38 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 				setLiteralTituloPantalla(nifParam);
 			}
 			filtros.setExcepcion(excepcionECM);
-		} else {
+		} else if (esDialogHA) {
+            layout = "../layout/dialogViewLayout.xhtml";
+            setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+            if (fechaDesdeHA != null && !fechaDesdeHA.isEmpty()) {
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    Date fecha = dateFormat.parse(fechaDesdeHA);
+                    filtros.setFechaDesde(fecha);
+                } catch (java.text.ParseException e) {
+
+                }
+            }
+
+            if (fechaHastaHA != null && !fechaHastaHA.isEmpty()) {
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    Date fecha = dateFormat.parse(fechaHastaHA);
+                    filtros.setFechaHasta(fecha);
+                } catch (java.text.ParseException e) {
+
+                }
+            }
+
+            if (eventoHA != null && !eventoHA.isEmpty()) {
+                try {
+                    TypeEvento evento = TypeEvento.valueOf(eventoHA);
+                    filtros.setEvento(evento);
+                } catch (IllegalArgumentException e) {
+
+                }
+            }
+        } else {
 			layout = "../layout/mainLayout.xhtml";
 			setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		}
@@ -284,10 +326,10 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * Copiado correctamente
 	 */
-	public void copiadoCorr() {
+	public void copiadoCorr(AjaxBehaviorEvent event) {
 
-		if (portapapeles.equals("") || portapapeles.equals(null)) {
-			copiadoErr();
+		if (StringUtils.isEmpty(portapapeles)) {
+			copiadoErr(event);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
@@ -404,7 +446,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * Copiado error
 	 */
-	public void copiadoErr() {
+	public void copiadoErr(AjaxBehaviorEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewAuditoriaTramites.copiar"));
 	}
 
@@ -807,6 +849,38 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public final void setExcepcionECM(String excepcionECM) {
 		this.excepcionECM = excepcionECM;
+	}
+
+	public String getEventoHA() {
+		return eventoHA;
+	}
+
+	public void setEventoHA(String eventoHA) {
+		this.eventoHA = eventoHA;
+	}
+
+	public String getFechaDesdeHA() {
+		return fechaDesdeHA;
+	}
+
+	public void setFechaDesdeHA(String fechaDesdeHA) {
+		this.fechaDesdeHA = fechaDesdeHA;
+	}
+
+	public String getFechaHastaHA() {
+		return fechaHastaHA;
+	}
+
+	public void setFechaHastaHA(String fechaHastaHA) {
+		this.fechaHastaHA = fechaHastaHA;
+	}
+
+	public Boolean getEsDialogHA() {
+		return esDialogHA;
+	}
+
+	public void setEsDialogHA(Boolean esDialogHA) {
+		this.esDialogHA = esDialogHA;
 	}
 
 	public String getIdSesionParam() {

@@ -80,7 +80,6 @@ import es.caib.sistrages.core.service.repository.model.JPasoRegistrar;
 import es.caib.sistrages.core.service.repository.model.JPasoRellenar;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JScript;
-import es.caib.sistrages.core.service.repository.model.JTramite;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
 /**
@@ -224,13 +223,13 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 	@Override
 	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso,
-			final Long idFormularioInterno, final String normativa) {
+			final Long idFormularioInterno) {
 		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
 		final JFormulario jFormularioInterno = entityManager.find(JFormulario.class, idFormularioInterno);
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		jFormulariotramite.setOrden((jpasoRellenar.getPasoRellenar().getFormulariosTramite().size()) + 1);
 
-		if(jFormulariotramite.getOrden() == 1 && normativa.equals("G")) {
+		if(jFormulariotramite.getOrden() == 1) {
 			jFormulariotramite.setFirmarDigitalmente(true);
 			jFormulariotramite.setFirmarDigitalmenteAntesDelIntercambio(true);
 		}

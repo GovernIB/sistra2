@@ -14,6 +14,10 @@ public final class PagoVerificacion {
     private TypeSiNo verificado;
     /** Indica si se ha realizado. */
     private TypeSiNo realizado;
+    /** Indica metodo de pago. */
+    private String metodoPago;
+    /** Indica localizador de pago que se ha intentado verificar. */
+    private String localizador;
     /** Estado incorrecto. */
     private DetalleEstadoPagoIncorrecto estadoIncorrecto;
 
@@ -75,6 +79,44 @@ public final class PagoVerificacion {
     public void setEstadoIncorrecto(
             DetalleEstadoPagoIncorrecto estadoIncorrecto) {
         this.estadoIncorrecto = estadoIncorrecto;
+    }
+
+    /**
+     * Método de acceso a metodoPago.
+     *
+     * @return metodoPago
+     */
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    /**
+     * Método para establecer metodoPago.
+     *
+     * @param metodoPago
+     *            metodoPago a establecer
+     */
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
+    /**
+     * Método de acceso a localizador.
+     *
+     * @return localizador
+     */
+    public String getLocalizador() {
+        return localizador;
+    }
+
+    /**
+     * Método para establecer localizador.
+     *
+     * @param localizador
+     *                        localizador a establecer
+     */
+    public void setLocalizador(String localizador) {
+        this.localizador = localizador;
     }
 
 }

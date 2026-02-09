@@ -1,5 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,6 +41,10 @@ public class DialogPlantillaIdiomaFormulario extends DialogControllerBase {
 	private List<PlantillaIdiomaFormulario> listaPlantillaIdioma;
 
 	private List<String> idiomas;
+
+	private String errorCopiar;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -170,6 +176,47 @@ public class DialogPlantillaIdiomaFormulario extends DialogControllerBase {
 
 	public void setCodPlantilla(final Long codigo) {
 		this.codPlantilla = codigo;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewAuditoriaTramites.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

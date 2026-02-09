@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarExiste;
@@ -164,7 +165,10 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 						UtilJSF.getLiteral("dialogTramiteImportarAR.error.vaciodatos"));
 				return;
 			}
-			if (tramiteService.checkIdentificadorAreaRepetido(identificador, null)) {
+
+			Entidad entidad = UtilJSF.getSessionBean().getEntidad();
+			Long codEntidad = entidad != null ? entidad.getCodigo() : null;
+			if (tramiteService.checkIdentificadorAreaRepetido(identificador, codEntidad, null)) {
 				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("dialogTramiteImportarAR.error.identificadorrepetido"));
 				return;

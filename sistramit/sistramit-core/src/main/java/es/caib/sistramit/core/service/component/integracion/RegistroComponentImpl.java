@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.service.component.integracion;
 
+import es.caib.sistramit.core.api.exception.TipoNoControladoException;
+import org.apache.xmlbeans.impl.jam.xml.TunnelledException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,9 +149,11 @@ public final class RegistroComponentImpl implements RegistroComponent {
 				case CARPETA_CIUDADANA:
 					res = TypeDescargaJustificante.CARPETA_CIUDADANA;
 					break;
-				default:
-					res = TypeDescargaJustificante.FICHERO;
+					case EMAIL:
+					res = TypeDescargaJustificante.EMAIL;
 					break;
+				default:
+					throw new TipoNoControladoException("No se permite tipo justificante: "+ justif);
 				}
 			}
 			return res;

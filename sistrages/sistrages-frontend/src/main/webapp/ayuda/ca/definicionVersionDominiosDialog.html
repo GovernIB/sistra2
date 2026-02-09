@@ -5,26 +5,24 @@
 	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">DOMINIS EMPRATS</h1>
+<h1 class="stgH1">SELECCIÓ DE DOMINIS</h1>
 <p>
-	En la pantalla de<i>' Dominis emprats</i>' es gestionen els dominis, de qualsevol àmbit, que vagi a utilitzar la versió del tràmit.<br>
-	Si es vol emprar un domini en qualsevol script de la versió del tràmit, siguin de flux o de formulari, prèviament hauran de ser afegit en aquesta pantalla.<br>
-	El llistat de dominis usats per la versió es presenta paginat, podent-se seleccionar el nombre d'elements per pàgina a mostrar.
+	A la pantalla de '<i>Selecció de dominis</i>' es permet la cerca sobre els dominis disponibles en els diferents àmbits (global, entitat o àrea) per afegir-los a la versió del tràmit.<br>
+	Per defecte, la pantalla mostra els dominis disponibles d'àmbit 'Entitat'. En fer un canvi d'àmbit o tipus, cal prémer sobre el botó de la lupa per obtenir resultats.<br>
+</p>
+<h2 class="stgH2">CAMPS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Tipus:</span> tipus o àmbit del domini a cercar per utilitzar-lo en la versió del tràmit. Hi ha dominis de tipus global, entitat i àrea.</li>
+		<li><span class="nombreCampo">Filtrar per:</span> permet recuperar dominis del tipus seleccionat filtrant per la cadena de text introduïda. Si no s'inclou cadena de text al camp Cerca, es tornaran tots els dominis del tipus seleccionat.</li>
+		<li><span class="nombreCampo">Resultats:</span> en aquesta taula es mostren tots els dominis resultants de la cerca realitzada. La taula presenta la columna Codi, on es mostra l'identificador del domini, i Descripció, que presenta el descriptor textual de l'objecte del domini</li>
+	</ul>
 </p>
 <h2 class="stgH2">OPERATIVA</h2>
 <p>
 	<ul>
-		<li><span class="boton">Afegir</span>: pitjant el botó s'obrirà la <a href="AyudaServlet?lang=ca&id=definicionVersionDominiosDialog">fitxa</a> que permet seleccionar i afegir un domini dels disponibles en els diferents àmbits (Global, entitat o àrea).</li>
-		<li><span class="boton">Lleva</span>: pitjant el botó s'eliminarà l'ús d'un domini, prèviament seleccionat del llistat, de la versió</li>
-		<li> <span class="boton">Consultar</span>: aquest botó permet accedir a la fitxa de configuració del domini del llistat seleccionat.</li>
-	</ul>
-</p>
-<h2 class="stgH2">CAMPOS</h2>
-<p>
-	<ul>
-		<li><span class="nombreCampo">Codi:</span> codi unívoc que identifica domini en l'aplicació.</li>
-		<li><span class="nombreCampo">Tipus:</span> tipus o àmbit del domini en l'aplicació (Global, Entitat o Àrea).</li>
-		<li><span class="nombreCampo">Descripció:</span> text descriptiu de l'objecte del domini.</li>
+		<li><span class="boton">Desar</span>: permet incorporar un domini, prèviament seleccionat a la taula 'Resultats', per utilitzar-lo en la versió del tràmit.</li>
+		<li><span class="boton">Cancel·lar</span>: tanca la pantalla sense desar els canvis.</li>
 	</ul>
 </p>
 </body>

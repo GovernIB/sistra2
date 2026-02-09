@@ -241,17 +241,25 @@ public class AreaDaoImpl implements AreaDao {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean checkIdentificadorRepetido(final String pIdentificador, final Long pCodigo) {
+	public boolean checkIdentificadorRepetido(final String pIdentificador, final Long pCodEntidad, Long pCodigo) {
 		boolean repetido = false;
 
 		StringBuilder sql = new StringBuilder("Select t From JArea t where t.identificador = :identificador");
+		if (pCodEntidad != null) {
+			sql.append(" and t.entidad.codigo = :codEntidad");
+		}
+
 		if (pCodigo != null) {
 			sql.append(" and t.codigo != :codigo");
 		}
 
+
 		final Query query = entityManager.createQuery(sql.toString());
 
 		query.setParameter("identificador", pIdentificador);
+		if (pCodEntidad != null) {
+			query.setParameter("codEntidad", pCodEntidad);
+		}
 		if (pCodigo != null) {
 			query.setParameter("codigo", pCodigo);
 		}

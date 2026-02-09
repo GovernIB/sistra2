@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -189,12 +192,17 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	private EventoCM seleccionadoErr;
 
+	private HistorialAlerta seleccionadoHistAlerta;
+
 	private Date fechaMin;
 
 	/** Propiedades configuración especificadas en properties. */
 	private Properties propiedadesLocales = recuperarConfiguracionProperties();
 	/** Propiedades */
 	private List<Propiedad> propiedades = new ArrayList<>();
+
+	private String tipoFechaMail;
+	private String fechaDesdeMail;
 
 	/**
 	 * Inicializa.
@@ -243,11 +251,22 @@ public class ViewCuadroMando extends ViewControllerBase {
 		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), true, false);
 		filtrosInacabados = new FiltroAuditoriaTramitacion(convierteListaAreas(), false, false);
 
-		tipoFecha = "tr";
-		horaDesde = filtros.getToday();
-		actualizarHoraDesde();
-		//localDate = LocalDateTime.now();
-		ultimoRefresco = new Date();
+		if(tipoFechaMail == null) {
+			tipoFecha = "tr";
+			horaDesde = filtros.getToday();
+			actualizarHoraDesde();
+			//localDate = LocalDateTime.now();
+			ultimoRefresco = new Date();
+		} else {
+			tipoFecha = tipoFechaMail;
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
+			fechaDesde = Date.from(LocalDateTime.parse(fechaDesdeMail, formatter).atZone(ZoneId.systemDefault()).toInstant());
+			fechaHasta = Date.from(LocalDateTime.parse(fechaDesdeMail, formatter)
+							.plusDays(1)
+							.atZone(ZoneId.systemDefault())
+							.toInstant()
+			);
+		}
 		filtros.setClasificacionSeleccionada("et");
 		filtrar();
 	}
@@ -359,6 +378,21 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1350, 750);
 
+	}
+
+	public void abrirDialogoHistorialAlerta() {
+		if(seleccionadoHistAlerta.getListaAreas() == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("viewCuadroMando.error.histAlertaIncompleto"));
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+
+		String idHistorialAlerta = seleccionadoHistAlerta.getCodigo().toString();
+		params.put("ID", idHistorialAlerta);
+
+		UtilJSF.openDialog(DialogHistorialAlertas.class, TypeModoAcceso.CONSULTA, params, true, 1350, 900);
 	}
 
 	/**
@@ -494,7 +528,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 		datoSeleccionado = null;
 
-		listaAlertas = historialAlertaService.listHistorialAlerta(filtros.getToday(), null);
+		listaAlertas = historialAlertaService.listHistorialAlerta(filtros.getFechaDesde(), filtros.getFechaHasta());
 	}
 
 	public void mail() {
@@ -1279,4 +1313,35 @@ public class ViewCuadroMando extends ViewControllerBase {
 		this.rolUsuario = rolUsuario;
 	}
 
+	public HistorialAlerta getSeleccionadoHistAlerta() {
+		return seleccionadoHistAlerta;
+	}
+
+	public void setSeleccionadoHistAlerta(HistorialAlerta seleccionadoHistAlerta) {
+		this.seleccionadoHistAlerta = seleccionadoHistAlerta;
+	}
+
+	public HelpDeskService getHelpDeskService() {
+		return helpDeskService;
+	}
+
+	public void setHelpDeskService(HelpDeskService helpDeskService) {
+		this.helpDeskService = helpDeskService;
+	}
+
+	public String getTipoFechaMail() {
+		return tipoFechaMail;
+	}
+
+	public void setTipoFechaMail(String tipoFechaMail) {
+		this.tipoFechaMail = tipoFechaMail;
+	}
+
+	public String getFechaDesdeMail() {
+		return fechaDesdeMail;
+	}
+
+	public void setFechaDesdeMail(String fechaDesdeMail) {
+		this.fechaDesdeMail = fechaDesdeMail;
+	}
 }

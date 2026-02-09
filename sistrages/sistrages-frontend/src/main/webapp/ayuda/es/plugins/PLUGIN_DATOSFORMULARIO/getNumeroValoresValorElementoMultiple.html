@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple(campoListaElementos,campo)');
+		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple(campoListaElementos,numElemento,campo)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -22,7 +22,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	getNumeroValoresValorElementoMultiple(campoListaElementos,campo): int
+	getNumeroValoresValorElementoMultiple(campoListaElementos,numElemento,campo): int
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
@@ -38,6 +38,7 @@
 <p>
 	<ul>
 		<li><b>campoListaElementos</b>: Identificador del campo lista de elementos. </li>
+		<li><b>numElemento</b>: Número del elemento dentro de la lista de elementos.</li>
 		<li><b>campo</b>: Identificador del campo dentro del formulario de la lista de elementos. </li>
 	</ul>
 </p>
@@ -52,9 +53,9 @@
  <p>
 	<b>Ejemplo</b>
  </p>
-<p> Si se desea obtener el número de elementos que tiene internamente un campo asociado a una lista de elementos utilizaremos la función de la siguiente forma (suponiendo que el identificador de la lista de elementos es 'LISTA_ELEM1' y que dentro tiene un componente selector con el identificador 'SELECT1'):</p>
+<p> Si se desea obtener el número de elementos que tiene internamente un campo asociado a una lista de elementos utilizaremos la función de la siguiente forma (suponiendo que el identificador de la lista de elementos es 'LISTA_ELEM1', que dentro tiene un componente selector con el identificador 'SELECT1' y que se quiere obtener los valores para el número de elemento 'i'):</p>
  <p class="codigoScript">
-	var numeroElementos = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple('LISTA_ELEM1', 'SELECT1'); <br />
+	var numeroElementos = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple('LISTA_ELEM1', i, 'SELECT1'); <br />
  </p>
  <p>
   La función getNumeroValoresValorElementoMultiple() devolverá el total de elementos que tiene dicho campo dentro de la lista de elementos. En caso de no tener ninguno, devolverá 'null'.

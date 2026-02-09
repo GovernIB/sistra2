@@ -78,13 +78,12 @@ public interface AreaDao {
 	/**
 	 * Comprueba si el identificador está repetido.
 	 *
-	 * @param pIdentificador
-	 *            identificador de area
-	 * @param pCodigo
-	 *            codigo del area
+	 * @param pIdentificador identificador de area
+	 * @param pCodEntidad    codigo del area
+	 * @param codigo
 	 * @return true, si existe
 	 */
-	boolean checkIdentificadorRepetido(String pIdentificador, Long pCodigo);
+	boolean checkIdentificadorRepetido(String pIdentificador, Long pCodEntidad, Long codigo);
 
 	/**
 	 * Importa un area. Hay 4 acciones posibles (TypeImportarAccion):

@@ -168,6 +168,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 			boolean ultimoCampoEsOculto = false;
 
+			int lineaActual = 0;
 			for (final LineaComponentesFormulario lc : pPagina.getLineas()) {
 
 				ultimoCampoEsOculto = false;
@@ -176,7 +177,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 					switch (cf.getTipo()) {
 					case SECCION:
-						campoSeccion(pOut, cf, pLang,  pModoEdicion , isTipoSeccionReutilizable, idSeccion, pCF);
+						campoSeccion(pOut, cf, pLang,  pModoEdicion , isTipoSeccionReutilizable, idSeccion, pCF, dataSeccionReutilizable);
 						ultimoCampoEsOculto = false;
 						break;
 					case CAMPO_TEXTO:
@@ -221,21 +222,24 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 					escribeLinea(pOut, "<br/><br/>", 6);
 				}
 
-				escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro\"",
-						escribeCodigo("L" + String.valueOf(lc.getCodigo()), pModoEdicion),
-						escribeId("L" + String.valueOf(lc.getCodigo())), " id=\"L", String.valueOf(lc.getCodigo()),
-						"\"></div>", 5);
+				if(lineaActual < pPagina.getLineas().size() -1){
+					escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro\"",
+							escribeCodigo("L" + String.valueOf(lc.getCodigo()), pModoEdicion),
+							escribeId("L" + String.valueOf(lc.getCodigo())), " id=\"L", String.valueOf(lc.getCodigo()),
+							"\"></div>", 5);
+				}
 
+				lineaActual++;
 			}
 		}
 	}
 
 	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final Long idSeccion, final ComponenteFormulario seccion) {
+			final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final Long idSeccion, final ComponenteFormulario seccion, final String dataSeccionReutilizable) {
 		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
 
 		if (isTipoSeccionReutilizable) {
-			escribeLinea(pOut, "<h4 ", escribeCodigo(idSeccion, pModoEdicion), escribeId(idSeccion.toString()),
+			escribeLinea(pOut, "<h4 ", escribeCodigo(pCF.getCodigo(), pModoEdicion), escribeId(pCF.getIdComponente()), dataSeccionReutilizable,
 					"class=\"imc-element imc-seccio\">", 5);
 		} else {
 			escribeLinea(pOut, "<h4 ", escribeCodigo(pCF.getCodigo(), pModoEdicion), escribeId(pCF.getIdComponente()),
@@ -331,7 +335,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente())+" " + dataSeccionReutilizable, escribeCodigo(pCF.getCodigo(), true),
 				escribeObligatorio(campo, pModoEdicion), escribeTieneScripts(campo, pModoEdicion),
 				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
-		
+
 		// Etiqueta: si no hay que mostrar texto, mostramos cadena vacia
 		String textoEtiqueta = "&nbsp;";
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
@@ -340,9 +344,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
 				"\">", textoEtiqueta, "</label></div>", 6);
 
+
 		if (tipo != null && !"textarea".equals(tipo)) {
-			// Cambiamos en modo editor a tipo text para que no saque el calendario al hacer
-			// clic
+			// Cambiamos en modo editor a tipo text para que no saque el calendario al hacer clic
 			if (pModoEdicion && "date".equals(tipo)) {
 				tipo = "text";
 			}
@@ -712,7 +716,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-element imc-missatge-en-linia imc-missatge-en-linia-icona-sup ",
-				estilo.toString(), "\" ", escribeId(pCF.getIdComponente()),
+				estilo.toString(), "\" ", escribeId(pCF.getIdComponente()),dataSeccionReutilizable,
 				escribeCodigo(pCF.getCodigo(), pModoEdicion), "><p>", 5);
 		if (pCF.getTexto() != null) {
 			escribeLinea(pOut, trataLiteral(pCF.getTexto().getTraduccion(pLang)), 6);

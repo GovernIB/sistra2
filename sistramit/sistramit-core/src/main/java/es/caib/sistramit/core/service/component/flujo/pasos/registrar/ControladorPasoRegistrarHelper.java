@@ -255,21 +255,17 @@ public final class ControladorPasoRegistrarHelper {
 	/**
 	 * Ejecuta script aviso fin trámite.
 	 *
-	 * @param pIdPaso
-	 *                               Id paso
-	 * @param pDefinicionTramite
-	 *                               Definicion tramite
-	 * @param pVariablesFlujo
-	 *                               Variables flujo
-	 * @param detalleRegistrar
-	 *                               Detalle paso registrar
-	 * @param scriptFlujo
-	 *                               Motor script
+	 * @param detalleRegistrar   Detalle paso registrar
+	 * @param pIdPaso            Id paso
+	 * @param pDefinicionTramite Definicion tramite
+	 * @param pVariablesFlujo    Variables flujo
+	 * @param scriptFlujo        Motor script
+	 * @param avisoObligatorio
 	 * @return Respuesta script
 	 */
 	public AvisoUsuario ejecutarScriptAvisoFinalizar(final String pIdPaso,
-			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
-			final ScriptExec scriptFlujo) {
+													 final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
+													 final ScriptExec scriptFlujo, boolean avisoObligatorio) {
 
 		// Obtenemos definicion paso
 		final RPasoTramitacionRegistrar defPaso = (RPasoTramitacionRegistrar) UtilsSTG.devuelveDefinicionPaso(pIdPaso,
@@ -285,6 +281,12 @@ public final class ControladorPasoRegistrarHelper {
 					scriptValidar.getScript(), pVariablesFlujo, null, pVariablesFlujo.getDocumentos(),
 					codigosErrorParametros, pDefinicionTramite);
 			final ResAviso resAviso = (ResAviso) rs.getResultado();
+			// Verificamos si es obligatorio el aviso
+			if (avisoObligatorio && StringUtils.isBlank(resAviso.getEmail())) {
+				throw new ErrorConfiguracionException(
+						"No s'ha especificat email per avís obligatori al finalitzar el tràmit");
+			}
+			// Verificamos email y establecemos aviso
 			if (StringUtils.isNotBlank(resAviso.getEmail())) {
 				// TODO VER SI GENERAR EXCEPCION O NO GENERAR AVISO
 				if (!ValidacionesTipo.getInstance().esEmail(resAviso.getEmail())) {

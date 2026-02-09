@@ -55,9 +55,9 @@
  <p>
 	<b>Exemple</b>
  </p>
-<p> Obtenir l'últim valor del camp múltiple 'campoTitulaciones' del primer element de la llista d'elements a un formulari concret. Per a això, primer s'ha d'obtenir el total de valors:</p>
+<p> Obtenir l'últim valor del camp múltiple 'campoTitulaciones' del primer element de la llista d'elements a un formulari concret. Per a això, primer s'ha d'obtenir el total de valors per a la primera fila de la llista d'elements (element 0):</p>
 <p class="codigoScript">
-	var total = PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple('FORM1','LISTA_ELEM1','campoTitulaciones'); 
+	var total = PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple('FORM1','LISTA_ELEM1', 0, 'campoTitulaciones');
 </p>
 <p>
 	La funció getNumeroValoresValorElementoMultiple retornarà 8 (total de valors d'aquest camp). Amb aquest valor podem calcular l'índex de l'últim element de la següent manera:

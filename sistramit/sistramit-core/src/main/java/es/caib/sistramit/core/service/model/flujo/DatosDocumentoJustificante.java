@@ -35,6 +35,10 @@ public final class DatosDocumentoJustificante extends DatosDocumento {
 	 * Solicitante.
 	 */
 	private Persona solicitante;
+	/**
+	 * Email aviso.
+	 */
+	private String emailAviso;
 
 	/**
 	 * Indica numero de registro del justificante.
@@ -138,6 +142,25 @@ public final class DatosDocumentoJustificante extends DatosDocumento {
 	 */
 	public void setPreregistro(final TypeSiNo pPreregistro) {
 		preregistro = pPreregistro;
+	}
+
+	/**
+	 * Método de acceso a emailAviso.
+	 *
+	 * @return emailAviso
+	 */
+	public String getEmailAviso() {
+		return emailAviso;
+	}
+
+	/**
+	 * Método para establecer emailAviso.
+	 *
+	 * @param pEmailAviso
+	 *            emailAviso a establecer
+	 */
+	public void setEmailAviso(final String pEmailAviso) {
+		emailAviso = pEmailAviso;
 	}
 
 }

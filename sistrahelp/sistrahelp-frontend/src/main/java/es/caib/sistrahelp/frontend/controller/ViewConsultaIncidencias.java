@@ -427,8 +427,7 @@ public class ViewConsultaIncidencias extends ViewControllerBase {
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewAuditoriaTramites.copiar"));
 	}
 
 	/**
