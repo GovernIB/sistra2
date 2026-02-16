@@ -2163,15 +2163,39 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	public void eliminarObjetoFormulario() {
+
+		if (objetoFormularioEdit == null) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"));
+			return;
+		}
+
+		final PaginaFormulario paginaActualObj = formulario.getPaginas().get(paginaActual - 1);
+		final List<LineaComponentesFormulario> lineasPagina = paginaActualObj.getLineas();
+
 		if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+			final LineaComponentesFormulario lineaSeleccionada = (LineaComponentesFormulario) objetoFormularioEdit;
+
+			if (lineasPagina.size() <= 1) {
+				for (ComponenteFormulario cf : lineaSeleccionada.getComponentes()) {
+					formIntService.removeComponenteFormulario(cf.getCodigo());
+				}
+
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.vacio"));
+
+				//lineaSeleccionada.getComponentes().clear();
+
+				this.cambios = false;
+
+				limpiaSeleccion();
+				recuperarFormulario(id);
+
+				urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
+				return;
+			}
+
 			formIntService.removeLineaFormulario(objetoFormularioEdit.getCodigo());
 
 			// actualizamos modelo
-			final List<LineaComponentesFormulario> lineasPagina = formulario.getPaginas().get(paginaActual - 1)
-					.getLineas();
-
-			final LineaComponentesFormulario lineaSeleccionada = (LineaComponentesFormulario) objetoFormularioEdit;
-
 			lineasPagina.removeIf(
 
 					linea -> (linea.getCodigo().compareTo(lineaSeleccionada.getCodigo()) == 0));
@@ -2212,6 +2236,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 		}
 
+		this.cambios = false;
 		limpiaSeleccion();
 	}
 

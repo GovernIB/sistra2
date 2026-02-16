@@ -222,7 +222,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 					escribeLinea(pOut, "<br/><br/>", 6);
 				}
 
-				if(lineaActual < pPagina.getLineas().size() -1){
+				if(lineaActual < pPagina.getLineas().size() -1 || pModoEdicion){
 					escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro\"",
 							escribeCodigo("L" + String.valueOf(lc.getCodigo()), pModoEdicion),
 							escribeId("L" + String.valueOf(lc.getCodigo())), " id=\"L", String.valueOf(lc.getCodigo()),

@@ -106,9 +106,13 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
             } else {
                 // Caso: Específica + Primero -> Sugerimos firma (solo si es ALTA)
                 // Si es EDICION, respetamos lo que venga de BD (dataI)
-                if (TypeModoAcceso.ALTA.toString().equals(modoAcceso)) {
-                    data.setDebeFirmarse(true);
-                    data.setDebeFirmarseAntesDelIntercambio(true);
+                if (TypeModoAcceso.ALTA.toString().equals(modoAcceso) || TypeModoAcceso.EDICION.toString().equals(modoAcceso)) {
+                	if (tramiteVersion.isNoAutenticado()) {
+                    	data.setDebeFirmarse(false);
+                    } else {
+                    	data.setDebeFirmarse(true);
+                        data.setDebeFirmarseAntesDelIntercambio(true);
+                	}
                 }
             }
         }
@@ -148,9 +152,12 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
      */
     public boolean isFirmaBloqueada() {
         // Bloqueado si: Normativa es GENERAL Y es la Primera Posición
-        if (tramiteVersion != null && TypeNormativa.GENERAL.toString().equals(tramiteVersion.getNormativa())) {
+    	if (tramiteVersion != null && tramiteVersion.isNoAutenticado()) {
+        	return true;
+        } else if (tramiteVersion != null && TypeNormativa.GENERAL.toString().equals(tramiteVersion.getNormativa())) {
             return calcularEsPrimeraPosicion();
         }
+
         return false;
     }
 
