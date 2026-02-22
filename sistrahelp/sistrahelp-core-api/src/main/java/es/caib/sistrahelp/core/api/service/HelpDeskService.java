@@ -149,4 +149,8 @@ public interface HelpDeskService {
 
 	List<String> obtenerListaErroresAuditoria(boolean eventoPlataforma);
 
+	List<String> obtenerListaMetodosFirma(String tipoEvento);
+
+	List<String> obtenerListaMetodosPago(String tipoEvento);
+
 }

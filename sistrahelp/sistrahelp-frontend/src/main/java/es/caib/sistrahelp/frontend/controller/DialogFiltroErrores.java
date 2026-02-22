@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
@@ -21,15 +22,21 @@ public class DialogFiltroErrores extends DialogControllerBase {
 	@Inject
 	private HelpDeskService helpDeskService;
 
+	private String tipoEvento; //ERROR, FIRMA_FIN_OK, FIRMA_FIN_KO, PAGO_ELECTRONICO_VERIFICADO, PAGO_ELECTRONICO_NO_VERIFICADO, PAGO_CANCELADO
+
+	private List<String> opcionesFijas; //Propiedades para FIRMA/PAGO
+
 	private boolean eventoPlataforma;
 
     private boolean checkTipoError;
+    private boolean checkTipoFirma = true;
+    private boolean checkTipoPago = true;
 
     private boolean checkTextoTraza;
 
     private List<String> listaTiposError;
 
-    private List<String> listaErroresSeleccionados;
+    private List<String> listaSeleccionados;
 	private List<String> listaErroresFiltrados;
     private String erroresSeleccionadosInit;
 
@@ -50,13 +57,48 @@ public class DialogFiltroErrores extends DialogControllerBase {
 
 		}*/
 
-        listaTiposError = helpDeskService.obtenerListaErroresAuditoria(eventoPlataforma);
+		if (tipoEvento == null) return;
 
-		if(erroresSeleccionadosInit != null) {
-			listaErroresSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
-		} else {
-			listaErroresSeleccionados = listaTiposError;
+		if ("ERROR".equals(tipoEvento)) {
+			this.checkTipoError = true;
+			this.checkTipoFirma = false;
+			this.checkTipoPago = false;
+
+			listaTiposError = helpDeskService.obtenerListaErroresAuditoria(eventoPlataforma);
+
+			if(erroresSeleccionadosInit != null) {
+				listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
+			} else {
+				listaSeleccionados = listaTiposError;
+			}
+
+		} else if (isModoFirma()) {
+			this.checkTipoError = false;
+			this.checkTipoFirma = true;
+			this.checkTipoPago = false;
+
+			listaTiposError = helpDeskService.obtenerListaMetodosFirma(tipoEvento);
+
+			if(erroresSeleccionadosInit != null && !erroresSeleccionadosInit.isEmpty()) {
+				listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
+            } else {
+                listaSeleccionados = new ArrayList<>(listaTiposError != null ? listaTiposError : new ArrayList<>());
+            }
+
+		} else if (isModoPago()) {
+			this.checkTipoError = false;
+			this.checkTipoFirma = false;
+			this.checkTipoPago = true;
+
+			listaTiposError = helpDeskService.obtenerListaMetodosPago(tipoEvento);
+
+			if(erroresSeleccionadosInit != null && !erroresSeleccionadosInit.isEmpty()) {
+                listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
+            } else {
+            	listaSeleccionados = new ArrayList<>(listaTiposError != null ? listaTiposError : new ArrayList<>());
+            }
 		}
+
 
         /*listaTiposError.add("Error A");
         listaTiposError.add("Error B");
@@ -65,33 +107,63 @@ public class DialogFiltroErrores extends DialogControllerBase {
 	}
 
 	public void aceptar() {
+
+		if (this.filtroTablaErrores != null && !this.filtroTablaErrores.trim().isEmpty()
+				&& this.listaSeleccionados != null) {
+
+			String textoFiltro = this.filtroTablaErrores.toLowerCase();
+			List<String> seleccionadosVisibles = new ArrayList<>();
+
+
+			for (String codigo : this.listaSeleccionados) {
+				String etiquetaVisible = obtenerEtiqueta(codigo).toLowerCase();
+
+				if (etiquetaVisible.contains(textoFiltro)) {
+					seleccionadosVisibles.add(codigo);
+				}
+			}
+
+			this.listaSeleccionados = seleccionadosVisibles;
+		}
+
 		// Se lanza aviso en caso de que no se seleccione ninguna opción de filtro
-		if (!checkTipoError && !checkTextoTraza) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFiltroErrores.error.noFiltro"));
-			return;
-		}
-
-		// Se lanza aviso en caso de no seleccionar ningún tipo de error si se ha marcado el checkbox
-		// de filtro por tipo de error
-		if (checkTipoError) {
-			if (listaErroresSeleccionados == null || listaErroresSeleccionados.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFiltroErrores.error.noSeleccion"));
-				return;
-			}
-
-			boolean hayCoincidencia = listaErroresFiltrados != null && listaErroresFiltrados.stream().anyMatch(listaErroresSeleccionados::contains);
-			if (filtroTablaErrores != null && ((listaErroresFiltrados == null || listaErroresFiltrados.isEmpty()) || !hayCoincidencia)) {
+		if (!"ERROR".equals(this.tipoEvento)) {
+			if (listaSeleccionados == null || listaSeleccionados.isEmpty()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFiltroErrores.error.noSeleccion"));
 				return;
 			}
 		}
 
-		// Se lanza aviso en caso de no introducir texto en el filtro de texto si se ha marcado el checkbox
-		// de filtro por texto en la traza
-		if (checkTextoTraza && (filtroTextoTraza == null || filtroTextoTraza.isEmpty())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFiltroErrores.error.noTexto"));
-			return;
+		else {
+			if (!checkTipoError && !checkTextoTraza) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFiltroErrores.error.noFiltro"));
+				return;
+			}
+
+			// Se lanza aviso en caso de no seleccionar ningún tipo de error si se ha marcado el checkbox
+			// de filtro por tipo de error
+			if (checkTipoError) {
+				if (listaSeleccionados == null || listaSeleccionados.isEmpty()) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFiltroErrores.error.noSeleccion"));
+					return;
+				}
+
+				/*boolean hayCoincidencia = listaErroresFiltrados != null && listaErroresFiltrados.stream().anyMatch(listaSeleccionados::contains);
+				if (filtroTablaErrores != null && ((listaErroresFiltrados == null || listaErroresFiltrados.isEmpty()) || !hayCoincidencia)) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFiltroErrores.error.noSeleccion"));
+					return;
+				}*/
+			}
+
+			// Se lanza aviso en caso de no introducir texto en el filtro de texto si se ha marcado el checkbox
+			// de filtro por texto en la traza
+			if (checkTextoTraza && (filtroTextoTraza == null || filtroTextoTraza.isEmpty())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFiltroErrores.error.noTexto"));
+				return;
+			}
 		}
+
+
 
 		DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -99,11 +171,18 @@ public class DialogFiltroErrores extends DialogControllerBase {
 
 		Map<String, Object> valores = new HashMap<>();
 
-		valores.put("checkTipoError", checkTipoError);
-		valores.put("checkTextoTraza", checkTextoTraza);
-		valores.put("tiposErrorSeleccionados", listaErroresSeleccionados);
+		valores.put("tipoEvento", tipoEvento);
+		valores.put("tiposErrorSeleccionados", listaSeleccionados);
 		valores.put("filtroTablaErrores", filtroTablaErrores);
-		valores.put("filtroTextoTraza", filtroTextoTraza);
+
+		if ("ERROR".equals(tipoEvento)) {
+			valores.put("checkTipoError", checkTipoError);
+			valores.put("checkTextoTraza", checkTextoTraza);
+			valores.put("filtroTextoTraza", filtroTextoTraza);
+		} else {
+			valores.put("checkTipoError", false);
+			valores.put("checkTextoTraza", false);
+		}
 
 		result.setResult(valores);
 		UtilJSF.closeDialog(result);
@@ -119,6 +198,68 @@ public class DialogFiltroErrores extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	public boolean isModoFirma() {
+		return "FIRMA_FIN_OK".equals(this.tipoEvento)
+				|| "FIRMA_FIN_KO".equals(this.tipoEvento);
+	}
+
+	public boolean isModoPago() {
+		return "PAGO_ELECTRONICO_VERIFICADO".equals(this.tipoEvento)
+					|| "PAGO_ELECTRONICO_NO_VERIFICADO".equals(this.tipoEvento)
+					|| "PAGO_CANCELADO".equals(this.tipoEvento);
+	}
+
+    /**
+     * Traduce el código a texto legible.
+     */
+	public String obtenerEtiqueta(String codigo) {
+		if (codigo == null) return "";
+
+		// Si estamos en el modo de PAGO, traducimos las siglas
+		if (isModoPago()) {
+			String key = "";
+			switch (codigo) {
+				case "TJ":  key = "entidadPago.TJ.titulo"; break;
+				case "BZ":  key = "entidadPago.BZ.titulo"; break;
+				case "EXT": key = "entidadPago.EXT.titulo"; break;
+				case "BM":  key = "entidadPago.BM.titulo"; break;
+				case "LC":  key = "entidadPago.LC.titulo"; break;
+				case "BB":  key = "entidadPago.BB.titulo"; break;
+				case "MKP": key = "entidadPago.MKP.titulo"; break;
+				case "MKX": key = "entidadPago.MKX.titulo"; break;
+				default: return codigo;
+			}
+			try {
+				return UtilJSF.getLiteral(key);
+			} catch (Exception e) {
+				return codigo;
+			}
+		}
+
+		if (isModoFirma()) {
+			String valor = codigo.toUpperCase();
+
+			if (valor.contains("AUTOFIRM")) {
+				return "Autofirm@";
+			}
+			else if (valor.contains("CL@VE")) {
+				return "Cl@veFirm@";
+			}
+			else if (valor.contains("AGIL") || valor.contains("ÀGIL") || valor.contains("ÁGIL")) {
+				return "Firma Àgil";
+			}
+
+			if (codigo.contains(" - ")) {
+				String[] partes = codigo.split(" - ");
+				if (partes.length > 1) {
+					return partes[partes.length - 1].trim();
+				}
+			}
+		}
+
+		return codigo;
+	}
+
 	/**
 	 * Copiado correctamente
 	 */
@@ -130,6 +271,19 @@ public class DialogFiltroErrores extends DialogControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
 	}
+
+	/**
+     * Devuelve la clave del properties para el título según el evento.
+     */
+    public String getTituloPantalla() {
+        if (isModoFirma()) {
+            return "dialogFiltroErrores.titulo.firma";
+        } else if (isModoPago()) {
+            return "dialogFiltroErrores.titulo.pago";
+        }
+        // Por defecto (ERROR u otros)
+        return "dialogFiltroErrores.titulo";
+    }
 
 	/**
 	 * @return the errorCopiar
@@ -181,6 +335,22 @@ public class DialogFiltroErrores extends DialogControllerBase {
 		this.eventoPlataforma = eventoPlataforma;
 	}
 
+	public String getTipoEvento() {
+		return tipoEvento;
+	}
+
+    public void setTipoEvento(String tipoEvento) {
+        this.tipoEvento = tipoEvento;
+    }
+
+	public List<String> getOpcionesFijas() {
+		return opcionesFijas;
+	}
+
+	public void setOpcionesFijas(List<String> opcionesFijas) {
+		this.opcionesFijas = opcionesFijas;
+	}
+
 	public boolean isCheckTipoError() {
 		return checkTipoError;
 	}
@@ -205,12 +375,12 @@ public class DialogFiltroErrores extends DialogControllerBase {
 		this.listaTiposError = listaTiposError;
 	}
 
-    public List<String> getListaErroresSeleccionados() {
-        return listaErroresSeleccionados;
+    public List<String> getListaSeleccionados() {
+        return listaSeleccionados;
     }
 
-    public void setListaErroresSeleccionados(List<String> listaErroresSeleccionados) {
-        this.listaErroresSeleccionados = listaErroresSeleccionados;
+    public void setListaSeleccionados(List<String> listaSeleccionados) {
+        this.listaSeleccionados = listaSeleccionados;
     }
 
 	public List<String> getListaErroresFiltrados() {
@@ -243,5 +413,21 @@ public class DialogFiltroErrores extends DialogControllerBase {
 
 	public void setErroresSeleccionadosInit(String erroresSeleccionadosInit) {
 		this.erroresSeleccionadosInit = erroresSeleccionadosInit;
+	}
+
+	public boolean isCheckTipoFirma() {
+		return checkTipoFirma;
+	}
+
+	public void setCheckTipoFirma(boolean checkTipoFirma) {
+		this.checkTipoFirma = checkTipoFirma;
+	}
+
+	public boolean isCheckTipoPago() {
+		return checkTipoPago;
+	}
+
+	public void setCheckTipoPago(boolean checkTipoPago) {
+		this.checkTipoPago = checkTipoPago;
 	}
 }

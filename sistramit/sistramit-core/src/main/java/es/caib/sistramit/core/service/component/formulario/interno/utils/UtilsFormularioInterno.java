@@ -923,5 +923,18 @@ public class UtilsFormularioInterno {
 		return res;
 	}
 
-
+	/**
+	 * Duplica valores campo.
+	 * @param ve Valores campo a duplicar
+	 * @return valores campo duplicados
+	 */
+	public static List<ValorCampo> duplicarValoresCampo(List<ValorCampo> ve) {
+		List<ValorCampo> res = new ArrayList<ValorCampo>();
+		if (ve != null) {
+			for (ValorCampo vc : ve) {
+				res.add(vc.duplicar());
+			}
+		}
+		return res;
+	}
 }

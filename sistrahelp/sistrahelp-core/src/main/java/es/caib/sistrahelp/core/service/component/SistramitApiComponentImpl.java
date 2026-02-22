@@ -786,6 +786,48 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		return resultado;
 	}
 
+	@Override
+    public List<String> listarMetodosFirma(String tipoEvento) {
+		Map<String, Object> body = new HashMap<>();
+		body.put("tipoEvento", tipoEvento);
+
+        return obtenerListadoGenerico("/auditoria/listarMetodosFirma", body);
+    }
+
+    @Override
+    public List<String> listarMetodosPago(String tipoEvento) {
+    	Map<String, Object> body = new HashMap<>();
+    	body.put("tipoEvento", tipoEvento);
+
+        return obtenerListadoGenerico("/auditoria/listarMetodosPago", body);
+    }
+
+    /**
+     * Método auxiliar que acepta parámetros en el body
+     */
+    private List<String> obtenerListadoGenerico(String endpoint, Map<String, Object> params) {
+        List<String> resultado = null;
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // Pasamos los parámetros
+        final HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
+
+        String url = getUrl() + endpoint;
+
+        // Hacemos el POST enviando el mapa
+        String[] response = restTemplate.postForObject(url, request, String[].class);
+
+        if (response != null) {
+            resultado = Arrays.asList(response);
+        }
+
+        return resultado;
+    }
+
 	private String getPassword() {
 		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_PWD);
 	}
@@ -872,6 +914,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 			rFiltro.setTiposErrores(pFiltro.getTiposErrores());
 			rFiltro.setTextoTraza(pFiltro.getTextoTraza());
+
+			rFiltro.setTiposFirma(pFiltro.getTiposFirma());
+            rFiltro.setTiposPago(pFiltro.getTiposPago());
 		}
 
 		return rFiltro;

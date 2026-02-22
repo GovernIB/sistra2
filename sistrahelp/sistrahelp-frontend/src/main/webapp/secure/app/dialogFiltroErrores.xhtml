@@ -10,7 +10,9 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <h:head>
-	<title><h:outputText value="#{msg['dialogFiltroErrores.titulo']}"/></title>
+	<title>
+    <h:outputText value="#{msg[dialogFiltroErrores.tituloPantalla]}" />
+	</title>
 	<style type="text/css">
 		.checkbox-disabled {
 			pointer-events: none;
@@ -30,6 +32,7 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogFiltroErrores.modoAcceso}"/>
+		<f:viewParam name="tipoEvento" value="#{dialogFiltroErrores.tipoEvento}"/>
 		<f:viewParam name="eventoPlataforma" value="#{dialogFiltroErrores.eventoPlataforma}" converter="javax.faces.Boolean"/>
 		<f:viewParam name="checkTipoError" value="#{dialogFiltroErrores.checkTipoError}" converter="javax.faces.Boolean"/>
 		<f:viewParam name="checkTextoTraza" value="#{dialogFiltroErrores.checkTextoTraza}" converter="javax.faces.Boolean"/>
@@ -158,7 +161,7 @@
 
 			<p:panelGrid columns="1" style="width:100%;" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-5">
 				<!-- Checkbox y label en línea -->
-				<h:panelGroup layout="inline">
+				<h:panelGroup layout="inline" rendered="#{dialogFiltroErrores.tipoEvento eq 'ERROR'}">
 					<p:selectBooleanCheckbox id="buscarPorTipoError" value="#{dialogFiltroErrores.checkTipoError}" style="margin-right:5px;" >
 						<p:ajax event="change" process="@this" update="tablaTiposError" />
 					</p:selectBooleanCheckbox>
@@ -166,25 +169,38 @@
 				</h:panelGroup>
 
 				<!-- Tabla en su propia fila -->
-				<p:dataTable id="tablaTiposError" widgetVar="tablaTiposError" value="#{dialogFiltroErrores.listaTiposError}"  var="tipoError" styleClass="w100"
-					selection="#{dialogFiltroErrores.listaErroresSeleccionados}" rowKey="#{tipoError}" selectionRowMode="new" autoResize="true" selectionMode="multiple"
-					scrollHeight="400px" scrollable="true" style="margin-bottom: 15px; table-layout: fixed;" filteredValue="#{dialogFiltroErrores.listaErroresFiltrados}">
+				<p:dataTable id="tablaTiposError" widgetVar="tablaTiposError"
+				             value="#{dialogFiltroErrores.listaTiposError}" var="tipoError" styleClass="w100"
+				             selection="#{dialogFiltroErrores.listaSeleccionados}" rowKey="#{tipoError}"
+				             selectionRowMode="new" autoResize="true" selectionMode="multiple"
+				             scrollHeight="400px" scrollable="true" style="margin-bottom: 15px; table-layout: fixed;"
+				             filteredValue="#{dialogFiltroErrores.listaErroresFiltrados}">
 
-					<p:ajax event="rowSelectCheckbox" process="@this" update="tablaTiposError"/>
-					<p:ajax event="rowSelect" process="@this" update="tablaTiposError"/>
-					<p:ajax event="rowUnselect" process="@this" update="tablaTiposError"/>
-					<p:ajax event="rowUnselectCheckbox" process="@this" update="tablaTiposError"/>
-					<p:ajax event="toggleSelect" process="@this" update="tablaTiposError"/>
-					<p:ajax event="rowDblselect" process="@this" update="tablaTiposError"/>
+				    <p:ajax event="rowSelectCheckbox" process="@this" update="tablaTiposError"/>
+				    <p:ajax event="rowSelect" process="@this" update="tablaTiposError"/>
+				    <p:ajax event="rowUnselect" process="@this" update="tablaTiposError"/>
+				    <p:ajax event="rowUnselectCheckbox" process="@this" update="tablaTiposError"/>
+				    <p:ajax event="toggleSelect" process="@this" update="tablaTiposError"/>
+				    <p:ajax event="rowDblselect" process="@this" update="tablaTiposError"/>
 
+				    <p:column selectionBox="true" style="width:16px; text-align:center"
+				              styleClass="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and !dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and !dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and !dialogFiltroErrores.checkTipoPago) ? 'checkbox-disabled' : '' }" />
 
-					<p:column selectionBox="true" style="width:16px; text-align:center" styleClass="#{!dialogFiltroErrores.checkTipoError ? 'checkbox-disabled' : ''}"/>
-					<p:column style="width:auto;" headerText="#{msg['dialogFiltroErrores.headError']}" filterBy="#{tipoError}" filterValue="#{dialogFiltroErrores.filtroTablaErrores}" filterMatchMode="contains" sortBy="#{tipoError}" selectRow="#{dialogFiltroErrores.checkTipoError}">
-						<h:outputText value="#{tipoError}" styleClass="#{!dialogFiltroErrores.checkTipoError ? 'checkbox-disabled' : ''}"/>
-					</p:column>
+				    <p:column style="width:auto;"
+				              headerText="#{dialogFiltroErrores.tipoEvento eq 'ERROR' ? msg['dialogFiltroErrores.headError'] : (dialogFiltroErrores.modoFirma ? 'Método de firma' : (dialogFiltroErrores.modoPago ? 'Método de pago' : 'Otros'))}"
+				              filterBy="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
+				              filterValue="#{dialogFiltroErrores.filtroTablaErrores}"
+				              filterMatchMode="contains"
+				              sortBy="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
+				              selectRow="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and dialogFiltroErrores.checkTipoPago) }">
+
+				        <h:outputText value="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
+				                      styleClass="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and !dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and !dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and !dialogFiltroErrores.checkTipoPago) ? 'checkbox-disabled' : '' }"/>
+				    </p:column>
+
 				</p:dataTable>
 
-				<h:panelGroup layout="block">
+				<h:panelGroup layout="block" rendered="#{dialogFiltroErrores.tipoEvento eq 'ERROR'}">
 				    <div style="display: flex; align-items: center;">
 				        <p:selectBooleanCheckbox id="buscarPorTextoTraza" value="#{dialogFiltroErrores.checkTextoTraza}" style="margin-right:5px;">
 									<p:ajax event="change" process="@this" update="textoTraza" />
@@ -212,7 +228,7 @@
 			<p:toolbar>
 				<f:facet name="right">
 					<!-- Botones de acción -->
-					<p:commandButton value="#{msg['botones.buscar']}" actionListener="#{dialogFiltroErrores.aceptar}" process="@form" update="growl"/>
+					<p:commandButton value="#{msg['botones.buscar']}" actionListener="#{dialogFiltroErrores.aceptar}" process="@form" update="growl" disabled="#{empty dialogFiltroErrores.listaTiposError}"/>
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFiltroErrores.cerrar}" process="@this" update="growl"/>
 					<p:commandButton value="#{msg['botones.ayuda']}" actionListener="#{dialogFiltroErrores.ayuda()}" process="@this" update="growl"/>
 				</f:facet>

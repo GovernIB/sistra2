@@ -89,13 +89,14 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
 	/** Init. **/
 	public void init() {
-        data = tramiteService.getFormulario(Long.valueOf(id));
-        dataI = tramiteService.getFormulario(Long.valueOf(id));
-        tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-       	gestores = gestorFormularioExternoService.listFormularioExterno(Long.valueOf(area), UtilJSF.getIdioma(), null);
-       	setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
 
-        boolean esPrimero = calcularEsPrimeraPosicion();
+		data = tramiteService.getFormulario(Long.valueOf(id));
+		dataI = tramiteService.getFormulario(Long.valueOf(id));
+		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+		gestores = gestorFormularioExternoService.listFormularioExterno(Long.valueOf(area), UtilJSF.getIdioma(), null);
+		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
+
+		boolean esPrimero = calcularEsPrimeraPosicion();
         boolean esNormativaGeneral = TypeNormativa.GENERAL.toString().equals(tramiteVersion.getNormativa());
 
         if (esPrimero) {
@@ -106,7 +107,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
             } else {
                 // Caso: Específica + Primero -> Sugerimos firma (solo si es ALTA)
                 // Si es EDICION, respetamos lo que venga de BD (dataI)
-                if (TypeModoAcceso.ALTA.toString().equals(modoAcceso) || TypeModoAcceso.EDICION.toString().equals(modoAcceso)) {
+            	if (TypeModoAcceso.ALTA.toString().equals(modoAcceso) || TypeModoAcceso.EDICION.toString().equals(modoAcceso)) {
                 	if (tramiteVersion.isNoAutenticado()) {
                     	data.setDebeFirmarse(false);
                     } else {
@@ -150,7 +151,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
     /**
      * Calcula la condición.
      */
-    public boolean isFirmaBloqueada() {
+	public boolean isFirmaBloqueada() {
         // Bloqueado si: Normativa es GENERAL Y es la Primera Posición
     	if (tramiteVersion != null && tramiteVersion.isNoAutenticado()) {
         	return true;

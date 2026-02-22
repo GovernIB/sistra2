@@ -64,6 +64,9 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private String rolAcceso;
 
 	private List<String> tiposErrores;
+	private List<String> tiposFirma;
+	private List<String> tiposPago;
+
 	private String textoTraza;
 
 	public FiltroAuditoriaTramitacion() {
@@ -139,6 +142,9 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 			this.tiposErrores = pFiltroAuditoriaTramitacion.getTiposErrores();
 			this.textoTraza = pFiltroAuditoriaTramitacion.getTextoTraza();
+
+			this.tiposFirma = pFiltroAuditoriaTramitacion.getTiposFirma();
+			this.tiposPago = pFiltroAuditoriaTramitacion.getTiposPago();
 		}
 	}
 
@@ -438,5 +444,21 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	public void setTextoTraza(String textoTraza) {
 		this.textoTraza = textoTraza;
+	}
+
+	public List<String> getTiposFirma() {
+		return tiposFirma;
+	}
+
+	public void setTiposFirma(List<String> tiposFirma) {
+		this.tiposFirma = tiposFirma;
+	}
+
+	public List<String> getTiposPago() {
+		return tiposPago;
+	}
+
+	public void setTiposPago(List<String> tiposPago) {
+		this.tiposPago = tiposPago;
 	}
 }

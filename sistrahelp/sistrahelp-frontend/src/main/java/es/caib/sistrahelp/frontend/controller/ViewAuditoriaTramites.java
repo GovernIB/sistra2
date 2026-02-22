@@ -124,6 +124,15 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	private String erroresSeleccionadosDE;
 	private String filtroTextoTrazaDE;
     private String filtroTablaErroresDE;
+    private String filtroTablaFirmaDE;
+    private String filtroTablaPagoDE;
+
+    private String firmasSeleccionadasDE;
+    private String pagosSeleccionadosDE;
+
+    private TypeEvento eventoFirmaGuardado;
+    private TypeEvento eventoPagoGuardado;
+    private TypeEvento eventoUltimaBusqueda = null;
 
 	/**
 	 * Inicializa.
@@ -255,8 +264,14 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * Filtrar.
 	 */
 	public void filtrar() {
-        // Resetear filtro errores
-        resetFiltroErrores();
+		TypeEvento eventoActual = this.filtros.getEvento();
+
+		if (this.eventoUltimaBusqueda != null && !this.eventoUltimaBusqueda.equals(eventoActual)) {
+			resetFiltroErrores(true);
+		} else {
+			resetFiltroErrores(false);
+		}
+		this.eventoUltimaBusqueda = eventoActual;
 
 		// Normaliza filtro
 		normalizarFiltro();
@@ -279,15 +294,41 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		filtros.setCodSia(filtros.getCodSia());
 	}
 
-    private void resetFiltroErrores() {
-        if ( !TypeEvento.ERROR.equals(this.filtros.getEvento()) ) {
-            setCheckTipoErrorDE(true);
-            setCheckTextoTrazaDE(false);
-            filtros.setTiposErrores(null);
-            filtros.setTextoTraza(null);
-            setErroresSeleccionadosDE(null);
-            setFiltroTextoTrazaDE(null);
-        }
+    private void resetFiltroErrores(boolean forzarBorrado) {
+    	TypeEvento eventoActual = this.filtros.getEvento();
+    	List<TypeEvento> eventosEspeciales = Arrays.asList(TypeEvento.ERROR, TypeEvento.FIRMA_FIN_OK, TypeEvento.FIRMA_FIN_KO, TypeEvento.PAGO_ELECTRONICO_VERIFICADO, TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO, TypeEvento.PAGO_CANCELADO);
+
+    	if (forzarBorrado || !eventosEspeciales.contains(eventoActual)) {
+
+    		// Limpiarmos ERROR si el evento actual no es Error
+    		if (!TypeEvento.ERROR.equals(eventoActual)) {
+				setCheckTipoErrorDE(false);
+				setCheckTextoTrazaDE(false);
+				setErroresSeleccionadosDE(null);
+				setFiltroTextoTrazaDE(null);
+				filtros.setTiposErrores(null);
+				filtros.setTextoTraza(null);
+				filtroTablaErroresDE = null;
+			}
+
+			// Limpiamos FIRMA si el evento actual no es Firma, o si es una Firma DIFERENTE a la guardada
+			boolean esFirma = TypeEvento.FIRMA_FIN_OK.equals(eventoActual) || TypeEvento.FIRMA_FIN_KO.equals(eventoActual);
+			if (!esFirma || (eventoFirmaGuardado != null && !eventoFirmaGuardado.equals(eventoActual))) {
+				setFirmasSeleccionadasDE(null);
+				filtros.setTiposFirma(null);
+				filtroTablaFirmaDE = null;
+				eventoFirmaGuardado = null;
+			}
+
+			// Limpiamos PAGO si el evento actual no es Pago, o si es un Pago DIFERENTE al guardado
+			boolean esPago = TypeEvento.PAGO_ELECTRONICO_VERIFICADO.equals(eventoActual) || TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO.equals(eventoActual) || TypeEvento.PAGO_CANCELADO.equals(eventoActual);
+			if (!esPago || (eventoPagoGuardado != null && !eventoPagoGuardado.equals(eventoActual))) {
+				setPagosSeleccionadosDE(null);
+				filtros.setTiposPago(null);
+				filtroTablaPagoDE = null;
+				eventoPagoGuardado = null;
+			}
+    	}
     }
 
 	/** Genera texto a copiar **/
@@ -375,18 +416,46 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public void abrirDialogErrores() {
         Map<String, String> params = new HashMap<>();
-		params.put("eventoPlataforma", Boolean.FALSE.toString());
-		params.put("checkTipoError", String.valueOf(checkTipoErrorDE));
-		params.put("checkTextoTraza", String.valueOf(checkTextoTrazaDE));
-        if (erroresSeleccionadosDE != null) {
-            params.put("erroresSeleccionadosInit", erroresSeleccionadosDE);
+
+        TypeEvento evento = this.filtros.getEvento();
+
+        params.put("tipoEvento", evento != null ? evento.name() : "");
+
+        if (TypeEvento.ERROR.equals(evento)) {
+        	params.put("eventoPlataforma", Boolean.FALSE.toString());
+        	params.put("checkTipoError", String.valueOf(checkTipoErrorDE));
+        	params.put("checkTextoTraza", String.valueOf(checkTextoTrazaDE));
+        	if (erroresSeleccionadosDE != null) {
+        		params.put("erroresSeleccionadosInit", erroresSeleccionadosDE);
+        	}
+        	if (filtroTextoTrazaDE != null) {
+        		params.put("filtroTextoTraza", filtroTextoTrazaDE);
+        	}
+        	if (filtroTablaErroresDE != null) {
+        		params.put("filtroTablaErrores", filtroTablaErroresDE);
+        	}
         }
-        if (filtroTextoTrazaDE != null) {
-            params.put("filtroTextoTraza", filtroTextoTrazaDE);
+        else if (TypeEvento.FIRMA_FIN_OK.equals(evento) || TypeEvento.FIRMA_FIN_KO.equals(evento)) {
+        	if (evento.equals(eventoFirmaGuardado)) {
+        		if (firmasSeleccionadasDE != null) {
+        			params.put("erroresSeleccionadosInit",  firmasSeleccionadasDE);
+        		}
+        		if (filtroTablaFirmaDE != null) {
+        			params.put("filtroTablaErrores", filtroTablaFirmaDE);
+        		}
+        	}
         }
-        if (filtroTablaErroresDE != null) {
-            params.put("filtroTablaErrores", filtroTablaErroresDE);
+        else if (TypeEvento.PAGO_ELECTRONICO_VERIFICADO.equals(evento) || TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO.equals(evento) || TypeEvento.PAGO_CANCELADO.equals(evento)) {
+        	if (evento.equals(eventoPagoGuardado)) {
+        		if (pagosSeleccionadosDE != null) {
+        			params.put("erroresSeleccionadosInit", pagosSeleccionadosDE);
+        		}
+        		if (filtroTablaPagoDE != null) {
+        			params.put("filtroTablaErrores", filtroTablaPagoDE);
+        		}
+        	}
         }
+
 		UtilJSF.openDialog(DialogFiltroErrores.class, TypeModoAcceso.CONSULTA, params.isEmpty() ? null : params, true, 650, 662);
 	}
 
@@ -400,38 +469,77 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
         }
         Map<String, Object> valores = (Map<String, Object>) result.getResult();
         if (valores != null) {
-			setCheckTipoErrorDE((boolean) valores.get("checkTipoError"));
-			setCheckTextoTrazaDE((boolean) valores.get("checkTextoTraza"));
-			setFiltroTablaErroresDE((String) valores.get("filtroTablaErrores"));
 
-			List<String> tiposErrores = (List<String>) valores.get("tiposErrorSeleccionados");
-			if (tiposErrores == null || tiposErrores.isEmpty()) {
-				setErroresSeleccionadosDE("");
-				filtros.setTiposErrores(null);
-			} else {
-				setErroresSeleccionadosDE(String.join(";", tiposErrores));
-				if (checkTipoErrorDE) {
-					if (filtroTablaErroresDE != null && !filtroTablaErroresDE.isEmpty()) {
-						Pattern pattern = Pattern.compile(filtroTablaErroresDE, Pattern.CASE_INSENSITIVE);
-						tiposErrores = tiposErrores.stream()
-								.filter(te -> pattern.matcher(te).find())
-								.collect(Collectors.toList());
-					}
-					filtros.setTiposErrores(tiposErrores);
-				} else {
-					filtros.setTiposErrores(null);
-				}
-			}
+        	String tipoEventoResult = (String) valores.get("tipoEvento");
+        	TypeEvento evento = TypeEvento.valueOf(tipoEventoResult);
 
-			String filtroTextoTraza = (String) valores.get("filtroTextoTraza");
-			if (filtroTextoTraza != null) {
-				setFiltroTextoTrazaDE(filtroTextoTraza);
-				if (filtroTextoTraza.isEmpty() || !checkTextoTrazaDE) {
-					filtros.setTextoTraza(null);
-				} else {
-					filtros.setTextoTraza(filtroTextoTraza);
-				}
-			}
+        	String textoEscrito = (String) valores.get("filtroTablaErrores");
+
+        	if (TypeEvento.ERROR.equals(evento)) {
+
+        		setCheckTipoErrorDE((boolean) valores.get("checkTipoError"));
+        		setCheckTextoTrazaDE((boolean) valores.get("checkTextoTraza"));
+        		setFiltroTablaErroresDE(textoEscrito);
+
+        		List<String> tiposErrores = (List<String>) valores.get("tiposErrorSeleccionados");
+        		if (tiposErrores == null || tiposErrores.isEmpty()) {
+        			setErroresSeleccionadosDE("");
+        			filtros.setTiposErrores(null);
+        		} else {
+        			setErroresSeleccionadosDE(String.join(";", tiposErrores));
+        			if (checkTipoErrorDE) {
+        				/*if (filtroTablaErroresDE != null && !filtroTablaErroresDE.isEmpty()) {
+        					Pattern pattern = Pattern.compile(filtroTablaErroresDE, Pattern.CASE_INSENSITIVE);
+        					tiposErrores = tiposErrores.stream()
+        							.filter(te -> pattern.matcher(te).find())
+        							.collect(Collectors.toList());
+        				}*/
+        				filtros.setTiposErrores(tiposErrores);
+        			} else {
+        				filtros.setTiposErrores(null);
+        			}
+        		}
+
+        		String filtroTextoTraza = (String) valores.get("filtroTextoTraza");
+        		if (filtroTextoTraza != null) {
+        			setFiltroTextoTrazaDE(filtroTextoTraza);
+        			if (filtroTextoTraza.isEmpty() || !checkTextoTrazaDE) {
+        				filtros.setTextoTraza(null);
+        			} else {
+        				filtros.setTextoTraza(filtroTextoTraza);
+        			}
+        		}
+        	}
+
+        	else if (TypeEvento.FIRMA_FIN_OK.equals(evento) || TypeEvento.FIRMA_FIN_KO.equals(evento)) {
+        		setFiltroTablaFirmaDE(textoEscrito);
+        		eventoFirmaGuardado = evento;
+
+        		List<String> firmas = (List<String>) valores.get("tiposErrorSeleccionados");
+        		if (firmas != null && !firmas.isEmpty()) {
+        			setFirmasSeleccionadasDE(String.join(";", firmas));
+        			filtros.setTiposFirma(firmas);
+        		} else {
+        			setFirmasSeleccionadasDE(null);
+        			filtros.setTiposFirma(null);
+        		}
+        	}
+
+        	else if (TypeEvento.PAGO_ELECTRONICO_VERIFICADO.equals(evento) || TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO.equals(evento) || TypeEvento.PAGO_CANCELADO.equals(evento)) {
+        		setFiltroTablaPagoDE(textoEscrito);
+        		eventoPagoGuardado = evento;
+
+        		List<String> pagos = (List<String>) valores.get("tiposErrorSeleccionados");
+        		if (pagos != null && !pagos.isEmpty()) {
+        			setPagosSeleccionadosDE(String.join(";", pagos));
+        			filtros.setTiposPago(pagos);
+        		} else {
+        			setPagosSeleccionadosDE(null);
+        			filtros.setTiposPago(null);
+        		}
+        	}
+
+
         }
 		PrimeFaces.current().executeScript("document.getElementById('form:btnBuscar').click()");
     }
@@ -959,4 +1067,60 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
     public void setFiltroTablaErroresDE(String filtroTablaErroresDE) {
         this.filtroTablaErroresDE = filtroTablaErroresDE;
     }
+
+	public String getFirmasSeleccionadasDE() {
+		return firmasSeleccionadasDE;
+	}
+
+	public void setFirmasSeleccionadasDE(String firmasSeleccionadasDE) {
+		this.firmasSeleccionadasDE = firmasSeleccionadasDE;
+	}
+
+	public String getPagosSeleccionadosDE() {
+		return pagosSeleccionadosDE;
+	}
+
+	public void setPagosSeleccionadosDE(String pagosSeleccionadosDE) {
+		this.pagosSeleccionadosDE = pagosSeleccionadosDE;
+	}
+
+	public String getFiltroTablaFirmaDE() {
+		return filtroTablaFirmaDE;
+	}
+
+	public void setFiltroTablaFirmaDE(String filtroTablaFirmaDE) {
+		this.filtroTablaFirmaDE = filtroTablaFirmaDE;
+	}
+
+	public String getFiltroTablaPagoDE() {
+		return filtroTablaPagoDE;
+	}
+
+	public void setFiltroTablaPagoDE(String filtroTablaPagoDE) {
+		this.filtroTablaPagoDE = filtroTablaPagoDE;
+	}
+
+	public TypeEvento getEventoPagoGuardado() {
+		return eventoPagoGuardado;
+	}
+
+	public void setEventoPagoGuardado(TypeEvento eventoPagoGuardado) {
+		this.eventoPagoGuardado = eventoPagoGuardado;
+	}
+
+	public TypeEvento getEventoFirmaGuardado() {
+		return eventoFirmaGuardado;
+	}
+
+	public void setEventoFirmaGuardado(TypeEvento eventoFirmaGuardado) {
+		this.eventoFirmaGuardado = eventoFirmaGuardado;
+	}
+
+	public TypeEvento getEventoUltimaBusqueda() {
+		return eventoUltimaBusqueda;
+	}
+
+	public void setEventoUltimaBusqueda(TypeEvento eventoUltimaBusqueda) {
+		this.eventoUltimaBusqueda = eventoUltimaBusqueda;
+	}
 }

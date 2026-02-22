@@ -1136,7 +1136,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
     /**
 	 * Sube el formulario.
 	 */
-	public void subirFormulario() {
+    public void subirFormulario() {
         final int posicion = posicionFormulario(this.formularioSeleccionado);
 
         if (posicion == 1) {
@@ -1146,11 +1146,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
         	if(tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) || tramiteVersion.getNormativa().equals(TypeNormativa.ESPECIFICA.toString())) {
 
         		if (!tramiteVersion.isNoAutenticado()) {
-            		formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
-            		formPosicion2.setDebeFirmarse(true);
+        			formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
+        			formPosicion2.setDebeFirmarse(true);
 
-            		tramiteService.updateFormularioTramite(formPosicion1);
-            		tramiteService.updateFormularioTramite(formPosicion2);
+        			tramiteService.updateFormularioTramite(formPosicion1);
+        			tramiteService.updateFormularioTramite(formPosicion2);
         		}
         	}
 		}
@@ -1186,7 +1186,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
     /**
 	 * Baja el formulario.
 	 */
-	public void bajarFormulario() {
+    public void bajarFormulario() {
         final int posicion = posicionFormulario(this.formularioSeleccionado);
 
 		if(posicion == 0) {
@@ -1194,12 +1194,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			FormularioTramite formPosicion2 = this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(1);
 
 			if (tramiteVersion.getNormativa().equals(TypeNormativa.GENERAL.toString()) || tramiteVersion.getNormativa().equals(TypeNormativa.ESPECIFICA.toString())) {
-				if (!tramiteVersion.isNoAutenticado()) {
-		            formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
-		            formPosicion2.setDebeFirmarse(true);
 
-		            tramiteService.updateFormularioTramite(formPosicion1);
-		            tramiteService.updateFormularioTramite(formPosicion2);
+				if (!tramiteVersion.isNoAutenticado()) {
+					formPosicion1.setDebeFirmarse(formPosicion1.isDebeFirmarseAntesDelIntercambio());
+					formPosicion2.setDebeFirmarse(true);
+
+					tramiteService.updateFormularioTramite(formPosicion1);
+					tramiteService.updateFormularioTramite(formPosicion2);
 				}
 			}
 		}

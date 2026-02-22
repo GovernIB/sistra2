@@ -817,6 +817,32 @@ public final class RestApiDaoImpl implements RestApiDao {
 			predicate = builder.and(predicate, tableE.get("codigoError").in(pFiltroBusqueda.getTiposErrores()));
 		}
 
+		if (pFiltroBusqueda.getTiposFirma() != null && !pFiltroBusqueda.getTiposFirma().isEmpty()) {
+            List<Predicate> predicatesFirma = new ArrayList<>();
+
+            for (String firma : pFiltroBusqueda.getTiposFirma()) {
+                // "FIRMETODO":"Valor"
+                String jsonPattern = "%\"FIRMETODO\":\"" + firma + "\"%";
+
+                predicatesFirma.add(builder.like(tableE.get("detalle"), jsonPattern));
+            }
+
+            predicate = builder.and(predicate, builder.or(predicatesFirma.toArray(new Predicate[0])));
+        }
+
+        if (pFiltroBusqueda.getTiposPago() != null && !pFiltroBusqueda.getTiposPago().isEmpty()) {
+            List<Predicate> predicatesPago = new ArrayList<>();
+
+            for (String pago : pFiltroBusqueda.getTiposPago()) {
+                // "PAGMET":"Valor"
+                String jsonPattern = "%\"PAGMET\":\"" + pago + "\"%";
+
+                predicatesPago.add(builder.like(tableE.get("detalle"), jsonPattern));
+            }
+
+            predicate = builder.and(predicate, builder.or(predicatesPago.toArray(new Predicate[0])));
+        }
+
 		if(pFiltroBusqueda.getTextoTraza() != null) {
 			predicate = builder.and(predicate, builder.like(tableE.get("trazaError"), "%" + pFiltroBusqueda.getTextoTraza() + "%"));
 		}
@@ -996,6 +1022,33 @@ public final class RestApiDaoImpl implements RestApiDao {
 		if(pFiltroBusqueda.getTiposErrores() != null) {
 			predicate = builder.and(predicate, tableE.get("codigoError").in(pFiltroBusqueda.getTiposErrores()));
 		}
+
+		if (pFiltroBusqueda.getTiposFirma() != null && !pFiltroBusqueda.getTiposFirma().isEmpty()) {
+            List<Predicate> predicatesFirma = new ArrayList<>();
+
+            for (String firma : pFiltroBusqueda.getTiposFirma()) {
+                // "FIRMETODO":"Valor"
+                String jsonPattern = "%\"FIRMETODO\":\"" + firma + "\"%";
+
+                predicatesFirma.add(builder.like(tableE.get("detalle"), jsonPattern));
+
+            }
+
+            predicate = builder.and(predicate, builder.or(predicatesFirma.toArray(new Predicate[0])));
+        }
+
+        if (pFiltroBusqueda.getTiposPago() != null && !pFiltroBusqueda.getTiposPago().isEmpty()) {
+            List<Predicate> predicatesPago = new ArrayList<>();
+
+            for (String pago : pFiltroBusqueda.getTiposPago()) {
+                // "PAGMET":"Valor"
+                String jsonPattern = "%\"PAGMET\":\"" + pago + "\"%";
+
+                predicatesPago.add(builder.like(tableE.get("detalle"), jsonPattern));
+            }
+
+            predicate = builder.and(predicate, builder.or(predicatesPago.toArray(new Predicate[0])));
+        }
 
 		if(pFiltroBusqueda.getTextoTraza() != null) {
 			predicate = builder.and(predicate, builder.like(tableE.get("trazaError"), "%" + pFiltroBusqueda.getTextoTraza() + "%"));
@@ -2593,4 +2646,146 @@ public final class RestApiDaoImpl implements RestApiDao {
 
 		return lista;
 	}
+
+	@Override
+    public List<String> listarMetodosFirma(String tipoEvento) {
+        List<String> resultado = new ArrayList<>();
+
+        // Decidimos qué códigos de BD vamos a buscar
+        List<String> codigosBD = new ArrayList<>();
+
+        if ("FIRMA_FIN_OK".equals(tipoEvento)) {
+            codigosBD.add("TR_SGO");
+        } else if ("FIRMA_FIN_KO".equals(tipoEvento)) {
+            codigosBD.add("TR_SGX");
+        } else {
+            // FALLBACK DE SEGURIDAD: Si llega null, buscamos ambos
+            codigosBD.add("TR_SGO");
+            codigosBD.add("TR_SGX");
+        }
+
+        try {
+            // Seleccionamos LOG_EVETIP y LOG_EVEDET usando 'IN'
+            String sql = "SELECT LOG_EVETIP, LOG_EVEDET FROM STT_LOGINT " +
+                         "WHERE LOG_EVETIP IN (:codigos) " +
+                         "AND LOG_EVEDET LIKE '%\"FIRMETODO\":\"%'";
+
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter("codigos", codigosBD);
+
+            // Al pedir 2 columnas, devuelve List<Object[]>
+            List<Object[]> listaCruda = query.getResultList();
+
+            for (Object[] fila : listaCruda) {
+                // Recuperamos el tipo REAL de la BD por si se necesita en un futuro para diferenciar métodos de firma en tipoEvento
+                String tipoRealBD = (String) fila[0];
+
+                // Procesamos el JSON
+                Object objDetalle = fila[1];
+                String json = (objDetalle instanceof java.sql.Clob) ?
+                              ((java.sql.Clob) objDetalle).getSubString(1, (int) ((java.sql.Clob) objDetalle).length()) :
+                              objDetalle.toString();
+
+                // 3. Extraer Valor
+                try {
+                    String[] partes = json.split("\"FIRMETODO\":\"");
+                    if (partes.length > 1) {
+                        String valor = partes[1].split("\"")[0];
+
+                        // Si en el futuro hay que distinguir los métodos de pago de un tipo de Evento a otro...
+                        //
+                        // if ("TR_SGX".equals(tipoRealBD)) {
+                        //     valor = valor + " (KO)";
+                        // }
+
+                        // Distinct manual
+                        if (!valor.isEmpty() && !resultado.contains(valor)) {
+                            resultado.add(valor);
+                        }
+                    }
+                } catch (Exception e) { /* Ignoramos JSON mal formados */ }
+            }
+            Collections.sort(resultado);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+	@Override
+    public List<String> listarMetodosPago(String tipoEvento) {
+        List<String> resultado = new ArrayList<>();
+
+        // Decidimos qué códigos de BD vamos a buscar
+        List<String> codigosBD = new ArrayList<>();
+
+        if ("PAGO_ELECTRONICO_VERIFICADO".equals(tipoEvento)) {
+            codigosBD.add("TR_PAE");
+        } else if ("PAGO_ELECTRONICO_NO_VERIFICADO".equals(tipoEvento)) {
+            codigosBD.add("TR_PAN");
+        } else if ("PAGO_CANCELADO".equals(tipoEvento)) {
+            codigosBD.add("TR_PAC");
+        } else {
+            // FALLBACK DE SEGURIDAD
+            // Si tipoEvento llega NULL o vacío, añadimos LOS 3 CÓDIGOS.
+            // Así la consulta nunca falla y siempre devuelve resultados.
+            codigosBD.add("TR_PAE");
+            codigosBD.add("TR_PAN");
+            codigosBD.add("TR_PAC");
+        }
+
+        try {
+            // Seleccionamos LOG_EVETIP (columna 0) además del detalle (columna 1).
+            // Usamos 'IN' para que funcione tanto si buscamos 1 código como si buscamos los 3.
+            String sql = "SELECT LOG_EVETIP, LOG_EVEDET FROM STT_LOGINT " +
+                         "WHERE LOG_EVETIP IN (:codigos) " +
+                         "AND LOG_EVEDET LIKE '%\"PAGMET\":\"%'";
+
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter("codigos", codigosBD);
+
+            // Al pedir 2 columnas, Hibernate devuelve una lista de arrays de objetos (Object[])
+            List<Object[]> lista = query.getResultList();
+
+            for (Object[] fila : lista) {
+                // Recuperamos el tipo REAL de la base de datos (independiente del parámetro que fallaba)
+                String tipoRealBD = (String) fila[0];
+
+                // Recuperamos el JSON (Clob o String)
+                Object objDetalle = fila[1];
+                String json = (objDetalle instanceof java.sql.Clob) ?
+                              ((java.sql.Clob) objDetalle).getSubString(1, (int) ((java.sql.Clob) objDetalle).length()) :
+                              objDetalle.toString();
+
+                try {
+                    // Extraemos el valor "PAGMET"
+                    String[] partes = json.split("\"PAGMET\":\"");
+                    if (partes.length > 1) {
+                        String valor = partes[1].split("\"")[0];
+
+                        // LÓGICA DE DISTINCIÓN
+                        // Usamos 'tipoRealBD' (el dato de la fila) para decidir.
+                        String valUpper = valor.toUpperCase();
+                        if (valUpper.startsWith("M") || valUpper.contains("MOCK") || valUpper.equals("MCK")) {
+
+                            if ("TR_PAE".equals(tipoRealBD)) {
+                                valor = "MKP"; // Viene de un pago verificado
+                            } else {
+                                valor = "MKX"; // Viene de cancelado o no verificado
+                            }
+                        }
+
+                        // Añadir si no existe ya
+                        if (!valor.isEmpty() && !resultado.contains(valor)) {
+                            resultado.add(valor);
+                        }
+                    }
+                } catch (Exception e) { /* Ignorar error de parsing puntual */ }
+            }
+            Collections.sort(resultado);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultado;
+    }
 }

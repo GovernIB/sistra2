@@ -127,4 +127,8 @@ public interface SistramitApiComponent {
 
 	List<String> listarTiposErrorAuditoria(boolean eventoPlataforma);
 
+	List<String> listarMetodosFirma(String tipoEvento);
+
+	List<String> listarMetodosPago(String tipoEvento);
+
 }

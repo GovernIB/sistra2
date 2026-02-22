@@ -11,6 +11,9 @@ public class EstadoFirma {
     /** Mensaje de error. */
     private String mensajeError;
 
+    /** Metodo de firma. */
+    private String metodoFirma;
+
     /**
      * Método de acceso a estadoFirmado.
      *
@@ -47,5 +50,24 @@ public class EstadoFirma {
      */
     public void setMensajeError(final String mensajeError) {
         this.mensajeError = mensajeError;
+    }
+
+    /**
+     * Método de acceso a metodoFirma.
+     *
+     * @return metodoFirma
+     */
+    public String getMetodoFirma() {
+        return metodoFirma;
+    }
+
+    /**
+     * Método para establecer metodoFirma.
+     *
+     * @param metodoFirma
+     *            metodoFirma a establecer
+     */
+    public void setMetodoFirma(final String metodoFirma) {
+        this.metodoFirma = metodoFirma;
     }
 }

@@ -87,6 +87,9 @@ public class RFiltroEventoAuditoria {
 	private String rolAcceso;
 
 	private List<String> tiposErrores;
+	private List<String> tiposFirma;
+	private List<String> tiposPago;
+
 	private String textoTraza;
 
 	public List<String> getListaAreas() {
@@ -312,4 +315,21 @@ public class RFiltroEventoAuditoria {
 	public void setTextoTraza(String textoTraza) {
 		this.textoTraza = textoTraza;
 	}
+
+	public List<String> getTiposFirma() {
+		return tiposFirma;
+	}
+
+	public void setTiposFirma(List<String> tiposFirma) {
+		this.tiposFirma = tiposFirma;
+	}
+
+	public List<String> getTiposPago() {
+		return tiposPago;
+	}
+
+	public void setTiposPago(List<String> tiposPago) {
+		this.tiposPago = tiposPago;
+	}
+
 }

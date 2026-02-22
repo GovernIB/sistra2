@@ -476,6 +476,26 @@ public class ApiInternaRestController {
 	    return restApiInternaService.listarTiposErrorAuditoria(eventoPlataforma);
 	}
 
+	@ApiOperation(value = "listar métodos de firma", notes = "listar métodos de firma disponibles", response = String.class, responseContainer = "List")
+	@RequestMapping(value = "/auditoria/listarMetodosFirma", method = RequestMethod.POST)
+	public List<String> obtenerMetodosFirma(@RequestBody(required = false) Map<String, String> params) {
+		String tipoEvento = null;
+		if (params != null) {
+			tipoEvento = params.get("tipoEvento");
+		}
+		return restApiInternaService.listarMetodosFirma(tipoEvento);
+	}
+
+	@ApiOperation(value = "listar métodos de pago", notes = "listar métodos de pago disponibles", response = String.class, responseContainer = "List")
+    @RequestMapping(value = "/auditoria/listarMetodosPago", method = RequestMethod.POST)
+    public List<String> obtenerMetodosPago(@RequestBody(required = false) Map<String, String> params) {
+		String tipoEvento = null;
+		if (params != null) {
+			tipoEvento = params.get("tipoEvento");
+		}
+        return restApiInternaService.listarMetodosPago(tipoEvento);
+    }
+
 	/**
 	 * Convierte detalle pago.
 	 *
@@ -596,6 +616,9 @@ public class ApiInternaRestController {
 
 			filtro.setTiposErrores(pRFiltro.getTiposErrores());
 			filtro.setTextoTraza(pRFiltro.getTextoTraza());
+
+			filtro.setTiposFirma(pRFiltro.getTiposFirma());
+			filtro.setTiposPago(pRFiltro.getTiposPago());
 		}
 
 		return filtro;

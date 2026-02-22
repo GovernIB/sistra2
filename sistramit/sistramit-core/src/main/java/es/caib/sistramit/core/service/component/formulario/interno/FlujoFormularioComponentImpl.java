@@ -923,8 +923,10 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 				paginaActualFormulario.getIdentificador(), idCampoListaElementos);
 
 		// Recupera valor actual elemento
-		final List<ValorCampo> ve = UtilsFormularioInterno.buscarValorElemento(idCampoListaElementos, indiceElemento,
+		final List<ValorCampo> vef = UtilsFormularioInterno.buscarValorElemento(idCampoListaElementos, indiceElemento,
 				valoresPaginaPrincipal);
+		// Duplicamos valores para evitar modificar los de la página principal al actualizar el elemento
+		final List<ValorCampo> ve = UtilsFormularioInterno.duplicarValoresCampo(vef);
 
 		// Inicializa pagina
 		final PaginaData pe = inicializarPagina(datosSesion.getDatosInicioSesion().getIdFormulario(), formDef, paginaDef, ve, forzarSoloLectura);

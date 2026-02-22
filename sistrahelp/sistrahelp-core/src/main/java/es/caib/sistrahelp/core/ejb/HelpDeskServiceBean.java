@@ -187,4 +187,16 @@ public class HelpDeskServiceBean implements HelpDeskService {
 		return helpdeskService.obtenerListaErroresAuditoria(eventoPlataforma);
 	}
 
+	@Override
+	@PermitAll
+	public List<String> obtenerListaMetodosFirma(String tipoEvento) {
+		return helpdeskService.obtenerListaMetodosFirma(tipoEvento);
+	}
+
+	@Override
+	@PermitAll
+	public List<String> obtenerListaMetodosPago(String tipoEvento) {
+		return helpdeskService.obtenerListaMetodosPago(tipoEvento);
+	}
+
 }

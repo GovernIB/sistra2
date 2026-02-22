@@ -544,6 +544,9 @@ public final class AccionGuardarFormulario implements AccionPaso {
 				docPasoModif.setFichero(referenciaXML);
 				docPasoModif.setFormularioPdf(null);
 
+				// Borramos firmas
+				docPasoModif.removeFirmasFicheros();
+
 				// Actualizamos datos en BBDD
 				dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), docPasoModif);
 			}

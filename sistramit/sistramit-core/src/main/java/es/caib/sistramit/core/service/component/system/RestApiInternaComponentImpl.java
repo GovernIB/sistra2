@@ -324,6 +324,16 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
 		return restApiDao.listarTiposErrorAuditoria(eventoPlataforma);
 	}
+
+	@Override
+	public List<String> listarMetodosFirma(String tipoEvento) {
+		return restApiDao.listarMetodosFirma(tipoEvento);
+	}
+
+	@Override
+	public List<String> listarMetodosPago(String tipoEvento) {
+		return restApiDao.listarMetodosPago(tipoEvento);
+	}
 	// ------------------ FUNCIONES INTERNAS ------------------
 
 	/**

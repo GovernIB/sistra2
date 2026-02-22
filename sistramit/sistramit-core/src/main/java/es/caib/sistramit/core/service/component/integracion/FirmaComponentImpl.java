@@ -13,6 +13,7 @@ import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
 import org.apache.commons.io.FilenameUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
 import org.fundaciobit.plugins.validatesignature.api.SignatureDetailInfo;
 import org.fundaciobit.plugins.validatesignature.api.SignatureRequestedInformation;
@@ -179,12 +180,13 @@ public final class FirmaComponentImpl implements FirmaComponent {
 						resFirma.setFinalizada(true);
 						resFirma.setFirmaContenido(fic.getFirmaFichero());
 						resFirma.setFirmaTipo(tipoFirma);
-						resFirma.setMetodoFirma(fic.getMetodoFirma());
+						resFirma.setMetodoFirma(StringUtils.isNotBlank(fic.getMetodoFirma()) ? fic.getMetodoFirma() : estado.getMetodoFirma());
 						resFirma.setValida(true);
 						resFirma.setVerificar(plgFirma.isVerificarFirma());
 					} else {
 						// Indica que ha finalizado con error
 						resFirma.setDetalleError(fic.getEstadoFirma().getMensajeError());
+						resFirma.setMetodoFirma(estado.getMetodoFirma());
 					}
 					break;
 
@@ -192,16 +194,19 @@ public final class FirmaComponentImpl implements FirmaComponent {
 					// Indica que está cancelada
 					resFirma.setCancelada(true);
 					resFirma.setDetalleError("Signatura cancel·lada");
+					resFirma.setMetodoFirma(estado.getMetodoFirma());
 					break;
 
 				case FINALIZADO_CON_ERROR:
 					// Indica que ha finalizado con error
 					resFirma.setDetalleError(estado.getMensajeError());
+					resFirma.setMetodoFirma(estado.getMetodoFirma());
 					break;
 
 				default:
 					// Indica que se recibe un estado no esperado
 					resFirma.setDetalleError("Estat signatura no esperat: " + estado.toString());
+					resFirma.setMetodoFirma(estado.getMetodoFirma());
 
 		}
 

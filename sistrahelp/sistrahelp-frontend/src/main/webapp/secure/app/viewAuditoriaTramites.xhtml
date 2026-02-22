@@ -230,7 +230,12 @@
 								<p:commandButton id="btnDialogErrores" styleClass="rotar-icono" icon="fa fa-sliders"
 												 actionListener="#{viewAuditoriaTramites.abrirDialogErrores}"
 												 process="@this" update="growl"
-												 disabled="#{viewAuditoriaTramites.filtros.evento ne 'ERROR'}" >
+												 disabled="#{viewAuditoriaTramites.filtros.evento ne 'ERROR' and
+												 			 viewAuditoriaTramites.filtros.evento ne 'FIRMA_FIN_OK' and
+												 			 viewAuditoriaTramites.filtros.evento ne 'FIRMA_FIN_KO' and
+												 			 viewAuditoriaTramites.filtros.evento ne 'PAGO_ELECTRONICO_VERIFICADO' and
+												 			 viewAuditoriaTramites.filtros.evento ne 'PAGO_ELECTRONICO_NO_VERIFICADO' and
+												 			 viewAuditoriaTramites.filtros.evento ne 'PAGO_CANCELADO'}" >
 									<p:ajax event="dialogReturn" listener="#{viewAuditoriaTramites.onDialogErroresReturn}" process="@this" update="growl"/>
 								</p:commandButton>
 				        	</h:panelGrid>

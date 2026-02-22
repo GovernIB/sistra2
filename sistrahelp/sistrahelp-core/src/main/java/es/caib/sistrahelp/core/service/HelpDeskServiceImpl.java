@@ -265,4 +265,16 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	public List<String> obtenerListaErroresAuditoria(boolean eventoPlataforma) {
 		return sistramitApiComponent.listarTiposErrorAuditoria(eventoPlataforma);
 	}
+
+	@Override
+	@NegocioInterceptor
+	public List<String> obtenerListaMetodosFirma(String tipoEvento) {
+		return sistramitApiComponent.listarMetodosFirma(tipoEvento);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<String> obtenerListaMetodosPago(String tipoEvento) {
+		return sistramitApiComponent.listarMetodosPago(tipoEvento);
+	}
 }
