@@ -17,11 +17,25 @@ A la finestra <i>' Auditoria de Tràmits</i>' es poden consultar els esdevenimen
 		<li><span class="nombreCampo">Id. Sessió:</span> Identificador de la sessió de tramitació. Aquest identificador és facilitat per l'assistent de tramitació al ciutadà quan s'inicia un tràmit sense autenticació.</li>
 		<li><span class="nombreCampo">NIF:</span> Número d'identificació fiscal de l'usuari autenticat. Aquest filtre de cerca aplica a tramitacions autenticades. </li>
 		<li><span class="nombreCampo">Àrea:</span> Àrea del tràmit. És l'àrea a la qual pertany el tràmit.</li>
-		<li><span class="nombreCampo">Cod. Proc. Catàleg.:</span> Codi del procediment en el catàleg. Aquest codi representa l'identificador intern del procediment/servei al qual està vinculat el tràmit en el catàleg de procediments de l'entitat.</li>
+		<li><span class="nombreCampo">Cod. Tràmit Catàleg.:</span> Codi del procediment en el catàleg. Aquest codi representa l'identificador intern del procediment/servei al qual està vinculat el tràmit en el catàleg de procediments de l'entitat.</li>
 		<li><span class="nombreCampo">Nom:</span> Nom de l'usuari autenticat. Aquest filtre de recerca aplica a tramitacions autenticades.  </li>
 		<li><span class="nombreCampo">Tràmit/Versió:</span> Identificador del tràmit de SISTRAGES, codi de tràmit i la seva versió corresponent. Aquest filtre permet restringir les cerques, filtrant per tràmit versió.</li>
 		<li><span class="nombreCampo">Esdeveniment:</span> Tipus d'esdeveniment a cercar. Els esdeveniments representen estats possibles pels quals passa la tramitació. (Ex: Inici del tràmit, càrrega del tràmit des de la carpeta, Registre del tràmit, ..." ). </li>
-		<li><span class="nombreCampo">Filtre d'errors:</span> Botó situat al costat del selector d'esdeveniments que obre un diàleg per filtrar els resultats per tipus d'error i/o per text de traça. Permet seleccionar un o diversos tipus d'error i cercar esdeveniments el detall dels quals contingui un text específic, facilitant la localització d'incidències concretes a l'auditoria. </li>
+		<li><span class="nombreCampo">Filtre d'esdeveniment:</span> Botó situat al costat del selector d'esdeveniments que obre un diàleg per filtrar els resultats pels següents esdeveniments: </li>
+		<ul class="detalle">
+			<li><span class="boton">Esdeveniment d'error:</span> Permet filtrar per tipus d'error i/o per text de traça. Permet seleccionar un o més tipus d'error i cercar esdeveniments que continguin un text específic en el detall, facilitant la localització d'incidències concretes en l'auditoria. </li>
+			<li><span class="boton">Esdeveniment de pagament:</span> Permet filtrar pel tipus de mètode de pagament dels següents esdeveniments de pagament: </li>
+			<ul class="detalle">
+				<li><span>TR_PAE - Pagament electrònic verificat</span></li>
+				<li><span>TR_PAE - Pagament electrònic no verificat</span></li>
+				<li><span>TR_PAC - Pagament cancelat</span></li>
+			</ul>
+			<li><span class="boton">Esdeveniment de signatura:</span> Permet filtrar pel tipus de mètode de signatura per als següents mètodes de signatura: </li>
+			<ul class="detalle">
+				<li><span>TR_SGO - Fi firma OK</span></li>
+				<li><span>TR_SGX - Fi firma KO</span></li>
+			</ul>
+		</ul>
 		<li><span class="nombreCampo">Iniciat per:</span> Inicialment precarregat amb el valor "Tots", aquest selector permet filtrar per qui ha iniciat el tràmit, si el ciutadà, el funcionari habilitat o tots. Només es podrà seleccionar si s'ha activat l'ús del mode Funcionari Habilitat a la configuració de l'entitat i si s'ha seleccionat l'esdeveniment "Inici de tràmit". </li>
 		<li><span class="nombreCampo">Cod. SIA.:</span> Codi SIA en el catàleg. Aquest codi representa l'identificador SIA del procediment/servei al qual està vinculat el tràmit en el catàleg de procediments de l'entitat.</li>
 		<li><span class="nombreCampo">Data inici (Des de / Fins a):</span> Els camps "Des de" i "Fins a" permeten fitar la cerca als elements que compleixin que la seva data d'inici estigui entre aquests dos valors. És obligatori establir una data inicial, i en el cas de no indicar una data final, es considerarà la data actual com a data final. </li>

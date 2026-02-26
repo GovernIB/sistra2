@@ -5,16 +5,32 @@
 	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">FILTRE D'ERRORS</h1>
+<h1 class="stgH1">FINESTRA DE FILTRES</h1>
 <p>
-	A la finestra <i>'Filtre d'errors'</i> es pot seleccionar el criteri per filtrar els errors mostrats a la plataforma. Permet cercar per tipus d'error i/o per text contingut a la traça.
+	A la finestra <i>'Finestra de filtres'</i> es pot seleccionar el criteri per obtindre resultats mès específics, depenent de l'esdeveniment seleccionat:
+	<ul>
+		<li><span class="nombreCampo">Filtre d'Error:</span> es podrà filtrar pels errors mostrats a la plataforma. Permet cercar per tipus d'error i/o per text contingut en la traça. </li>
+		<li><span class="nombreCampo">Filtre de Pagaments:</span> es podrà filtrar pels diferents mètodes de pagament per als esdeveniments: </li>
+		<ul class="detalle">
+			<li><span>TR_PAE - Pagament electrònic verificat</span></li>
+			<li><span>TR_PAN - Pagament electrònic no verificat</span></li>
+			<li><span>TR_PAC - Pagament cancelat</span></li>
+		</ul>
+		<li><span class="nombreCampo">Filtre de Signatura:</span> es podrà filtrar pels diferents mètodes de signatura per als esdeveniments: </li>
+		<ul class="detalle">
+			<li><span>TR_SGO - Fi firma OK</span></li>
+			<li><span>TR_SGX - Fi firma KO</span></li>
+		</ul>
+	</ul>
 </p>
 <h2 class="stgH2">Opcions de filtratge</h2>
 <ul>
-	<li>
-		<span class="nombreCampo">Cercar per tipus d'error:</span>
-		Permet activar la cerca per tipus d'error. En marcar aquesta opció, s'habilita una taula amb els diferents tipus d'error disponibles, on es poden seleccionar un o diversos per filtrar els resultats.
-	</li>
+	<li><span class="nombreCampo">Cerca per :</span> Depenent del tipus d'esdeveniment, es podrà filtrar pels diferents mètodes de cerca: </li>
+	<ul class="detalle">
+		<li><span class="boton">Cercar per tipus d'error:</span> Permet activar la cerca per tipus d'error. En marcar aquesta opció, s'habilita una taula amb els diferents tipus d'error disponibles, on es poden seleccionar un o més per filtrar els resultats.</li>
+		<li><span class="boton">Cercar per mètode de pagament:</span> Permet activar la cerca per mètode de pagament. És l'opció per defecte per a aquest tipus d'esdeveniment. Es mostrarà una taula amb els diferents mètodes de pagament, on es poden seleccionar un o diversos per filtrar els resultats.</li>
+		<li><span class="boton">Cercar per mètode de signatura:</span> Permet activar la cerca per mètode de signatura. És l'opció per defecte per a aquest tipus d'esdeveniment. Es mostrarà una taula amb els diferents mètodes de signatura, on es poden seleccionar un o diversos per filtrar els resultats.</li>
+	</ul>
 	<li>
 		<span class="nombreCampo">Cercar per text a la traça:</span>
 		Permet activar la cerca per text. En marcar aquesta opció, s'habilita un camp de text on es pot introduir una paraula o frase per cercar a les traces d'error.
