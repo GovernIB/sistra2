@@ -35,6 +35,13 @@
           html, body, #work {
               height: 100% !important;
           }
+
+          #form\:dataTableTramites thead th {
+		        position: sticky !important;
+		        top: 0;
+		        z-index: 10;
+		        background-color: #f4f4f4; /* Evita que el texto de las filas se superponga al subir */
+		    }
       </style>
 
     <h:form id="form" style="height: 94% !important">
@@ -502,13 +509,10 @@
              var alturaTramitesBody = altura - 160 - 90;
 			 $('#form\\:areas').height(alturaAreas);
              $('#form\\:areas .ui-datatable-scrollable-body').height(alturaAreasBody);
-             $('#form\\:dataTableTramites').height(alturaTramites - 20);
-             $('#form\\:dataTableTramites .ui-datatable-scrollable-body').height(alturaTramites);
-             $("#form\\:dataTableTramites div.ui-datatable-scrollable-body").height(alturaTramitesBody-50);
-
-			// console.log("altura dataTableTramites: " + $('#form\\:dataTableTramites').height()
-			// 				+ ", altura .ui-datatable-scrollable-body: " + $('#form\\:dataTableTramites .ui-datatable-scrollable-body').height()
-			// 					+ ", altura div.ui-datatable-scrollable-body: " + $("#form\\:dataTableTramites div.ui-datatable-scrollable-body").height());
+             $('#form\\:dataTableTramites > .ui-datatable-tablewrapper').css({
+		         'height': alturaTramites + 'px',
+		         'overflow-y': 'auto'
+		     });
           }
 
             function pageDatatable() {
@@ -780,10 +784,7 @@
 
 		  <p:dataTable id="dataTableTramites" value="#{viewTramites.dataModel}" var="td"
 					   rows="#{sessionBean.paginacion}" rowExpandMode="single"
-					   scrollable="true"
 					   lazy="true" filterDelay="300" widgetVar="myWidget"
-					   autoResize="true"
-					   scrollHeight="#{viewTramites.height}"
 					   rowsPerPageTemplate="5,10,15,30,50,75,100"
 					   paginator="#{viewTramites.mostrarPaginacion()}" rowIndexVar="rowIndex"
 					   paginatorPosition="bottom" paginatorAlwaysVisible="true"
@@ -805,42 +806,32 @@
                    <p:ajax event="page" listener="#{viewTramites.paginar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
 
                  <p:column style="width:2%">
-                  <p:rowToggler />
-                </p:column>
+				    <p:rowToggler />
+				</p:column>
 
-            	<!-- Columnas -->
-              	<p:column id="hCodigo" headerText="#{msg['viewTramites.headerCodigo']}" sortBy="#{td.tramite.identificador}" style="width:38%">
-              			<h:outputText value="#{td.tramite.identificador}"/>
-              	</p:column>
+				<p:column id="hCodigo" headerText="#{msg['viewTramites.headerCodigo']}" sortBy="#{td.tramite.identificador}" style="width:38%">
+				    <h:outputText value="#{td.tramite.identificador}"/>
 
-			  	<c:if test="#{viewTramites.listaAreasSeleccionadas.size() > 1}">
-					  <p:column headerText="#{msg['viewTramites.headerDescripcion']}" sortBy="#{td.tramite.descripcion}"  style="width:25%">
-						  <h:outputText   value="#{td.tramite.descripcion}"  />
-					  </p:column>
-				</c:if>
-				<c:if test="#{viewTramites.listaAreasSeleccionadas.size() == 1 || viewTramites.listaAreasSeleccionadas.size() == 0}">
-					<p:column headerText="#{msg['viewTramites.headerDescripcion']}" sortBy="#{td.tramite.descripcion}"  style="width:35%">
-						<h:outputText   value="#{td.tramite.descripcion}"  />
-					</p:column>
-				</c:if>
+				    <h:outputText id="codTram" value="#{td.tramite.codigo}" style="display:none;" />
+				</p:column>
 
-             <p:column headerText="#{msg['viewTramites.headerActivo']}" style="width:5% !important;text-align: center;" sortBy="#{td.tramite.activo}" >
-                  <p:selectBooleanCheckbox value="#{td.tramite.activo}" disabled="true" />
-              </p:column>
+				<p:column headerText="#{msg['viewTramites.headerDescripcion']}" sortBy="#{td.tramite.descripcion}"
+				          style="width:#{viewTramites.listaAreasSeleccionadas.size() gt 1 ? '30%' : '50%'}">
+				    <h:outputText value="#{td.tramite.descripcion}" />
+				</p:column>
 
-             <p:column headerText="#{msg['viewTramites.headerUltimaVersion']}" style="width:5% !important; padding:0 !important;text-align: center;" sortBy="#{td.tramite.ultima}">
-                <h:outputText value="#{td.ultimaVersion}" />
-              </p:column>
+				<p:column headerText="#{msg['viewTramites.headerActivo']}" style="width:5% !important;text-align: center;" sortBy="#{td.tramite.activo}" >
+				    <p:selectBooleanCheckbox value="#{td.tramite.activo}" disabled="true" />
+				</p:column>
 
-             <c:if test="#{viewTramites.listaAreasSeleccionadas.size() > 1}">
-                <p:column headerText="#{msg['viewTramites.headerArea']}"  sortBy="#{td.tramite.area}" style="width:20%">
-                    <h:outputText value="#{td.tramite.identificadorArea}" />
-                </p:column>
-             </c:if>
+				<p:column headerText="#{msg['viewTramites.headerUltimaVersion']}" style="width:5% !important; padding:0 !important;text-align: center;" sortBy="#{td.tramite.ultima}">
+				    <h:outputText value="#{td.ultimaVersion}" />
+				</p:column>
 
-			<p:column headerText="" style="display:none;">
-                <h:outputText id="codTram" value="#{td.tramite.codigo}" />
-            </p:column>
+				<p:column headerText="#{msg['viewTramites.headerArea']}"  sortBy="#{td.tramite.area}" style="width:20%" rendered="#{viewTramites.listaAreasSeleccionadas.size() gt 1}">
+				    <h:outputText value="#{td.tramite.identificadorArea}" />
+				</p:column>
+
             <p:rowExpansion>
                 <!-- Data table -->
                 <p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"

@@ -99,9 +99,10 @@
         #form\:panelFiltro > tbody > tr:nth-child(1) {
             flex-shrink: 0 !important;
         }
+
 		</style>
 
-		<h:form id="form" style="height:88%;">
+		<h:form id="form" style="min-height:88%;">
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000"
 				sticky="false" />
@@ -337,10 +338,9 @@
 
 					<p:dataTable id="dataTableTramites" var="td"
 						value="#{viewCuadroMando.listaErrores}" rowExpandMode="single"
-						scrollHeight="100%" emptyMessage="#{msg['error.emptyRows']}"
+						emptyMessage="#{msg['error.emptyRows']}"
 						rowIndexVar="rowIndex" selectionMode="single"
 						paginator="true" paginatorPosition="bottom" lazy="true"
-					 	scrollable="true"
                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                         rowsPerPageTemplate="5,10,15,30,50,75,100"
@@ -385,7 +385,6 @@
 							<p:dataTable id="dataTableErroresEx" var="tdErrores"
 								value="#{viewCuadroMando.listaErr}" rowIndexVar="rowIndexVer"
 								emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
-								 scrollable="true"
 		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
 		                         rowsPerPageTemplate="5,10,15,30,50,75,100" lazy="true"
@@ -423,7 +422,6 @@
 					<p:dataTable id="dataTableErrores" var="tdErrores"
 								value="#{viewCuadroMando.listaTramErr}" rowIndexVar="rowIndexVer" rowExpandMode="single"
 								emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
-								 scrollable="true"
 		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
 		                         rowsPerPageTemplate="5,10,15,30,50,75,100" lazy="true"
@@ -464,10 +462,9 @@
 									<!-- Data table -->
 									<p:dataTable id="dataTableTramitesEx" var="td"
 										value="#{viewCuadroMando.listaTramErrEx}"
-										scrollHeight="100%" emptyMessage="#{msg['error.emptyRows']}"
+										emptyMessage="#{msg['error.emptyRows']}"
 										rowIndexVar="rowIndex" selectionMode="single"
 										paginator="true" paginatorPosition="bottom" lazy="true"
-									 	scrollable="true"
 				                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				                        currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
 				                        rowsPerPageTemplate="5,10,15,30,50,75,100"
@@ -511,7 +508,6 @@
 				<p:dataTable id="dataTablePlataforma" var="tdErroresPlat"
 						value="#{viewCuadroMando.listaErrPlat}" rowIndexVar="rowIndexVer"
 						emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
-						 scrollable="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                          rowsPerPageTemplate="5,10,15,30,50,75,100" lazy="true"
@@ -547,10 +543,9 @@
 
 					<p:dataTable id="dataTableTramitesInacabados" var="tdInacabado"
 						value="#{viewCuadroMando.listaInacabados}"
-						scrollHeight="100%" emptyMessage="#{msg['error.emptyRows']}"
+						emptyMessage="#{msg['error.emptyRows']}"
 						rowIndexVar="rowIndexInacabadas"
 						paginator="true" paginatorPosition="bottom" lazy="true"
-					 	scrollable="true"
                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                         rowsPerPageTemplate="5,10,15,30,50,75,100"
@@ -581,10 +576,9 @@
 				<p:dataTable id="dataTableAlertas" var="tdAlerta"
 						value="#{viewCuadroMando.listaAlertas}"
 						rows="#{sessionBean.paginacion}"
-						scrollHeight="100%" rowIndexVar="rowIndexAl" emptyMessage="#{msg['error.emptyRows']}"
+						rowIndexVar="rowIndexAl" emptyMessage="#{msg['error.emptyRows']}"
 						paginator="true" paginatorPosition="bottom"
 						 selection="#{viewCuadroMando.seleccionadoHistAlerta}" selectionMode="single"
-						 scrollable="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                          rowsPerPageTemplate="5,10,15,30,50,75,100" rowKey="#{tdAlerta.codigo}"
