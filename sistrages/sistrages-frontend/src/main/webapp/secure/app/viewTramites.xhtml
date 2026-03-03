@@ -37,11 +37,23 @@
           }
 
           #form\:dataTableTramites thead th {
-		        position: sticky !important;
-		        top: 0;
-		        z-index: 10;
-		        background-color: #f4f4f4; /* Evita que el texto de las filas se superponga al subir */
-		    }
+		      position: sticky !important;
+		      top: 0;
+		      z-index: 10;
+		      background-color: #f4f4f4;
+		  }
+
+		    /* Estructura Flexbox permanente para la tabla de trámites */
+		  #form\:dataTableTramites {
+			  display: flex !important;
+			  flex-direction: column !important;
+		  }
+
+		  #form\:dataTableTramites > .ui-datatable-tablewrapper {
+			  flex: 1 !important;
+			  overflow-y: auto !important;
+			  min-height: 0 !important;
+		  }
       </style>
 
     <h:form id="form" style="height: 94% !important">
@@ -410,7 +422,7 @@
 			  <p:ajax event="rowSelect" onstart="funcionSelectArea(event);" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this" onclick="myWidget.getPaginator().setPage(0)" oncomplete="refrescarHeight();"/>
 			  <p:ajax event="rowUnselect" onstart="funcionUnselectArea(event);"  listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this" oncomplete="refrescarHeight();"/>
 			  <p:ajax event="rowUnselectCheckbox"  onstart="funcionUnselectArea(event);"  listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this" oncomplete="refrescarHeight();"/>
-			  <p:ajax event="toggleSelect" onstart="funcionSelectArea(event);" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this"/>
+			  <p:ajax event="toggleSelect" onstart="funcionSelectArea(event);" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this" oncomplete="refrescarHeight();"/>
 			  <p:ajax event="rowDblselect" onstart="funcionSelectArea(event);" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@this"/>
 			  <p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbarArea" />
 
@@ -430,7 +442,7 @@
               <f:facet name="footer" style="align:left">
                 <div align="left" style="display:#{(viewTramites.admEntidad)?'none':'block'}">
                   <p:selectBooleanCheckbox itemLabel="#{msg['viewTramites.mostrarTodasAreas']}" value="#{viewTramites.mostrarTodasAreas}"  >
-                 <p:ajax event="change" process="@this" update="@form" listener="#{viewTramites.calcularAreas}"  />
+                 <p:ajax event="change" process="@this" update="@form" listener="#{viewTramites.calcularAreas}" oncomplete="refrescarHeight();" />
             </p:selectBooleanCheckbox>
             </div>
               </f:facet>
@@ -496,24 +508,26 @@
 	          	}
 			}
 
-          function refrescarHeight() {
-             var altura = window.innerHeight - 50;
-             var alturaAreas = altura - 220;
-             var esAdministrador = #{(viewTramites.admEntidad)?true:false};
-             if(esAdministrador){
-             	var alturaAreasBody = altura - 245;
-             }else{
-             	var alturaAreasBody = altura - 272;
-			 }
-             var alturaTramites = altura - 310;
-             var alturaTramitesBody = altura - 160 - 90;
-			 $('#form\\:areas').height(alturaAreas);
-             $('#form\\:areas .ui-datatable-scrollable-body').height(alturaAreasBody);
-             $('#form\\:dataTableTramites > .ui-datatable-tablewrapper').css({
-		         'height': alturaTramites + 'px',
-		         'overflow-y': 'auto'
-		     });
-          }
+			function refrescarHeight() {
+			    var altura = window.innerHeight - 50;
+			    var alturaAreas = altura - 220;
+			    var esAdministrador = #{(viewTramites.admEntidad)?true:false};
+
+			    if(esAdministrador){
+			        var alturaAreasBody = altura - 245;
+			    } else {
+			        var alturaAreasBody = altura - 272;
+			    }
+
+			    $('#form\\:areas').height(alturaAreas);
+			    $('#form\\:areas .ui-datatable-scrollable-body').height(alturaAreasBody);
+
+			    // Añadimos un par de píxeles para ajustar correctamente la altura
+			    var pixelesExtra = 35;
+
+			    $('#form\\:dataTableTramites').css('height', (alturaAreas + pixelesExtra) + 'px');
+			}
+
 
             function pageDatatable() {
             document.getElementById("form:btnpage").click();
@@ -695,7 +709,7 @@
 
 
       </div>
-      <div class="ui-g-9 ui-g-nopad" style="padding-left:10px; max-height:98%;">
+      <div class="ui-g-9 ui-g-nopad" style="padding-left:10px; height:99%;">
 
         <!-- Toolbar -->
         <p:toolbar id="toolbarTramites" onchange="opcTramites();">
@@ -811,8 +825,6 @@
 
 				<p:column id="hCodigo" headerText="#{msg['viewTramites.headerCodigo']}" sortBy="#{td.tramite.identificador}" style="width:38%">
 				    <h:outputText value="#{td.tramite.identificador}"/>
-
-				    <h:outputText id="codTram" value="#{td.tramite.codigo}" style="display:none;" />
 				</p:column>
 
 				<p:column headerText="#{msg['viewTramites.headerDescripcion']}" sortBy="#{td.tramite.descripcion}"
@@ -831,6 +843,10 @@
 				<p:column headerText="#{msg['viewTramites.headerArea']}"  sortBy="#{td.tramite.area}" style="width:20%" rendered="#{viewTramites.listaAreasSeleccionadas.size() gt 1}">
 				    <h:outputText value="#{td.tramite.identificadorArea}" />
 				</p:column>
+
+				<p:column headerText="" style="display:none;">
+		            <h:outputText id="codTram" value="#{td.tramite.codigo}" />
+		        </p:column>
 
             <p:rowExpansion>
                 <!-- Data table -->

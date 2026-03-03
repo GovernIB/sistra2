@@ -33,16 +33,18 @@
     			Actualmente, PaymentIB consta de dos tipos de pasarela de pago, la pasarela de la ATIB y la pasarela TPV.
     			Para cada una de ellas, vamos a identificar los posibles métodos de pago que se pueden configurar.
     			(<b>Importante: Los métodos de pago que se indican a continuación aparecerán en caso en que se encuentren establecidos por defecto en PaymentIB. Si se indica
-    			un método en este script que no esté configurado en PaymentIB, este no aparecerá como método de pago.</b>) <br><br>
+    			un método en este script que no esté configurado en PaymentIB, este no aparecerá como método de pago. Es necesario indicar al menos un método de pago, caso en el que se accederá directamnte a la web correspondiente, sin necesidad de seleccionarlo, al ser único.</b>) <br><br>
 
     			<b>Pasarela de la ATIB</b>: Esta pasarela de pago está configurada para que por defecto solo se realice el pago mediante tarjeta electrónica. En caso de no establecer
     			ningún valor mediante este método, al configurar esta pasarela el usuario deberá realizar el pago mediante tarjeta electrónica. Los métodos de pago que pueden establecerse
     			en esta pasarela son los siguientes:
     			<ul>
-    				<li>Tarjeta electrónica. Identificador: <b>TJ</b></li>
-    				<li>Banca electrónica: Banca March. Identificador: <b>BM</b></li>
-    				<li>Banca electrónica: La Caixa. Identificador: <b>LC</b></li>
-    				<li>Banca electrónica: BBVA. Identificador: <b>BB</b></li>
+    				<li>Pago externo (ATIB). Identificador: <b>EXT</b></li>. Si se ha realizado previamente el pago en la web de ATIB, para usar el localizador del pago. Se validará el pago si coincide el importe, la tasa, el NIF, la fecha de pago y el localizador.
+    				<li>Tarjeta electrónica. Identificador: <b>TJ</b></li>. Para pagar con tarjeta de crédito o débito.
+    				<li>Bizum. Identificador: <b>BZ</b></li>. Si se quiere realizar el pago por Bizum.
+    				<li>Banca electrónica: Banca March. Identificador: <b>BM</b></li>. Para pagar a través de la banca electrónica de Banca March.
+    				<li>Banca electrónica: CaixaBank. Identificador: <b>LC</b></li>. Para pagar a través de ls banca electrónica de CaixaBank.
+    				<li>Banca electrónica: BBVA. Identificador: <b>BB</b></li>. Para pagar a través de la banca electrónica de BBVA.
     			</ul>
 
     			<br>
@@ -63,7 +65,7 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p>Si deseamos establecer los métodos de pago de tarjeta electrónica, Banca March y La Caixa, para la pasarela de la ATIB, incluiríamos la línea de código siguiente en el script: </p>
+<p>Si deseamos establecer los métodos de pago de tarjeta electrónica, Banca March y CaixaBank, para la pasarela de la ATIB, incluiríamos la línea de código siguiente en el script: </p>
  <p class="codigoScript">
 DATOS_PAGO.setMetodosPago(TJ; BM; LC);
 </p>

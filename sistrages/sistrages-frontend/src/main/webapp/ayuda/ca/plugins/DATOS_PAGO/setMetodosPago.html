@@ -33,18 +33,19 @@
     			Actualment, PaymentIB consta de dos tipus de passarel·les de pagaments, la passarel·la de l'ATIB i la passarel·la TPV.
     			Per a cada una d'elles, identificarem els possibles mètodes de pagament que es poden configurar.
     			(<b>Important: Els mètodes de pagament que s'indiquen a continuació apareixeran en cas d'estar configurats per defecte a PaymentIB. Si s'indica
-    			un mètode en aquest script que no estigui configurat a PaymentIB, aquest no apareixerà com a mètode de pagament.</b>) <br><br>
+    			un mètode en aquest script que no estigui configurat a PaymentIB, aquest no apareixerà com a mètode de pagament. Cal indicar almenys un mètode de pagament, cas en què s'accedirà directament a la web corresponent, sense necessitat de seleccionar-lo, en ser únic.</b>) <br><br>
 
     			<b>Passarel·la de l'ATIB</b>: Aquesta passarel·la de pagament està configurada perquè per defecte s'efectuï el pagament mitjançant targeta electrònica. En cas de no establir
     			cap valor mitjançant aquest mètode, en configurar aquesta passarel·la l'usuari haurà d'efectuar el pagament mitjançant targeta electrònica. Els mètodes de pagament que poden establir-se
     			en aquesta passarel·la són els següents:
     			<ul>
-    				<li>Targeta electrònica. Identificador: <b>TJ</b></li>
-    				<li>Bizum. Identificador: <b>BZ</b></li>
-    				<li>Banca electrònica: Banca March. Identificador: <b>BM</b></li>
-    				<li>Banca electrònica: La Caixa. Identificador: <b>LC</b></li>
-    				<li>Banca electrònica: BBVA. Identificador: <b>BB</b></li>
-    			</ul>
+					<li>Pagament extern (ATIB). Identificador: <b>EXT</b></li>. Si heu fet prèviament el pagament al web d'ATIB, per utilitzar el localitzador del pagament. Es validarà el pagament si coincideix limport, la taxa, el NIF, la data de pagament i el localitzador.
+    				<li>Targeta electrònica. Identificador: <b>TJ</b></li>. Per pagar amb targeta de crèdit o dèbit.
+    				<li>Bizum. Identificador: <b>BZ</b></li>. Si es vol fer el pagament per Bizum.
+    				<li>Banca electrònica: Banca March. Identificador: <b>BM</b></li>. Per pagar a través de la banca electrònica de Banca March.
+    				<li>Banca electrònica: CaixaBank. Identificador: <b>LC</b></li>. Per pagar a través de la banca electrònica de CaixaBank.
+    				<li>Banca electrònica: BBVA. Identificador: <b>BB</b></li>. Per pagar a través de la banca electrònica de BBVA.
+				</ul>
 
     			<br>
     			<b>Passarel·la TPV</b>: Aquesta passarel·la actualment només disposa d'un mètode de pagament, i per això no seria necessari indicar els mètodes de pagament utilitzant aquesta passarel·la.
