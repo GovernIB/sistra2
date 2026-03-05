@@ -23,6 +23,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
@@ -303,32 +304,42 @@ public class ViewCuadroMando extends ViewControllerBase {
 	}
 
 	public void loadExpansion(ErroresPorTramiteCM errTram) {
-
 		seleccionado = errTram;
-		filtros.setIdTramite(errTram.getIdTramite());
-		filtros.setVersionTramite(errTram.getVersion());
+
+		// 1. Clonamos el filtro global para que el poller de refresco no lo machaque
+		FiltroAuditoriaTramitacion filtroExpansion = SerializationUtils.clone(this.filtros);
+
+		// 2. Le asignamos el ID al filtro independiente
+		filtroExpansion.setIdTramite(errTram.getIdTramite());
+		filtroExpansion.setVersionTramite(errTram.getVersion());
+
 		Long rowCount = (long) 0;
-		filtros.setSoloContar(true);
-		ResultadoEventoCM result = helpDeskService.obtenerErroresPorTramiteCMExpansion(filtros, null);
+		filtroExpansion.setSoloContar(true);
+		ResultadoEventoCM result = helpDeskService.obtenerErroresPorTramiteCMExpansion(filtroExpansion, null);
 		rowCount = result.getNumElementos();
 
-		filtros.setSoloContar(false);
-		listaErr = new ErroresPorTramiteCMExpansionLazyDataModel(helpDeskService, rowCount, filtros);
-
+		filtroExpansion.setSoloContar(false);
+		// 3. Le pasamos a la tabla de PrimeFaces nuestro filtro clonado
+		listaErr = new ErroresPorTramiteCMExpansionLazyDataModel(helpDeskService, rowCount, filtroExpansion);
 	}
 
 	public void loadExpansionTe(EventoCM errTram) {
-
 		seleccionadoErr = errTram;
-		filtros.setErrorTipo(errTram.getTipoEvento());
+
+		// 1. Clonamos el filtro global
+		FiltroAuditoriaTramitacion filtroExpansion = SerializationUtils.clone(this.filtros);
+
+		// 2. Asignamos el tipo de error
+		filtroExpansion.setErrorTipo(errTram.getTipoEvento());
+
 		Long rowCount = (long) 0;
-		filtros.setSoloContar(true);
-		ResultadoErroresPorTramiteCM result = helpDeskService.obtenerTramitesPorErrorCMExpansion(filtros, null);
+		filtroExpansion.setSoloContar(true);
+		ResultadoErroresPorTramiteCM result = helpDeskService.obtenerTramitesPorErrorCMExpansion(filtroExpansion, null);
 		rowCount = result.getNumElementos();
 
-		filtros.setSoloContar(false);
-		listaTramErrEx = new TramitesPorErrorCMExpansionLazyDataModel(helpDeskService, rowCount, filtros);
-
+		filtroExpansion.setSoloContar(false);
+		// 3. Instanciamos con el filtro clonado
+		listaTramErrEx = new TramitesPorErrorCMExpansionLazyDataModel(helpDeskService, rowCount, filtroExpansion);
 	}
 
 	private void normalizarFiltro() {
