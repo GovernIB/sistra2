@@ -58,7 +58,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tramiteVersion.setLimiteTramitacion(false);
 		tramiteVersion.setDesactivacion(false);
 		tramiteVersion.setRelease(0);
-		tramiteVersion.setConfiguracionSeguridad(2);
+		tramiteVersion.setConfiguracionSeguridad(3);
 		tramiteVersion.setBloqueada(true);
 		tramiteVersion.setDatosUsuarioBloqueo(pDatosUsuarioBloqueo);
 		List<TypeAutenticacion> tiposAutenticacion = new ArrayList<>();
@@ -86,7 +86,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tramiteVersion.setLimiteTramitacion(false);
 		tramiteVersion.setDesactivacion(false);
 		tramiteVersion.setRelease(0);
-		tramiteVersion.setConfiguracionSeguridad(2);
+		tramiteVersion.setConfiguracionSeguridad(3);
 		tramiteVersion.setBloqueada(false);
 		List<TypeAutenticacion> tiposAutenticacion = new ArrayList<>();
 		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
