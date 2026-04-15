@@ -101,7 +101,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<RCommonInfo> entity = new HttpEntity<>(commonInfo, headers);
 
-			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword(), true);
+			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword());
 
 			ResponseEntity<String> response = restTemplate.postForEntity(
 					getPropiedad("url") + "/secure/directsignatureonweb/v1/getTransactionID",
@@ -153,7 +153,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<RAddFileToSignRequest> entity = new HttpEntity<>(fileToSignRequest, headers);
-			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword(), true);
+			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword());
 			ResponseEntity<String> response = restTemplate.postForEntity(
 					getPropiedad("url") + "/secure/directsignatureonweb/v1/addFileToSign",
 					entity,
@@ -185,7 +185,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<RStartTransactionRequest> entity = new HttpEntity<>(startTransactionInfo, headers);
-			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword(), true);
+			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword());
 			ResponseEntity<String> response = restTemplate.postForEntity(
 					getPropiedad("url") + "/secure/directsignatureonweb/v1/startTransaction",
 					entity,
@@ -208,8 +208,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			String transactionId = obtenerTransactionIdFromSesionId(idSesionFirma);
 
 			// Invoca para obtener estado
-			RestTemplate restTemplate = new RestTemplate();
-			restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(perfilFirma.getUsuario(), perfilFirma.getPassword()));
+			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword());
 			ResponseEntity<RTransactionStatusResponse> response = restTemplate.getForEntity(
 					getPropiedad("url") + "/secure/directsignatureonweb/v1/getTransactionStatus/" + transactionId,
 					RTransactionStatusResponse.class
@@ -249,7 +248,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			String transactionId = obtenerTransactionIdFromSesionId(idSesionFirma);
 
 			// Invoca para obtener firma del fichero
-			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword(), true);
+			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword());
 			ResponseEntity<RSignatureResponse> response = restTemplate.getForEntity(
 					getPropiedad("url") + "/secure/directsignatureonweb/v1/getSignatureResult/" + transactionId + "/" + signID,
 					RSignatureResponse.class
@@ -316,7 +315,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			String transactionId = obtenerTransactionIdFromSesionId(idSesionFirma);
 
 			// Invoca para cerrar sesión firma
-			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword(), true);
+			RestTemplate restTemplate = createRestTemplate(perfilFirma.getUsuario(), perfilFirma.getPassword());
 			ResponseEntity<String> response = restTemplate.getForEntity(
 					getPropiedad("url") + "/secure/directsignatureonweb/v1/closeTransaction/" + transactionId,
 					String.class
@@ -458,7 +457,10 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		return sessionId.substring(sessionId.indexOf('.') + 1);
 	}
 
-	private RestTemplate createRestTemplate(String usuario, String password, boolean debug) {
+	private RestTemplate createRestTemplate(String usuario, String password) {
+
+		boolean debug = "true".equalsIgnoreCase(this.getPropiedadOpcional("debug"));
+
 		RestTemplate restTemplate;
 		if (debug) {
 			restTemplate = new RestTemplate(
@@ -479,19 +481,19 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	public ClientHttpRequestInterceptor loggingInterceptor() {
 		return (request, body, execution) -> {
 
-			log.debug("URI: {}", request.getURI());
-			log.debug("Method: {}", request.getMethod());
-			log.debug("Headers: {}", request.getHeaders());
-			log.debug("Request body: {}", new String(body, StandardCharsets.UTF_8));
+			log.info("URI: {}", request.getURI());
+			log.info("Method: {}", request.getMethod());
+			log.info("Headers: {}", request.getHeaders());
+			log.info("Request body: {}", new String(body, StandardCharsets.UTF_8));
 
 			ClientHttpResponse response = execution.execute(request, body);
 
 			byte[] responseBytes = StreamUtils.copyToByteArray(response.getBody());
 			String responseBody = new String(responseBytes, StandardCharsets.UTF_8);
 
-			log.debug("Response status: {}", response.getStatusCode());
-			log.debug("Response headers: {}", response.getHeaders());
-			log.debug("Response body: {}", responseBody);
+			log.info("Response status: {}", response.getStatusCode());
+			log.info("Response headers: {}", response.getHeaders());
+			log.info("Response body: {}", responseBody);
 
 			return response;
 		};
