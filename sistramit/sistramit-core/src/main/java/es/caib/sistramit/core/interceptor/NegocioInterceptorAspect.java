@@ -1,9 +1,22 @@
 package es.caib.sistramit.core.interceptor;
 
-import java.util.Date;
-import java.util.List;
-
+import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.exception.DatabaseException;
+import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
+import es.caib.sistramit.core.api.exception.ServiceException;
+import es.caib.sistramit.core.api.exception.ServiceRollbackException;
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
+import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
+import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
+import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
+import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
+import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
+import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.service.*;
+import es.caib.sistramit.core.service.component.system.AuditorEventosFlujoTramitacion;
+import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
+import es.caib.sistramit.core.service.model.system.EventoFlujoInfo;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -18,22 +31,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistramit.core.api.exception.DatabaseException;
-import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
-import es.caib.sistramit.core.api.exception.ServiceException;
-import es.caib.sistramit.core.api.exception.ServiceRollbackException;
-import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
-import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
-import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
-import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
-import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
-import es.caib.sistramit.core.api.model.system.EventoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
-import es.caib.sistramit.core.api.model.system.types.TypeEvento;
-import es.caib.sistramit.core.service.component.system.AuditorEventosFlujoTramitacion;
-import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
-import es.caib.sistramit.core.service.model.system.EventoFlujoInfo;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Lógica de logging de las excepciones de la capa de servicios.
@@ -221,7 +220,7 @@ public final class NegocioInterceptorAspect {
 		if (isFlujoTramitacionService(jp) && exAud instanceof ServiceException) {
 			final List<EventoAuditoria> eventos = auditorEventosFlujoTramitacion.interceptaExcepcion(
 					infoFlujo.getIdSesionTramitacion(), jp.getSignature().getName(), jp.getArgs(),
-					(ServiceException) exAud);
+					(ServiceException) exAud, infoFlujo.isDebugEnabled());
 			auditoriaComponent.auditarEventosAplicacion(eventos);
 		}
 

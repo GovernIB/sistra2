@@ -2,6 +2,7 @@ package es.caib.sistrahelp.frontend.controller;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
+import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
@@ -43,7 +44,6 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 
 	private NavegacionEventos navegacionEventos;
 
-
 	/**
 	 * Inicialización.
 	 */
@@ -74,8 +74,14 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 				navegacionEventos.setRowIndex(indexRow);
 			}
 
-
-
+			if (isEventoPago() && dato.getPropiedadesEvento() != null) {
+				for (Entry<String, String> propiedad : dato.getPropiedadesEvento().getAsArrayList()) {
+					if ("PAGLOC".equals(propiedad.getKey())) {
+						dato.setLocalizador(propiedad.getValue());
+						break;
+					}
+				}
+			}
 
 		}
 	}
@@ -253,5 +259,16 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 
 	public NavegacionEventos getNavegacionEventos() {
 		return navegacionEventos;
+	}
+
+	/**
+	 * Verifica si el evento actual es de tipo pago
+	 */
+	public boolean isEventoPago() {
+		if (dato == null || dato.getTipoEvento() == null) {
+			return false;
+		}
+
+		return TypeEvento.PAGO_ELECTRONICO_VERIFICADO.equals(dato.getTipoEvento()) || TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO.equals(dato.getTipoEvento()) || TypeEvento.PAGO_CANCELADO.equals(dato.getTipoEvento());
 	}
 }

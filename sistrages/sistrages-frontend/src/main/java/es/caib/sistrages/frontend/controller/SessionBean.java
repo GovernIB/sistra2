@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -21,16 +23,19 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -105,6 +110,9 @@ public class SessionBean {
 
 	@Inject
 	private SystemService systemService;
+
+	@Inject
+	private RolService rolService;
 
 	/**
 	 * Lista entidades a las que tiene acceso desde el menú (si es Admin Entidad o
@@ -196,8 +204,14 @@ public class SessionBean {
 			FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(sesion.getIdioma()));
 		}
 
-		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
-		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+		if (sesion == null || StringUtils.isEmpty(sesion.getIdioma())) {
+		    lang = "ca";
+		    locale = new Locale("ca");
+		    FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
+		} else {
+		    lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
+		    locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+		}
 		rolesList = securityService.getRoles();
 		listaEntidadesAdministrador = securityService.getEntidadesAdministrador();
 		listaEntidadesDesarrollador = securityService.getEntidadesDesarrollador();
@@ -252,21 +266,21 @@ public class SessionBean {
 		} else if (rolesList.contains(TypeRoleAcceso.SUPER_ADMIN)) {
 			activeRole = TypeRoleAcceso.SUPER_ADMIN;
 			systemService.updateSesionPerfil(userName, activeRole.toString());
-			systemService.updateSesionIdioma(userName, locale.getLanguage());
+			systemService.updateSesionIdioma(userName, lang);
 			systemService.updateSesionEntidad(userName, null);
 		} else if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT)) {
 			activeRole = TypeRoleAcceso.ADMIN_ENT;
 			listaEntidades = listaEntidadesAdministrador;
 			entidad = listaEntidades.get(0);
 			systemService.updateSesionPerfil(userName, activeRole.toString());
-			systemService.updateSesionIdioma(userName, locale.getLanguage());
+			systemService.updateSesionIdioma(userName, lang);
 			systemService.updateSesionEntidad(userName, entidad.getCodigo());
 		} else if (rolesList.contains(TypeRoleAcceso.DESAR)) {
 			activeRole = TypeRoleAcceso.DESAR;
 			listaEntidades = listaEntidadesDesarrollador;
 			entidad = listaEntidades.get(0);
 			systemService.updateSesionPerfil(userName, activeRole.toString());
-			systemService.updateSesionIdioma(userName, locale.getLanguage());
+			systemService.updateSesionIdioma(userName, lang);
 			systemService.updateSesionEntidad(userName, entidad.getCodigo());
 		} else {
 			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", null);
@@ -460,6 +474,92 @@ public class SessionBean {
 		}
 	}
 
+	/**
+	 * Calcula el nombre del perfil combinando todos los permisos del usuario
+	 * en las distintas áreas del Gestor de Trámites.
+	 */
+	public String getLiteralPerfilPersonalizado() {
+		Entidad entidadReferencia = this.entidad;
+
+	    // Para SuperAdmin, 'this.entidad' es null.
+	    // Buscamos la primera entidad donde el usuario tenga el perfil de desarrollador.
+	    if (entidadReferencia == null && listaEntidadesDesarrollador != null && !listaEntidadesDesarrollador.isEmpty()) {
+	        entidadReferencia = listaEntidadesDesarrollador.get(0);
+	    }
+
+	    // Si después de intentar recuperarla sigue siendo null, devolvemos por defecto "Desarrollador de Área"
+	    if (entidadReferencia == null) {
+	        return "Desarrollador de Área";
+	    }
+
+	    try {
+	        List<Rol> rolesEntidad = rolService.listRol(entidadReferencia.getCodigo(), null);
+	        java.util.Set<Long> idsAreas = new java.util.HashSet<>();
+
+	        if (rolesEntidad != null) {
+	            for (Rol r : rolesEntidad) {
+	                if (r.getArea() != null) idsAreas.add(r.getArea().getCodigo());
+	            }
+	        }
+
+	        boolean tieneAdm = false;
+	        boolean tieneDes = false;
+	        boolean tieneCons = false;
+
+	        // Consultamos permisos por área
+	        for (Long idArea : idsAreas) {
+	            List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidadByArea(idArea);
+
+	            if (permisos != null) {
+	                for (TypeRolePermisos p : permisos) {
+	                    if (p == TypeRolePermisos.ADMINISTRADOR_AREA) {
+	                        tieneAdm = true;
+	                    } else if (p == TypeRolePermisos.DESARROLLADOR_AREA) {
+	                        tieneDes = true;
+	                    } else if (p == TypeRolePermisos.CONSULTA) {
+	                        tieneCons = true;
+	                    }
+	                }
+	            }
+	        }
+
+	        if (tieneAdm && tieneDes && tieneCons) return UtilJSF.getLiteral("perfil.dinamico.adm_des_cons");
+
+	        if (tieneAdm && tieneDes)  return UtilJSF.getLiteral("perfil.dinamico.adm_des");
+	        if (tieneAdm && tieneCons) return UtilJSF.getLiteral("percel.dinamico.adm_cons");
+	        if (tieneDes && tieneCons) return UtilJSF.getLiteral("perfil.dinamico.des_cons");
+
+	        if (tieneAdm)  return UtilJSF.getLiteral("perfil.dinamico.adm");
+	        if (tieneDes)  return UtilJSF.getLiteral("perfil.dinamico.des");
+	        if (tieneCons) return UtilJSF.getLiteral("perfil.dinamico.cons");
+
+	    } catch (Exception e) {
+	        return UtilJSF.getLiteral("perfil.dinamico.des");
+	    }
+
+	    return UtilJSF.getLiteral("perfil.dinamico.des");
+	}
+
+	/**
+	 * Método auxiliar para obtener el literal correcto (normal o dinámico)
+	 */
+	public String getLabelMenuSegunRol(TypeRoleAcceso role) {
+	    if (TypeRoleAcceso.DESAR.equals(role)) {
+	        return getLiteralPerfilPersonalizado();
+	    }
+	    // Para el resto usamos el literal estándar
+	    return UtilJSF.getLiteral("roles." + role.name().toLowerCase());
+	}
+
+	/**
+	 * Refresca la lista de roles y permisos del usuario desde el servicio de seguridad.
+	 */
+	public void refrescarPermisosSesion() {
+	    this.rolesList = securityService.getRoles();
+	    this.listaEntidadesAdministrador = securityService.getEntidadesAdministrador();
+	    this.listaEntidadesDesarrollador = securityService.getEntidadesDesarrollador();
+	}
+
 	/** Genera menu segun role activo. */
 	public MenuModel getMenuModel() {
 		final MenuModel model = new DefaultMenuModel();
@@ -508,17 +608,15 @@ public class SessionBean {
 		model.getElements().add(firstSubmenu);
 
 		final DefaultSubMenu secondSubmenu = new DefaultSubMenu();
-		secondSubmenu.setLabel(
-				UtilJSF.getLiteral("roles." + activeRole.name().toLowerCase()));
+		secondSubmenu.setLabel(this.getLabelMenuSegunRol(activeRole));
 		secondSubmenu.setIcon("fa fa-id-card");
 		secondSubmenu.setStyleClass("colorBlanco hijowpx180");
 		for (final TypeRoleAcceso role : rolesList) {
 			if (!activeRole.equals(role)) {
 				final DefaultMenuItem item2 = new DefaultMenuItem();
-				item2.setAriaLabel(
-						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
-				item2.setValue(
-						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
+				String labelItem = this.getLabelMenuSegunRol(role);
+				item2.setAriaLabel(labelItem);
+				item2.setValue(labelItem);
 				item2.setCommand("#{sessionBean.cambiarRoleActivo(\"" + role.toString() + "\")}");
 				item2.setIcon("fa fa-id-card");
 				if (!TypeRoleAcceso.HELPDESK.equals(role) && !TypeRoleAcceso.SUPERVISOR_ENTIDAD.equals(role)) {

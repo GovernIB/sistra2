@@ -24,7 +24,7 @@ public interface IFirmaPlugin extends IPlugin {
 	 * @return identificador de la sesión de firma
 	 * @throws FirmaPluginException
 	 */
-	String generarSesionFirma(InfoSesionFirma infoSesionFirma) throws FirmaPluginException;
+	String generarSesionFirma(InfoSesionFirma infoSesionFirma) throws FirmaPluginException, FirmaPluginConnectException;
 
 	/**
 	 * Permite añadir un fichero para firmar

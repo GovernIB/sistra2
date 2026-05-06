@@ -180,7 +180,7 @@
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewRolesPermisos.nuevo()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteAlta}" oncomplete="cerrarDialog()">
-		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable :formHeader" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewRolesPermisos.consultar()}" process="@this" update="growl" rendered="#{not viewRolesPermisos.permiteEditar and not viewRolesPermisos.permiteAlta}" oncomplete="cerrarDialog()">

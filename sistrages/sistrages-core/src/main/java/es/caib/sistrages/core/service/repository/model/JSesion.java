@@ -125,6 +125,13 @@ public class JSesion implements IModelApi {
 			jModel.setPerfil(model.getPerfil());
 			jModel.setIdioma(model.getIdioma());
 			jModel.setEntidad(model.getEntidad());
+
+			if (model.getIdioma() != null && !model.getIdioma().isEmpty()) {
+	            jModel.setIdioma(model.getIdioma());
+	        } else {
+	            jModel.setIdioma("ca");
+	        }
+
 			jModel.setPropiedades(UtilJSON.toJSON(model.getPropiedades()));
 		}
 		return jModel;

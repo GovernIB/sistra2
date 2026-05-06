@@ -196,17 +196,17 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	}
 
 	@Override
-	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
-		return restApiInternaComponent.listarTiposErrorAuditoria(eventoPlataforma);
+	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma, FiltroEventoAuditoria pFiltro) {
+		return restApiInternaComponent.listarTiposErrorAuditoria(eventoPlataforma, pFiltro);
 	}
 
 	@Override
-	public List<String> listarMetodosFirma(String tipoEvento) {
-		return restApiInternaComponent.listarMetodosFirma(tipoEvento);
+	public List<String> listarMetodosFirma(String tipoEvento, FiltroEventoAuditoria pFiltro) {
+		return restApiInternaComponent.listarMetodosFirma(tipoEvento, pFiltro);
 	}
 
 	@Override
-	public List<String> listarMetodosPago(String tipoEvento) {
-		return restApiInternaComponent.listarMetodosPago(tipoEvento);
+	public List<String> listarMetodosPago(String tipoEvento, FiltroEventoAuditoria pFiltro) {
+		return restApiInternaComponent.listarMetodosPago(tipoEvento, pFiltro);
 	}
 }

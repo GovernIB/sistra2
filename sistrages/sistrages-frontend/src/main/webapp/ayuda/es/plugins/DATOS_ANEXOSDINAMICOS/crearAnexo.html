@@ -48,9 +48,10 @@
 var anex = DATOS_ANEXOSDINAMICOS.crearAnexo(); <br/>
 anex.setIdentificador('DIN1'); <br/>
 anex.setDescripcion('Anexo dinamico'); <br/>
-anex.setExtensiones('pdf'); <br/>
+anex.setExtensiones('pdf'); // Para más extensiones, separar por ',': ('pdf,docx'). <br/>
 anex.setTamanyoMaximo('1MB'); <br/>
 anex.setObligatorio(true); <br/>
+anex.setFirmar(true);
 anex.setAyuda('&lt;p&gt;Ayuda del anexo dinámico&lt;/p&gt;'); // Se han de indicar los tags HTML.<br/>
 DATOS_ANEXOSDINAMICOS.addAnexo(anex); <br/>
 </p>

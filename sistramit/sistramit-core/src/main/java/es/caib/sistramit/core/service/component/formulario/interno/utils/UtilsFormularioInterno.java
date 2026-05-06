@@ -226,7 +226,14 @@ public class UtilsFormularioInterno {
 				if (pCampoDefSelector.getListaFija() != null) {
 					for (final RValorListaFija valor : pCampoDefSelector.getListaFija()) {
 						if (valor.isPorDefecto()) {
-							res = new ValorCampoIndexado(pCampoDef.getIdentificador(), valor.getCodigo(), valor.getDescripcion());
+							if (UtilsSTG.traduceTipoSelector(pCampoDefSelector.getTipoSelector()) == TypeSelector.MULTIPLE) {
+								final ValorCampoListaIndexados vci = new ValorCampoListaIndexados();
+								vci.setId(pCampoDef.getIdentificador());
+								vci.addValorIndexado(valor.getCodigo(), valor.getDescripcion());
+								res = vci;
+							} else {
+								res = new ValorCampoIndexado(pCampoDef.getIdentificador(), valor.getCodigo(), valor.getDescripcion());
+							}
 							break;
 						}
 					}

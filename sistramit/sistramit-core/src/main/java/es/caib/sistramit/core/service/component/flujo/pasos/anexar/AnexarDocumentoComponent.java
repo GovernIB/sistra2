@@ -226,6 +226,8 @@ public class AnexarDocumentoComponent {
             } else {
                 // Se valida protección por contraseña en cualquier caso
                 validarProteccionPassword(anexoDetalle, datosFichero, nombreFichero);
+                // Se valida que el PDF no tenga adjuntos en cualquier caso
+                validarTieneAdjuntos(anexoDetalle, datosFichero, nombreFichero);
                 // Solo si se requiere firma (firma asistente o anexar firmado)
                 if (anexoDetalle.getFirmar() == TypeSiNo.SI || anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
                     // - Validaciones de anexo firmado
@@ -259,6 +261,25 @@ public class AnexarDocumentoComponent {
                 }
             } catch (Exception e) {
                 throw new AnexarPdfNoVerificadoProtegidoException(e);
+            }
+        }
+    }
+
+    /**
+     * Valida si se puede anexar un PDF que tiene adjuntos
+     *
+     * @param anexoDetalle Anexo detalle
+     * @param datosFichero Datos fichero
+     * @param nombreFichero Nombre fichero
+     */
+    private void validarTieneAdjuntos(Anexo anexoDetalle, byte[] datosFichero, String nombreFichero) {
+        if (FilenameUtils.getExtension(nombreFichero).equalsIgnoreCase("PDF")) {
+            try {
+                if (UtilPDF.tieneAdjuntos(datosFichero)) {
+                    throw new AnexarVerificarAdjuntosException();
+                }
+            } catch (Exception e) {
+                throw new AnexarPdfNoVerificadoAdjuntosException(e);
             }
         }
     }

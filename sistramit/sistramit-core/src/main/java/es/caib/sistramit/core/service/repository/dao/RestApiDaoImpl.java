@@ -818,17 +818,32 @@ public final class RestApiDaoImpl implements RestApiDao {
 		}
 
 		if (pFiltroBusqueda.getTiposFirma() != null && !pFiltroBusqueda.getTiposFirma().isEmpty()) {
-            List<Predicate> predicatesFirma = new ArrayList<>();
+		    List<Predicate> predicatesFirma = new ArrayList<>();
 
-            for (String firma : pFiltroBusqueda.getTiposFirma()) {
-                // "FIRMETODO":"Valor"
-                String jsonPattern = "%\"FIRMETODO\":\"" + firma + "\"%";
+		    for (String firma : pFiltroBusqueda.getTiposFirma()) {
+		        String jsonPattern;
 
-                predicatesFirma.add(builder.like(tableE.get("detalle"), jsonPattern));
-            }
+		        if ("Autofirm@".equals(firma)) {
+		            jsonPattern = "%\"FIRMETODO\":\"%Autofirm@%\"%";
+		        }
+		        // Agrupación para Firma Ágil (cubre español y catalán omitiendo la tilde en el Like)
+		        else if ("Firma Ágil".equals(firma)) {
+		            jsonPattern = "%\"FIRMETODO\":\"%Firma%gil%\"%";
+		        }
+		        // Agrupación para Clave Firma
+		        else if ("Clave Firma".equals(firma)) {
+		            jsonPattern = "%\"FIRMETODO\":\"%Clave%\"%";
+		        }
+		        else {
+		            // Para el resto de métodos, búsqueda exacta
+		            jsonPattern = "%\"FIRMETODO\":\"" + firma + "\"%";
+		        }
 
-            predicate = builder.and(predicate, builder.or(predicatesFirma.toArray(new Predicate[0])));
-        }
+		        predicatesFirma.add(builder.like(tableE.get("detalle"), jsonPattern));
+		    }
+
+		    predicate = builder.and(predicate, builder.or(predicatesFirma.toArray(new Predicate[0])));
+		}
 
         if (pFiltroBusqueda.getTiposPago() != null && !pFiltroBusqueda.getTiposPago().isEmpty()) {
             List<Predicate> predicatesPago = new ArrayList<>();
@@ -1024,18 +1039,32 @@ public final class RestApiDaoImpl implements RestApiDao {
 		}
 
 		if (pFiltroBusqueda.getTiposFirma() != null && !pFiltroBusqueda.getTiposFirma().isEmpty()) {
-            List<Predicate> predicatesFirma = new ArrayList<>();
+		    List<Predicate> predicatesFirma = new ArrayList<>();
 
-            for (String firma : pFiltroBusqueda.getTiposFirma()) {
-                // "FIRMETODO":"Valor"
-                String jsonPattern = "%\"FIRMETODO\":\"" + firma + "\"%";
+		    for (String firma : pFiltroBusqueda.getTiposFirma()) {
+		        String jsonPattern;
 
-                predicatesFirma.add(builder.like(tableE.get("detalle"), jsonPattern));
+		        if ("Autofirm@".equals(firma)) {
+		            jsonPattern = "%\"FIRMETODO\":\"%Autofirm@%\"%";
+		        }
+		        // Agrupación para Firma Ágil (cubre español y catalán omitiendo la tilde en el Like)
+		        else if ("Firma Ágil".equals(firma)) {
+		            jsonPattern = "%\"FIRMETODO\":\"%Firma%gil%\"%";
+		        }
+		        // Agrupación para Clave Firma
+		        else if ("Clave Firma".equals(firma)) {
+		            jsonPattern = "%\"FIRMETODO\":\"%Clave%\"%";
+		        }
+		        else {
+		            // Para el resto de métodos, búsqueda exacta
+		            jsonPattern = "%\"FIRMETODO\":\"" + firma + "\"%";
+		        }
 
-            }
+		        predicatesFirma.add(builder.like(tableE.get("detalle"), jsonPattern));
+		    }
 
-            predicate = builder.and(predicate, builder.or(predicatesFirma.toArray(new Predicate[0])));
-        }
+		    predicate = builder.and(predicate, builder.or(predicatesFirma.toArray(new Predicate[0])));
+		}
 
         if (pFiltroBusqueda.getTiposPago() != null && !pFiltroBusqueda.getTiposPago().isEmpty()) {
             List<Predicate> predicatesPago = new ArrayList<>();
@@ -2632,160 +2661,222 @@ public final class RestApiDaoImpl implements RestApiDao {
 	}
 
 	@Override
-	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
-		String sql = "select distinct(e.LOG_ERRCOD) from STT_LOGINT e where e.LOG_EVETIP = 'ERROR' ";
-		if (!eventoPlataforma) {
-		    sql += "and e.LOG_CODSES is not null ";
-		} else {
-		    sql += "and e.LOG_CODSES is null ";
-		}
-		sql += "order by e.LOG_ERRCOD ASC";
+	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma, FiltroEventoAuditoria pFiltro) {
+	    StringBuilder sql = new StringBuilder();
+	    sql.append("SELECT DISTINCT f.LOG_ERRCOD FROM STT_LOGINT f ");
 
-		Query query = entityManager.createNativeQuery(sql);
-		List<String> lista = query.getResultList();
+	    // Triple Join para llegar a los datos del trámite e Id de sesión
+	    sql.append("INNER JOIN STT_SESION s ON f.LOG_CODSES = s.SES_CODIGO ");
+	    if (!eventoPlataforma) {
+	        sql.append("LEFT JOIN STT_TRAPER t ON s.SES_CODIGO = t.TRP_CODSTR ");
+	    }
 
-		return lista;
+	    sql.append("WHERE f.LOG_EVETIP = 'ERROR' AND f.LOG_ERRCOD IS NOT NULL ");
+
+	    Map<String, Object> params = new HashMap<>();
+	    appendFiltrosAuditoria(sql, pFiltro, params, eventoPlataforma);
+
+	    sql.append(" ORDER BY f.LOG_ERRCOD ASC");
+
+	    Query query = entityManager.createNativeQuery(sql.toString());
+
+	    // Bucle de parámetros para evitar Error 500
+	    String sqlFinal = sql.toString();
+	    params.forEach((k, v) -> {
+	        if (sqlFinal.contains(":" + k)) {
+	            query.setParameter(k, v);
+	        }
+	    });
+
+	    return query.getResultList();
 	}
 
 	@Override
-    public List<String> listarMetodosFirma(String tipoEvento) {
-        List<String> resultado = new ArrayList<>();
+	public List<String> listarMetodosFirma(String tipoEvento, FiltroEventoAuditoria pFiltro) {
+	    List<String> resultado = new ArrayList<>();
+	    List<String> codigosBD = new ArrayList<>();
 
-        // Decidimos qué códigos de BD vamos a buscar
-        List<String> codigosBD = new ArrayList<>();
+	    if ("FIRMA_FIN_OK".equals(tipoEvento)) codigosBD.add("TR_SGO");
+	    else if ("FIRMA_FIN_KO".equals(tipoEvento)) codigosBD.add("TR_SGX");
+	    else { codigosBD.add("TR_SGO"); codigosBD.add("TR_SGX"); }
 
-        if ("FIRMA_FIN_OK".equals(tipoEvento)) {
-            codigosBD.add("TR_SGO");
-        } else if ("FIRMA_FIN_KO".equals(tipoEvento)) {
-            codigosBD.add("TR_SGX");
-        } else {
-            // FALLBACK DE SEGURIDAD: Si llega null, buscamos ambos
-            codigosBD.add("TR_SGO");
-            codigosBD.add("TR_SGX");
-        }
+	    StringBuilder sql = new StringBuilder();
+	    sql.append("SELECT f.LOG_EVEDET FROM STT_LOGINT f ");
+	    sql.append("INNER JOIN STT_SESION s ON f.LOG_CODSES = s.SES_CODIGO ");
+	    sql.append("LEFT JOIN STT_TRAPER t ON s.SES_CODIGO = t.TRP_CODSTR ");
+	    sql.append("WHERE f.LOG_EVETIP IN (:codigos) AND f.LOG_EVEDET IS NOT NULL ");
+	    sql.append("AND UPPER(f.LOG_EVEDET) LIKE '%FIRMETODO%' ");
 
-        try {
-            // Seleccionamos LOG_EVETIP y LOG_EVEDET usando 'IN'
-            String sql = "SELECT LOG_EVETIP, LOG_EVEDET FROM STT_LOGINT " +
-                         "WHERE LOG_EVETIP IN (:codigos) " +
-                         "AND LOG_EVEDET LIKE '%\"FIRMETODO\":\"%'";
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("codigos", codigosBD);
+	    appendFiltrosAuditoria(sql, pFiltro, params, false);
 
-            Query query = entityManager.createNativeQuery(sql);
-            query.setParameter("codigos", codigosBD);
+	    Query query = entityManager.createNativeQuery(sql.toString());
+	    String sqlFinal = sql.toString();
+	    params.forEach((k, v) -> {
+	        if (sqlFinal.contains(":" + k)) {
+	            query.setParameter(k, v);
+	        }
+	    });
 
-            // Al pedir 2 columnas, devuelve List<Object[]>
-            List<Object[]> listaCruda = query.getResultList();
+	    List<Object> lista = query.getResultList();
+	    for (Object obj : lista) {
+	    	String json = extraerStringSeguro(obj);
+            String valor = extraerValorJson(json, "\"FIRMETODO\":\"");
+            if (valor != null && !valor.isEmpty()) {
+            	if (valor.contains("Autofirm@")) valor = "Autofirm@";
+                else if (valor.contains("Firma") && (valor.contains("gil") || valor.contains("Àgil") || valor.contains("Ágil"))) valor = "Firma Ágil";
+                else if (valor.toUpperCase().contains("CLAVE")) valor = "Clave Firma";
 
-            for (Object[] fila : listaCruda) {
-                // Recuperamos el tipo REAL de la BD por si se necesita en un futuro para diferenciar métodos de firma en tipoEvento
-                String tipoRealBD = (String) fila[0];
-
-                // Procesamos el JSON
-                Object objDetalle = fila[1];
-                String json = (objDetalle instanceof java.sql.Clob) ?
-                              ((java.sql.Clob) objDetalle).getSubString(1, (int) ((java.sql.Clob) objDetalle).length()) :
-                              objDetalle.toString();
-
-                // 3. Extraer Valor
-                try {
-                    String[] partes = json.split("\"FIRMETODO\":\"");
-                    if (partes.length > 1) {
-                        String valor = partes[1].split("\"")[0];
-
-                        // Si en el futuro hay que distinguir los métodos de pago de un tipo de Evento a otro...
-                        //
-                        // if ("TR_SGX".equals(tipoRealBD)) {
-                        //     valor = valor + " (KO)";
-                        // }
-
-                        // Distinct manual
-                        if (!valor.isEmpty() && !resultado.contains(valor)) {
-                            resultado.add(valor);
-                        }
-                    }
-                } catch (Exception e) { /* Ignoramos JSON mal formados */ }
+                if (!resultado.contains(valor)) resultado.add(valor);
             }
-            Collections.sort(resultado);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	    }
+	    Collections.sort(resultado);
         return resultado;
     }
 
-	@Override
-    public List<String> listarMetodosPago(String tipoEvento) {
-        List<String> resultado = new ArrayList<>();
-
-        // Decidimos qué códigos de BD vamos a buscar
+    @Override
+    public List<String> listarMetodosPago(String tipoEvento, FiltroEventoAuditoria pFiltro) {
         List<String> codigosBD = new ArrayList<>();
+        if ("PAGO_ELECTRONICO_VERIFICADO".equals(tipoEvento)) codigosBD.add("TR_PAE");
+        else if ("PAGO_ELECTRONICO_NO_VERIFICADO".equals(tipoEvento)) codigosBD.add("TR_PAN");
+        else if ("PAGO_CANCELADO".equals(tipoEvento)) codigosBD.add("TR_PAC");
+        else { codigosBD.add("TR_PAE"); codigosBD.add("TR_PAN"); codigosBD.add("TR_PAC"); }
 
-        if ("PAGO_ELECTRONICO_VERIFICADO".equals(tipoEvento)) {
-            codigosBD.add("TR_PAE");
-        } else if ("PAGO_ELECTRONICO_NO_VERIFICADO".equals(tipoEvento)) {
-            codigosBD.add("TR_PAN");
-        } else if ("PAGO_CANCELADO".equals(tipoEvento)) {
-            codigosBD.add("TR_PAC");
-        } else {
-            // FALLBACK DE SEGURIDAD
-            // Si tipoEvento llega NULL o vacío, añadimos LOS 3 CÓDIGOS.
-            // Así la consulta nunca falla y siempre devuelve resultados.
-            codigosBD.add("TR_PAE");
-            codigosBD.add("TR_PAN");
-            codigosBD.add("TR_PAC");
-        }
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT f.LOG_EVETIP, f.LOG_EVEDET FROM STT_LOGINT f ");
+        sql.append("INNER JOIN STT_SESION s ON f.LOG_CODSES = s.SES_CODIGO ");
+        sql.append("LEFT JOIN STT_TRAPER t ON s.SES_CODIGO = t.TRP_CODSTR ");
+        sql.append("WHERE f.LOG_EVETIP IN (:codigos) AND f.LOG_EVEDET LIKE '%\"PAGMET\":\"%' ");
 
-        try {
-            // Seleccionamos LOG_EVETIP (columna 0) además del detalle (columna 1).
-            // Usamos 'IN' para que funcione tanto si buscamos 1 código como si buscamos los 3.
-            String sql = "SELECT LOG_EVETIP, LOG_EVEDET FROM STT_LOGINT " +
-                         "WHERE LOG_EVETIP IN (:codigos) " +
-                         "AND LOG_EVEDET LIKE '%\"PAGMET\":\"%'";
+        Map<String, Object> params = new HashMap<>();
+        params.put("codigos", codigosBD);
+        appendFiltrosAuditoria(sql, pFiltro, params, false);
 
-            Query query = entityManager.createNativeQuery(sql);
-            query.setParameter("codigos", codigosBD);
-
-            // Al pedir 2 columnas, Hibernate devuelve una lista de arrays de objetos (Object[])
-            List<Object[]> lista = query.getResultList();
-
-            for (Object[] fila : lista) {
-                // Recuperamos el tipo REAL de la base de datos (independiente del parámetro que fallaba)
-                String tipoRealBD = (String) fila[0];
-
-                // Recuperamos el JSON (Clob o String)
-                Object objDetalle = fila[1];
-                String json = (objDetalle instanceof java.sql.Clob) ?
-                              ((java.sql.Clob) objDetalle).getSubString(1, (int) ((java.sql.Clob) objDetalle).length()) :
-                              objDetalle.toString();
-
-                try {
-                    // Extraemos el valor "PAGMET"
-                    String[] partes = json.split("\"PAGMET\":\"");
-                    if (partes.length > 1) {
-                        String valor = partes[1].split("\"")[0];
-
-                        // LÓGICA DE DISTINCIÓN
-                        // Usamos 'tipoRealBD' (el dato de la fila) para decidir.
-                        String valUpper = valor.toUpperCase();
-                        if (valUpper.startsWith("M") || valUpper.contains("MOCK") || valUpper.equals("MCK")) {
-
-                            if ("TR_PAE".equals(tipoRealBD)) {
-                                valor = "MKP"; // Viene de un pago verificado
-                            } else {
-                                valor = "MKX"; // Viene de cancelado o no verificado
-                            }
-                        }
-
-                        // Añadir si no existe ya
-                        if (!valor.isEmpty() && !resultado.contains(valor)) {
-                            resultado.add(valor);
-                        }
-                    }
-                } catch (Exception e) { /* Ignorar error de parsing puntual */ }
+        Query query = entityManager.createNativeQuery(sql.toString());
+        String sqlFinal = sql.toString();
+        params.forEach((k, v) -> {
+            if (sqlFinal.contains(":" + k)) {
+                query.setParameter(k, v);
             }
-            Collections.sort(resultado);
-        } catch (Exception e) {
-            e.printStackTrace();
+        });
+
+        List<String> resultado = new ArrayList<>();
+        List<Object[]> filas = query.getResultList();
+        for (Object[] fila : filas) {
+            String json = extraerStringSeguro(fila[1]); // fila[1] es LOG_EVEDET
+            String valor = extraerValorJson(json, "\"PAGMET\":\"");
+            if (valor != null && !valor.isEmpty()) {
+                if (valor.toUpperCase().contains("MOCK")) valor = "TR_PAE".equals(fila[0]) ? "TPV Virtual (Simulado)" : "TPV Error (Simulado)";
+
+                if (!resultado.contains(valor)) resultado.add(valor);
+            }
         }
+        Collections.sort(resultado);
         return resultado;
     }
+
+	private String extraerStringSeguro(Object obj) {
+		if (obj == null) return "";
+		if (obj instanceof java.sql.Clob) {
+			try {
+				java.sql.Clob clob = (java.sql.Clob) obj;
+				return clob.getSubString(1, (int) clob.length());
+			} catch (Exception e) { return ""; }
+		}
+		return obj.toString();
+	}
+
+	/**
+	 * Método centralizado para añadir filtros.
+	 * Protege contra listas vacías en el IN (causa común de Error 500 en Oracle).
+	 */
+	private void appendFiltrosAuditoria(StringBuilder sql, FiltroEventoAuditoria filtro, Map<String, Object> params, boolean esPlataforma) {
+	    if (filtro == null) return;
+
+	    // --- FECHAS ---
+	    if (filtro.getFechaDesde() != null) {
+	        sql.append(" AND f.LOG_EVEFEC >= :fDesde ");
+	        params.put("fDesde", new java.sql.Timestamp(filtro.getFechaDesde().getTime()));
+	    }
+	    if (filtro.getFechaHasta() != null) {
+	        sql.append(" AND f.LOG_EVEFEC <= :fHasta ");
+	        params.put("fHasta", new java.sql.Timestamp(filtro.getFechaHasta().getTime()));
+	    }
+
+	    // --- ID SESIÓN ---
+	    if (StringUtils.isNotBlank(filtro.getIdSesionTramitacion())) {
+	        sql.append(" AND s.SES_IDESTR = :sesionAlfanum ");
+	        params.put("sesionAlfanum", filtro.getIdSesionTramitacion().trim());
+	    }
+
+	    // --- FILTROS DE TRÁMITE ---
+	    if (!esPlataforma) {
+	        // NIF
+	        if (StringUtils.isNotBlank(filtro.getNif())) {
+	            sql.append(" AND UPPER(t.TRP_NIFINI) LIKE :nif ");
+	            params.put("nif", "%" + filtro.getNif().toUpperCase().trim() + "%");
+	        }
+
+	        // NOMBRE COMPLETO CONCATENADO
+	        if (StringUtils.isNotBlank(filtro.getNombre())) {
+	            String nomBusq = "%" + filtro.getNombre().trim().toUpperCase().replace(" ", "%") + "%";
+	            sql.append(" AND UPPER(NVL(t.TRP_NOMINI, '') || ' ' || NVL(t.TRP_APE1INI, '') || ' ' || NVL(t.TRP_APE2INI, '')) LIKE :nomFull ");
+	            params.put("nomFull", nomBusq);
+	        }
+
+	        // ID TRÁMITE (TRP_IDETRA)
+	        if (StringUtils.isNotBlank(filtro.getIdTramite())) {
+	            sql.append(" AND UPPER(t.TRP_IDETRA) LIKE :idTra ");
+	            params.put("idTra", "%" + filtro.getIdTramite().toUpperCase().trim() + "%");
+	        }
+
+	        // VERSIÓN (TRP_VERTRA)
+	        if (filtro.getVersionTramite() != null) {
+	            sql.append(" AND t.TRP_VERTRA = :version ");
+	            params.put("version", filtro.getVersionTramite());
+	        }
+
+	        // CÓDIGO SIA (TRP_PROSIA)
+	        if (StringUtils.isNotBlank(filtro.getCodSia())) {
+	            sql.append(" AND t.TRP_PROSIA LIKE :sia ");
+	            params.put("sia", "%" + filtro.getCodSia().trim() + "%");
+	        }
+
+	        // CÓDIGO TRÁMITE CATÁLOGO (TRP_IDEPCP)
+	        if (StringUtils.isNotBlank(filtro.getIdProcedimientoCP())) {
+	            sql.append(" AND t.TRP_IDEPCP LIKE :proc ");
+	            params.put("proc", "%" + filtro.getIdProcedimientoCP().trim() + "%");
+	        }
+
+	        // ÁREAS (TRP_IDEARE)
+	        if (filtro.getListaAreas() != null && !filtro.getListaAreas().isEmpty()) {
+	            sql.append(" AND t.TRP_IDEARE IN (:areas) ");
+	            params.put("areas", filtro.getListaAreas());
+	        }
+	    }
+	}
+
+	private String extraerValorJson(String json, String clave) {
+	    if (json == null) return null;
+	    String jsonUpper = json.toUpperCase();
+	    String claveUpper = clave.toUpperCase();
+
+	    try {
+	        int inicioClave = jsonUpper.indexOf(claveUpper);
+	        if (inicioClave != -1) {
+	            // Buscamos el inicio del valor
+	            int inicioValor = json.indexOf(":", inicioClave) + 2;
+	            // Buscamos la comilla de cierre
+	            int finValor = json.indexOf("\"", inicioValor);
+
+	            if (finValor > inicioValor) {
+	                return json.substring(inicioValor, finValor);
+	            }
+	        }
+	    } catch (Exception e) {
+	        // Si el JSON está mal formado, devolvemos null
+	    }
+	    return null;
+	}
 }

@@ -1,43 +1,37 @@
 package es.caib.sistramit.core.service.component.integracion;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoNivelSeguridad;
 import es.caib.sistra2.commons.plugins.firmacliente.api.*;
-import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
-import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
-import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
-import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
-import org.apache.commons.io.FilenameUtils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
-import org.fundaciobit.plugins.validatesignature.api.SignatureDetailInfo;
-import org.fundaciobit.plugins.validatesignature.api.SignatureRequestedInformation;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureRequest;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureResponse;
-import org.fundaciobit.plugins.validatesignature.api.ValidationStatus;
-import org.fundaciobit.pluginsib.validatecertificate.InformacioCertificat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import es.caib.sistramit.core.api.exception.SesionFirmaClienteConnectException;
 import es.caib.sistramit.core.api.exception.SesionFirmaClienteException;
 import es.caib.sistramit.core.api.exception.ValidacionFirmaException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.integracion.FirmaClienteRespuesta;
 import es.caib.sistramit.core.service.model.integracion.RedireccionFirma;
 import es.caib.sistramit.core.service.model.integracion.ValidacionFirmante;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.fundaciobit.plugins.validatesignature.api.*;
+import org.fundaciobit.pluginsib.validatecertificate.InformacioCertificat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Implementación acceso componente firma.
@@ -97,6 +91,8 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		String sf;
 		try {
 			sf = plgFirma.generarSesionFirma(infoSesionFirma);
+		} catch (final FirmaPluginConnectException e) {
+			throw new SesionFirmaClienteConnectException("Excepció al conectar con plugin firma: " + e.getMessage(), e);
 		} catch (final FirmaPluginException e) {
 			throw new SesionFirmaClienteException("Excepció al generar sessió firma: " + e.getMessage(), e);
 		}

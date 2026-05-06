@@ -1,7 +1,7 @@
 package es.caib.sistra2.commons.plugins.firmacliente.api;
 
 /**
- * Excepción en plugin firma.
+ * Excepción genérica en plugin firma.
  *
  * @author Indra
  *

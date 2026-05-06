@@ -86,7 +86,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(html, "<body>", 0);
 
 		if (pModoEdicion) {
-			escribeLinea(html, "<div id=\"imc-contenidor\" class=\"imc-contenidor\" >", 1);
+			escribeLinea(html, "<div id=\"imc-forms-contenidor\" class=\"imc-forms-contenidor\" >", 1);
+			escribeLinea(html, "<div class=\"imc--c\">", 1);
+			escribeLinea(html, "<div class=\"imc--finestra\">", 1);
 		}
 
 		if (formulario != null && formulario.isMostrarCabecera()) {
@@ -97,6 +99,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			}
 			cabeceraFormulario(html, trataLiteral(descripcion.getTraduccion(pLang)));
 			//cabeceraFormulario(html, trataLiteral(formulario.getTextoCabecera().getTraduccion(pLang)));
+		}
+
+		if (pModoEdicion){
+			escribeLinea(html, "<div class=\"imc--contingut imc-form imc--form\">", 1);
 		}
 
 		escribeLinea(html, "<form>", 2);
@@ -111,7 +117,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(html, "</form>", 2);
 
 		if (pModoEdicion) {
-			escribeLinea(html, "</div>", 1);
+			escribeLinea(html, "</div>", 1); // imc--contingut imc-form imc--form
+			escribeLinea(html, "</div>", 1); // imc--finestra
+			escribeLinea(html, "</div>", 1); // imc-forms-contenidor
 		}
 
 		if (pModoEdicion) {
@@ -154,11 +162,14 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void cabeceraFormulario(final StringBuilder pOut, final String textoCabecera) {
+		/*
 		escribeLinea(pOut, "<header class=\"imc-forms-cap\" id=\"imc-forms-cap\">", 2);
 		escribeLinea(pOut, "<div class=\"imc--contingut\">", 3);
 		escribeLinea(pOut, "<h2><span>", textoCabecera, "</span></h2>", 4);
 		escribeLinea(pOut, "</div>", 3);
 		escribeLinea(pOut, "</header>", 2);
+		 */
+		escribeLinea(pOut, "<h3><span>", textoCabecera, "</span></h3>", 2);
 	}
 
 	private void cuerpoHTML(final StringBuilder pOut, final PaginaFormulario pPagina, final String pLang,
@@ -670,20 +681,22 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		if (pModoEdicion) {
+			String nameGroup = " name=\"dummy_radio_" + pCampo.getIdComponente() + "\" ";
+
 			escribeLinea(pOut, "<ul>", 7);
 			escribeLinea(pOut, "<li>", 7);
 			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
-					".a\" checked=\"checked\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".a\"", nameGroup, " checked=\"checked\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
 					".a\">Opc. A</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "<li>", 7);
 			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
-					".b\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".b\"", nameGroup, " type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
 					".b\">Opc. B</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "<li>", 7);
 			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
-					".c\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".c\"", nameGroup, " type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
 					".c\">Opc. C</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "</ul>", 7);

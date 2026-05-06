@@ -919,7 +919,7 @@
             "convertirPDF": false,
             "anexarFirmado": true,
             "firmar": true,
-            "validarFirmantes" : false,
+            "validarFirmantes" : true,
             "scriptFirmantes": null,
             "scriptValidacion":null
           }

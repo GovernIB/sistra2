@@ -10,22 +10,22 @@ package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo;
 public class RRespuestaPlatTramitElectronica extends RRespuestaBasicaRolsac {
 
 	/** Resultado. **/
-	private RPlatTramitElectronica[] resultado;
+	private RPlatTramitElectronica[] items;
 
-	public RRespuestaPlatTramitElectronica(String status, String mensaje, long l, RPlatTramitElectronica[] resultado) {
-		super(status, mensaje, l);
-		this.resultado = resultado;
+	public RRespuestaPlatTramitElectronica(String status, String mensaje, long totalCount, RPlatTramitElectronica[] items) {
+		super(status, mensaje, totalCount);
+		this.items = items;
 	};
 
 	public RRespuestaPlatTramitElectronica() {
 		super();
 	}
 
-	public RPlatTramitElectronica[] getResultado() {
-		return resultado;
+	public RPlatTramitElectronica[] getItems() {
+		return items;
 	}
 
-	public void setResultado(RPlatTramitElectronica[] resultado) {
-		this.resultado = resultado;
+	public void setItems(RPlatTramitElectronica[] items) {
+		this.items = items;
 	}
 }

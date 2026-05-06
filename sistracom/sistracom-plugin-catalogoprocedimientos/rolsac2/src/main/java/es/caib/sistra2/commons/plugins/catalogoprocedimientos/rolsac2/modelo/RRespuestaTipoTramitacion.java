@@ -8,23 +8,23 @@ package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo;
  */
 public class RRespuestaTipoTramitacion extends RRespuestaBasicaRolsac {
 
-	/** Resultado. **/
-	private RTipoTramitacion[] resultado;
+	/** items. **/
+	private RTipoTramitacion[] items;
 
-	public RRespuestaTipoTramitacion(String status, String mensaje, long l, RTipoTramitacion[] resultado) {
-		super(status, mensaje, l);
-		this.resultado = resultado;
+	public RRespuestaTipoTramitacion(String status, String mensaje, long totalCount, RTipoTramitacion[] items) {
+		super(status, mensaje, totalCount);
+		this.items = items;
 	};
 
 	public RRespuestaTipoTramitacion() {
 		super();
 	}
 
-	public RTipoTramitacion[] getResultado() {
-		return resultado;
+	public RTipoTramitacion[] getItems() {
+		return items;
 	}
 
-	public void setResultado(RTipoTramitacion[] resultado) {
-		this.resultado = resultado;
+	public void setItems(RTipoTramitacion[] items) {
+		this.items = items;
 	}
 }

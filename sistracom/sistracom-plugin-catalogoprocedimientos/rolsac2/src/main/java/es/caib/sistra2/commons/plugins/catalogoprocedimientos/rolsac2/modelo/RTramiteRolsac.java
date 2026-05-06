@@ -10,6 +10,8 @@ import java.util.Date;
  */
 public class RTramiteRolsac {
 
+	private Long procedimientoWF;
+
     private Integer fase;
 
     private Boolean tasaAsociada;
@@ -57,6 +59,14 @@ public class RTramiteRolsac {
 	private RLink link_plantillaSel;
 
 	private Long plantillaSel;
+
+	public Long getProcedimientoWF() {
+		return procedimientoWF;
+	}
+
+	public void setProcedimientoWF(Long procedimientoWF) {
+		this.procedimientoWF = procedimientoWF;
+	}
 
 	/**
 	 * @return the fase

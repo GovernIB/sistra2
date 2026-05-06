@@ -41,7 +41,11 @@ public class SesionDaoImpl implements SesionDao {
 			jSesion = new JSesion();
 			jSesion.setUsuario(pUsername);
 			jSesion.setFecha(new Date());
-			jSesion.setPropiedades(pPropiedades);
+			if (pPropiedades == null || pPropiedades.trim().isEmpty() || pPropiedades.equals("[]")) {
+                jSesion.setPropiedades(JSesion.PROPIEDAD_DEFECTO);
+            } else {
+                jSesion.setPropiedades(pPropiedades);
+            }
 			entityManager.persist(jSesion);
 		} else {
 			jSesion.setPropiedades(pPropiedades);

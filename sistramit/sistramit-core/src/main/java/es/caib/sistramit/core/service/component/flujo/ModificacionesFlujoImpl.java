@@ -133,6 +133,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 		// Copiamos info de datos sesion
 		vf.setIdTramite(pDatosSesion.getDefinicionTramite().getDefinicionVersion().getIdentificador());
 		vf.setVersionTramite(pDatosSesion.getDefinicionTramite().getDefinicionVersion().getVersion());
+		vf.setNivelSeguridad(UtilsSTG.obtenerNivelSeguridadAutenticado(pDatosSesion.getDefinicionTramite()));
 		vf.setIdSesionTramitacion(pDatosSesion.getDatosTramite().getIdSesionTramitacion());
 		vf.setUrlInicioTramite(pDatosSesion.getDatosTramite().getUrlInicio());
 		vf.setTituloTramite(pDatosSesion.getDatosTramite().getTituloTramite());

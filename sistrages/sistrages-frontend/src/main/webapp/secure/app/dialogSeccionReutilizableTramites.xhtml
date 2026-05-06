@@ -14,7 +14,6 @@
 
   	<f:facet name="last">
 	    <h:outputStylesheet library="css" name="style.css" />
-
 		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
 		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
 		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
@@ -29,12 +28,38 @@
 
 <h:body>
 
-	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogSeccionReutilizableTramites.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogSeccionReutilizableTramites.id}"/>
 		<f:viewAction action="#{dialogSeccionReutilizableTramites.init}" />
 	</f:metadata>
+
+	<script type="text/javascript">
+		function setHeight(){
+			// Altura de la pantalla del pop-up
+			var altura = window.innerHeight;
+			// Altura total de la tabla (descontamos aprox 60px para que quepa la botonera de Tancar)
+			var alturaDatatable = altura - 60;
+			// Altura del scrollable body (descontamos la cabecera y el paginador)
+			var alturaScrollableBody = alturaDatatable - 85;
+
+			$('#dialogFuenteDatos\\:dataTableDatos').height(alturaDatatable);
+			$('#dialogFuenteDatos\\:dataTableDatos .ui-datatable-scrollable-body').height(alturaScrollableBody);
+		}
+
+		jQuery(document).ready(function() {
+			$(window).resize(function () {
+				setTimeout(function () {
+					setHeight();
+				}, 100);
+			});
+
+			setTimeout(function () {
+				setHeight();
+			}, 10);
+		});
+	</script>
+
 	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
 			<h:outputScript >
 
@@ -146,59 +171,56 @@
 				  });
 			  }
 
-
 		</h:outputScript>
-  			<!-- Growl mensajes -->
-			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+  			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid styleClass="h100" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid styleClass="h100" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns="1" cellpadding="5" cellspacing="0" width="100%">
 
-			<p:dataTable  id="dataTableDatos"
-						  var="td"
-						  value="#{dialogSeccionReutilizableTramites.campos}"
-						  rows="#{sessionBean.paginacion}"
-						  emptyMessage="#{msg['error.emptyRows']}"
-						  scrollable="true"
-						  scrollHeight="100%"
-						  styleClass="h100"
-                          paginator="true"
-                          paginatorPosition="bottom"
-                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                          rowsPerPageTemplate="5,10,15,30,50,75,100"
-			        	  selectionMode="single"
-			        	  selection="#{dialogSeccionReutilizableTramites.valorSeleccionado}"
-			        	  rowIndexVar="rowIndex"
-			        	  rowKey="#{td.tramiteVersion}">
+			    <p:dataTable  id="dataTableDatos"
+			                  var="td"
+			                  value="#{dialogSeccionReutilizableTramites.campos}"
+			                  rows="#{sessionBean.paginacion}"
+			                  emptyMessage="#{msg['error.emptyRows']}"
+			                  scrollable="true"
+			                  scrollHeight="100%"
+			                  styleClass="h100"
+			                  paginator="true"
+			                  paginatorPosition="bottom"
+			                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			                  currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
+			                  rowsPerPageTemplate="5,10,15,30,50,75,100"
+			                  selectionMode="single"
+			                  selection="#{dialogSeccionReutilizableTramites.valorSeleccionado}"
+			                  rowIndexVar="rowIndex"
+			                  rowKey="#{td.tramiteVersion}">
 
-				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" global="false" />
-				<p:ajax event="rowUnselect" />
+			        <p:ajax event="rowSelect" global="false" />
+			        <p:ajax event="rowUnselect" />
 
-			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}" style="width:25%" sortBy="#{dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}">
-			        <h:outputText value="#{dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}"/>
-			    </p:column>
+			        <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}" style="width:25%" sortBy="#{dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}">
+			            <h:outputText value="#{dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}"/>
+			        </p:column>
 
-			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}" sortBy="#{td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}">
-			        <h:outputText value="#{td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
-			    </p:column>
+			        <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}" sortBy="#{td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}">
+			            <h:outputText value="#{td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
+			        </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}" sortBy="#{td.area}">
-			        <h:outputText value="#{td.area}" />
-			    </p:column>
+			         <p:column headerText="#{msg['dialogDominioTramites.headerArea']}" sortBy="#{td.area}">
+			            <h:outputText value="#{td.area}" />
+			        </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerNumVersion']}" style="width:7%" sortBy="#{td.numVersion}">
-			        <h:outputText value="#{td.numVersion}" />
-			    </p:column>
+			         <p:column headerText="#{msg['dialogDominioTramites.headerNumVersion']}" style="width:7%" sortBy="#{td.numVersion}">
+			            <h:outputText value="#{td.numVersion}" />
+			        </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerRelease']}" style="width:7%" sortBy="#{td.release}">
-			        <h:outputText value="#{td.release}" />
-			    </p:column>
+			         <p:column headerText="#{msg['dialogDominioTramites.headerRelease']}" style="width:7%" sortBy="#{td.release}">
+			            <h:outputText value="#{td.release}" />
+			        </p:column>
 
-			</p:dataTable>
-			<!-- <p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogSeccionReutilizableTramites.consultarTramite()}" process="@this" update="growlDialog"  /> -->
+			    </p:dataTable>
 
-		 </h:panelGrid>
+			</h:panelGrid>
+
 	  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
@@ -206,7 +228,7 @@
 					</f:facet>
 				</p:toolbar>
 		 </p:outputPanel>
-			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
+		 <p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="dialogFuenteDatos:mnuCopy" action="copy" target="dialogFuenteDatos:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">

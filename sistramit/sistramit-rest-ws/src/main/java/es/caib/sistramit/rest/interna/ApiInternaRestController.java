@@ -1,6 +1,8 @@
 package es.caib.sistramit.rest.interna;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +57,9 @@ import es.caib.sistramit.rest.api.interna.RSoporte;
 import es.caib.sistramit.rest.api.interna.RVerificacionPago;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Operaciones requeridas desde el resto de módulos de Sistra2. No requieren
@@ -468,33 +473,66 @@ public class ApiInternaRestController {
 
 	@ApiOperation(value = "listar tipos errores auditoria", notes = "listar tipos errores auditoria", response = String.class, responseContainer = "List")
 	@RequestMapping(value = "/auditoria/listarTiposError", method = RequestMethod.POST)
-	public List<String> obtenerTiposErrorAuditoria(@RequestBody Map<String, Object> params) {
-	    boolean eventoPlataforma = false;
-	    if (params != null && params.get("eventoPlataforma") != null) {
-	        eventoPlataforma = Boolean.parseBoolean(params.get("eventoPlataforma").toString());
-	    }
-	    return restApiInternaService.listarTiposErrorAuditoria(eventoPlataforma);
+	public List<String> obtenerTiposError(@RequestBody Map<String, Object> params) {
+	    boolean eventoPlataforma = params.get("eventoPlataforma") != null && (boolean) params.get("eventoPlataforma");
+
+	    FiltroEventoAuditoria filtro = mapearFiltro(params);
+
+	    return restApiInternaService.listarTiposErrorAuditoria(eventoPlataforma, filtro);
 	}
 
 	@ApiOperation(value = "listar métodos de firma", notes = "listar métodos de firma disponibles", response = String.class, responseContainer = "List")
 	@RequestMapping(value = "/auditoria/listarMetodosFirma", method = RequestMethod.POST)
-	public List<String> obtenerMetodosFirma(@RequestBody(required = false) Map<String, String> params) {
-		String tipoEvento = null;
-		if (params != null) {
-			tipoEvento = params.get("tipoEvento");
-		}
-		return restApiInternaService.listarMetodosFirma(tipoEvento);
+	public List<String> obtenerMetodosFirma(@RequestBody Map<String, Object> params) {
+	    String tipoEvento = (String) params.get("tipoEvento");
+
+	    FiltroEventoAuditoria filtro = mapearFiltro(params);
+
+	    return restApiInternaService.listarMetodosFirma(tipoEvento, filtro);
 	}
 
 	@ApiOperation(value = "listar métodos de pago", notes = "listar métodos de pago disponibles", response = String.class, responseContainer = "List")
-    @RequestMapping(value = "/auditoria/listarMetodosPago", method = RequestMethod.POST)
-    public List<String> obtenerMetodosPago(@RequestBody(required = false) Map<String, String> params) {
-		String tipoEvento = null;
-		if (params != null) {
-			tipoEvento = params.get("tipoEvento");
-		}
-        return restApiInternaService.listarMetodosPago(tipoEvento);
-    }
+	@RequestMapping(value = "/auditoria/listarMetodosPago", method = RequestMethod.POST)
+	public List<String> obtenerMetodosPago(@RequestBody Map<String, Object> params) {
+	    String tipoEvento = (String) params.get("tipoEvento");
+
+	    FiltroEventoAuditoria filtro = mapearFiltro(params);
+
+	    return restApiInternaService.listarMetodosPago(tipoEvento, filtro);
+	}
+
+	/**
+	 * Reconstruye el filtro de forma manual y segura.
+	 */
+	private FiltroEventoAuditoria mapearFiltro(Map<String, Object> params) {
+	    FiltroEventoAuditoria f = new FiltroEventoAuditoria();
+	    if (params == null) return f;
+
+	    f.setNif((String) params.get("f_nif"));
+	    f.setIdSesionTramitacion((String) params.get("f_sesion"));
+	    f.setNombre((String) params.get("f_nombre"));
+	    f.setIdTramite((String) params.get("f_idTra"));
+	    f.setCodSia((String) params.get("f_sia"));
+	    f.setIdProcedimientoCP((String) params.get("f_proc"));
+
+	    // Control de nulidad para evitar Error 500
+	    if (params.get("f_ver") != null) {
+	        try {
+	            f.setVersionTramite(((Number) params.get("f_ver")).intValue());
+	        } catch (Exception e) { /* Ignorar si no es un número */ }
+	    }
+
+	    // Control de nulidad para las áreas
+	    if (params.get("f_areas") instanceof List) {
+	        f.setListaAreas((List<String>) params.get("f_areas"));
+	    }
+
+	    // Fechas
+	    if (params.get("f_fDesde") != null) f.setFechaDesde(new Date(((Number) params.get("f_fDesde")).longValue()));
+	    if (params.get("f_fHasta") != null) f.setFechaHasta(new Date(((Number) params.get("f_fHasta")).longValue()));
+
+	    return f;
+	}
 
 	/**
 	 * Convierte detalle pago.

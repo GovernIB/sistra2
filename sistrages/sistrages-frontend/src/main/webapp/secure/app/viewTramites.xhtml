@@ -808,12 +808,12 @@
 					   expandedRow="#{viewTramites.expandir(td)}"
 					   selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}"
 					   height="100%"
-					   rowKey="#{td.tramite.codigo}"
+					   rowKey="#{td.tramite.codigo.toString()}"
 		  >
 
 		  <!-- Necesario para actualizar en controlador la fila seleccionada -->
-            	   <p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T'); expandirContraer();"/>
-                   <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectVersionTramite}" process="@this" update="@form:toolbarTramites" oncomplete=" deseleccionar('T');"/>
+            	   <p:ajax event="rowSelect" global="false" listener="#{viewTramites.onRowSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T'); expandirContraer();"/>
+		<p:ajax event="contextMenu" global="false" listener="#{viewTramites.onRowSelectTramite}" process="@this" update="@form:toolbarTramites" oncomplete=" deseleccionar('T');"/>
 
                    <!-- <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/> -->
                    <!-- <p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/> -->
@@ -855,10 +855,10 @@
                         rowIndexVar="rowIndexVer"
                         styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10"
                             selectionMode="single" selection="#{viewTramites.versionSeleccionada}"
-							  rowKey="#{tdVersiones.codigo}"
+							  rowKey="#{tdVersiones.codigo.toString()}"
 				>
-                    <p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
-                    <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectTramite}" process="@this" update="@form:toolbarTramites" oncomplete="deseleccionar('V'); eliminarDupl();"/>
+                    <p:ajax event="rowSelect" global="false" listener="#{viewTramites.seleccionarVersion}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
+                    <p:ajax event="contextMenu" global="false" listener="#{viewTramites.seleccionarVersion}" process="@this" update="@form:toolbarTramites" oncomplete="deseleccionar('V'); eliminarDupl();"/>
                     <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersionDblClick}"/>
 
                     <!-- Columnas -->

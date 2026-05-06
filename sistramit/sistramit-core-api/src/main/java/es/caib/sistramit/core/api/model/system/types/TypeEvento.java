@@ -85,6 +85,10 @@ public enum TypeEvento {
 	 */
 	FORMULARIO_FIN("TR_FRF"),
 	/**
+	 * FIRMA ERROR CONEXION.
+	 */
+	// FIRMA_ERROR_CONEXION("TR_SGC"),
+	/**
 	 * FIRMA INICIO.
 	 */
 	FIRMA_INICIO("TR_SGI"),
@@ -100,6 +104,10 @@ public enum TypeEvento {
 	 * FIRMA FIN (ERROR).
 	 */
 	FIRMA_FIN_KO("TR_SGX"),
+	/**
+	 * FIRMA ANEXO FIRMADO INCORRECTA.
+	 */
+	// FIRMA_ANEXOFIRMADO_KO("TR_AFX"),
 	/**
 	 * INVALIDACIONES: PETICIÓN INVALIDACIÓN.   
 	 */

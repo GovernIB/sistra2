@@ -110,16 +110,27 @@
 			   		</p:selectBooleanCheckbox>
 
 		    		<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMin']}" styleClass="padding-left-4"/>
-					<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMinimo}" decimalPlaces="2" minValue="-9999999999" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
-						<p:ajax event="blur" process="@this" />
-						<p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoActualizado}" process="@this" update="@this checkNumeroConSigno precisionEntera"/>
-					</p:inputNumber>
+						<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMin']}" styleClass="padding-left-4"/>
+						<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}"
+						               value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMinimo}"
+						               decimalPlaces="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroSeparador == 'SIN_FORMATO' ? 0 : 2}"
+						               thousandSeparator="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroSeparador == 'SIN_FORMATO' ? '' : '.'}"
+						               minValue="-9999999999" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20"
+						               readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+						    <p:ajax event="blur" process="@this" />
+						    <p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoActualizado}" process="@this" update="@this checkNumeroConSigno precisionEntera"/>
+						</p:inputNumber>
 
-		   			<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMax']}" styleClass="padding-left-4"/>
-		   			<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMaximo}" decimalPlaces="2" minValue="-9999999999" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
-		   				<p:ajax event="blur" process="@this" />
-						<p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoActualizado}" process="@this" update="@this checkNumeroConSigno precisionEntera"/>
-		   			</p:inputNumber>
+						<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMax']}" styleClass="padding-left-4"/>
+						<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}"
+						               value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMaximo}"
+						               decimalPlaces="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroSeparador == 'SIN_FORMATO' ? 0 : 2}"
+						               thousandSeparator="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroSeparador == 'SIN_FORMATO' ? '' : '.'}"
+						               minValue="-9999999999" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20"
+						               readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+						    <p:ajax event="blur" process="@this" />
+						    <p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoActualizado}" process="@this" update="@this checkNumeroConSigno precisionEntera"/>
+						</p:inputNumber>
    	  	</p:outputPanel>
 	</h:column>
 

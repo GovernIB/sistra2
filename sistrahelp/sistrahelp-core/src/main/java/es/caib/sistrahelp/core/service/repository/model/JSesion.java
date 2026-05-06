@@ -23,6 +23,8 @@ public class JSesion implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
+	public static String PROPIEDAD_DEFECTO = "[{\"codigo\":\"paginacion\",\"valor\":\"10\",\"orden\":null},{\"codigo\":\"idioma\",\"valor\":\"ca\",\"orden\":null}]";
+
 	@Id
 	@Column(name = "SESI_USUA", unique = true, nullable = false, length = 100)
 	private String usuario;

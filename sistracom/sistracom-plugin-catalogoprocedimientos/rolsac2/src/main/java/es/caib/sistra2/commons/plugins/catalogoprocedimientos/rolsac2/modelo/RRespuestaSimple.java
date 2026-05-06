@@ -9,13 +9,13 @@ package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo;
 public class RRespuestaSimple extends RRespuestaBasicaRolsac {
 
 	/** Resultado. **/
-	private String resultado;
+	private String resultadoURL;
 
 	/** Constructor. **/
-	public RRespuestaSimple(final String status, final String mensaje, final Long numeroElementos,
-			final String resultado) {
-		super(status, mensaje, numeroElementos);
-		this.resultado = resultado;
+	public RRespuestaSimple(final String status, final String mensaje, final Long totalCount,
+			final String resultadoURL) {
+		super(status, mensaje, totalCount);
+		this.resultadoURL = resultadoURL;
 	}
 
 	/** Constructor. **/
@@ -26,15 +26,15 @@ public class RRespuestaSimple extends RRespuestaBasicaRolsac {
 	/**
 	 * @return the resultado
 	 */
-	public String getResultado() {
-		return resultado;
+	public String getResultadoURL() {
+		return resultadoURL;
 	}
 
 	/**
-	 * @param resultado
+	 * @param resultadoURL
 	 *            the resultado to set
 	 */
-	public void setResultado(final String resultado) {
-		this.resultado = resultado;
+	public void setResultadoURL(final String resultadoURL) {
+		this.resultadoURL = resultadoURL;
 	}
 }

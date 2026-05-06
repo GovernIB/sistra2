@@ -8,7 +8,7 @@
 	template="#{viewAuditoriaTramites.layout}">
 
 	<f:metadata>
-		<f:viewAction action="#{viewAuditoriaTramites.init}" />
+		<f:viewAction action="#{viewAuditoriaTramites.init}" onPostback="false" />
 		<f:viewParam name="idTramite" value="#{viewAuditoriaTramites.idTramiteECM}"/>
 		<f:viewParam name="esDialog" value="#{viewAuditoriaTramites.esDialog}"/>
 		<f:viewParam name="esDialogParams" value="#{viewAuditoriaTramites.esDialogParams}"/>
@@ -229,7 +229,7 @@
 
 								<p:commandButton id="btnDialogErrores" styleClass="rotar-icono" icon="fa fa-sliders"
 												 actionListener="#{viewAuditoriaTramites.abrirDialogErrores}"
-												 process="@this" update="growl"
+												 process="@this panelFiltro" update="growl"
 												 disabled="#{viewAuditoriaTramites.filtros.evento ne 'ERROR' and
 												 			 viewAuditoriaTramites.filtros.evento ne 'FIRMA_FIN_OK' and
 												 			 viewAuditoriaTramites.filtros.evento ne 'FIRMA_FIN_KO' and
@@ -264,7 +264,9 @@
 
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding">
 				        		<p:outputLabel for="filtroCodSia" value="#{msg['viewAuditoriaTramites.headSIA']}:"/>
-				        		<p:inputText id="filtroCodSia" value="#{viewAuditoriaTramites.filtros.codSia}"  size="19" locale="#{sessionBean.locale}" style="margin-left: 68px;" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+				        		<p:inputText id="filtroCodSia" value="#{viewAuditoriaTramites.filtros.codSia}"
+								             size="19" onkeyup="capitalize(this)" onblur="trim(this)"
+								             style="margin-left: 68px;" />
 							</h:panelGrid>
 
 						</p:column>
@@ -349,7 +351,11 @@
 
 			        	<h:panelGrid columns="2" styleClass="w100, noPadding">
 			        		<p:outputLabel for="filtroCodSia" value="#{msg['viewAuditoriaTramites.headSIA']}:"/>
-			        		<p:inputText id="filtroCodSia" value="#{viewAuditoriaTramites.filtros.codSia}"  size="19" locale="#{sessionBean.locale}" style="margin-left: 68px;" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+			        		<p:inputText id="filtroCodSia" value="#{viewAuditoriaTramites.filtros.codSia}"
+							             size="19" onkeyup="capitalize(this)" onblur="trim(this)"
+							             style="margin-left: 68px;" >
+							    <p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
+							</p:inputText>
 						</h:panelGrid>
 
 					</p:column>
@@ -435,8 +441,30 @@
 			        <h:outputText value="#{dt.idProcedimientoSIA}" />
 			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headDescripcionEvento']}" style="width:12% !important;" sortBy="#{dt.descripcion}">
-			        <h:outputText value="#{dt.descripcion}" />
-			    </p:column>
+				    <h:outputText value="#{dt.descripcion}" />
+
+				    <h:panelGroup style="display:block; margin-top:5px; font-size: 0.9em; color: #555;"
+				                  rendered="#{viewAuditoriaTramites.esEventoFirmaDetalle(dt.tipoEvento)}">
+				        <hr style="border: 0; border-top: 1px dotted #ccc; margin: 4px 0;" />
+				        <h:outputText value="Método de firma: " style="font-weight:bold;" />
+				        <ui:repeat value="#{dt.propiedadesEvento.asArrayList}" var="p">
+				            <h:panelGroup rendered="#{p.key eq 'FIRMETODO'}">
+				                <h:outputText value="#{viewAuditoriaTramites.obtenerEtiquetaPropiedad(p.key, p.value)}" />
+				            </h:panelGroup>
+				        </ui:repeat>
+				    </h:panelGroup>
+
+				    <h:panelGroup style="display:block; margin-top:5px; font-size: 0.9em; color: #555;"
+				                  rendered="#{viewAuditoriaTramites.esEventoPagoDetalle(dt.tipoEvento)}">
+				        <hr style="border: 0; border-top: 1px dotted #ccc; margin: 4px 0;" />
+				        <h:outputText value="Método de pago: " style="font-weight:bold;" />
+				        <ui:repeat value="#{dt.propiedadesEvento.asArrayList}" var="p">
+				            <h:panelGroup rendered="#{p.key eq 'PAGMET'}">
+				                <h:outputText value="#{viewAuditoriaTramites.obtenerEtiquetaPropiedad(p.key, p.value)}" />
+				            </h:panelGroup>
+				        </ui:repeat>
+				    </h:panelGroup>
+				</p:column>
 			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}" style="width:17% !important;" sortBy="#{dt.codigoError}" rendered="#{!viewAuditoriaTramites.esDialog}">
 			        <h:outputText value="#{dt.codigoError}" />
 			    </p:column>

@@ -236,8 +236,8 @@
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewDominios.consultar()}" process="@this" update="growl" rendered="#{viewDominios.getPermiteConsultar()}" >
 		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewDominios.avisoEliminar()}" process="@this" update="growl dataTable"  rendered="#{viewDominios.getPermiteEditar()}" oncomplete="cerrarDialog()">
-		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewDominios.eliminar()}" process="@this" update="growl dataTable form:panelBotones"  rendered="#{viewDominios.getPermiteEditar()}" oncomplete="setHeight()">
+		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{!viewDominios.filaSeleccionada}"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{viewDominios.ping()}" process="@this" update="growl dataTable" oncomplete="cerrarDialog()">
 		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
@@ -374,12 +374,16 @@
 
 			</style>
 
-			 <p:confirmDialog header="#{msg['confirm.componente.eliminar.titulo']}" global="true" id="dlgConfirmar" widgetVar="dlgConfirmar" message="#{viewDominios.msg}" styleClass="confirmar_ancho">
-		    	<p:outputPanel styleClass="confirmar_botonera">
-	           	 	<p:commandButton value="#{msg['botones.si']}" actionListener="#{viewDominios.eliminar}" styleClass="boton-azul" icon="ui-icon-check" onclick="PF('dlgConfirmar').hide();" process="@this"  update="@form" />
-	            	<p:commandButton value="#{msg['botones.no']}" icon="ui-icon-close" onclick="PF('dlgConfirmar').hide();" process="@this"  update="@form"  />
-	            </p:outputPanel>
-        	</p:confirmDialog>
+			 <p:confirmDialog global="true" >
+			    <p:outputPanel styleClass="confirmar_botonera">
+			        <p:commandButton value="#{msg['botones.si']}" type="button"
+			                         styleClass="ui-confirmdialog-yes boton-azul"
+			                         icon="fa fa-check" />
+			        <p:commandButton value="#{msg['botones.no']}" type="button"
+			                         styleClass="ui-confirmdialog-no"
+			                         icon="fa fa-times" />
+			    </p:outputPanel>
+			</p:confirmDialog>
 
 		</h:form>
 

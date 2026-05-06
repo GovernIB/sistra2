@@ -80,7 +80,18 @@
 
 .imc-forms--missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
 .imc-forms--missatge .imc--text h2 span { font-size: 1.4em; }
+
 .imc-forms--missatge .imc--text .imc--explicacio { margin-bottom: 2em; margin-left: 5em; }
+
+
+.imc-forms--missatge .imc--text .imc--explicacio p { margin-bottom: .5em; }
+
+.imc-forms--missatge .imc--text .imc--explicacio ul,
+.imc-forms--missatge .imc--text .imc--explicacio ol { list-style: circle; margin: 0 0 .5em 2em; }
+
+.imc-forms--missatge .imc--text .imc--explicacio ul li { list-style: circle; padding-bottom: .3em; }
+.imc-forms--missatge .imc--text .imc--explicacio ol li { list-style: decimal; padding-bottom: .3em; }
+
 
 
 .imc-forms--missatge .imc--text .imc--desenvolupadors { color: #666; margin-bottom: 2em; margin-left: 5em; }

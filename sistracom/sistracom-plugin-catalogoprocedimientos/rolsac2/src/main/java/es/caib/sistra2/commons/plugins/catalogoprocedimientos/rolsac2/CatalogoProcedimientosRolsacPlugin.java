@@ -172,7 +172,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 					responseTramite = restTemplate.postForEntity(url + "/servicios/" + idServicioCP + "?" + LITERAL_IDIOMA + "=" + idioma,
 							request, RRespuestaServicios.class);
 				}
-				final RServicioRolsac[] serviciosRolsac = responseTramite.getBody().getResultado();
+				final RServicioRolsac[] serviciosRolsac = responseTramite.getBody().getItems();
 
 				// Si se ha pasado el idServicio y está vacío o nulo, entonces dar error
 				if (idServicioCP != null && !idServicioCP.isEmpty()
@@ -213,10 +213,17 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		// Obtener procedimiento.
 		final RTramiteRolsac[] tramitesRolsac = getRTramiteRolsac(idTramiteCP, map, idioma);
-		final RTramiteRolsac tramiteRolsac = tramitesRolsac[0];
 
+		// getRProcedimientoRolsac devuelve siempre el procedimiento publico, porque utiliza el filtro por defecto de estadoWF 'T'
 		final RProcedimientoRolsac procRolsac = getRProcedimientoRolsac(
-				tramiteRolsac.getLink_procedimiento().getCodigo(), idioma);
+				tramitesRolsac[0].getLink_procedimiento().getCodigo(), idioma);
+
+		final Long procCodigoWF = procRolsac.getCodigoWF();
+		final RTramiteRolsac tramiteRolsac = Arrays.stream(tramitesRolsac)
+				.filter(t -> Objects.equals(t.getProcedimientoWF(), procCodigoWF))
+				.findFirst()
+				.orElseThrow(() -> new CatalogoPluginException(
+						"No se ha encontrado trámite con procedimientoWF=" + procCodigoWF));
 
 		final DefinicionTramiteCP dt = obtenerDefinicionTramiteProcedimiento(procRolsac, tramiteRolsac, idioma, modoResumen);
 		return dt;
@@ -241,12 +248,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			return dt;
 		}
 
-		// Codigo DIR3 responsable procedimiento
-		String dir3organoResponsable = "";
-		if (procRolsac.getLinkUnidadAdministrativaResponsable() == null) {
+		// Codigo DIR3 órgano instructor del procedimiento
+		String dir3organoInstructor = "";
+		if (procRolsac.getLinkUnidadAdministrativaInstructora() == null) {
 			log.error("El link de unidad administrativa es nulo con el proc: " + procRolsac.getCodigo());
 		} else {
-			dir3organoResponsable = getCodigoDir3UA(procRolsac.getLinkUnidadAdministrativaResponsable().getCodigo());
+			dir3organoInstructor = getCodigoDir3UA(procRolsac.getLinkUnidadAdministrativaInstructora().getCodigo());
 		}
 
 		// Codigo DIR3 destintario tramite
@@ -263,7 +270,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dp.setIdentificador(tramiteRolsac.getLink_procedimiento().getCodigo());
 		dp.setDescripcion(procRolsac.getNombreProcedimientoWorkFlow());
 		dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA().toString());
-		dp.setOrganoResponsableDir3(dir3organoResponsable);
+		dp.setOrganoResponsableDir3(dir3organoInstructor);
 		dp.setValidacion((procRolsac.getEstado().equals(TypeProcedimientoEstado.PUBLICADO)
 								&& procRolsac.getWorkflow().equals(TypeProcedimientoWorkflow.DEFINITIVO)) ? 1 : 0);
 		dp.setServicio(false);
@@ -332,12 +339,15 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 						url + "/procedimientos/" + codigoProc + "?" + LITERAL_IDIOMA + "=" + idioma, null,
 						RRespuestaProcedimientos.class);
 				if (responseProc == null || responseProc.getBody() == null
-						|| responseProc.getBody().getResultado() == null) {
+						|| responseProc.getBody().getItems() == null) {
 					throw new CatalogoPluginException("El procedimiento no existe.");
 				}
-				final RProcedimientoRolsac[] procedimientosRolsac = responseProc.getBody().getResultado();
+				final RProcedimientoRolsac[] procedimientosRolsac = responseProc.getBody().getItems();
 				if (procedimientosRolsac == null || procedimientosRolsac.length == 0) {
 					throw new CatalogoPluginException("No hay procedimiento");
+				}
+				if(procedimientosRolsac.length > 1) {
+					throw new CatalogoPluginException("Hay más de un procedimiento con el mismo código");
 				}
 
 				return procedimientosRolsac[0];
@@ -369,14 +379,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		String codigos = "";
-		for(Long codProc : codigoProcs) {
-			codigos += codProc+",";
-		}
-		if (codigos.endsWith(",")) {
-			codigos = codigos.substring(0, codigos.length()-1);
-		}
-		map.add(LITERAL_FILTRO, "{\"codigos\":\"" + codigos + "\", \"filtroPaginacion\" : {\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}}");
+		List<Long> codigos = new ArrayList<>(codigoProcs);
+		map.add(LITERAL_FILTRO, "{\"codigos\":" + codigos + ", \"filtroPaginacion\" : {\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}}");
 		final HttpEntity<String> request = new HttpEntity<>(map.getFirst(LITERAL_FILTRO), headers);
 
 
@@ -396,7 +400,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 							RRespuestaProcedimientos.class);
 
 
-				final RProcedimientoRolsac[] procedimientosRolsac = responseTramite.getBody().getResultado();
+				final RProcedimientoRolsac[] procedimientosRolsac = responseTramite.getBody().getItems();
 				Map<Long, RProcedimientoRolsac> respuesta = new HashMap<>();
 				for(RProcedimientoRolsac proc : procedimientosRolsac ) {
 					respuesta.put(proc.getCodigo(), proc);
@@ -445,7 +449,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				responseDocumento = restTemplate.postForEntity(url + "/procedimientos/documentos/" + codigoWorkflow,
 						null, RRespuestaProcedimientoDocumento.class);
 
-				final RProcedimientoDocumento[] documentosRolsac = responseDocumento.getBody().getResultado();
+				final RProcedimientoDocumento[] documentosRolsac = responseDocumento.getBody().getItems();
 
 				if (documentosRolsac == null || documentosRolsac.length == 0) {
 					throw new CatalogoPluginException("No existe archivo");
@@ -504,7 +508,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 							request, RRespuestaTramites.class);
 				}
 
-				final RTramiteRolsac[] tramitesRolsac = responseTramite.getBody().getResultado();
+				final RTramiteRolsac[] tramitesRolsac = responseTramite.getBody().getItems();
 
 				if (idTramiteCP != null && !idTramiteCP.isEmpty()
 						&& (tramitesRolsac == null || tramitesRolsac.length == 0)) {
@@ -557,10 +561,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 						RRespuestaSimple.class);
 
 				if (responseCodDIR3 == null || responseCodDIR3.getBody() == null
-						|| responseCodDIR3.getBody().getResultado() == null) {
+						|| responseCodDIR3.getBody().getResultadoURL() == null) {
 					throw new CatalogoPluginException("LA UA no existe.");
 				}
-				return responseCodDIR3.getBody().getResultado();
+				return responseCodDIR3.getBody().getResultadoURL();
 
 			} catch (final Exception e) {
 				// No hacemos nada
@@ -696,11 +700,11 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		//	vigentes = " \"vigente\":\"1\", ";
 		//}
 		if (version == null) {
-			map.add(LITERAL_FILTRO, "{\"idTramite\":\"" + idTramite + "\", \"plataforma\" : \""
+			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""
 					+ getIdentificadorPlafaformaSistra2() + "\", \"filtroPaginacion\" : {\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}}");
 		} else {
 			map.add(LITERAL_FILTRO,
-					"{\"idTramite\":\"" + idTramite + "\", \"version\" : \"" + version
+					"{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"versionTramiteTelematico\" : \"" + version
 							+ "\", \"plataforma\" : \"" + getIdentificadorPlafaformaSistra2()
 								+ "\", \"filtroPaginacion\" : {\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}}");
 		}
@@ -750,9 +754,14 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		if (tramitesRolsac != null) {
 
 			List<Long> codigoProcs = getCodigoProcedimientos(tramitesRolsac);
+			// getRProcedimientoRolsac devuelve siempre los procedimientos publico, porque utiliza el filtro por defecto de estadoWF 'T'
 			Map<Long, RProcedimientoRolsac> procedimientos = getRProcedimientoRolsac(codigoProcs, idioma);
+
+			// Se obtienen los tramites presentes en los procedimientos
+			final RTramiteRolsac[] tramitesFiltrados = filtrarTramitesProcedimientos(procedimientos, tramitesRolsac);
+
 			if (procedimientos != null) {
-				for(RTramiteRolsac tramiteRolsac : tramitesRolsac) {
+				for(RTramiteRolsac tramiteRolsac : tramitesFiltrados) {
 					if (procedimientos.get(Long.valueOf(tramiteRolsac.getLink_procedimiento().getCodigo())) != null) {
 						final DefinicionTramiteCP dt = obtenerDefinicionTramiteProcedimiento(procedimientos.get(Long.valueOf(tramiteRolsac.getLink_procedimiento().getCodigo())), tramiteRolsac, idioma, resumen);
 						res.add(dt);
@@ -763,6 +772,21 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		return res;
 
+	}
+
+	// Devuelve los tramites cuyos procedimientoWF se encuentra en algun procedimiento del listado
+	private RTramiteRolsac[] filtrarTramitesProcedimientos (Map<Long, RProcedimientoRolsac> procedimientos, RTramiteRolsac[] tramitesRolsac) {
+		if (tramitesRolsac == null) return new RTramiteRolsac[0];
+
+		final Set<Long> codigosWF = procedimientos.values().stream()
+				.map(RProcedimientoRolsac::getCodigoWF)
+				.filter(Objects::nonNull)
+				.collect(java.util.stream.Collectors.toSet());
+
+		return Arrays.stream(tramitesRolsac)
+				.filter(Objects::nonNull)
+				.filter(t -> t.getProcedimientoWF() != null && codigosWF.contains(t.getProcedimientoWF()))
+				.toArray(RTramiteRolsac[]::new);
 	}
 
 	private List<Long> getCodigoProcedimientos(RTramiteRolsac[] tramitesRolsac) {
@@ -805,11 +829,11 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 						url + "/tipos_tramitacion/" + codTipoTramiteCP + "?" + LITERAL_IDIOMA + "=" + idioma, null,
 						RRespuestaTipoTramitacion.class);
 				if (responseProc == null || responseProc.getBody() == null
-						|| responseProc.getBody().getResultado() == null) {
+						|| responseProc.getBody().getItems() == null) {
 					throw new CatalogoPluginException("El tipo de tramitación no existe.");
 				}
 
-				return responseProc.getBody().getResultado();
+				return responseProc.getBody().getItems();
 
 			} catch (final Exception e) {
 				// No hacemos nada
@@ -850,11 +874,11 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 						url + "/plataformas/" + codPlatTramitCP + "?" + LITERAL_IDIOMA + "=" + idioma, null,
 						RRespuestaPlatTramitElectronica.class);
 				if (responseProc == null || responseProc.getBody() == null
-						|| responseProc.getBody().getResultado() == null) {
+						|| responseProc.getBody().getItems() == null) {
 					throw new CatalogoPluginException("La plataforma de tramitación electrónica no existe.");
 				}
 
-				return responseProc.getBody().getResultado();
+				return responseProc.getBody().getItems();
 
 			} catch (final Exception e) {
 				// No hacemos nada

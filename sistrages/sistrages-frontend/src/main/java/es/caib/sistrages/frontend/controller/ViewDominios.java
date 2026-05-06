@@ -261,67 +261,46 @@ public class ViewDominios extends ViewControllerBase {
 		abrirDlg(TypeModoAcceso.CONSULTA);
 	}
 
-	public void avisoEliminar() {
-		// Verificamos por si acaso si hay permisos
-		if (!permiteEditar) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, LITERAL_SIN_PERMISOS);
-			return;
-		}
-
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada()) {
-			return;
-		}
-
-
-		if (this.datoSeleccionado.getTipo().equals(TypeDominio.FUENTE_DATOS)) {
-			String[] param = new String[1];
-			param[0] = this.datoSeleccionado.getIdentificadorFD();
-			this.msg = UtilJSF.getLiteral("confirm.componente.eliminarFD", param);
-			PrimeFaces.current().ajax().update("form:dlgConfirmar");
-		} else {
-			this.msg = UtilJSF.getLiteral("confirm.borrado");
-			PrimeFaces.current().ajax().update("form:dlgConfirmar");
-		}
-		PrimeFaces.current().executeScript("PF('confirmationButton').jq.click();");
-	}
-
-	/**
-	 * Elimina dato seleccionado.
-	 */
 	public void eliminar() {
+	    if (!permiteEditar) {
+	        UtilJSF.addMessageContext(TypeNivelGravedad.INFO, LITERAL_SIN_PERMISOS);
+	        return;
+	    }
 
-		// Eliminamos
-		String eliminado = this.datoSeleccionado.getIdentificadorCompuesto();
-		Long idFd = null;
-		if (this.datoSeleccionado.getTipo().equals(TypeDominio.FUENTE_DATOS)) {
-			idFd = this.datoSeleccionado.getIdFuenteDatos();
-		}
-		if (this.dominioService.removeDominio(this.datoSeleccionado.getCodigo())) {
-			// Refrescamos datos
-			filtrar();
-			ResultadoError re = this.refrescar();
-			String message = "";
-			// Mostramos mensaje
-			if (re.getCodigo() != 1) {
-				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
-						+ ": " + re.getMensaje();
-			} else {
-				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
-			}
-			if (idFd != null) {
-				if (this.dominioService.removeFuenteDato(idFd)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-				} else {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-							UtilJSF.getLiteral("error.borrar.dependencias.fd"));
-				}
-			} else {
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-			}
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias"));
-		}
+	    if (!verificarFilaSeleccionada()) {
+	        return;
+	    }
+
+	    String eliminado = this.datoSeleccionado.getIdentificadorCompuesto();
+	    Long idFd = null;
+
+	    if (this.datoSeleccionado.getTipo().equals(TypeDominio.FUENTE_DATOS)) {
+	        idFd = this.datoSeleccionado.getIdFuenteDatos();
+	    }
+
+	    if (this.dominioService.removeDominio(this.datoSeleccionado.getCodigo())) {
+	        filtrar();
+	        ResultadoError re = this.refrescar();
+	        String message = "";
+
+	        if (re.getCodigo() != 1) {
+	            message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+	        } else {
+	            message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+	        }
+
+	        if (idFd != null) {
+	            if (this.dominioService.removeFuenteDato(idFd)) {
+	                UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+	            } else {
+	                UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias.fd"));
+	            }
+	        } else {
+	            UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+	        }
+	    } else {
+	        UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias"));
+	    }
 	}
 
 	/**

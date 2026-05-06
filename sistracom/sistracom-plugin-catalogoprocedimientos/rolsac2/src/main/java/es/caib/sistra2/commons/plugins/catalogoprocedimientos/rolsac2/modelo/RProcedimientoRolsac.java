@@ -39,7 +39,7 @@ public class RProcedimientoRolsac {
 	private Integer codigoSIA;
 
 	/**  **/
-	private boolean estadoSIA;
+	private String estadoSIA;
 
 	/**  **/
 	private Calendar fechaSIA;
@@ -241,14 +241,15 @@ public class RProcedimientoRolsac {
 	/**
 	 * @return the estadoSIA
 	 */
-	public boolean isEstadoSIA() {
+	public String getEstadoSIA() {
 		return estadoSIA;
 	}
 
 	/**
-	 * @param estadoSIA the estadoSIA to set
+	 *
+	 * @param estadoSIA
 	 */
-	public void setEstadoSIA(boolean estadoSIA) {
+	public void setEstadoSIA(String estadoSIA) {
 		this.estadoSIA = estadoSIA;
 	}
 

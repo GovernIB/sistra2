@@ -9,12 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.lowagie.text.Image;
-import com.lowagie.text.pdf.AcroFields;
-import com.lowagie.text.pdf.Barcode128;
-import com.lowagie.text.pdf.BarcodePDF417;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfStamper;
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.*;
 
 /**
  * Librería para manejo de PDFs con iText
@@ -357,4 +352,6 @@ public class PdfUtil {
 			pdfs.getUnderContent(i).addImage(imagen);
 		}
 	}
+
+
 }

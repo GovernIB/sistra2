@@ -758,49 +758,69 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		}
 	}
 
+
 	@Override
-	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma) {
-		List<String> resultado = null;
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+	public List<String> listarTiposErrorAuditoria(boolean eventoPlataforma, Object filtro) {
+	    // Preparamos parámetros
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("eventoPlataforma", eventoPlataforma);
 
-		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+	    // Añadimos todos los campos del filtro
+	    mapearFiltroAParams(filtro, params);
 
-		Map<String, Object> params = new HashMap<>();
-		params.put("eventoPlataforma", eventoPlataforma);
-
-		final HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
-
-		try {
-			String url = getUrl() + "/auditoria/listarTiposError";
-			String[] response = restTemplate.postForObject(url, request, String[].class);
-
-			if (response != null) {
-				resultado = Arrays.asList(response);
-			}
-		} catch (Exception e) {
-			// Manejo de errores
-		}
-
-		return resultado;
+	    return obtenerListadoGenerico("/auditoria/listarTiposError", params);
 	}
 
 	@Override
-    public List<String> listarMetodosFirma(String tipoEvento) {
-		Map<String, Object> body = new HashMap<>();
-		body.put("tipoEvento", tipoEvento);
+	public List<String> listarMetodosFirma(String tipoEvento, Object filtro) {
+	    // Preparamos parámetros
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("tipoEvento", tipoEvento);
 
-        return obtenerListadoGenerico("/auditoria/listarMetodosFirma", body);
-    }
+	    // Añadimos todos los campos del filtro
+	    mapearFiltroAParams(filtro, params);
 
-    @Override
-    public List<String> listarMetodosPago(String tipoEvento) {
-    	Map<String, Object> body = new HashMap<>();
-    	body.put("tipoEvento", tipoEvento);
+	    return obtenerListadoGenerico("/auditoria/listarMetodosFirma", params);
+	}
 
-        return obtenerListadoGenerico("/auditoria/listarMetodosPago", body);
-    }
+	@Override
+	public List<String> listarMetodosPago(String tipoEvento, Object filtro) {
+	    // Preparamos parámetros
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("tipoEvento", tipoEvento);
+
+	    // Añadimos todos los campos del filtro
+	    mapearFiltroAParams(filtro, params);
+
+	    return obtenerListadoGenerico("/auditoria/listarMetodosPago", params);
+	}
+
+	/**
+	 * Método privado para centralizar el mapeo de todos los campos de búsqueda
+	 * que aparecen en la imagen de Auditoría de Trámites.
+	 */
+	private void mapearFiltroAParams(Object filtro, Map<String, Object> params) {
+	    if (filtro instanceof FiltroAuditoriaTramitacion) {
+	        FiltroAuditoriaTramitacion f = (FiltroAuditoriaTramitacion) filtro;
+
+	        // Mapeo de campos de texto (Id. Sesión, NIF, Nombre, etc.)
+	        params.put("f_sesion", f.getIdSesionTramitacion());
+	        params.put("f_nif", f.getNif());
+	        params.put("f_nombre", f.getNombre());
+	        params.put("f_idTra", f.getIdTramite());
+	        params.put("f_ver", f.getVersionTramite());
+	        params.put("f_areas", f.getListaAreas());
+
+	        // Mapeo de campos específicos
+	        params.put("f_proc", f.getIdProcedimientoCP()); // Cod. Trámite Catálogo
+	        params.put("f_sia", f.getCodSia());             // Cod. SIA
+
+	        // Mapeo de fechas
+	        params.put("f_fDesde", f.getFechaDesde() != null ? f.getFechaDesde().getTime() : null);
+	        params.put("f_fHasta", f.getFechaHasta() != null ? f.getFechaHasta().getTime() : null);
+	    }
+	}
+
 
     /**
      * Método auxiliar que acepta parámetros en el body

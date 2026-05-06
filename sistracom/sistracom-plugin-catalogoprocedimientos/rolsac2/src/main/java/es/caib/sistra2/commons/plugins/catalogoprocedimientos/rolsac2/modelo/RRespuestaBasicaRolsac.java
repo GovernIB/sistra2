@@ -14,23 +14,23 @@ public class RRespuestaBasicaRolsac {
     /** Mensaje de error. **/
     private String mensaje;
 
-    /** Numero de Elementos. **/
-    private Long numeroElementos;
+    /** totalCount. **/
+    private Long totalCount;
 
     /** Constructor. **/
     public RRespuestaBasicaRolsac(final String status, final String mensaje,
-            final Long numeroElementos) {
+            final Long totalCount) {
         super();
         this.status = status;
         this.mensaje = mensaje;
-        this.numeroElementos = numeroElementos;
+        this.totalCount = totalCount;
     }
 
     /** Constructor. **/
     public RRespuestaBasicaRolsac() {
         this.status = null;
         this.mensaje = null;
-        this.numeroElementos = null;
+        this.totalCount = null;
     };
 
     /**
@@ -64,18 +64,18 @@ public class RRespuestaBasicaRolsac {
     }
 
     /**
-     * @return the numeroElementos
+     * @return the totalCount
      */
-    public Long getNumeroElementos() {
-        return numeroElementos;
+    public Long getTotalCount() {
+        return totalCount;
     }
 
     /**
-     * @param numeroElementos
-     *            the numeroElementos to set
+     * @param totalCount
+     *            the totalCount to set
      */
-    public void setNumeroElementos(final Long numeroElementos) {
-        this.numeroElementos = numeroElementos;
+    public void setTotalCount(final Long totalCount) {
+        this.totalCount = totalCount;
     }
 
 }

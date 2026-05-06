@@ -9,22 +9,22 @@ package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo;
 
 public class RRespuestaProcedimientoDocumento extends RRespuestaBasicaRolsac {
 	/** Resultado. **/
-	private RProcedimientoDocumento[] resultado;
+	private RProcedimientoDocumento[] items;
 
-	public RRespuestaProcedimientoDocumento(String status, String mensaje, Long numeroElementos, RProcedimientoDocumento[] resultado) {
-		super(status, mensaje, numeroElementos);
-		this.resultado = resultado;
+	public RRespuestaProcedimientoDocumento(String status, String mensaje, Long totalCount, RProcedimientoDocumento[] items) {
+		super(status, mensaje, totalCount);
+		this.items = items;
 	}
 
 	public RRespuestaProcedimientoDocumento() {
 		super();
 	}
 
-	public RProcedimientoDocumento[] getResultado() {
-		return resultado;
+	public RProcedimientoDocumento[] getItems() {
+		return items;
 	}
 
-	public void setResultado(RProcedimientoDocumento[] resultado) {
-		this.resultado = resultado;
+	public void setItems(RProcedimientoDocumento[] items) {
+		this.items = items;
 	}
 }

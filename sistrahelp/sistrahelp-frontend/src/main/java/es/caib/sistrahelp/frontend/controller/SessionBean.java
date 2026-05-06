@@ -171,15 +171,14 @@ public class SessionBean {
 			obtenerUmbrales(propiedades);
 		}
 
-		// asignamos idioma por defecto si lo tiene
 		if (sesion != null && StringUtils.isNotEmpty(lang)
-				&& ("es".equals(lang) || "ca".equals(lang))) {
-			FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(lang));
+		        && ("es".equals(lang) || "ca".equals(lang))) {
+		    FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(lang));
+		} else {
+		    lang = "ca";
+		    FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(lang));
 		}
 
-		if(lang == null) {
-			lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
-		}
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
 		// AREAS

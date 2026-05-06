@@ -111,8 +111,7 @@ public class ConfiguracionEntidadAdapter {
 				.setInstruccionesSubsanacion(AdapterUtils.generarLiteral(entidad.getInstruccionesSubsanacion()));
 		rConfiguracionEntidad.setOficinaRegistroCentralizado(entidad.getOficinaRegistroCentralizado());
 		rConfiguracionEntidad.setRegistroCentralizado(entidad.isRegistroCentralizado());
-
-
+		rConfiguracionEntidad.setPermitirOtrasExtensionesFirmaCertificado(entidad.isPermitirExtensionesSustancial());
 
 		if (plantillas != null && !plantillas.isEmpty()) {
 			final List<RPlantillaIdioma> plantillasDefecto = new ArrayList<>();

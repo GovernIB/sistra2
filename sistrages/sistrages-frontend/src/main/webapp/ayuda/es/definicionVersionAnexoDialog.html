@@ -31,11 +31,11 @@
 		<li><span class="nombreCampo">Presentación electrónica:</span> configuraciones y restricciones relativas a la aportación electrónica del documento por parte del ciudadano:</li>
 		<ul class="detalle">
 		<li><span class="boton">Num. instancias:</span> indica, en formato numérico entero, el número de ficheros que pueden ir adjunto en un mismo anexo. Si el anexo requiere firma no se podrá indicar un número superior a 1 instancia.</li>
-		<li><span class="boton">Extensiones:</span> indica las extensiones de ficheros que se permitirán adjuntar para el documento anexo. Si se marca “Todas” se permitirá cualquier extensión, y en caso de marcar “Personalizadas” se deberán consignar en el campo de texto las extensiones deseadas, separadas por punto y coma (;). Si la versión del trámite se ha configurado con nivel de seguridad Bajo o Sustancial, no se podrá cambiar la configuración y quedará fijada a Personalizada, con extensión PDF. Si se ha configurado la entidad para permitir otras extensiones distintas a PDF para firmar, se podrá indicar cualquier extensión, aunque se haya marcado el check de Requiere firma.</li>
+		<li><span class="boton">Extensiones:</span> indica las extensiones de ficheros que se permitirán adjuntar para el documento anexo. Si se marca “Todas” se permitirá cualquier extensión, y en caso de marcar “Personalizadas” se deberán consignar en el campo de texto las extensiones deseadas, separadas por punto y coma (;).</li>
 		<li><span class="boton">Tam. máximo:</span> indica, en formato numérico entero, el tamaño máximo de los ficheros que se permitirán adjuntar. Además, dicho tamaño se puede expresar en kilobytes (KB) o megabytes (MB), marcando la opción correspondiente.</li>
-		<li><span class="boton">Requiere firma:</span> solo podrá activarse si el número de instancias es 1 e indica si el fichero aportado ha de ir firmado o, en su defecto, si se deberá firmar en el asistente. Si el anexo viene firmado (restringido a PDF), se verificarán los firmantes o no, según esté marcado o no el nuevo check “Validar firmantes”. Si el anexo no viene firmado, se pedirá la firma en el asistente y SISTRA2 solo validará el NIF si se ha marcado el check "Validar firmates", tras conectar con PortaFIB mediante el plug-in de validación de firma en servidor para obtener el NIF firmante. En caso de que no se active “Requiere firma”, no se pedirá firma en el asistente, se desactivará el botón del script “Establecer firmantes” y se podrá anexar el archivo con o sin firma, sin realizarse ningún control, salvo el del tamaño y extensión. Además, si la versión del trámite está configurada con normativa específica y no autenticado, el check no podrá marcarse.</li>
-		<li><span class="boton">Validar firmantes:</span> solo se activa si se activa el check "Requiere firma" y el nivel de seguridad del trámite es "Sustancial (firma con certificado)" o "alto" e indica si se validarán o no los firmantes del fichero anexado, de forma que si no se activa, el fichero anexado puede ir firmado por cualquier firmante, sin necesidad de informar su NIF previamente. Si está marcado, se avisará si los firmantes no coinciden con los informados por script o el autenticado. Además, el check no se podrá modificar, de forma que si la versión del trámite está configurada con un nivel de seguridad Bajo o Sustancial, el check no podrá marcarse y si el nivel de seguridad es Sustancial (firma con certificado) o Alto, no se podrá desmarcar.</li>
-		<li><span class="boton">Establecer firmantes:</span> script que permite, en caso de requerirse firma electrónica del anexo y validar firmantes, establecer el firmante o firmantes requeridos. Para tramitaciones autenticadas, si no se consignan firmantes, se solicitará la firma del usuario autenticado. Para tramitaciones no autenticadas será obligatorio consignar por lo menos un firmante en el script.</li>
+		<li><span class="boton">Requiere firma:</span> solo podrá activarse si el número de instancias es 1 e indica que el anexo deber ser firmado, bien mediante el asistente (a través del correspondiente plugin de firma cliente) o anexado ya firmado. En caso de que no se active “Requiere firma”, no se pedirá firma en el asistente, y se podrá anexar el archivo con o sin firma, sin realizarse ningún control, salvo el del tamaño y extensión.</li>
+		<li><span class="boton">Validar firmantes:</span> valida que el anexo esté firmado por los firmantes establecidos, que por defecto será el usuario que inició el trámite.</li>
+		<li><span class="boton">Establecer firmantes:</span> script que establece los firmantes del anexo (si no se establece, será el usuario autenticado).</li>
 		<li><span class="boton">Script de validación:</span> script que permite llevar a cabo validaciones tras la aportación del documento por parte del ciudadano. Este script se ejecuta al anexar el documento.</li>
 		</ul>
 	</ul>
@@ -45,6 +45,25 @@
 	<ul>
 		<li><span class="boton">Guardar</span>: cierra la pantalla guardando los cambios.</li>
 		<li><span class="boton">Cancelar</span>: cierra la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+<h2 class="stgH2">RESTRICCIONES</h2>
+<p>
+	En relación a la configuración de extensiones y firma, deben tenerse en cuenta las siguientes restricciones.<br>
+</p>
+<p>
+	<ul>
+		<li>Para poder firmar anexos, el trámite no puede ser anónimo.</li>
+		<li>La validación de firmantes se configura de forma automática según nivel de seguridad:</li>
+		<ul>
+			<li>Nivel alto / sustancial con certificado: se queda habilitada la validación de firmantes</li>
+			<li>Nivel bajo / sustancial: se queda deshabilitada la validación de firmantes</li>
+		</ul>
+		<li>También se Verifica la configuración de extensiones según nivel de seguridad:</li>
+		<ul>
+			<li>Nivel alto / sustancial con certificado: Se permite anexar sólo PDF (u otras extensiones según configuración de entidad.</li>
+			<li>Nivel bajo / sustancial: Solo se permite PDF.
+		</ul>
 	</ul>
 </p>
 </body>

@@ -115,7 +115,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 			detallesError.addPropiedad("valorCampo", valorCampoError.print());
 			errorMsg = literales.getLiteral(Literales.GESTOR_FORMULARIOS_INTERNO, "validacion.servidor.incorrecta",
 					new String[] { idCampoError }, pDatosSesion.getDatosInicioSesion().getIdioma());
-			throw new ErrorConfiguracionException(errorMsg);
+			throw new ErrorConfiguracionException(errorMsg, detallesError);
 		}
 
 	}

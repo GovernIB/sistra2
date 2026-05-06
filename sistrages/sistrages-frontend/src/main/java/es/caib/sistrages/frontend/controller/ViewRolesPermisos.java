@@ -148,6 +148,8 @@ public class ViewRolesPermisos extends ViewControllerBase {
 				message = UtilJSF.getLiteral("info.modificado.ok");
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			UtilJSF.getSessionBean().refrescarPermisosSesion();
 			// Refrescamos datos
 			buscar();
 		}

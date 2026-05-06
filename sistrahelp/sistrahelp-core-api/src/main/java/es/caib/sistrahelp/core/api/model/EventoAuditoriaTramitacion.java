@@ -78,6 +78,8 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 
 	private FuncionarioHabilitado funcionarioHabilitado;
 
+	private String localizador;
+
 	/**
 	 * Obtiene el valor de tipoEvento.
 	 *
@@ -401,5 +403,33 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 
 	public void setFuncionarioHabilitado(FuncionarioHabilitado funcionarioHabilitado) {
 		this.funcionarioHabilitado = funcionarioHabilitado;
+	}
+
+	/**
+	 * Obtiene el localizador. Si no está asignado explícitamente,
+	 * lo busca automáticamente en sus propiedades dinámicas (PAGLOC).
+	 * @return el localizador o null
+	 */
+	public String getLocalizador() {
+		// Si ya lo tenemos guardado, lo devolvemos
+		if (this.localizador != null) {
+			return this.localizador;
+		}
+
+		// Si no, y tenemos propiedades, buscamos PAGLOC
+		if (this.propiedadesEvento != null && this.propiedadesEvento.getAsArrayList() != null) {
+			for (java.util.Map.Entry<String, String> propiedad : this.propiedadesEvento.getAsArrayList()) {
+				if ("PAGLOC".equals(propiedad.getKey())) {
+					this.localizador = propiedad.getValue();
+					return this.localizador;
+				}
+			}
+		}
+
+		return null; // Si no hay propiedades o no es un pago, devuelve null
+	}
+
+	public void setLocalizador(String localizador) {
+		this.localizador = localizador;
 	}
 }

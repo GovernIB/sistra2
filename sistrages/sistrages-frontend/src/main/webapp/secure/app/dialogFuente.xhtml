@@ -166,7 +166,7 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w30, w65" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid styleClass="h100" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18 w20, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w75, wpx25" columns="3" cellpadding="5" cellspacing="0" style="width:100%;">
 
 			  	<p:outputLabel for="codigo" value="#{msg['dialogFuente.headerCodigo']}" />
 			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" readonly="#{dialogFuente.isConsulta()}" style="width:98%;" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -208,7 +208,8 @@
 							</p:column>
 
 				</p:dataTable>
-				<p:column  rendered="#{!dialogFuente.consulta}">
+				<p:column id="botones" style="vertical-align: top; padding-top: 10px;">
+					<p:outputPanel rendered="#{!dialogFuente.consulta}">
 						     	<p>
 						    		<p:commandButton id="btnNuevaPropiedad" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogFuente.nuevaFuenteDatosCampo()}" process="@this" update="growlDialog" rendered="#{dialogFuente.permiteEdicion}">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuente.returnDialogo}" update="growlDialog dataTableParametros"/>
@@ -230,6 +231,7 @@
 						    	<p>
 						    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}"  actionListener="#{dialogFuente.bajarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" rendered="#{dialogFuente.permiteEdicion}" />
 						    	</p>
+				 	</p:outputPanel>
 				 </p:column>
 
 			 </h:panelGrid>

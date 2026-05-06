@@ -1,36 +1,26 @@
 package es.caib.sistramit.core.service.component.system;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.UserAgentUtil;
+import es.caib.sistramit.core.api.exception.AnexarFirmadoFirmaIncorrectaException;
 import es.caib.sistramit.core.api.exception.ServiceException;
+import es.caib.sistramit.core.api.exception.SesionFirmaClienteConnectException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.DatosSesionPago;
-import es.caib.sistramit.core.api.model.flujo.FirmaVerificacion;
-import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
-import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
-import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
+import es.caib.sistramit.core.api.model.flujo.*;
+import es.caib.sistramit.core.api.model.flujo.types.*;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypeParametroEvento;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Permite establecer logica personalizada para auditar eventos en la invocacion
@@ -54,9 +44,13 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 
 	@Override
 	public List<EventoAuditoria> interceptaExcepcion(final String idSesionTramitacion, final String pMetodo,
-			final Object[] pArgumentos, final ServiceException pExcepcion) {
-		// No se requiere
-		return new ArrayList<>();
+													 final Object[] pArgumentos, final ServiceException pExcepcion,
+													 boolean debugEnabled) {
+		List<EventoAuditoria> eventosFlujoTramitacion = null;
+		// Auditamos invocaciones si debug esta habilitado
+		eventosFlujoTramitacion = eventoFlujoTramitacionExcepcion(idSesionTramitacion, pMetodo, pArgumentos, pExcepcion,
+				debugEnabled);
+		return eventosFlujoTramitacion;
 	}
 
 	@Override
@@ -224,6 +218,44 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 
 		return eventosFlujo;
 	}
+
+
+	/**
+	 * Intercepta excepciones producidas en el flujo de tramitacion.
+	 * @param idSesionTramitacion Id sesion tramitación
+	 * @param pMetodo Metodo
+	 * @param pArgumentos Argumentos
+	 * @param pExcepcion Excepcion generada
+	 * @param debugEnabled Si debug habilitado
+	 * @return Eventos generados
+	 */
+	private List<EventoAuditoria> eventoFlujoTramitacionExcepcion(String idSesionTramitacion, String pMetodo, Object[] pArgumentos, ServiceException pExcepcion, boolean debugEnabled) {
+
+		final List<EventoAuditoria> eventosFlujo = new ArrayList<>();
+
+		/*
+			-----  QUITAMOS EVENTOS ESPECIFICOS Y DEJAMOS SOLO ERROR -----
+
+		// Evento de problema de conexion a firma cliente
+		if (pExcepcion instanceof SesionFirmaClienteConnectException) {
+			EventoAuditoria e = crearEvento(TypeEvento.FIRMA_ERROR_CONEXION, idSesionTramitacion);
+			e.setDescripcion(pExcepcion.getMessage());
+			eventosFlujo.add(e);
+		}
+
+		// Evento de verificación erronea de firmante para anexo firmado
+		if (pExcepcion instanceof AnexarFirmadoFirmaIncorrectaException) {
+			EventoAuditoria e = crearEvento(TypeEvento.FIRMA_ANEXOFIRMADO_KO, idSesionTramitacion);
+			e.setDescripcion(pExcepcion.getMessage());
+			eventosFlujo.add(e);
+		}
+
+		 */
+
+		return eventosFlujo;
+
+	}
+
 
 	/**
 	 * Añade propiedades autenticación.

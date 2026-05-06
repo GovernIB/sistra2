@@ -221,6 +221,9 @@
 				 		<p:outputLabel for="resultado" value="#{msg['dialogAuditoriaTramites.resultado']}:" />
 						<p:inputText id="resultado" value="#{dialogAuditoriaTramites.dato.resultado}" readonly="true" styleClass="w90" />
 
+						<p:outputLabel for="localizador" value="#{msg['dialogAuditoriaTramites.localizador']}:" rendered="#{not empty dialogAuditoriaTramites.dato.localizador}" />
+						<p:inputText id="localizador" value="#{dialogAuditoriaTramites.dato.localizador}" readonly="true" styleClass="w90" rendered="#{not empty dialogAuditoriaTramites.dato.localizador}" />
+
 						<p:outputLabel for="btnSTG" value=""/>
 						<p:commandButton id="btnSTG"
 									 	value="#{msg['botones.stg']}" icon="fa fa-send"

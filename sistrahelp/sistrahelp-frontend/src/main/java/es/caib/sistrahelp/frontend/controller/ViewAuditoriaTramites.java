@@ -148,116 +148,117 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		esDialogParams = esDialogParams == null ? false : esDialogParams;
 		esDialogHA = esDialogHA != null && esDialogHA;
 
-		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false);
+		if (this.filtros == null) {
 
-		// cargamos los eventos quitando el de purga
-		tiposEventos = eventoService.getTiposEvento(entidad);
-		tiposEventos.removeAll(Arrays.asList(TypeEvento.PROCESO_PURGA, TypeEvento.INV_EJE, TypeEvento.INV_REQ));
+	        filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false);
 
-		filtros.setTiposEventos(new ArrayList<>(tiposEventos));
+	        // cargamos los eventos quitando el de purga
+	        tiposEventos = eventoService.getTiposEvento(entidad);
+	        tiposEventos.removeAll(Arrays.asList(TypeEvento.PROCESO_PURGA, TypeEvento.INV_EJE, TypeEvento.INV_REQ));
+
+	        filtros.setTiposEventos(new ArrayList<>(tiposEventos));
 
 
-		if (idSesionParam != null && !idSesionParam.isEmpty()) {
-			filtros.setIdSesionTramitacion(idSesionParam);
-			filtros.setFechaDesde(null);
-			filtros.setSortField("fecha");
-			filtros.setSortOrder("ASCENDING");
-		}
+	        if (idSesionParam != null && !idSesionParam.isEmpty()) {
+	            filtros.setIdSesionTramitacion(idSesionParam);
+	            filtros.setFechaDesde(null);
+	            filtros.setSortField("fecha");
+	            filtros.setSortOrder("ASCENDING");
+	        }
 
-		if (nifParam != null && !nifParam.isEmpty()) {
-			filtros.setNif(nifParam);
-			filtros.setFechaDesde(null);
-			filtros.setSortField("fecha");
-			filtros.setSortOrder("ASCENDING");
-		}
+	        if (nifParam != null && !nifParam.isEmpty()) {
+	            filtros.setNif(nifParam);
+	            filtros.setFechaDesde(null);
+	            filtros.setSortField("fecha");
+	            filtros.setSortOrder("ASCENDING");
+	        }
 
-		if (idTramiteECM != null && !idTramiteECM.isEmpty() && versionTramiteECM != null
-				&& !versionTramiteECM.isEmpty()) {
-			filtros.setIdTramite(idTramiteECM);
-			filtros.setVersionTramite(Integer.parseInt(versionTramiteECM));
-			filtros.setEvento(TypeEvento.ERROR);
+	        if (idTramiteECM != null && !idTramiteECM.isEmpty() && versionTramiteECM != null
+	                && !versionTramiteECM.isEmpty()) {
+	            filtros.setIdTramite(idTramiteECM);
+	            filtros.setVersionTramite(Integer.parseInt(versionTramiteECM));
+	            filtros.setEvento(TypeEvento.ERROR);
 
-			if (horaDesdeECM != null && !horaDesdeECM.isEmpty()) {
-				try {
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-					Date fecha = dateFormat.parse(horaDesdeECM);
-					filtros.setFechaDesde(fecha);
-				} catch (java.text.ParseException e) {
+	            if (horaDesdeECM != null && !horaDesdeECM.isEmpty()) {
+	                try {
+	                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	                    Date fecha = dateFormat.parse(horaDesdeECM);
+	                    filtros.setFechaDesde(fecha);
+	                } catch (java.text.ParseException e) {
 
-				}
-			} else {
+	                }
+	            } else {
 
-				if (fechaDesdeECM != null && !fechaDesdeECM.isEmpty()) {
-					try {
-						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-						Date fecha = dateFormat.parse(fechaDesdeECM);
-						filtros.setFechaDesde(fecha);
-					} catch (java.text.ParseException e) {
+	                if (fechaDesdeECM != null && !fechaDesdeECM.isEmpty()) {
+	                    try {
+	                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	                        Date fecha = dateFormat.parse(fechaDesdeECM);
+	                        filtros.setFechaDesde(fecha);
+	                    } catch (java.text.ParseException e) {
 
-					}
-				}
+	                    }
+	                }
 
-				if (fechaHastaECM != null && !fechaHastaECM.isEmpty()) {
-					try {
-						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-						Date fecha = dateFormat.parse(fechaHastaECM);
-						filtros.setFechaHasta(fecha);
-					} catch (java.text.ParseException e) {
+	                if (fechaHastaECM != null && !fechaHastaECM.isEmpty()) {
+	                    try {
+	                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	                        Date fecha = dateFormat.parse(fechaHastaECM);
+	                        filtros.setFechaHasta(fecha);
+	                    } catch (java.text.ParseException e) {
 
-					}
-				}
-			}
-		}
-		if (esDialog || esDialogParams) {
-			layout = "../layout/dialogViewLayout.xhtml";
-			if (esDialog) {
-				setLiteralTituloPantalla(idTramiteECM + " / " + versionTramiteECM + " - " + excepcionECM);
-			} else if (idSesionParam != null) {
-				setLiteralTituloPantalla(idSesionParam);
-			} else if (nifParam != null) {
-				setLiteralTituloPantalla(nifParam);
-			}
-			filtros.setExcepcion(excepcionECM);
-		} else if (esDialogHA) {
-            layout = "../layout/dialogViewLayout.xhtml";
-            setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-            if (fechaDesdeHA != null && !fechaDesdeHA.isEmpty()) {
-                try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                    Date fecha = dateFormat.parse(fechaDesdeHA);
-                    filtros.setFechaDesde(fecha);
-                } catch (java.text.ParseException e) {
+	                    }
+	                }
+	            }
+	        }
+	    }
 
-                }
-            }
+	    if (esDialog || esDialogParams) {
+	        layout = "../layout/dialogViewLayout.xhtml";
+	        if (esDialog) {
+	            setLiteralTituloPantalla(idTramiteECM + " / " + versionTramiteECM + " - " + excepcionECM);
+	        } else if (idSesionParam != null) {
+	            setLiteralTituloPantalla(idSesionParam);
+	        } else if (nifParam != null) {
+	            setLiteralTituloPantalla(nifParam);
+	        }
+	        filtros.setExcepcion(excepcionECM);
+	    } else if (esDialogHA) {
+	        layout = "../layout/dialogViewLayout.xhtml";
+	        setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-            if (fechaHastaHA != null && !fechaHastaHA.isEmpty()) {
-                try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                    Date fecha = dateFormat.parse(fechaHastaHA);
-                    filtros.setFechaHasta(fecha);
-                } catch (java.text.ParseException e) {
+	        // Solo reasignamos si acabamos de crear los filtros
+	        if (fechaDesdeHA != null && !fechaDesdeHA.isEmpty()) {
+	            try {
+	                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	                Date fecha = dateFormat.parse(fechaDesdeHA);
+	                filtros.setFechaDesde(fecha);
+	            } catch (java.text.ParseException e) { }
+	        }
 
-                }
-            }
+	        if (fechaHastaHA != null && !fechaHastaHA.isEmpty()) {
+	            try {
+	                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	                Date fecha = dateFormat.parse(fechaHastaHA);
+	                filtros.setFechaHasta(fecha);
+	            } catch (java.text.ParseException e) { }
+	        }
 
-            if (eventoHA != null && !eventoHA.isEmpty()) {
-                try {
-                    TypeEvento evento = TypeEvento.valueOf(eventoHA);
-                    filtros.setEvento(evento);
-                } catch (IllegalArgumentException e) {
+	        if (eventoHA != null && !eventoHA.isEmpty()) {
+	            try {
+	                TypeEvento evento = TypeEvento.valueOf(eventoHA);
+	                filtros.setEvento(evento);
+	            } catch (IllegalArgumentException e) { }
+	        }
+	    } else {
+	        layout = "../layout/mainLayout.xhtml";
+	        setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+	    }
 
-                }
-            }
-        } else {
-			layout = "../layout/mainLayout.xhtml";
-			setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-		}
-		if(idSesionCorreoIncidencia != null && !idSesionCorreoIncidencia.isEmpty()) {
-			filtros.setIdSesionTramitacion(idSesionCorreoIncidencia);
-			filtros.setSortField("fecha");
-			filtros.setSortOrder("DESCENDING");
-		}
+	    if(idSesionCorreoIncidencia != null && !idSesionCorreoIncidencia.isEmpty()) {
+	        filtros.setIdSesionTramitacion(idSesionCorreoIncidencia);
+	        filtros.setSortField("fecha");
+	        filtros.setSortOrder("DESCENDING");
+	    }
 	}
 
 	/**
@@ -415,48 +416,64 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * Abre dialogo errores
 	 */
 	public void abrirDialogErrores() {
-        Map<String, String> params = new HashMap<>();
+		Map<String, String> params = new HashMap<>();
 
-        TypeEvento evento = this.filtros.getEvento();
+		if (this.filtros.getIdSesionTramitacion() != null) params.put("fSesion", this.filtros.getIdSesionTramitacion());
+	    if (this.filtros.getNif() != null) params.put("fNif", this.filtros.getNif());
+	    if (this.filtros.getNombre() != null) params.put("fNombre", this.filtros.getNombre());
+	    if (this.filtros.getIdTramite() != null) params.put("fIdTra", this.filtros.getIdTramite());
+	    if (this.filtros.getVersionTramite() != null) params.put("fVer", String.valueOf(this.filtros.getVersionTramite()));
+	    if (this.filtros.getCodSia() != null) params.put("fSia", this.filtros.getCodSia());
+	    if (this.filtros.getIdProcedimientoCP() != null) params.put("fProc", this.filtros.getIdProcedimientoCP());
+	    if (this.filtroArea != null && !this.filtroArea.isEmpty()) {
+	        params.put("fArea", this.filtroArea);
+	    }
+	    if (this.filtros.getFechaDesde() != null) {
+	    	params.put("fDesde", String.valueOf(this.filtros.getFechaDesde().getTime()));
+	    }
+	    if (this.filtros.getFechaHasta() != null) {
+	    	params.put("fHasta", String.valueOf(this.filtros.getFechaHasta().getTime()));
+	    }
 
-        params.put("tipoEvento", evento != null ? evento.name() : "");
+	    TypeEvento evento = this.filtros.getEvento();
+	    params.put("tipoEvento", evento != null ? evento.name() : "");
 
-        if (TypeEvento.ERROR.equals(evento)) {
-        	params.put("eventoPlataforma", Boolean.FALSE.toString());
-        	params.put("checkTipoError", String.valueOf(checkTipoErrorDE));
-        	params.put("checkTextoTraza", String.valueOf(checkTextoTrazaDE));
-        	if (erroresSeleccionadosDE != null) {
-        		params.put("erroresSeleccionadosInit", erroresSeleccionadosDE);
-        	}
-        	if (filtroTextoTrazaDE != null) {
-        		params.put("filtroTextoTraza", filtroTextoTrazaDE);
-        	}
-        	if (filtroTablaErroresDE != null) {
-        		params.put("filtroTablaErrores", filtroTablaErroresDE);
-        	}
-        }
-        else if (TypeEvento.FIRMA_FIN_OK.equals(evento) || TypeEvento.FIRMA_FIN_KO.equals(evento)) {
-        	if (evento.equals(eventoFirmaGuardado)) {
-        		if (firmasSeleccionadasDE != null) {
-        			params.put("erroresSeleccionadosInit",  firmasSeleccionadasDE);
-        		}
-        		if (filtroTablaFirmaDE != null) {
-        			params.put("filtroTablaErrores", filtroTablaFirmaDE);
-        		}
-        	}
-        }
-        else if (TypeEvento.PAGO_ELECTRONICO_VERIFICADO.equals(evento) || TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO.equals(evento) || TypeEvento.PAGO_CANCELADO.equals(evento)) {
-        	if (evento.equals(eventoPagoGuardado)) {
-        		if (pagosSeleccionadosDE != null) {
-        			params.put("erroresSeleccionadosInit", pagosSeleccionadosDE);
-        		}
-        		if (filtroTablaPagoDE != null) {
-        			params.put("filtroTablaErrores", filtroTablaPagoDE);
-        		}
-        	}
-        }
+	    if (TypeEvento.ERROR.equals(evento)) {
+	        params.put("eventoPlataforma", Boolean.FALSE.toString());
+	        params.put("checkTipoError", String.valueOf(checkTipoErrorDE));
+	        params.put("checkTextoTraza", String.valueOf(checkTextoTrazaDE));
+	        if (erroresSeleccionadosDE != null) {
+	            params.put("erroresSeleccionadosInit", erroresSeleccionadosDE);
+	        }
+	        if (filtroTextoTrazaDE != null) {
+	            params.put("filtroTextoTraza", filtroTextoTrazaDE);
+	        }
+	        if (filtroTablaErroresDE != null) {
+	            params.put("filtroTablaErrores", filtroTablaErroresDE);
+	        }
+	    }
+	    else if (TypeEvento.FIRMA_FIN_OK.equals(evento) || TypeEvento.FIRMA_FIN_KO.equals(evento)) {
+	        if (evento.equals(eventoFirmaGuardado)) {
+	            if (firmasSeleccionadasDE != null) {
+	                params.put("erroresSeleccionadosInit", firmasSeleccionadasDE);
+	            }
+	            if (filtroTablaFirmaDE != null) {
+	                params.put("filtroTablaErrores", filtroTablaFirmaDE);
+	            }
+	        }
+	    }
+	    else if (TypeEvento.PAGO_ELECTRONICO_VERIFICADO.equals(evento) || TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO.equals(evento) || TypeEvento.PAGO_CANCELADO.equals(evento)) {
+	        if (evento.equals(eventoPagoGuardado)) {
+	            if (pagosSeleccionadosDE != null) {
+	                params.put("erroresSeleccionadosInit", pagosSeleccionadosDE);
+	            }
+	            if (filtroTablaPagoDE != null) {
+	                params.put("filtroTablaErrores", filtroTablaPagoDE);
+	            }
+	        }
+	    }
 
-		UtilJSF.openDialog(DialogFiltroErrores.class, TypeModoAcceso.CONSULTA, params.isEmpty() ? null : params, true, 650, 662);
+	    UtilJSF.openDialog(DialogFiltroErrores.class, TypeModoAcceso.CONSULTA, params.isEmpty() ? null : params, true, 650, 662);
 	}
 
     public void onDialogErroresReturn(final SelectEvent event) {
@@ -542,6 +559,62 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
         }
 		PrimeFaces.current().executeScript("document.getElementById('form:btnBuscar').click()");
+    }
+
+    /**
+     * Determina si el evento es uno de los tipos de PAGO permitidos para mostrar detalle.
+     */
+    public boolean esEventoPagoDetalle(TypeEvento evento) {
+        return evento == TypeEvento.PAGO_ELECTRONICO_VERIFICADO
+            || evento == TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO
+            || evento == TypeEvento.PAGO_CANCELADO;
+    }
+
+    /**
+     * Determina si el evento es uno de los tipos de FIRMA permitidos para mostrar detalle.
+     */
+    public boolean esEventoFirmaDetalle(TypeEvento evento) {
+        return evento == TypeEvento.FIRMA_FIN_OK
+            || evento == TypeEvento.FIRMA_FIN_KO;
+    }
+
+    /**
+     * Traduce siglas de pago y normaliza firmas para la tabla de resultados.
+     * Sigue la misma lógica que dialogFiltroErrores.
+     */
+    public String obtenerEtiquetaPropiedad(String key, String valor) {
+        if (valor == null || key == null) return "";
+
+        // Lógica para PAGO
+        if ("PAGMET".equals(key) || "METODO_PAGO".equals(key)) {
+            String msgKey = "";
+            switch (valor) {
+                case "TJ":  msgKey = "entidadPago.TJ.titulo"; break;
+                case "BZ":  msgKey = "entidadPago.BZ.titulo"; break;
+                case "EXT": msgKey = "entidadPago.EXT.titulo"; break;
+                case "BM":  msgKey = "entidadPago.BM.titulo"; break;
+                case "LC":  msgKey = "entidadPago.LC.titulo"; break;
+                case "BB":  msgKey = "entidadPago.BB.titulo"; break;
+                case "MKP": msgKey = "entidadPago.MKP.titulo"; break;
+                case "MKX": msgKey = "entidadPago.MKX.titulo"; break;
+                default: return valor; // Si no es una sigla conocida, muestra el valor original
+            }
+            try {
+                return UtilJSF.getLiteral(msgKey);
+            } catch (Exception e) {
+                return valor;
+            }
+        }
+
+        // Lógica para FIRMA
+        if ("FIRMETODO".equals(key) || "METODO_FIRMA".equals(key)) {
+            String v = valor.toUpperCase();
+            if (v.contains("AUTOFIRM")) return "Autofirm@";
+            if (v.contains("CLAVE") || v.contains("CL@VE")) return "Cl@veFirm@";
+            if (v.contains("AGIL") || v.contains("ÀGIL") || v.contains("ÁGIL")) return "Firma Àgil";
+        }
+
+        return valor;
     }
 
 	/**

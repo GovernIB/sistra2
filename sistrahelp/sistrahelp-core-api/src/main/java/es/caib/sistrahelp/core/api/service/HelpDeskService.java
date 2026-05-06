@@ -147,10 +147,10 @@ public interface HelpDeskService {
 	String urlLogoEntidad(String codDir3);
 	byte[] contenidoLogoEntidad(String codDir3);
 
-	List<String> obtenerListaErroresAuditoria(boolean eventoPlataforma);
+	List<String> obtenerListaErroresAuditoria(boolean eventoPlataforma, Object filtro);
 
-	List<String> obtenerListaMetodosFirma(String tipoEvento);
+	List<String> obtenerListaMetodosFirma(String tipoEvento, Object filtro);
 
-	List<String> obtenerListaMetodosPago(String tipoEvento);
+	List<String> obtenerListaMetodosPago(String tipoEvento, Object filtro);
 
 }

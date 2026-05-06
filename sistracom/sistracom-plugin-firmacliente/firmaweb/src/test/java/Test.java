@@ -1,13 +1,12 @@
-import java.util.Properties;
-
-import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
 import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
 import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
 import es.caib.sistra2.commons.plugins.firmacliente.firmaweb.ComponenteFirmaSimpleWebPlugin;
 
+import java.util.Properties;
+
 public class Test {
 
-    public static void main(String[] args) throws FirmaPluginException {
+    public static void main(String[] args) throws Exception {
 
         // String configJSON =
 

@@ -37,6 +37,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,6 +247,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		objetoFormularioEdit = objetoFormularioEditAnterior;
 		paginaActual = paginaActualAnterior;
 		detalleComponenteUrl = detalleComponenteUrlAnterior;
+	}
+
+	public boolean isEditLinea() {
+	    return objetoFormularioEdit != null && objetoFormularioEdit instanceof LineaComponentesFormulario;
 	}
 
 	/**
@@ -1351,6 +1356,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:botonera");
 		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:bh-herramientas");
 
+		if (idComponenteSeleccionado != null) {
+	        String script = String.format("refrescarIframe('%s');", idComponenteSeleccionado);
+	        PrimeFaces.current().executeScript(script);
+	    }
+
     }
 
 	public void onNodeSelect(final NodeSelectEvent event) {
@@ -1602,187 +1612,158 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 *              anterior.
 	 */
 	public void paste(final boolean check) {
+	    if (check && isModificadoSinGuardar(TypeAccionFormulario.PEGAR)) {
+	        return;
+	    }
 
-		if (check && isModificadoSinGuardar(TypeAccionFormulario.PEGAR)) {
-			return;
-		}
+	    if ((!copy && !cut) || objetoFormularioEdit == null) {
+	        addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.primerocopy"), true);
+	        return;
+	    }
 
-		if ((!copy && !cut) || objetoFormularioEdit == null) {
-			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.primerocopy"), true);
-			return;
-		}
+	    if (cut && objetoFormularioEdit.getCodigo().compareTo(idObjetoCopy) == 0) {
+	        addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.mismoelemento"), true);
+	        return;
+	    }
 
-		if (cut && objetoFormularioEdit.getCodigo().compareTo(idObjetoCopy) == 0) {
-			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.mismoelemento"), true);
-			return;
-		}
+	    ObjetoFormulario componenteRecienCreado = null;
 
-		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CAMPO_OCULTO
-				|| tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX || tipoObjetoCopy == TypeObjetoFormulario.SELECTOR
-				|| tipoObjetoCopy == TypeObjetoFormulario.CAPTCHA) {
+	    if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CAMPO_OCULTO
+	            || tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX || tipoObjetoCopy == TypeObjetoFormulario.SELECTOR
+	            || tipoObjetoCopy == TypeObjetoFormulario.CAPTCHA) {
 
-			/**
-			 * Si es de tipo texto, checkbox o selector, los pasos a seguir son:
-			 * <ul>
-			 * <li>Buscar la linea seleccionada.</li>
-			 * <li>La posición, si es de tipo linea el elemento seleccionado se pondrá al
-			 * final sino donde haya seleccionado.</li>
-			 * <li>Si se selecciona posterior/anterior, cambiará la posición
-			 * seleccionada.</li>
-			 * <li>Se comprueba si cabe</li>
-			 * <li>Si cabe, se realiza la acción</li>
-			 * </ul>
-			 */
-			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
-			final Long idPagina = pagina.getCodigo();
-			LineaComponentesFormulario linea = null;
-			Integer ordenSeleccionado = null;
-			Integer orden = null;
-			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
-				linea = (LineaComponentesFormulario) objetoFormularioEdit;
-			} else {
-				final ComponenteFormulario campo = (ComponenteFormulario) objetoFormularioEdit;
-				linea = pagina.getLineaComponente(campo.getCodigo());
-				ordenSeleccionado = campo.getOrden();
-			}
+	        final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+	        final Long idPagina = pagina.getCodigo();
+	        LineaComponentesFormulario linea = null;
+	        Integer ordenSeleccionado = null;
+	        Integer orden = null;
+	        if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+	            linea = (LineaComponentesFormulario) objetoFormularioEdit;
+	        } else {
+	            final ComponenteFormulario campo = (ComponenteFormulario) objetoFormularioEdit;
+	            linea = pagina.getLineaComponente(campo.getCodigo());
+	            ordenSeleccionado = campo.getOrden();
+	        }
 
-			if (!linea.cabenComponentes((ComponenteFormulario) objetoCopy, true)) {
-				//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
-				alertarSinEspacio("paste");
-				return;
-			}
+	        if (!linea.cabenComponentes((ComponenteFormulario) objetoCopy, true)) {
+	            alertarSinEspacio("paste");
+	            return;
+	        }
 
-			if (TypeObjetoFormulario.CAMPO_OCULTO.equals(tipoObjetoCopy)) {
-				orden = UtilDisenyo.ordenInsercionComponenteOculto(linea, ordenSeleccionado, posicionamiento);
-			} else {
-				orden = UtilDisenyo.ordenInsercionComponente(linea, ordenSeleccionado, posicionamiento);
-			}
-			if (orden == null) {
-				//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
-				alertarSinEspacio("paste");
-				return;
-			} else {
+	        if (TypeObjetoFormulario.CAMPO_OCULTO.equals(tipoObjetoCopy)) {
+	            orden = UtilDisenyo.ordenInsercionComponenteOculto(linea, ordenSeleccionado, posicionamiento);
+	        } else {
+	            orden = UtilDisenyo.ordenInsercionComponente(linea, ordenSeleccionado, posicionamiento);
+	        }
 
-				// ya está insertado el componente
-				final ObjetoFormulario componente = formIntService.copyCutComponenteFormulario(idPagina,
-						linea.getCodigo(), orden, posicionamiento, this.idObjetoCopy, cut);
+	        if (orden == null) {
+	            alertarSinEspacio("paste");
+	            return;
+	        } else {
+	            componenteRecienCreado = formIntService.copyCutComponenteFormulario(idPagina,
+	                    linea.getCodigo(), orden, posicionamiento, this.idObjetoCopy, cut);
 
-				// borramos el elemento original
-				if (cut) {
-					ComponenteFormulario objetoBorrar = null;
-					for (final ComponenteFormulario comp : formulario.getPaginas().get(idPaginaCopy - 1)
-							.getLinea(idLineaCopy).getComponentes()) {
-						if (comp.getCodigo().compareTo(idObjetoCopy) == 0) {
-							objetoBorrar = comp;
-							break;
-						}
-					}
+	            if (cut) {
+	                ComponenteFormulario objetoBorrar = null;
+	                for (final ComponenteFormulario comp : formulario.getPaginas().get(idPaginaCopy - 1)
+	                        .getLinea(idLineaCopy).getComponentes()) {
+	                    if (comp.getCodigo().compareTo(idObjetoCopy) == 0) {
+	                        objetoBorrar = comp;
+	                        break;
+	                    }
+	                }
+	                if (objetoBorrar != null) {
+	                    formulario.getPaginas().get(idPaginaCopy - 1).getLinea(idLineaCopy).getComponentes().remove(objetoBorrar);
+	                }
+	            }
 
-					if (objetoBorrar != null) {
-						formulario.getPaginas().get(idPaginaCopy - 1).getLinea(idLineaCopy).getComponentes()
-								.remove(objetoBorrar);
-					}
-				}
+	            pagina.getLineas().get(linea.getOrden() - 1).addComponente((ComponenteFormulario) componenteRecienCreado);
+	            seleccionaComponente(componenteRecienCreado);
+	        }
+	    } else if (tipoObjetoCopy == TypeObjetoFormulario.LINEA || tipoObjetoCopy == TypeObjetoFormulario.SECCION
+	            || tipoObjetoCopy == TypeObjetoFormulario.ETIQUETA) {
 
-				// actualizamos modelo
-				pagina.getLineas().get(linea.getOrden() - 1).addComponente((ComponenteFormulario) componente);
+	        final PaginaFormulario paginaCopy = formulario.getPaginas().get(idPaginaCopy - 1);
+	        final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+	        final Long idPagina = pagina.getCodigo();
+	        LineaComponentesFormulario lineaDestino = null;
+	        LineaComponentesFormulario lineaOriginal = null;
 
-				// lo seleccionamos
-				seleccionaComponente(componente);
-			}
-		} else if (tipoObjetoCopy == TypeObjetoFormulario.LINEA || tipoObjetoCopy == TypeObjetoFormulario.SECCION
-				|| tipoObjetoCopy == TypeObjetoFormulario.ETIQUETA) {
-			/**
-			 * Si es de tipo linea, secciono o etiqueta hay que tener en cuenta, que se
-			 * copia toda la linea, los pasos a seguir son:
-			 * <ul>
-			 * <li>Si es tipo etiqueta o sección, se selecciona la linea</li>
-			 * <li>Si la linea es vacía, no se copia.</li>
-			 * <li>Buscamos la posición de la linea donde va a ir (caber seguro que
-			 * cabe)</li>
-			 * <li>Realizamos la acción de copiado sobre la linea original.</li>
-			 * </ul>
-			 *
-			 **/
+	        if (objetoCopy instanceof LineaComponentesFormulario) {
+	            lineaOriginal = (LineaComponentesFormulario) objetoCopy;
+	        } else {
+	            final ComponenteFormulario campo = (ComponenteFormulario) objetoCopy;
+	            lineaOriginal = paginaCopy.getLineaComponente(campo.getCodigo());
+	        }
 
-			final PaginaFormulario paginaCopy = formulario.getPaginas().get(idPaginaCopy - 1);
+	        if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+	            lineaDestino = (LineaComponentesFormulario) objetoFormularioEdit;
+	        } else {
+	            final ComponenteFormulario campo = (ComponenteFormulario) objetoFormularioEdit;
+	            lineaDestino = pagina.getLineaComponente(campo.getCodigo());
+	        }
+	        final Integer orden = UtilDisenyo.ordenInsercionLinea(pagina, lineaDestino, posicionamiento);
 
-			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
-			final Long idPagina = pagina.getCodigo();
-			LineaComponentesFormulario lineaDestino = null;
-			LineaComponentesFormulario lineaOriginal = null;
+	        if (orden == null) {
+	            alertarSinEspacio("paste");
+	            return;
+	        } else {
+	            componenteRecienCreado = formIntService.copyCutLineaFormulario(idPagina,
+	                    lineaOriginal.getCodigo(), orden, posicionamiento, cut);
 
-			// Seleccionamos la linea original que vamos a copiar
-			if (objetoCopy instanceof LineaComponentesFormulario) {
-				lineaOriginal = (LineaComponentesFormulario) objetoCopy;
-			} else {
-				final ComponenteFormulario campo = (ComponenteFormulario) objetoCopy;
-				lineaOriginal = paginaCopy.getLineaComponente(campo.getCodigo());
-			}
+	            if (cut) {
+	                LineaComponentesFormulario objetoBorrar = null;
+	                for (final LineaComponentesFormulario comp : formulario.getPaginas().get(idPaginaCopy - 1).getLineas()) {
+	                    if (comp.getCodigo().compareTo(idLineaCopy) == 0) {
+	                        objetoBorrar = comp;
+	                        break;
+	                    }
+	                }
+	                if (objetoBorrar != null) {
+	                    formulario.getPaginas().get(idPaginaCopy - 1).getLineas().remove(objetoBorrar);
+	                }
+	            }
 
-			//
-			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
-				lineaDestino = (LineaComponentesFormulario) objetoFormularioEdit;
-			} else {
-				final ComponenteFormulario campo = (ComponenteFormulario) objetoFormularioEdit;
-				lineaDestino = pagina.getLineaComponente(campo.getCodigo());
-			}
-			final Integer orden = UtilDisenyo.ordenInsercionLinea(pagina, lineaDestino, posicionamiento);
+	            pagina.addLinea((LineaComponentesFormulario) componenteRecienCreado);
 
-			if (orden == null) {
-				//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
-				alertarSinEspacio("paste");
-				return;
-			} else {
+	            switch (tipoObjetoCopy) {
+	                case SECCION:
+	                case ETIQUETA:
+	                    seleccionaComponente(((LineaComponentesFormulario) componenteRecienCreado).getComponentes().get(0));
+	                    break;
+	                case LINEA:
+	                    seleccionaComponente(componenteRecienCreado);
+	                    break;
+	                default:
+	                    break;
+	            }
+	        }
+	    } else {
+	        addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.noimplementado"), true);
+	        return;
+	    }
 
-				final ObjetoFormulario componente = formIntService.copyCutLineaFormulario(idPagina,
-						lineaOriginal.getCodigo(), orden, posicionamiento, cut);
+	    idObjetoCopy = null;
+	    copy = false;
+	    cut = false;
 
-				if (cut) {
-					LineaComponentesFormulario objetoBorrar = null;
-					for (final LineaComponentesFormulario comp : formulario.getPaginas().get(idPaginaCopy - 1)
-							.getLineas()) {
-						if (comp.getCodigo().compareTo(idLineaCopy) == 0) {
-							objetoBorrar = comp;
-							break;
-						}
-					}
+	    if (componenteRecienCreado != null) {
+	        String idVisual = "";
 
-					if (objetoBorrar != null) {
-						formulario.getPaginas().get(idPaginaCopy - 1).getLineas().remove(objetoBorrar);
-					}
+	        if (componenteRecienCreado instanceof ComponenteFormulario) {
+	            idVisual = ((ComponenteFormulario) componenteRecienCreado).getIdComponente();
+	        } else if (componenteRecienCreado instanceof LineaComponentesFormulario) {
+	            LineaComponentesFormulario linea = (LineaComponentesFormulario) componenteRecienCreado;
+	            if (!linea.getComponentes().isEmpty()) {
+	                idVisual = linea.getComponentes().get(0).getIdComponente();
+	            }
+	        }
 
-				}
-
-				// actualizamos modelo (si habia saltos en el orden de linea puede que el orden
-				// inicial no sea el que toca)
-				pagina.addLinea((LineaComponentesFormulario) componente);
-
-				switch (tipoObjetoCopy) {
-				case SECCION:
-				case ETIQUETA:
-					seleccionaComponente(((LineaComponentesFormulario) componente).getComponentes().get(0));
-					break;
-				case LINEA:
-					seleccionaComponente(componente);
-					break;
-				default:
-					break;
-				}
-
-			}
-		} else {
-			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.noimplementado"), true);
-
-			return;
-		}
-
-		idObjetoCopy = null;
-		copy = false;
-		cut = false;
-
-		// Actualizar el formulario
-		PrimeFaces.current().ajax().update("dialogDisenyoFormulario:formulario-panel");
+	        if (idVisual != null && !idVisual.isEmpty()) {
+	            String script = String.format("refrescarIframe('%s');", idVisual);
+	            PrimeFaces.current().executeScript(script);
+	        }
+	    }
 	}
 
 	/**
@@ -3530,11 +3511,23 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	public void setCambiosFormatoSeparador() {
-		this.cambios = true;
-		if(this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormulario
-				&& ((ComponenteFormularioCampoTexto) objetoFormularioEdit).getNumeroSeparador() == TypeSeparadorNumero.SIN_FORMATO) {
-			((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumeroDigitosDecimales(null);
-		}
+	    this.cambios = true;
+	    if (this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormularioCampoTexto) {
+	        ComponenteFormularioCampoTexto campoTexto = (ComponenteFormularioCampoTexto) this.objetoFormularioEdit;
+
+	        if (campoTexto.getNumeroSeparador() == TypeSeparadorNumero.SIN_FORMATO) {
+	            // Limpiamos la configuración de decimales
+	            campoTexto.setNumeroDigitosDecimales(null);
+
+	            // Truncamos los valores de los rangos para quitar los decimales residuales
+	            if (campoTexto.getNumeroRangoMinimo() != null) {
+	                campoTexto.setNumeroRangoMinimo((double) campoTexto.getNumeroRangoMinimo().intValue());
+	            }
+	            if (campoTexto.getNumeroRangoMaximo() != null) {
+	                campoTexto.setNumeroRangoMaximo((double) campoTexto.getNumeroRangoMaximo().intValue());
+	            }
+	        }
+	    }
 	}
 
 	public void setCambiosPermiteRangoCB() {

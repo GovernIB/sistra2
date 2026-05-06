@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
@@ -9,6 +10,7 @@ import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import java.util.*;
@@ -47,6 +49,8 @@ public class DialogFiltroErrores extends DialogControllerBase {
 
 	private String errorCopiar;
 
+	private FiltroAuditoriaTramitacion filtro = new FiltroAuditoriaTramitacion();
+
 	/**
 	 * Inicialización.
 	 */
@@ -59,51 +63,72 @@ public class DialogFiltroErrores extends DialogControllerBase {
 
 		if (tipoEvento == null) return;
 
-		if ("ERROR".equals(tipoEvento)) {
-			this.checkTipoError = true;
-			this.checkTipoFirma = false;
-			this.checkTipoPago = false;
+		try {
+			Map<String, String> requestParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 
-			listaTiposError = helpDeskService.obtenerListaErroresAuditoria(eventoPlataforma);
+			this.filtro.setNif(requestParams.get("fNif"));
+		    this.filtro.setIdSesionTramitacion(requestParams.get("fSesion"));
+		    this.filtro.setNombre(requestParams.get("fNombre"));
+		    this.filtro.setIdTramite(requestParams.get("fIdTra"));
+		    this.filtro.setCodSia(requestParams.get("fSia"));
+		    this.filtro.setIdProcedimientoCP(requestParams.get("fProc"));
 
-			if(erroresSeleccionadosInit != null) {
-				listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
-			} else {
-				listaSeleccionados = listaTiposError;
-			}
+		    String areaParam = requestParams.get("fArea");
+		    if (areaParam != null && !areaParam.isEmpty()) {
+		        this.filtro.setListaAreas(Arrays.asList(areaParam.split(",")));
+		    }
 
-		} else if (isModoFirma()) {
-			this.checkTipoError = false;
-			this.checkTipoFirma = true;
-			this.checkTipoPago = false;
-
-			listaTiposError = helpDeskService.obtenerListaMetodosFirma(tipoEvento);
-
-			if(erroresSeleccionadosInit != null && !erroresSeleccionadosInit.isEmpty()) {
-				listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
-            } else {
-                listaSeleccionados = new ArrayList<>(listaTiposError != null ? listaTiposError : new ArrayList<>());
-            }
-
-		} else if (isModoPago()) {
-			this.checkTipoError = false;
-			this.checkTipoFirma = false;
-			this.checkTipoPago = true;
-
-			listaTiposError = helpDeskService.obtenerListaMetodosPago(tipoEvento);
-
-			if(erroresSeleccionadosInit != null && !erroresSeleccionadosInit.isEmpty()) {
-                listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
-            } else {
-            	listaSeleccionados = new ArrayList<>(listaTiposError != null ? listaTiposError : new ArrayList<>());
-            }
-		}
+		    if (requestParams.get("fVer") != null)
+		        this.filtro.setVersionTramite(Integer.parseInt(requestParams.get("fVer")));
+		    if (requestParams.get("fDesde") != null)
+		        this.filtro.setFechaDesde(new Date(Long.parseLong(requestParams.get("fDesde"))));
+		    if (requestParams.get("fHasta") != null)
+		        this.filtro.setFechaHasta(new Date(Long.parseLong(requestParams.get("fHasta"))));
 
 
-        /*listaTiposError.add("Error A");
-        listaTiposError.add("Error B");
-        listaTiposError.add("Error C");*/
+	    } catch (Exception e) {
+	        // Si falla, el filtro se queda a null y la consulta no filtrará por los campos
+	    }
 
+	    if ("ERROR".equals(tipoEvento)) {
+	    	this.checkTipoError = true;
+	        this.checkTipoFirma = false;
+	        this.checkTipoPago = false;
+
+	        listaTiposError = helpDeskService.obtenerListaErroresAuditoria(eventoPlataforma, filtro);
+
+	        if(erroresSeleccionadosInit != null) {
+	        	listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
+	        } else {
+	        	listaSeleccionados = listaTiposError;
+	        }
+
+	    } else if (isModoFirma()) {
+	    	this.checkTipoError = false;
+	        this.checkTipoFirma = true;
+	        this.checkTipoPago = false;
+
+	        listaTiposError = helpDeskService.obtenerListaMetodosFirma(tipoEvento, filtro);
+
+	        if(erroresSeleccionadosInit != null && !erroresSeleccionadosInit.isEmpty()) {
+	        	listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
+	        } else {
+	        	listaSeleccionados = new ArrayList<>(listaTiposError != null ? listaTiposError : new ArrayList<>());
+	        }
+
+	    } else if (isModoPago()) {
+	    	this.checkTipoError = false;
+	        this.checkTipoFirma = false;
+	        this.checkTipoPago = true;
+
+	        listaTiposError = helpDeskService.obtenerListaMetodosPago(tipoEvento, filtro);
+
+	        if(erroresSeleccionadosInit != null && !erroresSeleccionadosInit.isEmpty()) {
+	        	listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
+	        } else {
+	        	listaSeleccionados = new ArrayList<>(listaTiposError != null ? listaTiposError : new ArrayList<>());
+	        }
+	    }
 	}
 
 	public void aceptar() {
@@ -429,5 +454,13 @@ public class DialogFiltroErrores extends DialogControllerBase {
 
 	public void setCheckTipoPago(boolean checkTipoPago) {
 		this.checkTipoPago = checkTipoPago;
+	}
+
+	public FiltroAuditoriaTramitacion getFiltro() {
+		return filtro;
+	}
+
+	public void setFiltro(FiltroAuditoriaTramitacion filtro) {
+		this.filtro = filtro;
 	}
 }

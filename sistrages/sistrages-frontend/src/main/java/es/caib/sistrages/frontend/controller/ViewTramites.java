@@ -123,6 +123,13 @@ public class ViewTramites extends ViewControllerBase {
 	private static final String LITERAL_INFO_BORRADO_OK = "info.borrado.ok";
 	private static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";
 
+	// Constantes para clave de sesión
+	private static final String SESSION_KEY_AREA = "SISTRA_GESTOR_AREAS_SEL";
+	private static final String SESSION_KEY_TRAMITE = "SISTRA_GESTOR_TRAMITE_SEL";
+	private static final String SESSION_KEY_VERSION = "SISTRA_GESTOR_VERSION_SEL";
+
+	private List<Long> idsAreasPreseleccionadas;
+
 	private LazyDataModel<TramiteFrontal> dataModel;
 	/** Datos que obtienen el ancho y alto de la pantalla. **/
 	private String height;
@@ -183,20 +190,49 @@ public class ViewTramites extends ViewControllerBase {
 			pag = "0";
 		}
 
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		boolean estadoRecuperado = false;
+
+		if (StringUtils.isEmpty(idArea) && StringUtils.isEmpty(idTramite) && StringUtils.isEmpty(idTramiteVersion)) {
+
+			if (sessionMap.containsKey(SESSION_KEY_AREA)) {
+				this.idsAreasPreseleccionadas = (List<Long>) sessionMap.get(SESSION_KEY_AREA);
+				estadoRecuperado = true;
+			}
+
+			if (sessionMap.containsKey(SESSION_KEY_TRAMITE)) {
+				Long idTramiteGuardado = (Long) sessionMap.get(SESSION_KEY_TRAMITE);
+				if (idTramiteGuardado != null) {
+					idTramite = String.valueOf(idTramiteGuardado);
+				}
+			}
+
+			if (sessionMap.containsKey(SESSION_KEY_VERSION)) {
+				Long idVersionGuardada = (Long) sessionMap.get(SESSION_KEY_VERSION);
+				if (idVersionGuardada != null) {
+					idTramiteVersion = String.valueOf(idVersionGuardada);
+				}
+			}
+		} else {
+			// Si entró por URL con parámetros directos, limpiamos lo que hubiera en sesión
+			guardarEstadoEnSesion(null, null, null);
+		}
+
 		mostrarTodasAreas = false;
 		buscarAreas();
 
+		if (!estadoRecuperado) {
+			guardarAreasEnSesion(listaAreasSeleccionadas);
+		}
+
 		if (idTramite != null) {
-
 			final Tramite tramCrumb = tramiteService.getTramite(Long.valueOf(idTramite));
-
 			tramiteSeleccionadaBreadcrumb = new TramiteFrontal(tramCrumb, null);
-			tramiteSeleccionada = tramiteSeleccionadaBreadcrumb;
+			setTramiteSeleccionada(tramiteSeleccionadaBreadcrumb);
 		}
 
 		if (idTramiteVersion != null) {
-			tramiteSeleccionada = null;
-			versionSeleccionada = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+			setVersionSeleccionada(tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion)));
 		}
 	}
 
@@ -205,9 +241,7 @@ public class ViewTramites extends ViewControllerBase {
 		String codigo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("param");
 		String x = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("x");
 		String y = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("y");
-		// TramiteFrontal tv = new
-		// TramiteFrontal(tramiteService.getTramite(Long.parseLong(codigo)),
-		// tramiteService.listTramiteVersion(Long.parseLong(codigo), null));
+
 		try {
 			TramiteFrontal tv = this.dataModel.getRowData(codigo);
 			if (tv == null) {
@@ -216,12 +250,27 @@ public class ViewTramites extends ViewControllerBase {
 				tv = new TramiteFrontal(tr, ltv);
 			}
 			this.setTramiteSeleccionada(tv);
+
+			this.idTramite = String.valueOf(tv.getTramite().getCodigo());
+			guardarTramiteEnSesion(tv.getTramite().getCodigo());
+
 		} catch (NumberFormatException e) {
 			this.setTramiteSeleccionada(null);
+			this.idTramite = null;
+			guardarTramiteEnSesion(null);
 		}
 		PrimeFaces.current().ajax().update("form:toolbarTramites");
-		PrimeFaces.current()
-				.executeScript("document.elementFromPoint(" + x + ", " + y + ").classList.add('resaltar');");
+		PrimeFaces.current().executeScript("document.elementFromPoint(" + x + ", " + y + ").classList.add('resaltar');");
+	}
+
+	public void seleccionarVersion(SelectEvent event) {
+		TramiteVersion tv = (TramiteVersion) event.getObject();
+		this.versionSeleccionada = tv;
+
+		this.idTramiteVersion = String.valueOf(tv.getCodigo());
+		guardarVersionEnSesion(tv.getCodigo());
+
+		this.tramiteSeleccionada = null;
 	}
 
 	/**
@@ -838,6 +887,21 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Método que captura el clic real del usuario en la tabla de Trámites
+	 */
+	public void onRowSelectTramite(SelectEvent event) {
+		// Obtenemos el objeto de la fila en la que ha hecho clic
+		TramiteFrontal tramite = (TramiteFrontal) event.getObject();
+		this.tramiteSeleccionada = tramite;
+
+		// Extraemos el ID y lo guardamos en las variables
+		if (tramite != null && tramite.getTramite() != null) {
+			this.idTramite = String.valueOf(tramite.getTramite().getCodigo());
+			guardarTramiteEnSesion(tramite.getTramite().getCodigo());
+		}
+	}
+
+	/**
 	 * Método publico de filtrar
 	 */
 	public void filtrar() {
@@ -848,6 +912,8 @@ public class ViewTramites extends ViewControllerBase {
 		dataTable.setFirst(0);
 		idTramiteVersion = null;
 		idTramite = null;
+
+		guardarEstadoEnSesion(listaAreasSeleccionadas, null, null);
 
 		this.buscarTramites(filtro, true);
 		filtro = filtro != null ? quitarEscapeFiltro(filtro) : null;
@@ -1074,28 +1140,75 @@ public class ViewTramites extends ViewControllerBase {
 	 * marcaremos todas como seleccionadas.
 	 */
 	private void buscarAreasPreseleccionadas() {
+		if (listaAreasSeleccionadas == null) {
+			listaAreasSeleccionadas = new ArrayList<>();
+		} else {
+			listaAreasSeleccionadas.clear();
+		}
+
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+
 		if (StringUtils.isNotEmpty(idArea)) {
 			for (final Area area : getListaAreas()) {
 				if (area.getCodigo().compareTo(Long.valueOf(idArea)) == 0) {
-					if (listaAreasSeleccionadas == null) {
-						listaAreasSeleccionadas = new ArrayList<>();
-					}
 					listaAreasSeleccionadas.add(area);
 				}
 			}
-		} else {
-			if (listaAreasSeleccionadas == null) {
-				listaAreasSeleccionadas = new ArrayList<>();
+		} else if (sessionMap.containsKey(SESSION_KEY_AREA)) {
+			if (idsAreasPreseleccionadas != null && !idsAreasPreseleccionadas.isEmpty()) {
+				for (final Area area : getListaAreas()) {
+					if (idsAreasPreseleccionadas.contains(area.getCodigo())) {
+						listaAreasSeleccionadas.add(area);
+					}
+				}
 			}
-
+		} else {
 			for (final Area area : getListaAreas()) {
 				listaAreasSeleccionadas.add(area);
 			}
 		}
 
-		// Lo desactivamos
 		idArea = null;
+		idsAreasPreseleccionadas = null;
 	}
+
+	private void guardarAreasEnSesion(List<Area> areas) {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		List<Long> idsAreas = new ArrayList<>();
+
+		if (areas != null && !areas.isEmpty()) {
+			for (Area a : areas) {
+				idsAreas.add(a.getCodigo());
+			}
+		}
+
+		sessionMap.put(SESSION_KEY_AREA,  idsAreas);
+	}
+
+	private void guardarTramiteEnSesion(Long idTramite) {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		if (idTramite == null) {
+			sessionMap.remove(SESSION_KEY_TRAMITE);
+		} else {
+			sessionMap.put(SESSION_KEY_TRAMITE, idTramite);
+		}
+	}
+
+	private void guardarVersionEnSesion(Long idVersion) {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		if (idVersion == null) {
+			sessionMap.remove(SESSION_KEY_VERSION);
+		} else {
+			sessionMap.put(SESSION_KEY_VERSION, idVersion);
+		}
+	}
+
+	private void guardarEstadoEnSesion(List<Area> areas, Long idTramite, Long idVersion) {
+		guardarAreasEnSesion(areas);
+		guardarTramiteEnSesion(idTramite);
+		guardarVersionEnSesion(idVersion);
+	}
+
 
 	/** Buscar tramites. **/
 	private void buscarTramites() {
@@ -1202,6 +1315,25 @@ public class ViewTramites extends ViewControllerBase {
 				numPag = first;
 				listaTramiteFrontal = tramiteService.listTramiteVersionesSimplicada(UtilJSF.getSessionBean().getEntidad().getCodigo(),
 						convertirAreas(), filtro, first ,pageSize, sortField, sortAscending);
+
+				if (idTramite != null && !idTramite.isEmpty()) {
+					for (TramiteFrontal tf : listaTramiteFrontal) {
+						if (tf.getTramite().getCodigo().toString().equals(idTramite)) {
+							// Asignamos la referencia EXACTA que acaba de cargar la tabla
+							tramiteSeleccionada = tf;
+
+							if (idTramiteVersion != null && !idTramiteVersion.isEmpty() && tf.getListaVersiones() != null) {
+								for (TramiteVersion tv : tf.getListaVersiones()) {
+									if (tv.getCodigo().toString().equals(idTramiteVersion)) {
+										versionSeleccionada = tv;
+										break;
+									}
+								}
+							}
+							break;
+						}
+					}
+				}
 
 				return listaTramiteFrontal;
 			}
@@ -1424,14 +1556,17 @@ public class ViewTramites extends ViewControllerBase {
 
 	/** UnselectTramite. **/
 	public void unSelectTramite() {
-		tramiteSeleccionada = null;
+		this.tramiteSeleccionada = null;
+		this.idTramite = null;
+		guardarTramiteEnSesion(null);
+		unSelectVersionTramite();
 	}
 
-	/** SelectTramite. **/
+	/** UnselectVersion **/
 	public void unSelectVersionTramite() {
-		this.setVersionSeleccionada(null);
-		idTramite = null;
-		idTramiteVersion = null;
+		this.versionSeleccionada = null;
+		this.idTramiteVersion = null;
+		guardarVersionEnSesion(null);
 	}
 
 	/**
@@ -2097,12 +2232,8 @@ public class ViewTramites extends ViewControllerBase {
 		return versionSeleccionada;
 	}
 
-	public void setVersionSeleccionada(final TramiteVersion versionSeleccionado) {
-		this.versionSeleccionada = versionSeleccionado;
-	}
-
-	public List<TramiteFrontal> getListaTramiteFrontal() {
-		return listaTramiteFrontal;
+	public void setVersionSeleccionada(final TramiteVersion versionSeleccionada) {
+		this.versionSeleccionada = versionSeleccionada;
 	}
 
 	public void setListaTramiteFrontal(final List<TramiteFrontal> listaTramiteFrontal) {

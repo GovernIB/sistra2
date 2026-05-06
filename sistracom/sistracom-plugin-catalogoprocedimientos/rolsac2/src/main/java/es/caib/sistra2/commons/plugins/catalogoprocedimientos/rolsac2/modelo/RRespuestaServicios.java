@@ -8,17 +8,17 @@ package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo;
  */
 public class RRespuestaServicios extends RRespuestaBasicaRolsac {
 
-	/** Resultado. **/
-	private RServicioRolsac[] resultado;
+	/** items. **/
+	private RServicioRolsac[] items;
 
 	/** Url. **/
 	private String url;
 
 	/** Constructor. **/
-	public RRespuestaServicios(final String status, final String mensaje, final Long numeroElementos,
-			final RServicioRolsac[] resultado) {
-		super(status, mensaje, numeroElementos);
-		this.resultado = resultado;
+	public RRespuestaServicios(final String status, final String mensaje, final Long totalCount,
+			final RServicioRolsac[] items) {
+		super(status, mensaje, totalCount);
+		this.items = items;
 	}
 
 	/** Constructor. **/
@@ -27,18 +27,18 @@ public class RRespuestaServicios extends RRespuestaBasicaRolsac {
 	}
 
 	/**
-	 * @return the resultado
+	 * @return the items
 	 */
-	public RServicioRolsac[] getResultado() {
-		return resultado;
+	public RServicioRolsac[] getItems() {
+		return items;
 	}
 
 	/**
-	 * @param resultado
-	 *            the resultado to set
+	 * @param items
+	 *            the items to set
 	 */
-	public void setResultado(final RServicioRolsac[] resultado) {
-		this.resultado = resultado;
+	public void setItems(final RServicioRolsac[] items) {
+		this.items = items;
 	}
 
 	/**

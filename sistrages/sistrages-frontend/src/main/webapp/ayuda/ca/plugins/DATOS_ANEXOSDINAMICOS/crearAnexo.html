@@ -47,9 +47,10 @@
 var anex = DATOS_ANEXOSDINAMICOS.crearAnexo(); <br/>
 anex.setIdentificador('DIN1'); <br/>
 anex.setDescripcion('Anexo dinamico'); <br/>
-anex.setExtensiones('pdf'); <br/>
+anex.setExtensiones('pdf'); // Per mès extensions, separar per ',': ('pdf,docx').<br/>
 anex.setTamanyoMaximo('1MB'); <br/>
 anex.setObligatorio(true); <br/>
+anex.setFirmar(true);<br/>
 anex.setAyuda('&lt;p&gt;Ajuda de l'annex dinàmic&lt;/p&gt;'); // S'han d'indicar els tags HTML.<br/>
 DATOS_ANEXOSDINAMICOS.addAnexo(anex); <br/>
 </p>

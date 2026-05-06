@@ -476,6 +476,40 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
+	 * Evalúa si el botón de consultar/modificar el script de firmantes debe estar deshabilitado dependiendo del nivel de seguridad
+	 */
+	public boolean isScriptFirmantesDeshabilitado() {
+	    // 1. Obtenemos el formulario que realmente estamos viendo en pantalla.
+	    // Usamos el getter que corresponde a "formularioTramiteSeleccionado" del .xhtml
+	    FormularioTramite formActual = this.getFormularioTramiteSeleccionado();
+	    // Nota: Si no tienes el getter, usa directamente this.formularioSeleccionado
+
+	    // 2. Comprobamos si es null o si el check de "debe firmarse" es falso.
+	    if (formActual == null || !formActual.isDebeFirmarse()) { // o .getDebeFirmarse() si no es boolean primitivo
+	        return true;
+	    }
+
+	    // 3. Obtenemos el nivel de seguridad actual
+	    Integer nivelSeguridad = this.tramiteVersion.getNivelSeguridad();
+
+	    if (nivelSeguridad == null) {
+	        return true;
+	    }
+
+	    // 4. Evaluamos si es BAJO o SUSTANCIAL (sin certificado)
+	    boolean esBajo = nivelSeguridad.equals(TypeNivelSeguridad.BAJO.getValor());
+	    boolean esSustancialSinCertificado = nivelSeguridad.equals(TypeNivelSeguridad.SUSTANCIAL.getValor());
+
+	    if (esBajo || esSustancialSinCertificado) {
+	        return true; // Bloqueamos el botón
+	    }
+
+	    // Si llega hasta aquí, es SUSTANCIAL_CERTIFICADO o ALTO y SÍ debe firmarse.
+	    // Habilitamos el botón.
+	    return false;
+	}
+
+	/**
 	 * Abre diálogo sistrahelp
 	 */
 	public void sistrahelp() {

@@ -207,6 +207,10 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "Gestores formularios externos entidad y sus areas")
 	private List<RGestorFormularioExterno> gestoresFormulariosExternos;
 
+	/** Indica si se permiten otras extensiones de firma certificado. */
+	@ApiModelProperty(value = "Indica si se permiten otras extensiones de firma certificado")
+	private boolean permitirOtrasExtensionesFirmaCertificado;
+
 	/**
 	 * Método de acceso a logo.
 	 *
@@ -986,4 +990,11 @@ public class RConfiguracionEntidad {
 		this.codigo = codigo;
 	}
 
+	public void setPermitirOtrasExtensionesFirmaCertificado(boolean permitirOtrasExtensionesFirmaCertificado) {
+		this.permitirOtrasExtensionesFirmaCertificado = permitirOtrasExtensionesFirmaCertificado;
+	}
+
+	public boolean isPermitirOtrasExtensionesFirmaCertificado() {
+		return permitirOtrasExtensionesFirmaCertificado;
+	}
 }

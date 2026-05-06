@@ -10,7 +10,7 @@ var APP_CONTEXT = "";
 
 function inicio(){
 	imc_finestra = $(window);
-	imc_contenidor = $("#imc-contenidor");
+	imc_contenidor = $("#imc-forms-contenidor");
 	imc_forms_formulari = $("#imc-forms-formulari");
 	imc_forms_formulari.appElement();
 	imc_forms_formulari.appScript();

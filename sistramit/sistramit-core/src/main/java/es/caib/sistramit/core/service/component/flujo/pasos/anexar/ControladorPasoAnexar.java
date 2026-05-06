@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -263,8 +265,16 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OPCIONAL, anexosFij));
 			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OPCIONAL, anexosDin));
 		}
-		dpa.setCompletado(TypeSiNo.NO);
 
+		// Verificamos configuracion anexos y restricciones de firma por nivel
+		// Para firma de formularios no se verifica nada, pero para anexo es necesario por anexos dinamicos ya que se
+		// establecen las propiedades por script (sin validación previa en STG)
+		for (Anexo a : dpa.getAnexos()) {
+			verificarRestriccionesFirmaPorNivelSeguridad(pDefinicionTramite, pVariablesFlujo, a);
+		}
+
+		// Retornamos paso como no completado
+		dpa.setCompletado(TypeSiNo.NO);
 		return dpa;
 	}
 
@@ -415,12 +425,8 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				anexo.setAyuda(anexd.getAyuda());
 				anexo.setTipoENI("TD99");
 				anexo.setPresentacion(TypePresentacion.ELECTRONICA);
-				// FH fija extensión a pdf
-				if (pVariablesFlujo.isFuncionarioHabilitado()) {
-					anexo.setExtensiones("pdf");
-				} else {
-					anexo.setExtensiones(calcularExtensionesPermitidas(anexd.getExtensiones()));
-				}
+				// Extensiones permitidas (FH fija extensión a pdf)
+				anexo.setExtensiones(pVariablesFlujo.isFuncionarioHabilitado()? "pdf" : calcularExtensionesPermitidas(anexd.getExtensiones()));
 				if (StringUtils.isNotBlank(anexd.getTamanyoMaximo())
 						&& !("0KB".equals(StringUtils.deleteWhitespace(anexd.getTamanyoMaximo().toUpperCase())))) {
 					anexo.setTamMax(anexd.getTamanyoMaximo());
@@ -429,25 +435,29 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					anexo.setPlantilla(PlantillaAnexo.createNewPlantillaAnexo(TypePlantillaAnexo.EXTERNA,
 							anexd.getUrlPlantilla()));
 				}
-				if (anexd.isObligatorio()) {
-					anexo.setObligatorio(TypeObligatoriedad.OBLIGATORIO);
-				} else {
-					anexo.setObligatorio(TypeObligatoriedad.OPCIONAL);
-				}
-				// FH no convierte a PDF, se tiene que retornar PDF
-				if (!pVariablesFlujo.isFuncionarioHabilitado() && anexd.isConvertirPDF()) {
-					anexo.setConvertirPDF(TypeSiNo.SI);
-				}
-				// FH no hace caso firma
-				if (!pVariablesFlujo.isFuncionarioHabilitado()  && anexd.isFirmar()) {
-					anexo.setFirmar(TypeSiNo.SI);
-					final Firmante f = Firmante.createNewFirmante();
-					f.setNif(pVariablesFlujo.getUsuario().getNif());
-					f.setNombre(pVariablesFlujo.getUsuario().getNombreApellidos());
-					anexo.getFirmantes().add(f);
-				}
+				anexo.setObligatorio(anexd.isObligatorio()? TypeObligatoriedad.OBLIGATORIO : TypeObligatoriedad.OPCIONAL);
 				anexo.setMaxInstancias(anexd.getMaxInstancias());
-
+				// Convertir PDF (FH no convierte a PDF)
+				anexo.setConvertirPDF(TypeSiNo.fromBoolean(!pVariablesFlujo.isFuncionarioHabilitado() && anexd.isConvertirPDF()));
+				// Firma (FH no hace caso firma)
+				if (!pVariablesFlujo.isFuncionarioHabilitado()  && anexd.isFirmar()) {
+					// Si se debe firmar: se permite firmar por asistente o anexar firmado
+					anexo.setFirmar(TypeSiNo.SI);
+					anexo.setAnexarfirmado(TypeSiNo.SI);
+                    // Marca que se valide firmantes en caso de nivel seguridad alto / sustancial con certificado
+					anexo.setValidarFirmantes(TypeSiNo.fromBoolean(
+									pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.ALTO ||
+									pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO));
+					// Si hay que validar firmantes, el firmante es el usuario autenticado
+					// (de momento no hay opción a establecer los firmantes del anexo)
+					if (anexo.getValidarFirmantes() == TypeSiNo.SI) {
+						final Firmante f = Firmante.createNewFirmante();
+						f.setNif(pVariablesFlujo.getUsuario().getNif());
+						f.setNombre(pVariablesFlujo.getUsuario().getNombreApellidos());
+						anexo.getFirmantes().add(f);
+					}
+				}
+				// Añade anexo a la lista
 				anexos.add(anexo);
 			}
 		}
@@ -456,6 +466,56 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 		res.setAnexos(anexos);
 		res.setPrecedenciaSobreAnexosFijos(precedencia);
 		return res;
+	}
+
+	/**
+	 * Verifica que las configuraciones de firma de anexos cumplen con las restricciones establecidas para cada nivel de seguridad.
+	 * @param pDefinicionTramite Definición trámite
+	 * @param pVariablesFlujo Variables flujo
+	 * @param anexo Anexo
+	 */
+	private void verificarRestriccionesFirmaPorNivelSeguridad(DefinicionTramiteSTG pDefinicionTramite, VariablesFlujo pVariablesFlujo, Anexo anexo) {
+		// Si esta marcado para firmar, verificamos restricciones por nivel de seguridad
+		if (anexo.getFirmar() == TypeSiNo.SI) {
+			// Firma no puede ser habilitada para anónimo
+			if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
+				throw new ErrorConfiguracionException("Anexo " + anexo.getId()
+						+ " no pot ser marcat com a que requereix firma si el nivell d'autenticació és anònim");
+			}
+			// Validación de firmantes solo debe estar habilitada para nivel alto / sustancial con certificado
+			if (pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.ALTO || pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO) {
+				if (anexo.getValidarFirmantes() != TypeSiNo.SI) {
+					throw new ErrorConfiguracionException("Annexe " + anexo.getId()
+							+ " ha de ser configurat per validar signants ja que requereix firma i el seu nivell de seguretat és alt/sustancial amb certificat");
+				}
+ 			} else {
+				if (anexo.getValidarFirmantes() != TypeSiNo.NO) {
+					throw new ErrorConfiguracionException("Annexe " + anexo.getId()
+							+ " ha de ser configurat per no validar signants ja que requereix firma i el seu nivell de seguretat és baix/sustancial");
+				}
+			}
+			// Verificamos que las extensiones sean correctas segun nivel seguridad
+			String[] extensiones = anexo.getExtensiones().split(",");
+			// - Nivel alto / sustancial con certificado: PDF / Otras extensiones (según configuración entidad)
+			final RConfiguracionEntidad entidadInfo = this.getConfig().obtenerConfiguracionEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+			if (pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.ALTO || pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO) {
+				for (String ext : extensiones) {
+					if (!"pdf".equalsIgnoreCase(ext)
+							&& !entidadInfo.isPermitirOtrasExtensionesFirmaCertificado()) {
+						throw new ErrorConfiguracionException("Annexe " + anexo.getId()
+								+ " només pot ser configurat per admetre pdf ja que requereix firma (la entitat no admiteix altres extensions per al nivell de seguretat és alt/sustancial amb certificat)");
+					}
+				}
+			} else {
+				// - Nivel bajo/sustancial: solo pdf
+				for (String ext : extensiones) {
+					if (!"pdf".equalsIgnoreCase(ext)) {
+						throw new ErrorConfiguracionException("Annexe " + anexo.getId()
+								+ " només pot ser configurat per admetre pdf ja que requereix firma amb nivell de seguretat baix/sustancial");
+					}
+				}
+			}
+		}
 	}
 
 	/**

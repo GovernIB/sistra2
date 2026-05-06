@@ -6,10 +6,12 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.model.Area;
@@ -80,6 +82,14 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 		// Normaliza filtro
 		normalizarFiltro();
 
+		sanitarFiltros();
+
+		final DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
+				.findComponent("form:dataTable");
+		if (dataTable != null) {
+			dataTable.setFirst(0);
+		}
+
 		// Buscar
 		this.buscar();
 	}
@@ -91,15 +101,33 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
 	}
 
+	private void sanitarFiltros() {
+		filtros.setIdTramite(filtrarString(filtros.getIdTramite(), "[a-zA-Z0-9_\\-\\.]"));
+		filtros.setIdProcedimientoCP(filtrarString(filtros.getIdProcedimientoCP(), "[a-zA-Z0-9_\\-]"));
+	}
+
+	private String filtrarString(String var, String regex) {
+		if (var == null || var.trim().isEmpty()) return "";
+		StringBuilder varB = new StringBuilder();
+		for (int i = 0; i < var.length(); i++) {
+			String caracter = Character.toString(var.charAt(i));
+			if (caracter.matches(regex)) {
+				varB.append(caracter);
+			}
+		}
+		return varB.toString();
+	}
+
 	/**
 	 * Buscar.
 	 */
 	private void buscar() {
-		// Filtra
-		final Long rowCount = helpDeskService.countAuditoriaPersistencia(filtros);
-		listaDatos = new PersistenciaLazyDataModel(helpDeskService, rowCount, filtros);
-		// Quitamos seleccion de dato
-		datoSeleccionado = null;
+	    long startTime = System.currentTimeMillis(); // Tiempo inicial
+
+	    final Long rowCount = helpDeskService.countAuditoriaPersistencia(filtros);
+	    listaDatos = new PersistenciaLazyDataModel(helpDeskService, rowCount, filtros);
+
+	    datoSeleccionado = null;
 	}
 
 	/**

@@ -431,4 +431,47 @@ public class UtilPDF {
 		return protegido;
 	}
 
+	/**
+	 * Método que comprueba si un PDF tiene adjuntos. Para ello se comprueba si el
+	 * PDF tiene archivos embebidos o anotaciones de tipo file attachment.
+	 *
+	 * @param pdf PDF a comprobar
+	 * @return true si el PDF tiene adjuntos, false en caso contrario
+	 */
+	public static boolean tieneAdjuntos(final byte[] pdf) throws Exception{
+
+		PdfReader reader = new PdfReader(pdf);
+
+		// Embedded files
+		PdfDictionary catalog = reader.getCatalog();
+		PdfDictionary names = catalog.getAsDict(PdfName.NAMES);
+
+		if (names != null) {
+			PdfDictionary embeddedFiles = names.getAsDict(PdfName.EMBEDDEDFILES);
+			if (embeddedFiles != null) {
+				PdfArray files = embeddedFiles.getAsArray(PdfName.NAMES);
+				if (files != null && files.size() > 0) {
+					return true;
+				}
+			}
+		}
+
+		// Annotations
+		for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+			PdfDictionary page = reader.getPageN(i);
+			PdfArray annots = page.getAsArray(PdfName.ANNOTS);
+
+			if (annots == null) continue;
+
+			for (int j = 0; j < annots.size(); j++) {
+				PdfDictionary annot = annots.getAsDict(j);
+				if (PdfName.FILEATTACHMENT.equals(annot.getAsName(PdfName.SUBTYPE))) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 }

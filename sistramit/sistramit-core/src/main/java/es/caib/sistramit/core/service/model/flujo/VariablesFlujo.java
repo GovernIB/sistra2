@@ -16,6 +16,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
 
 /**
  * Variables accesibles desde un paso de tramitación. Permiten el acceso desde
@@ -122,6 +123,12 @@ public final class VariablesFlujo implements Serializable {
 	 * Tipo destino.
 	 */
 	private TypeDestino tipoDestino;
+
+
+	/**
+	 * Nivel seguridad.
+	 */
+	private TypeNivelSeguridad nivelSeguridad;
 
 	/**
 	 * Método de acceso a entorno.
@@ -535,4 +542,21 @@ public final class VariablesFlujo implements Serializable {
 		return usuarioAutenticado != null && usuarioAutenticado.getFuncionarioHabilitado() != null;
 	}
 
+	/**
+	 * Método para establecer nivel seguridad.
+	 *
+	 * @param typeNivelSeguridad
+	 *                          nivel seguridad a establecer
+	 */
+	public void setNivelSeguridad(TypeNivelSeguridad typeNivelSeguridad) {
+		this.nivelSeguridad = typeNivelSeguridad;
+	}
+
+	/**
+	 * Método de acceso a nivel seguridad.
+	 * @return nivel seguridad
+	 */
+	public TypeNivelSeguridad getNivelSeguridad() {
+		return nivelSeguridad;
+	}
 }

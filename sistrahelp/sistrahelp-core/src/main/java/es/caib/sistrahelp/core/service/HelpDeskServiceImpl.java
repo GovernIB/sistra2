@@ -262,19 +262,19 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 
 	@Override
 	@NegocioInterceptor
-	public List<String> obtenerListaErroresAuditoria(boolean eventoPlataforma) {
-		return sistramitApiComponent.listarTiposErrorAuditoria(eventoPlataforma);
+	public List<String> obtenerListaErroresAuditoria(boolean eventoPlataforma, Object filtro) {
+		return sistramitApiComponent.listarTiposErrorAuditoria(eventoPlataforma, filtro);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public List<String> obtenerListaMetodosFirma(String tipoEvento) {
-		return sistramitApiComponent.listarMetodosFirma(tipoEvento);
+	public List<String> obtenerListaMetodosFirma(String tipoEvento, Object filtro) {
+		return sistramitApiComponent.listarMetodosFirma(tipoEvento, filtro);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public List<String> obtenerListaMetodosPago(String tipoEvento) {
-		return sistramitApiComponent.listarMetodosPago(tipoEvento);
+	public List<String> obtenerListaMetodosPago(String tipoEvento, Object filtro) {
+		return sistramitApiComponent.listarMetodosPago(tipoEvento, filtro);
 	}
 }
