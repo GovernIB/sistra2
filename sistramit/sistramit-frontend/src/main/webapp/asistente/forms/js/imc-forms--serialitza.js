@@ -42,7 +42,7 @@ $.fn.appSerialitza = function(opcions) {
 
 				if (el_tipus === "texto" || el_tipus === "oculto") {
 
-					var input_el = (el_contingut === "ti") ? el.find("input:last") : el.find("input:first, textarea:first")
+					var input_el = (el_contingut === "ti" || el.attr("data-passaport") === "s") ? el.find("input:last") : el.find("input:first, textarea:first")
 						,esData = (input_el.attr("type") === "date") ? true : false
 						,enMayuscules = (input_el.attr("data-mayuscules") === "s") ? true : false
 						,input_val = input_el.val();
@@ -73,9 +73,28 @@ $.fn.appSerialitza = function(opcions) {
 
 					// nif, dni, nie, ...
 
-					if (el_contingut === "id" && input_val !== "") {
+					if (el_contingut === "id" && input_val !== "" && el.attr("data-passaport") !== "s") {
 
 						input_val = $.trim( input_val.toUpperCase() );
+
+					}
+
+					// passaport
+
+					if (el_contingut === "id" && input_val !== "" && el.attr("data-passaport") === "s") {
+
+						var selector_tipus_id = el.find("div[data-selector]")
+							,esDual = (selector_tipus_id.is(":visible")) ? true : false;
+
+						var id_tipus = el.find("div[data-selector] input:first").val()
+							,pass_pais = el.find("div[data-pais] input:first").val()
+							,pass_codi = el.find("input:last").val();
+
+						if (esDual && id_tipus !== "passaport") {
+							pass_pais = "";
+						}
+
+						input_val = pass_pais.toUpperCase() + $.trim( pass_codi.toUpperCase() );
 
 					}
 
@@ -301,6 +320,9 @@ $.fn.appSerialitza = function(opcions) {
 
 				if (verifica && !estaOcult && !estaBlocOcult) {
 
+					el
+						.removeClass("imc-el-error");
+
 					if (el_tipus === "texto" || el_tipus === "oculto") {
 
 						// obligatori
@@ -343,9 +365,9 @@ $.fn.appSerialitza = function(opcions) {
 
 						}
 
-						// identificador
+						// identificador (sense dualitat nif/passaport)
 
-						if (input_el.attr("data-contingut") === "identificador" && input_val !== "") {
+						if (input_el.attr("data-contingut") === "identificador" && input_el.attr("data-identificador") !== "dual" && input_val !== "") {
 
 							var idValid = false;
 
@@ -361,13 +383,13 @@ $.fn.appSerialitza = function(opcions) {
 
 							}
 
-							if (!idValid && input_el.attr("data-nifOtros") === "s") {
+							if (!idValid && input_el.attr("data-nifotros") === "s") {
 
 								idValid = ( appValidaIdentificador.nifOtros(input_val) ) ? true : false;
 
 							}
 
-							if (!idValid && (input_el.attr("data-nifPJ") === "s" || input_el.attr("data-cif") === "s")) {
+							if (!idValid && (input_el.attr("data-nifpj") === "s")) {
 
 								idValid = ( appValidaIdentificador.nifPJ(input_val) ) ? true : false;
 
@@ -379,9 +401,72 @@ $.fn.appSerialitza = function(opcions) {
 
 							}
 
-							if (!idValid && input_el.attr("data-nif") === "s") {
+							if (!idValid && input_el.attr("data-passaport") === "s") {
 
-								idValid = ( appValidaIdentificador.nif(input_val) ) ? true : false;
+								var dual_pais_val = el.find("div[data-pais] input:first").val()
+									,dual_input_val = el.find(".imc-el-control input:last").val();
+
+								if (dual_pais_val !== "") {
+
+									var dual_pais_patro = el.find("div[data-pais] a[data-value=" + dual_pais_val + "]").attr("data-patro");
+
+									idValid = ( appValidaIdentificador.passaport(dual_input_val.toUpperCase(), dual_pais_patro) ) ? true : false;
+
+								}
+
+							}
+
+							esError = !idValid;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_id : false;
+
+						}
+
+						// identificador (AMB DUALITAT nif/passaport)
+
+						if (input_el.attr("data-contingut") === "identificador" && input_el.attr("data-identificador") === "dual" && input_val !== "") {
+
+							var idValid = false;
+
+							var dual_tipus_id = el.find("div[data-selector] input:first").val()
+								,dual_input_val = el.find(".imc-el-control input:last").val();
+
+							if (dual_tipus_id === "nif") {
+
+								if (!idValid && input_el.attr("data-dni") === "s") {
+
+									idValid = ( appValidaIdentificador.dni(dual_input_val) ) ? true : false;
+
+								}
+
+								if (!idValid && input_el.attr("data-nie") === "s") {
+
+									idValid = ( appValidaIdentificador.nie(dual_input_val) ) ? true : false;
+
+								}
+
+								if (!idValid && input_el.attr("data-nifotros") === "s") {
+
+									idValid = ( appValidaIdentificador.nifOtros(dual_input_val) ) ? true : false;
+
+								}
+
+								if (!idValid && input_el.attr("data-nifpj") === "s") {
+
+									idValid = ( appValidaIdentificador.nifPJ(dual_input_val) ) ? true : false;
+
+								}
+
+							} else {
+
+								var dual_pais_val = el.find("div[data-pais] input:first").val();
+
+								if (dual_pais_val !== "") {
+
+									var dual_pais_patro = el.find("div[data-pais] a[data-value=" + dual_pais_val + "]").attr("data-patro");
+
+									idValid = ( appValidaIdentificador.passaport(dual_input_val.toUpperCase(), dual_pais_patro) ) ? true : false;
+
+								}
 
 							}
 

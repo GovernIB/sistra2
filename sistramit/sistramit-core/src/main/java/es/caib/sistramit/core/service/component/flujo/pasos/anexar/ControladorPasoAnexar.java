@@ -444,10 +444,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					// Si se debe firmar: se permite firmar por asistente o anexar firmado
 					anexo.setFirmar(TypeSiNo.SI);
 					anexo.setAnexarfirmado(TypeSiNo.SI);
-                    // Marca que se valide firmantes en caso de nivel seguridad alto / sustancial con certificado
+                    // Marca que se valide firmantes en caso de ser autenticado y tenga nivel seguridad alto / sustancial con certificado
 					anexo.setValidarFirmantes(TypeSiNo.fromBoolean(
-									pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.ALTO ||
-									pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO));
+							pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.AUTENTICADO &&
+									(pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.ALTO ||
+									pVariablesFlujo.getNivelSeguridad() == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO)));
 					// Si hay que validar firmantes, el firmante es el usuario autenticado
 					// (de momento no hay opción a establecer los firmantes del anexo)
 					if (anexo.getValidarFirmantes() == TypeSiNo.SI) {

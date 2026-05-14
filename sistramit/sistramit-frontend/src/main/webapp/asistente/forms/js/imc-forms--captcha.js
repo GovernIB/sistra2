@@ -27,18 +27,14 @@ $.fn.appFormsCaptcha = function(options) {
 		var element = $(this)
 			,genera_acc = settings.genera
 			,tipo_acc = settings.tipo
-			,columnes_acc = settings.columnes
-			,titol_acc = settings.titol
 			,so_acc = settings.so
 			,esSelecc = (tipo_acc === "s") ? true : false
 			,app_json_captcha_genera = (esSelecc) ? APP_FORMS_CAPTCHA_SEL_GENERA : APP_FORMS_CAPTCHA_TXT_GENERA
 			,app_json_captcha_so = (esSelecc) ? APP_FORMS_CAPTCHA_SEL_REPRODUEIX : APP_FORMS_CAPTCHA_TXT_REPRODUIX
 			,app_json_captcha_sel_ids = APP_FORMS_CAPTCHA_SEL_DESCARREGA
-			,camp_id = false
-			,envia_url = false
 			,envia_ajax = false
-			,json = false
 			,audio = false
+			,audios = {}
 			,inicia = function() {
 
 				var camp_id = element.attr("data-id");
@@ -154,18 +150,31 @@ $.fn.appFormsCaptcha = function(options) {
 				}
 
 			}
-			,audios = {}
 			,btSo_sona = function() {
 
 				var botoId = element.attr("data-id");
 
 				// crea audio
 
-				if (!audios[botoId]) {
-					audios[botoId] = new Audio(app_json_captcha_so + '?id=' + botoId + "&ts=" + Date.now() + "&" + headerIdSessio + "=" + tokenIdSessio);
+				if (audios[botoId]) {
+
+					console
+						.log("botoId: " + botoId);
+
+					audios[botoId]
+						.pause();
+
+					delete audios[botoId];
+					
 				}
 
-				const audio = audios[botoId];
+				if (!audios[botoId]) {
+
+					audios[botoId] = new Audio(app_json_captcha_so + '?id=' + botoId + "&ts=" + Date.now() + "&" + headerIdSessio + "=" + tokenIdSessio);
+
+				}
+
+				audio = audios[botoId];
 
 				// Pausar els demés
 
@@ -173,7 +182,10 @@ $.fn.appFormsCaptcha = function(options) {
 					.keys(audios)
 						.forEach(id => {
 							if (id !== botoId && !audios[id].paused) {
-								audios[id].pause();
+
+								audios[id]
+									.pause();
+								
 							}
 						});
 
@@ -197,6 +209,19 @@ $.fn.appFormsCaptcha = function(options) {
 				var timestamp = Date.now()
 					,camp_id = element.attr("data-id");
 
+				// audio?
+
+				if (audios[camp_id]) {
+
+					audios[camp_id]
+						.pause();
+
+					delete audios[camp_id];
+					
+				}
+
+				// perem botó i refresquem
+
 				element
 					.find("input, button")
 						.attr("disabled", "disabled");
@@ -210,8 +235,6 @@ $.fn.appFormsCaptcha = function(options) {
 				}
 
 				refresca(timestamp, camp_id);
-
-				audios = {};
 
 			}
 			,refresca = function(timestamp, camp_id) {
@@ -241,85 +264,87 @@ $.fn.appFormsCaptcha = function(options) {
 
 					var pag_dades = { id: camp_id }
 
-					$.ajax({
-						url: app_json_captcha_genera,
-						data: pag_dades,
-						method: "post",
-						dataType: "json"
-					})
-					.done(function( json ) {
+					envia_ajax = $.ajax({
+							url: app_json_captcha_genera,
+							data: pag_dades,
+							method: "post",
+							dataType: "json"
+						})
+						.done(function( json ) {
 
-						var estat_ = json.estado
-							,ids_ = json.datos.imagenes
-							,figura_ = json.datos.figura;
+							envia_ajax = false;
 
-						if (estat_ === "SUCCESS" || estat_ === "WARNING") {
+							var estat_ = json.estado
+								,ids_ = json.datos.imagenes
+								,figura_ = json.datos.figura;
 
-							// JSON -> èxit o atenció
+							if (estat_ === "SUCCESS" || estat_ === "WARNING") {
 
-							var avant = function() {
+								// JSON -> èxit o atenció
 
-									element
-										.attr("data-ids", ids_)
-										.removeAttr("data-reproduccio");
-
-									// figura
-
-									if (figura_ && figura_ !== "") {
+								var avant = function() {
 
 										element
-											.find("label:first")
-												.attr("data-text", txtFormDinSeleccionaAmb_captcha + " " + figura_)
-												.text( txtFormDinSeleccionaAmb_captcha + " " + figura_ );
+											.attr("data-ids", ids_)
+											.removeAttr("data-reproduccio");
 
-									}
+										// figura
 
-									// pinta imatges
+										if (figura_ && figura_ !== "") {
 
-									selecPinta(timestamp, camp_id);
+											element
+												.find("label:first")
+													.attr("data-text", txtFormDinSeleccionaAmb_captcha + " " + figura_)
+													.text( txtFormDinSeleccionaAmb_captcha + " " + figura_ );
 
-								};
+										}
 
-							if (json.estado === "WARNING") {
+										// pinta imatges
 
-								imc_forms_missatge
-									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { avant(); } });
+										selecPinta(timestamp, camp_id);
 
-								return;
+									};
+
+								if (json.estado === "WARNING") {
+
+									imc_forms_missatge
+										.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { avant(); } });
+
+									return;
+
+								}
+
+								// avant
+
+								avant();
+								
+
+							} else {
+
+								// JSON -> error!
+
+								consola("Captcha genera SELECTOR IMGS: error des de JSON");
+
+								imc_forms_body
+									.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 							}
 
-							// avant
+						})
+						.fail(function(dades, tipus, errorThrown) {
 
-							avant();
-							
+							envia_ajax = false;
 
-						} else {
+							if (tipus === "abort") {
+								return false;
+							}
 
-							// JSON -> error!
-
-							consola("Captcha genera SELECTOR IMGS: error des de JSON");
+							consola("Captcha genera SELECTOR IMGS: error des de FAIL. " + dades + ", "+ tipus +", "+ errorThrown);
 
 							imc_forms_body
-								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
+								.appFormsErrorsGeneral({ estat: "fail" });
 
-						}
-
-					})
-					.fail(function(dades, tipus, errorThrown) {
-
-						envia_ajax = false;
-
-						if (tipus === "abort") {
-							return false;
-						}
-
-						consola("Captcha genera SELECTOR IMGS: error des de FAIL. " + dades + ", "+ tipus +", "+ errorThrown);
-
-						imc_forms_body
-							.appFormsErrorsGeneral({ estat: "fail" });
-
-					});
+						});
 
 				}
 

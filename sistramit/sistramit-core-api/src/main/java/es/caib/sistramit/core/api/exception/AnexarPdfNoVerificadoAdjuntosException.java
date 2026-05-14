@@ -23,7 +23,7 @@ public final class AnexarPdfNoVerificadoAdjuntosException extends ServiceRollbac
 	 * Constructor AnexarPdfProtegidoException.
 	 */
 	public AnexarPdfNoVerificadoAdjuntosException(Throwable ex){
-		super("No se ha podido verificar si PDF protegido con contraseña: " + ex.getMessage(), ex);
+		super("No se ha podido verificar si PDF tiene adjuntos: " + ex.getMessage(), ex);
 	}
 
 }

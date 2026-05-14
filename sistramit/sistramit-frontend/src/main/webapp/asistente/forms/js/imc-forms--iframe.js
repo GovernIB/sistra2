@@ -20,7 +20,7 @@ window
 			document
 				.querySelector("a[data-id='F2']")
 					.click();
-								
+
 		}
 
 	});

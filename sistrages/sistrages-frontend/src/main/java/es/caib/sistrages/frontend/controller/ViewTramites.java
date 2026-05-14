@@ -623,39 +623,36 @@ public class ViewTramites extends ViewControllerBase {
 	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoArea(final SelectEvent event) {
+	    final DialogResult respuesta = (DialogResult) event.getObject();
 
-		final DialogResult respuesta = (DialogResult) event.getObject();
+	    if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+	        String message = respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)
+	                         ? UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK)
+	                         : UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
+	        UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
-		// Verificamos si se ha modificado
-		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
-			// Mensaje
-			String message = null;
-			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
-			} else {
-				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
-			}
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+	        buscarAreas();
 
-			// Refrescamos datos
-			buscarAreas();
+	        Area areaResult = (Area) respuesta.getResult();
 
-			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				Area areaRespuesta = (Area) respuesta.getResult();
-				Area aCreada = null;
-				for (Area area : listaAreasSeleccionadas) {
-					if (area.getIdentificador().equals(areaRespuesta.getIdentificador())) {
-						aCreada = area;
-					}
-				}
-				listaAreasSeleccionadas.clear();
-				listaAreasSeleccionadas.add(aCreada);
-			} else {
-				listaAreasSeleccionadas.clear();
-				listaAreasSeleccionadas.add((Area) respuesta.getResult());
-			}
+	        if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+	        	this.listaAreasSeleccionadas.clear();
 
-		}
+	        	for (Area a : this.listaAreas) {
+	                if (a.getIdentificador().equals(areaResult.getIdentificador())) {
+	                    this.listaAreasSeleccionadas.add(a);
+	                    break;
+	                }
+	            }
+
+	        	this.setTramiteSeleccionada(null);
+	            this.setVersionSeleccionada(null);
+
+	            // 3. Forzamos que el filtro traiga los trámites de la nueva área
+	            // Este método debe resetear el LazyDataModel de trámites
+	            this.filtrar();
+	        }
+	    }
 	}
 
 	/**

@@ -756,7 +756,7 @@ public final class RestApiDaoImpl implements RestApiDao {
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNif())) {
 			predicate = builder.and(predicate,
-					builder.like(tableT.get("nifIniciador"), "%" + pFiltroBusqueda.getNif() + "%"));
+					builder.equal(tableT.get("nifIniciador"), pFiltroBusqueda.getNif()));
 		}
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNombre())) {
@@ -1270,6 +1270,16 @@ public final class RestApiDaoImpl implements RestApiDao {
 		}
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		final CriteriaQuery<EventoCM> query = builder.createQuery(EventoCM.class);
+
+		Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
+		Root<HTramite> tableT = query.from(HTramite.class);
+
+		final Join<HEventoAuditoria, HSesionTramitacion> joinSesion = tableE.join("sesionTramitacion");
+
+		query.multiselect(tableE.get("tipo").alias("tipoEvento"), builder.count(tableE).alias("concurrencias"));
+
+		Predicate predicate = builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion"));
+
 		List<TypeEvento> eventos = new ArrayList<>();
 		eventos.add(TypeEvento.FORMULARIO_INICIO);
 		eventos.add(TypeEvento.FORMULARIO_FIN);
@@ -1284,23 +1294,19 @@ public final class RestApiDaoImpl implements RestApiDao {
 		eventos.add(TypeEvento.FIN_TRAMITE);
 		eventos.add(TypeEvento.ERROR);
 
-		Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
-		query.multiselect(tableE.get("tipo").alias("tipoEvento"), builder.count(tableE).alias("concurrencias"));
-		Root<HTramite> tableT = null;
-		if(rolOperador != null && rolOperador) {
-			tableT = query.from(HTramite.class);
-		}
+		Predicate predicateTipos = tableE.get("tipo").in(getListaEventosToString(eventos));
 
-		Predicate predicate = tableE.get("tipo").in(getListaEventosToString(eventos));
-		Predicate predicateFirma = builder.equal(tableE.get("tipo"), TypeEvento.FIRMA_FIN.toString());
-		predicateFirma = builder.and(predicateFirma, builder.equal(tableE.get("resultado"), "OK"));
-		predicate = builder.or(predicate, predicateFirma);
-		if(tableT != null) {
-			predicate = builder.and(predicate,
-					builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion")));
+		Predicate predicateFirma = builder.and(
+				builder.equal(tableE.get("tipo"), TypeEvento.FIRMA_FIN.toString()),
+				builder.equal(tableE.get("resultado"), "OK"));
 
-			if (pFiltroBusqueda.getListaAreas() != null) {
+		predicate = builder.and(predicate, builder.or(predicateTipos, predicateFirma));
+
+		if ("STH_OPE".equals(pFiltroBusqueda.getRolAcceso())) {
+			if (CollectionUtils.isNotEmpty(pFiltroBusqueda.getListaAreas())) {
 				predicate = builder.and(predicate, tableT.get("idArea").in(pFiltroBusqueda.getListaAreas()));
+			} else {
+				predicate = builder.and(predicate, builder.disjunction());
 			}
 		}
 

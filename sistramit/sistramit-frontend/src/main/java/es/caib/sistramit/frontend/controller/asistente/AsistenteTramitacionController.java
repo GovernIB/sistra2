@@ -748,6 +748,18 @@ public class AsistenteTramitacionController extends TramitacionController {
 		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
 	}
 
+	/**
+	 * Url para mantener sesión activa (pensada para timer en cliente).
+	 * @return Jsonview
+	 */
+	@RequestMapping(value = "/mantenerSesion.json", method = RequestMethod.POST)
+	public ModelAndView mantenerSesion() {
+		// Generamos respuesta
+		RespuestaJSON resAnexar = new RespuestaJSON();
+		// - Retorna JSON
+		return generarJsonView(resAnexar);
+	}
+
 	// -------------------------------------------------------------------
 	// FUNCIONES PRIVADAS
 	// -------------------------------------------------------------------

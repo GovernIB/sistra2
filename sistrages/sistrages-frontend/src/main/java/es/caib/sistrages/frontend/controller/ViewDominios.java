@@ -271,33 +271,25 @@ public class ViewDominios extends ViewControllerBase {
 	        return;
 	    }
 
-	    String eliminado = this.datoSeleccionado.getIdentificadorCompuesto();
-	    Long idFd = null;
-
-	    if (this.datoSeleccionado.getTipo().equals(TypeDominio.FUENTE_DATOS)) {
-	        idFd = this.datoSeleccionado.getIdFuenteDatos();
-	    }
+	    Long idFd = (this.datoSeleccionado.getTipo().equals(TypeDominio.FUENTE_DATOS))
+	                ? this.datoSeleccionado.getIdFuenteDatos() : null;
 
 	    if (this.dominioService.removeDominio(this.datoSeleccionado.getCodigo())) {
+
 	        filtrar();
 	        ResultadoError re = this.refrescar();
-	        String message = "";
 
-	        if (re.getCodigo() != 1) {
-	            message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
-	        } else {
-	            message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
-	        }
+	        String message = (re.getCodigo() != 1)
+	            ? UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje()
+	            : UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
 
-	        if (idFd != null) {
-	            if (this.dominioService.removeFuenteDato(idFd)) {
-	                UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-	            } else {
-	                UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias.fd"));
-	            }
+	        // Gestión de la Fuente de Datos asociada
+	        if (idFd != null && !this.dominioService.removeFuenteDato(idFd)) {
+	            UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias.fd"));
 	        } else {
 	            UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 	        }
+
 	    } else {
 	        UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias"));
 	    }

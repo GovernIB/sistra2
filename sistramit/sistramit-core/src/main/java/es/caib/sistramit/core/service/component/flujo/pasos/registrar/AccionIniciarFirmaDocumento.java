@@ -64,21 +64,18 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		final int instancia = UtilsFlujo.instanciaStrToInt(instanciaStr);
 		final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", false);
 
-
 		// Validaciones
 		UtilsPasoRegistrar.getInstance().validacionesFirmaDocumento(pDatosPaso, pVariablesFlujo, idDocumento, instancia,
 				nifFirmante);
 
 		// Buscamos datos firmante
 		Persona firmante = null;
-		// - Si es FH, debe firmar el FH
-		if (pVariablesFlujo.isFuncionarioHabilitado()) {
-			FuncionarioHabilitado fh = pVariablesFlujo.getUsuarioAutenticado().getFuncionarioHabilitado();
-			firmante = new Firmante(fh.getNif(),
-					fh.getNombreApellidos(),
-					TypeObligatoriedadFirmante.OBLIGATORIO);
-		} else {
-			if (nifFirmante != null) {
+		// - Si se indica firmante y es en modo FH, debe firmar el FH
+		if (nifFirmante != null) {
+			if (pVariablesFlujo.isFuncionarioHabilitado()) {
+				FuncionarioHabilitado fh = pVariablesFlujo.getUsuarioAutenticado().getFuncionarioHabilitado();
+				firmante = new Firmante(fh.getNif(), fh.getNombreApellidos(), TypeObligatoriedadFirmante.OBLIGATORIO);
+			} else {
 				firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento,
 						instancia, nifFirmante);
 			}

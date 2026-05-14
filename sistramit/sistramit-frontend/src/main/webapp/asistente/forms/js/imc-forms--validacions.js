@@ -32,7 +32,7 @@ $.fn.appValida = function(opcions) {
 
 	if (format === "correuelectronic") {
 
-		esCorrecte = (/^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,10}$/.test(valor)) ? true : false;
+		esCorrecte = (/^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/.test(valor)) ? true : false;
 
 	}
 
@@ -638,47 +638,14 @@ var appValidaIdentificador = (function(){
 			return (valor.substr(0, valor.length-2)%97 == valor.substr(valor.length-2, 2)) ? true : false;
 
 		},
-		nif: function(valor) {
+		passaport: function(valor, patro) {
 
-			// dni
+			var patroBasic = "^[a-zA-Z0-9]{0,30}$"
+				,patroAplicar = (patro) ? patro : patroBasic;
 
-			valor = valor.toUpperCase();
+			var patro_regExp = new RegExp( patroAplicar );
 
-			if (valor.length != 9) {
-				return false;
-			}
-
-			var esPatronNIF = false
-				,esPatronNIFotros = false
-				,esLletraNumero = false;
-
-			var patronNif = "^[0-9]{0,8}[" + LETRAS_DNI + "]{1}$";
-
-			var regExp = new RegExp(patronNif);
-
-			if (regExp.test(valor)) {
-				esPatronNIF = true;
-			}
-
-			var patronNifOtros = "^[K|L|M][0-9]{1,8}[A-Z]{1}$";
-
-			var regExp = new RegExp(patronNifOtros);
-
-			if (regExp.test(valor)) {
-				esPatronNIFotros = true;
-			}
-
-
-			var digitos = obtenerDigitos(valor);
-			var letra = calcularLetraDni(digitos);
-
-			if (valor.charAt(8) == letra) {
-				esLletraNumero = true;
-			}
-
-			// resultat
-
-			var resultat = ((esPatronNIF || esPatronNIFotros) && esLletraNumero) ? true : false;
+			var resultat = (patro_regExp.test(valor)) ? true : false;
 
 			return resultat;
 

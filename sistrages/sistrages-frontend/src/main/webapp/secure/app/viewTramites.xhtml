@@ -21,9 +21,14 @@
       function setHeight(){
 		  let dataTable = document.getElementById("form:dataTableTramites");
           let toolBar = document.getElementById("form:toolbarTramites");
+          if (!dataTable || !toolBar) return;
+
 		  let dataTableS = dataTable.querySelector('.ui-datatable-scrollable-body');
-		  let height = dataTable.parentElement.offsetHeight - toolBar.offsetHeight - 100;
-          dataTableS.setAttribute("style","max-height: "+height+"px !important")
+
+		  if (dataTableS) {
+			  let height = dataTable.parentElement.offsetHeight - toolBar.offsetHeight - 100;
+	          dataTableS.setAttribute("style","max-height: "+height+"px !important")
+		  }
       }
     </script>
   </ui:define>
@@ -339,11 +344,11 @@
                  </f:facet>
                  <f:facet name="right">
                      <p:commandButton id="btnNuevoArea" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas}">
-                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
+                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl areas dataTableTramites toolbarArea toolbarTramites" oncomplete="refrescarHeight();"/>
                   </p:commandButton>
                   <p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}" />
                   <p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-pencil ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
-                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
+                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl areas dataTableTramites toolbarArea toolbarTramites" oncomplete="refrescarHeight();"/>
                   </p:commandButton>
                   <p:commandButton id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
                     <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoArea']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
@@ -509,24 +514,25 @@
 			}
 
 			function refrescarHeight() {
-			    var altura = window.innerHeight - 50;
-			    var alturaAreas = altura - 220;
-			    var esAdministrador = #{(viewTramites.admEntidad)?true:false};
+				try {
+				    var altura = window.innerHeight - 50;
+				    var alturaAreas = altura - 220;
+				    var areasEl = $('#form\\:areas');
 
-			    if(esAdministrador){
-			        var alturaAreasBody = altura - 245;
-			    } else {
-			        var alturaAreasBody = altura - 272;
+				    if (areasEl.length > 0) {
+				    	var esAdministrador = #{(viewTramites.admEntidad)?true:false};
+				        var alturaAreasBody = esAdministrador ? (altura - 245) : (altura - 272);
+
+				        areasEl.height(alturaAreas);
+				        $('#form\\:areas .ui-datatable-scrollable-body').height(alturaAreasBody);
+
+			            var pixelesExtra = 35;
+			            $('#form\\:dataTableTramites').css('height', (alturaAreas + pixelesExtra) + 'px');
+			        }
+			    } catch (e) {
+			        console.error("Error en refrescarHeight: ", e);
 			    }
-
-			    $('#form\\:areas').height(alturaAreas);
-			    $('#form\\:areas .ui-datatable-scrollable-body').height(alturaAreasBody);
-
-			    // Añadimos un par de píxeles para ajustar correctamente la altura
-			    var pixelesExtra = 35;
-
-			    $('#form\\:dataTableTramites').css('height', (alturaAreas + pixelesExtra) + 'px');
-			}
+		   }
 
 
             function pageDatatable() {

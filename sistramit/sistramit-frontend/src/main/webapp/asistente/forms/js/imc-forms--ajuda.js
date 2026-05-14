@@ -38,7 +38,7 @@ $.fn.appFormsAjuda = function(opcions) {
 					txtAjudaBoto = txtFormDinDesactiva;
 					ajuda_data = "on";
 
-					APP_FORMS_AJUDA_ACTIVADA = "S";
+					APP_FORMS_AJUDA_ACTIVADA = "S"
 
 				} else {
 
@@ -53,7 +53,7 @@ $.fn.appFormsAjuda = function(opcions) {
 					txtAjudaBoto = txtFormDinActiva;
 					ajuda_data = "off";
 
-					APP_FORMS_AJUDA_ACTIVADA = "N";
+					APP_FORMS_AJUDA_ACTIVADA = "N"
 
 				}
 

@@ -177,9 +177,11 @@ $.fn.submenu = function(options) {
 		submenu_elm,
 		tancarAlClicarDins = settings.tancarAlClicarDins,
 		ultima_opcio = false,
-		onClick = function() {
+		onClick = function(e) {
 
-			console.log("Submenú select");
+			submenu_a = $(this);
+
+			// si no està actiu, no fem res
 
 			if (element.find("a.imc-select:first").is(".imc-select-deshabilitat, .imc-select-lectura")) {
 				return;
@@ -189,16 +191,17 @@ $.fn.submenu = function(options) {
 
 			if (!element.hasClass("imc-select-on") && !element.find("a.imc-select:first").is(".imc-select-deshabilitat, .imc-select-lectura")) {
 
-				submenu_a = element.find("a.imc-select:first");
-				submenu_elm = element.find(".imc-select-submenu:first");
+				//submenu_a = element.find("a.imc-select:first");
+				submenu_elm = submenu_a.closest("div.imc-select").find(".imc-select-submenu:first");
 
 				// on està el submenu?
 
-				var esLlistaElements = element.closest(".imc-forms--taula").length ? true : false;
+				var esLlistaElements = element.closest(".imc-forms--taula").length ? true : false
+					,esPassos = element.closest(".passos").length ? true : false;
 
-				if (esLlistaElements) {
+				if (esLlistaElements || esPassos) {
 
-					var form_llista_contenidor = element.closest(".imc--form-contenidor")
+					var form_llista_contenidor = (esLlistaElements) ? element.closest(".imc--form-contenidor") : $("window")
 						,form_llista_contenidor_H = form_llista_contenidor.outerHeight();
 
 					var form_submenu_a = element.find("a.imc-select:first")
@@ -211,9 +214,23 @@ $.fn.submenu = function(options) {
 						maxHeight = form_llista_contenidor_H;
 					}
 
+					/*submenu_elm
+						.find("ul:first")
+							.css({ "max-height": maxHeight+"px" });*/
+
+					// altura del contenidor ems scroll - 50px (25+25)
+
+					var form_f_ = (esLlistaElements) ? element.closest(".imc--form") : $("window")
+						,form_f_T = form_f_.scrollTop()
+						,form_f_H = form_f_.outerHeight()
+						,form_f_submenu_H = form_f_H - 50;
+
 					submenu_elm
 						.find("ul:first")
-							.css({ "max-height": maxHeight+"px" });
+							.css({ "max-height": form_f_submenu_H+"px" });
+
+					//console
+					//	.log("form_f_H: " + form_f_submenu_H);
 
 				}
 
@@ -245,7 +262,7 @@ $.fn.submenu = function(options) {
 				
 				if ((element_T+element_H+submenu_H) > (window_H+window_T)) {
 
-					submenu_T = element_T-submenu_H+window_T;
+					submenu_T = element_T - submenu_H + window_T;
 
 					submenu_elm
 						.addClass("imc-opcions-superior");
@@ -259,9 +276,18 @@ $.fn.submenu = function(options) {
 
 				// està en la llista d'elements?
 
-				if (esLlistaElements) {
+				//console
+				//	.log("((" + submenu_T + " * -1) > (" + submenu_a.offset().top + " - " + $(window).scrollTop() + "))");
 
-					submenu_T = submenu_T - element_H;
+				if (esLlistaElements && ((submenu_T * -1) > (submenu_a.offset().top - $(window).scrollTop()))) {
+
+					submenu_T = (submenu_a.offset().top - $(window).scrollTop() - (element_H * 2)) * -1;
+
+				}
+
+				if (esPassos) {
+
+					submenu_T = element_H;
 
 				}
 
@@ -284,8 +310,18 @@ $.fn.submenu = function(options) {
 
 						if (esLlistaElements) {
 
-							var sub_H = submenu_elm.outerHeight();
+							//var sub_H = submenu_elm.outerHeight();
 
+							/*if ((submenu_T * -1) > submenu_a.offset().top) {
+
+								submenu_T = (submenu_a.offset().top - 65) * -1;
+
+								submenu_elm
+									.css({ top: submenu_T+"px" });
+
+							}*/
+
+							/*
 							if (form_submenu_pos_T+sub_H > form_llista_contenidor_H) {
 
 								var top_sub = (form_submenu_pos_T+form_submenu_H+sub_H) - form_llista_contenidor_H;
@@ -293,7 +329,7 @@ $.fn.submenu = function(options) {
 								submenu_elm
 									.css({ top: (form_submenu_H-top_sub-10)+"px" });
 
-							}
+							}*/
 								
 						}
 
@@ -399,14 +435,16 @@ $.fn.submenu = function(options) {
 		},
 		onSelectLletra = function(e) {
 
-			console.log("va: ")
+			//console.log("onSelectLletra: " + String.fromCharCode(e.keyCode))
+
+			//console.log("hasClass(imc-submenu-on): " + element.find(".imc-select-submenu:visible:first").hasClass("imc-submenu-on"))
 			
-			if (element.find(".imc-select-submenu:first").hasClass("imc-submenu-on")) {
+			if (element.find(".imc-select-submenu:visible:first").hasClass("imc-submenu-on")) {
 				if (!element.hasClass("imc-el-index-marcant")) {
 					
-					element.addClass("imc-el-index-marcant");
+					element
+						.addClass("imc-el-index-marcant");
 					
-					//console.log( String.fromCharCode(e.keyCode) );
 					situa( String.fromCharCode(e.keyCode) );
 
 				}
@@ -421,7 +459,7 @@ $.fn.submenu = function(options) {
 				elm_trobat_mateixa_lletra = 0,
 				elm_trobats = [];
 
-			var el_opcions_llista = element.find(".imc-select-submenu ul:first")
+			var el_opcions_llista = element.find(".imc-select-submenu:visible:first ul:first")
 				,el_opcions = el_opcions_llista.find("li");
 			
 			el_opcions
@@ -542,22 +580,44 @@ $.fn.selectorIMC = function(options) {
 			onClick = function(e) {
 				
 				var elm = $(this);
+
+				//alert( elm.closest("ul").length  + " && " + !elm.parent().hasClass("imc-select-seleccionat")   );
 				
 				if (elm.closest("ul").length && !elm.parent().hasClass("imc-select-seleccionat")) {
 					
-					element_selector = element.find("div.imc-select:first");
-					element_a = element_selector.find("a:first");
+					element_selector = elm.closest("div.imc-select");
+					element_a = element_selector.find("a.imc-select:first");
 					seleccionat_input = element_selector.find("input:first");
 					seleccionat_span = element_selector.find("span:first");
 					opcions_elm = element_selector.find("ul:first");
+
+					//alert( elm.attr("data-value") );
 					
-					seleccionat_input.val(elm.attr("data-value"));
-					element_a.html( $("<span>").text( elm.text() ) ).focus();
+					seleccionat_input
+						.val( elm.attr("data-value") );
+
+					var data_alSeleccionar = elm.attr("data-alseleccionar")
+						,text_alSeleccionar = (data_alSeleccionar && data_alSeleccionar !== "") ? data_alSeleccionar : elm.text();
+
 					
-					opcions_elm.find("li").removeClass("imc-select-seleccionat");
-					elm.parent().addClass("imc-select-seleccionat");
+						//alert( "text_alSeleccionar: " +  text_alSeleccionar );
+
+						//alert( "element_a: " + element_a.html() );
 					
-					settings.alAcabar();
+					element_a
+						.html( $("<span>").text( text_alSeleccionar ) )
+						.focus();
+					
+					opcions_elm
+						.find("li")
+							.removeClass("imc-select-seleccionat");
+					
+					elm
+						.parent()
+							.addClass("imc-select-seleccionat");
+					
+					settings
+						.alAcabar();
 					
 				}
 				
@@ -587,7 +647,8 @@ $.fn.selectorIMC = function(options) {
 				.on('mouseenter.selector', '.imc-select-submenu a', onMouseEnter)
 				.on('mouseleave.selector', '.imc-select-submenu a', onMouseLeave);
 		} else {
-			element.off('.selector')
+			element
+				.off('.selector')
 				.on('click.selector', '.imc-select-submenu a', onClick);
 		}
 		

@@ -7,7 +7,7 @@ div.imc-select { display: inline-block; position: relative; width: 100%; }
 	div.imc-select a.imc-select { overflow: hidden; display: inline-block; position: relative; height: 2.2em; color: #626A72; padding: .2em 2em 0 .2em; background-color: #fff; border: 3px solid #ccc; }
 	div.imc-select a.imc-select:hover { border-color: #999; }
 	div.imc-select a.imc-select:focus { background-color: #f9f9e8; border-color: #4dba79; }
-		div.imc-select a.imc-select span { overflow: hidden; display: inline-block; white-space: nowrap; padding-top: .1em; margin-right: 1.5em; }
+		div.imc-select a.imc-select span { overflow: hidden; display: inline-block; white-space: nowrap; padding-top: .2em; margin-right: 1.5em; }
 
 div.imc-select a.imc-select::before {
 	content: "";
@@ -51,7 +51,7 @@ div.imc-select a.imc-select.imc-select-lectura::before,
 div.imc-select a.imc-select.imc-select-deshabilitat::before { display: none; }
 
 div.imc-select a.imc-select.imc-select-lectura:hover { border-color: #ccc; }
-div.imc-select a.imc-select.imc-select-lectura:focus { background-color: #f9f9e8; border-color: #ccc; }
+div.imc-select a.imc-select.imc-select-lectura:focus { background-color: #e2e2e2; border-color: #ccc; }
 
 
 
@@ -85,7 +85,7 @@ div.imc-opcions ul { overflow: auto; max-height: 20em; list-style: none; margin:
 	div.imc-opcions ul a { display: block; font-size: 1em; padding: .3em .5em; }
 	div.imc-opcions ul a:hover
 	,div.imc-opcions ul a.hover { background-color: #265d3c; }
-	div.imc-opcions ul li { padding: 0; }
+	div.imc-opcions ul li { padding: 0 !important; }
 	div.imc-opcions ul li.imc-select-seleccionat a { font-style: italic; color: #999; background-color: transparent; cursor: default; }
 
 div.imc-opcions .imc-select-submenu {

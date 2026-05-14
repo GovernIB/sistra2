@@ -110,13 +110,32 @@ function appFormsInicia() {
 
 function getScript(urlJS) {
 
-	$.ajax({
+	return $.ajax({
 		async: false
 		,url: urlJS
 		,dataType: "script"
 	});
 
 }
+
+function loadScriptsInOrder(scripts) {
+	// scripts: array de rutas, ej: ["/lib1.js", "/lib2.js", "/lib3.js"]
+	let sequence = $.Deferred().resolve();
+
+	scripts.forEach((src) => {
+		sequence = sequence.then(() => {
+			return $.ajax({
+				url: src,
+				dataType: "script",
+				cache: true // evita recargar si ya se descargó
+			});
+		});
+	});
+
+	return sequence;
+}
+
+
 
 function appFormsCarregaScripts() {
 
@@ -144,29 +163,34 @@ function appFormsCarregaScripts() {
 		,$.get(APP_FORMS_ + "forms/css/imc-forms--taula-iframe.css?" + APP_FORMS_VERSIO)
 		,$.get(APP_FORMS_ + "forms/css/imc-forms--missatge.css?" + APP_FORMS_VERSIO)
 		,$.get(APP_FORMS_ + "forms/css/imc-forms.css?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/numeral.min.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--comuns.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--funcions.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--validacions.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--captcha.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--llistaElements.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--validaNumero.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--serialitza.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--missatge.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--moduls.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--ajuda.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--textarea.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--avalua.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--iframe.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--elementImatge.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--telefonInternacional.js?" + APP_FORMS_VERSIO)
-		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--bloc.js?" + APP_FORMS_VERSIO)
-
+		,loadScriptsInOrder([
+			APP_FORMS_ + "forms/js/numeral.min.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--comuns.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--funcions.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--validacions.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--captcha.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--llistaElements.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--validaNumero.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--serialitza.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--missatge.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--ajuda.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--textarea.js?" + APP_FORMS_VERSIO,
+			// APP_FORMS_ + "forms/js/imc-forms--passaport.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--avalua.js?" + APP_FORMS_VERSIO,
+			// APP_FORMS_ + "forms/js/imc-forms--iframe.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--elementImatge.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--telefonInternacional.js?" + APP_FORMS_VERSIO,
+			// APP_FORMS_ + "forms/js/imc-forms--bloc.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/imc-forms--moduls.js?" + APP_FORMS_VERSIO,
+			APP_FORMS_ + "forms/js/numeral.min_es-es.js?" + APP_FORMS_VERSIO
+		])
 	).then(
 
 		function( cssFormsDestaca, cssFormsSelect, cssFormsTaulaIframe, cssFormsMissatge, cssForms) {
 
-			$.getScript(APP_FORMS_ + "forms/js/numeral.min_es-es.js?" + APP_FORMS_VERSIO);
+			// TODO ISMA -- VER SI PODEMOS PASAR A CARGA EN ORDEN
+			// getScript(APP_FORMS_ + "forms/js/numeral.min_es-es.js?" + APP_FORMS_VERSIO);
+
 
 			// estils
 
@@ -192,6 +216,9 @@ function appFormsCarregaScripts() {
 
 			FORMS_JS = true;
 
+			imc_forms_body
+				.removeAttr("data-forms");
+
 		}
 
 	).fail(
@@ -200,8 +227,11 @@ function appFormsCarregaScripts() {
 
 			consola("Error carrega arxius JS i CSS de FORMS");
 
-			imc_forms_body
-				.appFormsErrorsGeneral({ estat: "fail" });
+			$("body")
+				.attr("data-forms", "error");
+
+			//imc_forms_body
+			//	.appFormsErrorsGeneral({ estat: "fail" });
 
 		}
 
@@ -253,6 +283,11 @@ $.when(
 			.find("button:first span")
 				.text( txtFormsDinSeccionsForm );
 
+		// no hi ha error
+
+		$("body")
+			.removeAttr("data-forms");
+
 		// carrega CSS i JS
 
 		appFormsCarregaScripts();
@@ -268,6 +303,9 @@ $.when(
 	function() {
 
 		consola("Formulari: error des de l'inicia de FORMS (FAIL)");
+
+		$("body")
+			.attr("data-forms", "error");
 
 	}
 

@@ -255,12 +255,14 @@ public class AnexarDocumentoComponent {
      */
     private void validarProteccionPassword(Anexo anexoDetalle, byte[] datosFichero, String nombreFichero) {
         if (FilenameUtils.getExtension(nombreFichero).equalsIgnoreCase("PDF")) {
+            boolean protegidoPwd = false;
             try {
-                if (UtilPDF.esProtegidoPwd(datosFichero)) {
-                    throw new AnexarPdfProtegidoException();
-                }
+                protegidoPwd = UtilPDF.esProtegidoPwd(datosFichero);
             } catch (Exception e) {
                 throw new AnexarPdfNoVerificadoProtegidoException(e);
+            }
+            if (protegidoPwd) {
+                throw new AnexarPdfProtegidoException();
             }
         }
     }
@@ -274,12 +276,14 @@ public class AnexarDocumentoComponent {
      */
     private void validarTieneAdjuntos(Anexo anexoDetalle, byte[] datosFichero, String nombreFichero) {
         if (FilenameUtils.getExtension(nombreFichero).equalsIgnoreCase("PDF")) {
+            boolean tieneAdjuntos = false;
             try {
-                if (UtilPDF.tieneAdjuntos(datosFichero)) {
-                    throw new AnexarVerificarAdjuntosException();
-                }
+                tieneAdjuntos = UtilPDF.tieneAdjuntos(datosFichero);
             } catch (Exception e) {
                 throw new AnexarPdfNoVerificadoAdjuntosException(e);
+            }
+            if (tieneAdjuntos) {
+                throw new AnexarVerificarAdjuntosException();
             }
         }
     }

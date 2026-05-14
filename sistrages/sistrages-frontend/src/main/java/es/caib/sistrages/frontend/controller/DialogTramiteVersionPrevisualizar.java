@@ -494,14 +494,29 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 * Selecciona el trámite si solo hay uno disponible.
 	 */
 	public void seleccionarTramite() {
-		if (tramites != null && tramites.size() == 1) {
-			tramiteSeleccionado = tramites.get(0).getIdentificador();
-			calcularUrl(false);
-		}
-		if (tramiteSeleccionado != null && (tramites == null || tramites.isEmpty())) {
-			tramiteSeleccionado = null;
-			calcularUrl(false);
-		}
+		if (tramites != null && !tramites.isEmpty()) {
+	        // Comprobamos si el trámite actualmente seleccionado sigue estando en la lista filtrada
+	        boolean sigueEnLista = false;
+	        for (DefinicionTramiteCP t : tramites) {
+	            if (t.getIdentificador().equals(tramiteSeleccionado)) {
+	                sigueEnLista = true;
+	                break;
+	            }
+	        }
+
+	        // Si no está en la lista o no había nada seleccionado, forzamos el primero
+	        if (!sigueEnLista || tramiteSeleccionado == null) {
+	            tramiteSeleccionado = tramites.get(0).getIdentificador();
+	        }
+
+	        // Recalculamos la URL con el nuevo trámite seleccionado
+	        calcularUrl(false);
+
+	    } else {
+	        // Si la lista está vacía, limpiamos la selección
+	        tramiteSeleccionado = null;
+	        calcularUrl(false);
+	    }
 	}
 
 	/**

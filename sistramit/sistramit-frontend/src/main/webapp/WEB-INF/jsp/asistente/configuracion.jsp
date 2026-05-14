@@ -97,6 +97,7 @@ var APP_TRAMIT_JUSTIFICANT = APP_SERVIDOR + "gj/descargarJustificante.html",
 var APP_FORMS_AJUDA_ACTIVADA = "${configuracion.formularioAyudaActivada}"
 	,APP_FORMS_URL_DINAMICA = "s"
 	,APP_FORM_DATA_FORMAT = "es"
+	,APP_FORM_MANTENIR_SESSIO = APP_SERVIDOR + "mantenerSesion.json"
 	,APP_FORM_CARREGA = APP_SERVIDOR + "fm/cargarFormulario.json"
 	,APP_FORM_GUARDA = APP_SERVIDOR + "fm/guardarPagina.json"
 	,APP_FORM_CANCELAR = APP_SERVIDOR + "fm/cancelar.json"

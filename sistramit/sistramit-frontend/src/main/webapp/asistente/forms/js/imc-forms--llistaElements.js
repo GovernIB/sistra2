@@ -304,6 +304,7 @@ $.fn.appFormsLlistaElements = function(options) {
 						imc_forms_taula = $("#imc-forms--taula");
 						imc_forms_taula_form = imc_forms_taula.find(".imc--form-contenidor:first");
 
+
 						// literals
 
 						imc_forms_taula
@@ -317,6 +318,18 @@ $.fn.appFormsLlistaElements = function(options) {
 								.text( txtFormDinTanca )
 								.end()
 							.attr("data-id", elm_id);
+						
+
+						// columnes?
+
+						var cols_pare_ = $("#imc-forms-contenidor").attr("data-columnes");
+
+						if (!isNaN(parseInt(cols_pare_, 10))) {
+
+							imc_forms_taula
+								.attr("data-columnes", cols_pare_);
+							
+						}
 
 					}
 
@@ -557,7 +570,24 @@ $.fn.appFormsLlistaElements = function(options) {
 						,llista_filla_col_filla = llista_filla_.attr("data-columna-filla")
 						,llista_filla_trs_ = llista_filla_.find("tbody:first tr");
 
-					var valor_fila_pare_ = fila_el.find("td[data-id='" + llista_filla_col_pare + "']:first").text();
+					var valor_fila_pare_ = false; // fila_el.find("td[data-id='" + llista_filla_col_pare + "']:first").text();
+
+					var valor_fila_pare_dades = JSON.parse( fila_el.attr("data-dades") );
+
+					$(valor_fila_pare_dades.elemento)
+						.each(function() {
+
+							var tjd = this
+								,tjd_id = tjd.id;
+
+							if (tjd_id === llista_filla_col_pare) {
+								valor_fila_pare_ = tjd.valor;
+								return;
+							}
+
+						});
+
+					//alert(llista_filla_col_pare + " - " + valor_fila_pare_)
 
 					llista_filla_trs_
 						.each(function() {

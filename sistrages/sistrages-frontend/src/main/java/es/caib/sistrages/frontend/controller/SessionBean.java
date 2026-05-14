@@ -526,7 +526,7 @@ public class SessionBean {
 	        if (tieneAdm && tieneDes && tieneCons) return UtilJSF.getLiteral("perfil.dinamico.adm_des_cons");
 
 	        if (tieneAdm && tieneDes)  return UtilJSF.getLiteral("perfil.dinamico.adm_des");
-	        if (tieneAdm && tieneCons) return UtilJSF.getLiteral("percel.dinamico.adm_cons");
+	        if (tieneAdm && tieneCons) return UtilJSF.getLiteral("perfil.dinamico.adm_cons");
 	        if (tieneDes && tieneCons) return UtilJSF.getLiteral("perfil.dinamico.des_cons");
 
 	        if (tieneAdm)  return UtilJSF.getLiteral("perfil.dinamico.adm");

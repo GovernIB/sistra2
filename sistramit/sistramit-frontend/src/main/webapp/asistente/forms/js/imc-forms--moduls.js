@@ -222,6 +222,17 @@ $.fn.appDestaca = function(options) {
 
 $.fn.appFormsConfiguracio = function(options) {
 
+    // Timeout para mantener la sesion
+    setInterval(() => {
+        $.ajax({
+            type: "POST",
+            url: APP_FORM_MANTENIR_SESSIO,
+            dataType: "json"
+        });
+    }, 60000);
+
+
+    // Configuracion formulario
 	var settings = $.extend({
 		forms_json: false
 		,desDe: false // inicia, avalua, taula
@@ -280,6 +291,49 @@ $.fn.appFormsConfiguracio = function(options) {
 									.appFormsSeccionsNav();
 
 							}
+						);
+
+					}
+
+					// navegació per seccions quan és mòbil
+
+					var mobilNavegacio = forms_json.datos.movilNavegacion || "n";
+
+					element
+						.attr("data-mobil-navegacio", mobilNavegacio);
+
+					if (mobilNavegacio === "s") {
+
+						$.when(
+
+							$.get(APP_FORMS_ + "forms/css/imc-forms--seccio-nav.css?" + APP_FORMS_VERSIO)
+							,$.getScript(APP_FORMS_ + "forms/js/imc-forms--mobil-seccions-nav.js?" + APP_FORMS_VERSIO)
+
+						).then(
+
+							function( cssFormsSeccioNav ) {
+
+								// estils
+
+								$("<style>")
+									.html( cssFormsSeccioNav[0] )
+										.appendTo( imc_forms_head );
+
+								// script
+
+								element
+									.appFormsMobilSeccNavegacio();
+
+							}
+
+						).fail(
+
+							function() {
+
+								consola("Error al descarregar JS i CSS de la navegació per seccions en móbil");
+
+							}
+
 						);
 
 					}
@@ -597,7 +651,7 @@ $.fn.appFormsConfiguracio = function(options) {
 								if (conf_opcions.nifOtros && conf_opcions.nifOtros === "s") {
 
 									elm_input
-										.attr("data-nifOtros", conf_opcions.nifOtros);
+										.attr("data-nifotros", conf_opcions.nifOtros);
 
 								}
 
@@ -611,7 +665,7 @@ $.fn.appFormsConfiguracio = function(options) {
 								if (conf_opcions.nifPJ && conf_opcions.nifPJ === "s") {
 
 									elm_input
-										.attr("data-nifPJ", conf_opcions.nifPJ);
+										.attr("data-nifpj", conf_opcions.nifPJ);
 
 								}
 
@@ -622,17 +676,20 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								}
 
-								if (conf_opcions.nif && conf_opcions.nif === "s") {
+								// passaport
 
+								if (conf_opcions.pasaporte && conf_opcions.pasaporte === "s") {
+
+									elm
+										.attr("data-passaport", conf_opcions.pasaporte)
+										.attr("data-passaport-op-dni", conf_opcions.dni)
+										.attr("data-passaport-op-nie", conf_opcions.nie)
+										.attr("data-passaport-op-nifotros", conf_opcions.nifOtros)
+										.attr("data-passaport-op-nifpj", conf_opcions.nifPJ)
+										.appPassaportCrea();
+										
 									elm_input
-										.attr("data-nif", conf_opcions.nif);
-
-								}
-
-								if (conf_opcions.cif && conf_opcions.cif === "s") {
-
-									elm_input
-										.attr("data-cif", conf_opcions.cif);
+										.attr("data-passaport", conf_opcions.pasaporte);
 
 								}
 
@@ -975,23 +1032,26 @@ $.fn.appFormsConfiguracio = function(options) {
 								if (elm_input_tipus === "texto" || elm_input_tipus === "oculto") {
 
 
-									// revisem si es data
+									// revisem
 
 									if (elm_input_contingut === "fe") {
 
+										// revisem si es data
+
 										val_valor = appFormsDataFormat(val_valor);
 
-									}
+										elm_input
+											.val( val_valor );
 
+									} else if (elm_input_contingut === "ti" && typeof elm.data("iti") !== "undefined") {
 
-									// telf. internacional
-
-									if (elm_input_contingut === "ti" && typeof elm.data("iti") !== "undefined") {
+										// telf. internacional
 
 										var el_iti = elm.data("iti");
 
 										el_iti
 											.setNumber( val_valor );
+
 									} else if (elm_input[0].nodeName === "TEXTAREA") {
 
 										// si és textarea
@@ -999,6 +1059,13 @@ $.fn.appFormsConfiguracio = function(options) {
 										elm_input
 											.val( val_valor )
 											.appTextareaAmplaria();
+
+									} else if (elm.attr("data-passaport") === "s") {
+
+										// si és passaport
+
+										elm
+											.appPassaportValora({ valor: val_valor });
 
 									} else {
 
@@ -1047,7 +1114,15 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									elm
 										.find("input")
-										.prop("checked", false);
+											.prop("checked", false);
+
+									if (elm.attr("data-lectura") === "s") {
+
+										elm
+											.find("input")
+												.attr("disabled", "disabled");
+
+									}
 
 									$(val_valor)
 										.each(function() {
@@ -1067,7 +1142,7 @@ $.fn.appFormsConfiguracio = function(options) {
 
 														check_
 															.find("input")
-															.attr("disabled", "disabled");
+																.attr("disabled", "disabled");
 
 													}
 
@@ -1176,30 +1251,39 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								// SENSE VALOR (null)
 
-								if (elm_input_tipus === "texto") {
+								if (elm_input_tipus === "texto" || elm_input_tipus === "oculto") {
 
 
-									// telf. internacional
+									// revisem
 
 									if (elm_input_contingut === "ti") {
+
+										// telf. internacional
 
 										elm
 											.find(".iti__tel-input:first")
 												.val( "" );
 
+									} else if (elm_input[0].nodeName === "TEXTAREA") {
+
+										// si és textarea
+
+										elm_input
+											.val( "" )
+											.appTextareaAmplaria();
+											
+
+									} else if (elm.attr("data-passaport") === "s") {
+
+										// si és passaport
+
+										elm
+											.appPassaportValora({ valor: "" });
+
 									} else {
 
 										elm_input
 											.val( "" );
-
-									}
-
-									// si es textarea
-
-									if (elm_input[0].nodeName === "TEXTAREA" && elm_input.attr("maxlength")) {
-
-										elm_input
-											.appTextareaAmplaria();
 
 									}
 
@@ -1553,6 +1637,20 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									}
 
+									// si és passaport
+
+									if (elm.attr("data-passaport") === "s") {
+
+										elm
+											.find("a.imc-select")
+												.addClass("imc-select-lectura")
+												.end()
+											.find("input:last")
+												.attr({ "readonly": "readonly", "aria-required": "false" })
+												.removeAttr("required");
+
+									}
+
 								} else if (conf_lectura === "n") {
 
 									if (conf_tipus === "texto") {
@@ -1603,6 +1701,20 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										elm_input
 											.removeAttr("disabled");
+
+									}
+
+									// si és passaport
+
+									if (elm.attr("data-passaport") === "s") {
+
+										elm
+											.find("a.imc-select")
+												.removeClass("imc-select-lectura")
+												.end()
+											.find("input:last")
+												.removeAttr("readonly")
+												.attr({ "required": "required", "aria-required": "true" });
 
 									}
 
@@ -1885,9 +1997,9 @@ $.fn.appFormsValida = function(options) {
 
 				}
 
-				// identificador
+				// identificador (sense dualitat nif/passaport)
 
-				if (input.attr("data-contingut") === "identificador" && input_val !== "") {
+				if (input.attr("data-contingut") === "identificador" && input.attr("data-identificador") !== "dual" && input_val !== "") {
 
 					var idValid = false;
 
@@ -1903,13 +2015,13 @@ $.fn.appFormsValida = function(options) {
 
 					}
 
-					if (!idValid && input.attr("data-nifOtros") === "s") {
+					if (!idValid && input.attr("data-nifotros") === "s") {
 
 						idValid = ( appValidaIdentificador.nifOtros(input_val) ) ? true : false;
 
 					}
 
-					if (!idValid && (input.attr("data-nifPJ") === "s" || input.attr("data-cif") === "s")) {
+					if (!idValid && (input.attr("data-nifpj") === "s")) {
 
 						idValid = ( appValidaIdentificador.nifPJ(input_val) ) ? true : false;
 
@@ -1920,10 +2032,73 @@ $.fn.appFormsValida = function(options) {
 						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;	
 
 					}
+					
+					if (!idValid && input.attr("data-passaport") === "s") {
 
-					if (!idValid && input.attr("data-nif") === "s") {
+						var dual_pais_val = input_pare.find("div[data-pais] input:first").val()
+							,dual_input_val = input_pare.find(".imc-el-control input:last").val();
 
-						idValid = ( appValidaIdentificador.nif(input_val) ) ? true : false;
+						if (dual_pais_val !== "") {
+
+							var dual_pais_patro = input_pare.find("div[data-pais] a[data-value=" + dual_pais_val + "]").attr("data-patro");
+
+							idValid = ( appValidaIdentificador.passaport(dual_input_val.toUpperCase(), dual_pais_patro) ) ? true : false;
+
+						}
+
+					}
+
+					esError = !idValid;
+					ERROR_TEXT = (esError) ? txtFormDinCampError_id : false;
+
+				}
+
+				// identificador (AMB DUALITAT nif/passaport)
+
+				if (input.attr("data-contingut") === "identificador" && input.attr("data-identificador") === "dual" && input_val !== "") {
+
+					var idValid = false;
+
+					var dual_tipus_id = input_pare.find("div[data-selector] input:first").val()
+						,dual_input_val = input_pare.find(".imc-el-control input:last").val();
+
+					if (dual_tipus_id === "nif") {
+
+						if (!idValid && input.attr("data-dni") === "s") {
+
+							idValid = ( appValidaIdentificador.dni(dual_input_val) ) ? true : false;
+
+						}
+
+						if (!idValid && input.attr("data-nie") === "s") {
+
+							idValid = ( appValidaIdentificador.nie(dual_input_val) ) ? true : false;
+
+						}
+
+						if (!idValid && input.attr("data-nifotros") === "s") {
+
+							idValid = ( appValidaIdentificador.nifOtros(dual_input_val) ) ? true : false;
+
+						}
+
+						if (!idValid && input.attr("data-nifpj") === "s") {
+
+							idValid = ( appValidaIdentificador.nifPJ(dual_input_val) ) ? true : false;
+
+						}
+
+					} else {
+
+						var dual_pais_val = input_pare.find("div[data-pais] input:first").val();
+
+						if (dual_pais_val !== "") {
+
+							var dual_pais_patro = input_pare.find("div[data-pais] a[data-value=" + dual_pais_val + "]").attr("data-patro");
+
+							idValid = ( appValidaIdentificador.passaport(dual_input_val.toUpperCase(), dual_pais_patro) ) ? true : false;
+
+						}
 
 					}
 
@@ -3266,7 +3441,7 @@ $.fn.appFormsPopupTabula = function(options) {
 
 							} else if (f_el_contingut === "a") {
 
-
+								// textarea
 
 								f_el
 									.find("textarea:first")
@@ -3361,8 +3536,6 @@ $.fn.appFormsPopupTabula = function(options) {
 
 					setTimeout(
 						function() {
-
-							//alert("Sí!")
 
 							var elm_a_observar = element.find(".imc-element.imc-el-captcha:first");// .imc--img
 
