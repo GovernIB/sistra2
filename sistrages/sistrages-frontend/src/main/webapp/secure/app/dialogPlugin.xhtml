@@ -14,87 +14,15 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogPlugin.titulo']}"/></title>
-
-	<script type="text/javascript">
-		//<![CDATA[
-		    function setHeight() {
-		        // 1. Altura total disponible en el iframe del diálogo
-		        var alturaVentana = window.innerHeight;
-
-		        // 2. Calculamos cuánto ocupan los elementos superiores (Inputs)
-		        var alturaInputs = $('#dialogPlugin\\:gridContenido').outerHeight(true) || 0;
-
-		        // 3. Calculamos la altura de la botonera inferior
-		        var alturaBotonera = $('.botonera').outerHeight(true) || 0;
-
-		        // 4. Espacio para etiquetas o títulos adicionales
-		        var etiquetasExtra = 30;
-
-		        // 5. Cálculo de la altura resultante para la tabla
-		        var alturaDatatable = alturaVentana - alturaInputs - alturaBotonera - etiquetasExtra - 20;
-
-		        // Seguridad: Mantenemos un mínimo
-		        if (alturaDatatable < 150) {
-		            alturaDatatable = 150;
-		        }
-
-		        // 6. Aplicar alturas a los componentes de PrimeFaces
-		        var $table = $('#dialogPlugin\\:dataTablePropiedades');
-		        $table.height(alturaDatatable);
-
-		        var alturaHeaderTabla = $table.find('.ui-datatable-scrollable-header').outerHeight(true) || 35;
-		        var alturaScrollableBody = alturaDatatable - alturaHeaderTabla;
-
-		        $table.find('.ui-datatable-scrollable-body').css('height', alturaScrollableBody + 'px');
-		    }
-
-		    function ajustarHeaderScroll() {
-		        var header = document.querySelector('.ui-datatable-scrollable-header-box');
-		        var body = document.querySelector('.ui-datatable-scrollable-body');
-		        var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-
-		        // El uso de && aquí dentro de CDATA ya no dará error
-		        if (!isFirefox && body && body.scrollHeight > body.clientHeight) {
-		            var scrollWidth = body.offsetWidth - body.clientWidth;
-		            header.style.marginRight = scrollWidth + 'px';
-		        } else if (header) {
-		            header.style.marginRight = '0px';
-		        }
-		    }
-
-		    jQuery(document).ready(function() {
-		        $(window).resize(function() {
-		            setTimeout(function(){ setHeight(); ajustarHeaderScroll(); }, 50);
-		        });
-
-		        setTimeout(function(){ setHeight(); ajustarHeaderScroll(); }, 100);
-		        setTimeout(function(){ setHeight(); ajustarHeaderScroll(); }, 500);
-		        setTimeout(function(){ setHeight(); ajustarHeaderScroll(); }, 1500);
-		    });
-		//]]>
-		</script>
-
 	<style type="text/css">
-	    html, body {
-	        height: auto !important; /* Permite que el cuerpo crezca con el contenido */
-	        overflow: hidden !important; /* Evitamos el doble scroll molesto */
-	        background-color: #f8f9fa;
-	    }
-	    #dialogPlugin {
-	        height: auto !important;
-	        padding-bottom: 20px; /* Espacio para que respire el final */
-	    }
-	    .tabla-con-botones {
-	        display: flex;
-	        align-items: flex-start;
-	        gap: 10px;
-	        margin-top: 15px;
-	    }
-	    /* Estilo para que la tabla no tenga scroll interno y crezca libremente */
-	    .ui-datatable-scrollable-body {
-	        height: auto !important;
-	        max-height: none !important;
-	    }
+		.dContents{
+			display:contents;
+		}
+
+		.alturaPropiedadesPlugin{
+			height: 360px !important;
+		}
+
 	</style>
 </h:head>
 
@@ -115,79 +43,99 @@
 	</f:metadata>
 	<h:form id="dialogPlugin" styleClass="margin-top-10">
 
-  		<p:outputPanel id="panelPrincipal" style="height: auto;">
-			    <p:growl id="growlDialog" widgetVar="growlDialog" />
+  			<p:outputPanel style="height:497px;">
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			    <h:panelGrid id="gridContenido" columns="2"
-			                 columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18 w15, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w80"
-			                 style="width:100%;" cellpadding="5">
+				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd, ui-datatable-even, ui-datatable-odd, ui-datatable-even, ui-datatable-odd alturaPropiedadesPlugin, ui-datatable-even" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18 w15, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w80, wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
 
-			        <p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}"/>
-			        <p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}" required="true" disabled="#{dialogPlugin.isConsulta()}" style="width:94%;">
-			             <f:selectItems value="#{dialogPlugin.tipos}" var="tipo" itemLabel="#{msg['typePlugin.' += tipo]}"/>
-			        </p:selectOneMenu >
+					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" style="padding-left: 2px; display: block;"/>
+					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}"  required="true" disabled="#{dialogPlugin.isConsulta()}" style="width:94%;">
+    					 <f:selectItems value="#{dialogPlugin.tipos}" var="tipo" itemLabel="#{msg['typePlugin.' += tipo]}"/>
+					</p:selectOneMenu >
+					<p:outputLabel value=""/>
 
-			        <p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}"/>
-			        <p:inputText id="valor" value="#{dialogPlugin.data.realClassname}" readonly="#{dialogPlugin.isReal ? false : true}" style="width:98%;"/>
+					<p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" style="padding-left: 2px; display: block;"/>
+					<p:inputText id="valor" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.realClassname}" readonly="#{dialogPlugin.isReal ? false : true}" required="false" style="width:98%;" maxlength="500">
+						<p:ajax event="keyup" process="@this" />
+					</p:inputText>
+					<p:outputLabel value="" />
 
-			        <p:outputLabel for="mockClassname" value="#{msg['dialogPlugin.headerMockClassname']}"/>
-			        <p:inputText id="mockClassname" value="#{dialogPlugin.data.mockClassname}" readonly="#{dialogPlugin.isReal ? true : false}" style="width:98%;"/>
+					<p:outputLabel for="mockClassname" value="#{msg['dialogPlugin.headerMockClassname']}" style="padding-left: 2px; display: block;"/>
+					<p:inputText id="mockClassname" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.mockClassname}" readonly="#{dialogPlugin.isReal ? true : false}" required="false" style="width:98%;" maxlength="500">
+						<p:ajax event="keyup" process="@this" />
+					</p:inputText>
+					<p:outputLabel value="" />
 
-			        <p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}"/>
-			        <p:inputText id="descripcion" value="#{dialogPlugin.data.descripcion}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;"/>
+					<p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}" style="padding-left: 2px; display: block;"/>
+					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.descripcion}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="255"/>
+					<p:outputLabel value="" />
 
-			        <p:outputLabel for="prefijoPropiedades" value="#{msg['dialogPlugin.headerPrefijo']}"/>
-			        <p:inputText id="prefijoPropiedades" value="#{dialogPlugin.data.prefijoPropiedades}" readonly="#{dialogPlugin.isConsulta()}" style="width:98%;"/>
-			    </h:panelGrid>
+					<p:outputLabel for="prefijoPropiedades" value="#{msg['dialogPlugin.headerPrefijo']}" style="padding-left: 2px; display: block;"/>
+					<p:inputText id="prefijoPropiedades" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.prefijoPropiedades}" readonly="#{dialogPlugin.isConsulta()}" style="width:98%;" maxlength="100"/>
+					<p:outputLabel value="" />
 
-			    <div style="padding-left: 18px; margin-top: 15px; font-weight: bold;">
-			        <h:outputText value="#{msg['dialogPlugin.headerPropiedad']}" />
-			    </div>
+   					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" style="padding-left: 2px; display: block;"/>
+					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
+								  rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="328"
+								  paginator="false" selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">
 
-			    <div class="wrapper-tabla-botones">
-			        <div class="tabla-principal">
-			            <p:dataTable id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
-			                         emptyMessage="#{msg['error.emptyRows']}" scrollable="false"
-			                         selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">
+						<!-- Necesario para actualizar en controlador la fila seleccionada -->
+						<p:ajax event="rowSelect" global="false" />
+						<p:ajax event="rowUnselect" />
+						<p:ajax event="rowDblselect"
+		                  		oncomplete="rcEditarPropiedad();"
+		                        disabled="#{dialogPlugin.isConsulta()}"
+		                        />
+		                <p:ajax event="contextMenu" global="false" process="@this" update="@form:botones"/>
 
-			                <p:ajax event="rowSelect" global="false" />
-			                <p:column headerText="Codi"><h:outputText value="#{td.codigo}" /></p:column>
-			                <p:column headerText="Valor"><h:outputText value="#{td.valor}" /></p:column>
-			            </p:dataTable>
-			        </div>
+						<!-- Columnas -->
+					    <p:column headerText="#{msg['dialogPlugin.headerParametros.codigo']}" class="ui-panelgrid-cell">
+					        <h:outputText value="#{td.codigo}" />
+					    </p:column>
 
-			        <p:outputPanel id="botonesLaterales" styleClass="columna-botones-accion">
-			            <p:commandButton icon="fa fa-plus" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog" rendered="#{!dialogPlugin.consulta}">
-			                <p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="dataTablePropiedades" oncomplete="ajustarAlturaHijo();"/>
-			            </p:commandButton>
+					    <p:column headerText="#{msg['dialogPlugin.headerParametros.valor']}" class="ui-panelgrid-cell">
+					        <h:outputText value="#{td.valor}" />
+					    </p:column>
 
-			            <p:commandButton icon="fa fa-pencil" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" rendered="#{!dialogPlugin.consulta}">
-			                 <p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="dataTablePropiedades"/>
-			            </p:commandButton>
+		 			</p:dataTable>
+		 			<p:column id="botones" style="margin-left: 0px">
+						    <p>
+					    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
+	        					</p:commandButton>
+	        				</p>
+	        				<p>
+					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-pencil" title="#{msg['botones.editar']}" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
+	        					</p:commandButton>
+	        				</p>
+					    	<p>
+					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+					    			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+					    		</p:commandButton>
+					    	</p>
+					    	<p>
+					    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+					    	</p>
+					    	<p>
+					    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+					    	</p>
+					</p:column>
 
-			            <p:commandButton icon="fa fa-minus" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="dataTablePropiedades" oncomplete="ajustarAlturaHijo();" rendered="#{!dialogPlugin.consulta}"/>
+					<p:commandButton id="switchButton" value="#{dialogPlugin.isReal ? msg['botones.switchMock'] : msg['botones.switchReal']}" actionListener="#{dialogPlugin.switchClassname()}" process="@this" update="@this growlDialog valor mockClassname" style="margin-top: 5px;"/>
 
-			            <p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="dataTablePropiedades" rendered="#{!dialogPlugin.consulta}"/>
+				</h:panelGrid>
+				<h:outputScript rendered="#{!dialogPlugin.isConsulta()}">
+				      function rcEditarPropiedad() {
+				      	document.getElementById("dialogPlugin:btnEditarPropiedad").click();
+				      }
 
-			            <p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="dataTablePropiedades" rendered="#{!dialogPlugin.consulta}"/>
-			        </p:outputPanel>
-			    </div>
-
-			    <div style="padding-left: 18px; margin-top: 15px;">
-			        <p:commandButton id="switchButton" value="#{dialogPlugin.isReal ? msg['botones.switchMock'] : msg['botones.switchReal']}"
-			                         actionListener="#{dialogPlugin.switchClassname()}" process="@this"
-			                         update="valor mockClassname @this" oncomplete="ajustarAlturaHijo();" />
-			    </div>
-
-			    <p:outputPanel styleClass="botonera-inferior">
-			        <p:toolbar>
-			            <f:facet name="right">
-			                <p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form" styleClass="boton-azul" rendered="#{!dialogPlugin.consulta}"/>
-			                <p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this" />
-			                <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogPlugin.ayuda}" process="@this"/>
-			            </f:facet>
-			        </p:toolbar>
-			    </p:outputPanel>
+				      function  rcBorrarPropiedad() {
+				      	document.getElementById("dialogPlugin:btnEliminarPropiedad").click();
+				      }
+			    </h:outputScript>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
@@ -319,36 +267,6 @@
 					  });
 				  }
 
-
-			    function comunicarAlturaAlPadre() {
-			        // 1. Calculamos la altura total de nuestro contenido
-			        // Sumamos 100px para que los botones de abajo (Desar/Cancelar) no tapen nada
-			        var altoReal = jQuery('#dialogPlugin').outerHeight(true) + 100;
-
-			        // 2. Buscamos el diálogo en la ventana padre
-			        if (window.parent &amp;&amp; window.parent.PrimeFaces) {
-			            // Buscamos el iframe que nos contiene
-			            var $iframe = window.parent.jQuery('iframe').filter(function() {
-			                return this.contentWindow === window;
-			            });
-
-			            if ($iframe.length > 0) {
-			                // Ajustamos el iframe y su contenedor
-			                var $contenedor = $iframe.closest('.ui-dialog-content');
-			                $iframe.height(altoReal);
-			                $contenedor.height(altoReal);
-
-			                // Recentramos el diálogo para que no se vea cortado
-			                var idDialogo = $iframe.closest('.ui-dialog').attr('id');
-			                window.parent.PF(window.parent.jQuery('.ui-dialog:visible').data('widgetvar') || idDialogo).initPosition();
-			            }
-			        }
-			    }
-
-			    // Ejecutar al cargar y cada vez que la ventana cambie
-			    jQuery(document).ready(function() {
-			        setTimeout(comunicarAlturaAlPadre, 250);
-			    });
 
 			</h:outputScript>
 

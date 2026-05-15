@@ -290,16 +290,7 @@ public class ViewPlugins extends ViewControllerBase {
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		}
-
-		final Map<String, Object> options = new HashMap<>();
-	    options.put("modal", true);
-	    options.put("resizable", true); // ¡Importante!
-	    options.put("width", 750);
-	    options.put("height", "auto"); // Dejamos que el contenido mande
-	    options.put("contentHeight", "100%"); // Que el iframe ocupe el alto que le den
-	    options.put("contentWidth", "100%");
-
-	    UtilJSF.openDialog(DialogPlugin.class, modoAccesoDlg, params, true, 750, 850);
+		UtilJSF.openDialog(DialogPlugin.class, modoAccesoDlg, params, true, 750, 740);
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------
