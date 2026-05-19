@@ -75,6 +75,8 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 	private int errTot;
 
+	private int errPlat;
+
 	private int pagIni;
 
 	private int pagFin;
@@ -552,6 +554,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 			datosResumen.setTramIniFin(Pair.of(tramIni, tramFin));
 
 			datosResumen.setErrTot(errTot);
+			datosResumen.setErrPlat(errPlat);
 
 			datosResumen.setUmbralNormalAtencion(umbralNormalAtencion);
 			datosResumen.setUmbralAtencionRevisar(umbralAtencionRevisar);
@@ -590,6 +593,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 		regIni = 0;
 		regFin = 0;
 		errTot = 0;
+		errPlat = 0;
 		formIni = 0;
 		formFin = 0;
 		firmaIni = 0;
@@ -634,6 +638,8 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 		filtros.setSoloContar(false);
 		listaErrPlat = hService.obtenerErroresPlataformaCM(filtros, null).getListaEventosCM();
+
+		errPlat = hService.sumarErroresPlataformaCM(filtros).intValue();
 
 	}
 

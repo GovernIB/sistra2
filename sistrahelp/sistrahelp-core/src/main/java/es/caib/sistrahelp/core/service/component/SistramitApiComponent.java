@@ -116,6 +116,8 @@ public interface SistramitApiComponent {
 	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
 
+	Long sumarErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda);
+
 	ResultadoSoporte obtenerFormularioSoporte(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
 

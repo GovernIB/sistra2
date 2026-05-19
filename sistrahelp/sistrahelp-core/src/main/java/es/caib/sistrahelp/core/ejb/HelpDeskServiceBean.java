@@ -151,6 +151,12 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	}
 
 	@Override
+	@PermitAll
+	public Long sumarErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return helpdeskService.sumarErroresPlataformaCM(pFiltroBusqueda);
+	}
+
+	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public ResultadoSoporte obtenerFormularioSoporte(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {

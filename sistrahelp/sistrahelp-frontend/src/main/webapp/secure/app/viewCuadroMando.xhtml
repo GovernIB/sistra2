@@ -320,7 +320,7 @@
 				<p:spacer width="20" height="20" />
 
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses=" grey borde ,wpx100 white borde pad" cellspacing = "1" columns="2">
-				            <h:outputText style="font-weight: bold;" value="#{viewCuadroMando.isSupervisor() ? msg['viewCuadroMando.errTot'] : msg['viewCuadroMando.errTotTram']}" class="grey"/>
+				            <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.errTotTram']}" class="grey"/>
 				            <h:outputText value="#{viewCuadroMando.errTot}"/>
 				</h:panelGrid>
 
@@ -501,6 +501,13 @@
 									</p:dataTable>
 								</p:rowExpansion>
 							</p:dataTable>
+
+				<p:spacer width="20" height="20" />
+
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses=" grey borde ,wpx100 white borde pad" cellspacing = "1" columns="2">
+				            <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.errTotPlat']}" class="grey"/>
+				            <h:outputText value="#{viewCuadroMando.errPlat}"/>
+				</h:panelGrid>
 
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
 					<h:outputText value="#{msg['viewCuadroMando.erroresPlataforma']}" style="font-weight: bold;"/>

@@ -405,7 +405,8 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
         // Si no se ha encontrado perfil de firma, lanzamos excepción
         if (perfilFirma == null) {
             throw new FirmaPluginException("No se ha encontrado perfil de firma para método de autenticación "
-                    + metodoAutenticacion + " y nivel de seguridad " + nivelSeguridad);
+                    + metodoAutenticacion + " y nivel de seguridad " + nivelSeguridad + " "
+                    + (validarFirmante ? "con" : "sin") + " validación de firmante");
         }
 
         // Retornamos perfil de firma

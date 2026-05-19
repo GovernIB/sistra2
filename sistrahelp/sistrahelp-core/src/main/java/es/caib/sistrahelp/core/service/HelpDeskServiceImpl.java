@@ -244,6 +244,12 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 
 	@Override
 	@NegocioInterceptor
+	public Long sumarErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return sistramitApiComponent.sumarErroresPlataformaCM(pFiltroBusqueda);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public void updateFormularioSoporte(Soporte soporte) {
 		sistramitApiComponent.updateFormularioSoporte(soporte);
 	}

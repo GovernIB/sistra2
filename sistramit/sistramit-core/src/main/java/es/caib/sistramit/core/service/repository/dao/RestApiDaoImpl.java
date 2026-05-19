@@ -2392,6 +2392,34 @@ public final class RestApiDaoImpl implements RestApiDao {
 		return Long.valueOf(entityManager.createQuery(query).getResultList().size());
 	}
 
+	public Long sumarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda) {
+
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<Long> query = builder.createQuery(Long.class);
+
+		final Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
+
+		Predicate predicate = builder.equal(tableE.get("tipo"), TypeEvento.ERROR.toString());
+
+		predicate = builder.and(predicate, builder.isNull(tableE.get("sesionTramitacion")));
+
+		if (pFiltroBusqueda.getFechaDesde() != null) {
+			predicate = builder.and(predicate,
+					builder.greaterThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaDesde()));
+		}
+
+		if (pFiltroBusqueda.getFechaHasta() != null) {
+			predicate = builder.and(predicate,
+					builder.lessThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaHasta()));
+		}
+
+		query.where(predicate);
+		query.select(builder.count(tableE.get("id")));
+
+		final Long totalErrores = entityManager.createQuery(query).getSingleResult();
+		return totalErrores == null ? 0L : totalErrores;
+	}
+
 	@Override
 	public List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion) {

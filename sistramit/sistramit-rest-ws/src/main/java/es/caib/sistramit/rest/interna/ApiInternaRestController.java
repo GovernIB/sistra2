@@ -318,6 +318,13 @@ public class ApiInternaRestController {
 
 	}
 
+	@ApiOperation(value = "Suma de errores de plataforma", notes = "Suma total de concurrencias de errores de plataforma")
+	@RequestMapping(value = "/auditoria/sumarErroresPlataformaCM", method = RequestMethod.POST)
+	public Long sumarErroresPlataformaCM(@RequestBody final RINEventoAuditoria pFiltros) {
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
+		return restApiInternaService.sumarErroresPlataformaCM(filtroBusqueda);
+	}
+
 	@ApiOperation(value = "Auditoría de eventos", notes = "Auditoría de eventos", response = ROUTEventoAuditoria.class)
 	@RequestMapping(value = "/auditoria/evento", method = RequestMethod.POST)
 	public ROUTEventoAuditoria obtenerAuditoriaEvento(@RequestBody final RINEventoAuditoria pFiltros) {

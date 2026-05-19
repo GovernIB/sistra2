@@ -206,6 +206,8 @@ public interface RestApiDao {
 
 	Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda);
 
+	Long sumarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda);
+
 	/**
 	 * Recupera formularios de soporte
 	 *

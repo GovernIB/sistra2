@@ -5,6 +5,7 @@ import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
+import es.caib.sistramit.core.service.component.flujo.RestriccionesFirmaUtil;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,20 +66,21 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", false);
 
 		// Validaciones
-		UtilsPasoRegistrar.getInstance().validacionesFirmaDocumento(pDatosPaso, pVariablesFlujo, idDocumento, instancia,
-				nifFirmante);
+		UtilsPasoRegistrar.getInstance().validacionesFirmaDocumento(pDatosPaso, pVariablesFlujo, idDocumento, instancia, nifFirmante);
 
 		// Buscamos datos firmante
 		Persona firmante = null;
-		// - Si se indica firmante y es en modo FH, debe firmar el FH
-		if (nifFirmante != null) {
-			if (pVariablesFlujo.isFuncionarioHabilitado()) {
-				FuncionarioHabilitado fh = pVariablesFlujo.getUsuarioAutenticado().getFuncionarioHabilitado();
-				firmante = new Firmante(fh.getNif(), fh.getNombreApellidos(), TypeObligatoriedadFirmante.OBLIGATORIO);
-			} else {
-				firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento,
-						instancia, nifFirmante);
-			}
+
+		// Si se debe validar firmante y es modo FH, debemos indicar que el firmante es el FH
+		boolean verificarFirmante = RestriccionesFirmaUtil.verificarFirmante(pVariablesFlujo.getNivelAutenticacion(), UtilsSTG.obtenerNivelSeguridadAutenticado(pDefinicionTramite));
+		if (pVariablesFlujo.isFuncionarioHabilitado() && verificarFirmante) {
+			FuncionarioHabilitado fh = pVariablesFlujo.getUsuarioAutenticado().getFuncionarioHabilitado();
+			firmante = new Persona(fh.getNif(), fh.getNombreApellidos());
+		}
+
+		// - Si es modo normal y se verifica firmante debe firmar el firmante indicado
+		if (!pVariablesFlujo.isFuncionarioHabilitado() && verificarFirmante && StringUtils.isNotBlank(nifFirmante)) {
+			firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia, nifFirmante);
 		}
 
 		// Envia fichero a firmar

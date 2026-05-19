@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import es.caib.sistramit.core.service.component.flujo.RestriccionesFirmaUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,52 +78,59 @@ public final class UtilsPasoRegistrar {
 
 		final DatosInternosPasoRegistrar dipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
 		final DetallePasoRegistrar dpr = (DetallePasoRegistrar) dipa.getDetallePaso();
+		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
+
+		// Parametros firma
+		boolean firmar = (dd.getFirmar() == TypeSiNo.SI);
+		boolean verificarFirmante = RestriccionesFirmaUtil.verificarFirmante(pVariablesFlujo.getNivelAutenticacion(), pVariablesFlujo.getNivelSeguridad());
+		boolean modoFH = pVariablesFlujo.isFuncionarioHabilitado();
+		boolean existeFirmanteNif = (nifFirmante != null);
+		boolean existenFirmantes = !dd.getFirmantes().isEmpty();
 
 		// Verificamos si el documento debe firmarse
-		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
-		if (dd.getFirmar() != TypeSiNo.SI) {
+		if (!firmar) {
 			throw new AccionPasoNoPermitidaException(
 					"El document " + idDocumento + "-" + instancia + " no està configurat per firmar");
 		}
 
-		// Si es FH, debe ser nulo
-		if (pVariablesFlujo.isFuncionarioHabilitado() && nifFirmante != null) {
-			throw new AccionPasoNoPermitidaException(
-					"El document " + idDocumento + "-" + instancia + " és per firmar per FH però s'ha especificat firmant");
+		// Verificaciones modo FH vs modo normal
+		if (modoFH) {
+			// Modo FH: no se debe especificar firmante ya que se será fijo el FH
+			if (existeFirmanteNif) {
+				throw new AccionPasoNoPermitidaException(
+						"El document " + idDocumento + "-" + instancia + " està configurat per firmar en modo funcionario habilitat però s'ha especificat un firmant");
+			}
+		} else {
+			// Modo normal: si se verifica firma debe especificarse firmante y ha de aparecer en la lista de firmantes como no firmado todavia
+			 if (verificarFirmante && (!existeFirmanteNif || !existenFirmantes)) {
+				throw new AccionPasoNoPermitidaException(
+						"El document " + idDocumento + "-" + instancia + " està configurat per validar firmants però no s'ha especificat cap firmant o el document no té firmants associats");
+			}
+			// Buscamos firmante en la lista de firmantes para ver que existe y no ha firmado ya el documento
+			if (verificarFirmante) {
+				final Persona firmante = obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia, nifFirmante);
+				if (firmante == null) {
+					throw new AccionPasoNoPermitidaException(
+							"La persona " + nifFirmante + " no està configurada com a firmant del document " + idDocumento + "-" + instancia);
+				}
+				// Verificamos si la persona ya ha firmado el documento
+				final DocumentoRegistro docReg = dpr.buscarDocumentoRegistro(idDocumento, instancia);
+				if (docReg == null) {
+					throw new AccionPasoNoPermitidaException("El document " + idDocumento + "-" + instancia
+							+ " no està a la llista de documents per registre");
+				}
+				final Firma firma = docReg.getFirma(nifFirmante);
+				if (firma == null) {
+					throw new AccionPasoNoPermitidaException(
+							"No es troba informació de la firma pel document " + idDocumento + "-" + instancia);
+				}
+				if (firma.getEstadoFirma() == TypeEstadoFirma.FIRMADO) {
+					throw new AccionPasoNoPermitidaException(
+							"El document " + idDocumento + "-" + instancia + " ja ha estat signat per " + nifFirmante);
+				}
+			}
 		}
 
-		// Verificamos si el documento debe verificar firmantes, pero no se le ha especificado ningún firmante a validar
-		if (nifFirmante == null && !dd.getFirmantes().isEmpty()) {
-			throw new AccionPasoNoPermitidaException(
-					"El document " + idDocumento + "-" + instancia + " està configurat per firmar però no s'ha especificat cap firmant");
-		}
-
-		// Verificamos si la persona esta como firmante del documento (si no es FH)
-		if (nifFirmante != null) {
-
-			final Persona firmante = obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia, nifFirmante);
-			if (firmante == null) {
-				throw new AccionPasoNoPermitidaException(
-						"La persona " + nifFirmante + " no està configurada com a firmant del document " + idDocumento + "-" + instancia);
-			}
-
-			// Verificamos si la persona ya ha firmado el documento
-			final DocumentoRegistro docReg = dpr.buscarDocumentoRegistro(idDocumento, instancia);
-			if (docReg == null) {
-				throw new AccionPasoNoPermitidaException("El document " + idDocumento + "-" + instancia
-						+ " no està a la llista de documents per registre");
-			}
-			final Firma firma = docReg.getFirma(nifFirmante);
-			if (firma == null) {
-				throw new AccionPasoNoPermitidaException(
-						"No es troba informació de la firma pel document " + idDocumento + "-" + instancia);
-			}
-			if (firma.getEstadoFirma() == TypeEstadoFirma.FIRMADO) {
-				throw new AccionPasoNoPermitidaException(
-						"El document " + idDocumento + "-" + instancia + " ja ha estat signat per " + nifFirmante);
-			}
-
-		}
 	}
 
 	/**

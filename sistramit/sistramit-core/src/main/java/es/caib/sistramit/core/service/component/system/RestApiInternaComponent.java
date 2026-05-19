@@ -162,6 +162,8 @@ public interface RestApiInternaComponent {
 
 	public Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda);
 
+	public Long sumarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda);
+
 	List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion);
 

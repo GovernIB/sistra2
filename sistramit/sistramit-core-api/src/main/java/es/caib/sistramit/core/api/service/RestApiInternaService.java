@@ -165,6 +165,8 @@ public interface RestApiInternaService {
 
 	Long contarErroresPlataformaCM(FiltroEventoAuditoria filtroBusqueda);
 
+	Long sumarErroresPlataformaCM(FiltroEventoAuditoria filtroBusqueda);
+
 	List<String> listarTiposProblema();
 
 	void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios);

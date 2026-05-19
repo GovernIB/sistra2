@@ -197,13 +197,8 @@ public class MensajeEmailServiceImpl implements MensajeEmailService {
                 + "                     <td style=\"font-weight: bold;\">"
                 + "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
                 + "                           <tbody>" + "                              <tr>";
-        if(rolUsuario.equals(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
-            msg += "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">"
-            + messageSource.getMessage("resumen.diario.mail.errores.titulo.plataforma", null, localeUsuario)  + messageSource.getMessage("resumen.diario.mail.errores.titulo.plataforma", null, localeUsuario) + "</span></td>";
-        }else {
-            msg += "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">"
-                    + messageSource.getMessage("resumen.diario.mail.errores.titulo.tramitacion", null, localeUsuario) + "</span></td>";
-        }
+        msg += "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">"
+                + messageSource.getMessage("resumen.diario.mail.errores.titulo.tramitacion", null, localeUsuario)  + "</span></td>";
         msg += "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
                 + datosResumen.getErrTot() + "</td>" + "                              </tr>" + "                           </tbody>"
                 + "                        </table>" + "                     </td>" + "                  </tr>"
@@ -288,22 +283,50 @@ public class MensajeEmailServiceImpl implements MensajeEmailService {
                         + df.format(ltrerr.getPorc()) + "%</td>        </tr>";
             }
         } else {
-            msg += "                             <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
-                    + "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> "
-                    + messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_error" , null, new Locale(idioma)) + "</td>"
-                    + "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
-                    + "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
-                    + "                             </tr>";
-        }
-        msg += "                          </tbody>" + "                       </table>"
-                + "                    </td>" + "                 </tr>" + "                  "
-                + "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-                + "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
-                + "                           <tbody>" + "                              <tr>"
-                + "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>" +
-                messageSource.getMessage("resumen.diario.mail.errores.plataforma" , null, new Locale(idioma)) + "</u></span></td>"
-                + "                              </tr>" + "                           </tbody>"
-                + "                        </table>" + "                     </td>" + "                  </tr>"
+			msg += "                           <tr>"
+					+ "                              <td style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> " + messageSource.getMessage("resumen.diario.mail.errores.tramitacion.por_error" , null, new Locale(idioma)) + "</td>"
+					+ "                              <td style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+					+ "                              <td style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+					+ "                           </tr>";
+		}
+		msg += "                        </tbody>"
+				+ "                     </table>"
+				+ "                  </td>"
+				+ "               </tr>"
+				+ "               <tr>"
+				+ "                  <td style=\"font-weight: bold;\">"
+				+ "                     <div style=\"height:20px;\"></div>"
+				+ "                  </td>"
+				+ "               </tr>"
+				+ "               <tr>"
+				+ "                  <td style=\"font-weight: bold;\">"
+				+ "                     <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
+				+ "                        <tbody>"
+				+ "                           <tr>"
+				+ "                              <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\">"
+				+ "                                 <span style=\"font-weight: bold; background-color: lightgrey; font-size: 1.2em !important;\">"
+				+                                      messageSource.getMessage("resumen.diario.mail.errores.titulo.plataforma", null, localeUsuario)
+				+ "                                 </span>"
+				+ "                              </td>"
+				+ "                              <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
+				+                                   datosResumen.getErrPlat()
+				+ "                              </td>"
+				+ "                           </tr>"
+				+ "                        </tbody>"
+				+ "                     </table>"
+				+ "                  </td>"
+				+ "               </tr>"
+				+ "               <tr>"
+				+ "                  <td style=\"font-weight: bold;\">"
+				+ "                     <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
+				+ "                        <tbody>"
+				+ "                           <tr>"
+				+ "                              <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>" + messageSource.getMessage("resumen.diario.mail.errores.plataforma", null, new Locale(idioma)) + "</u></span></td>"
+				+ "                           </tr>"
+				+ "                        </tbody>"
+				+ "                     </table>"
+				+ "                  </td>"
+				+ "               </tr>"
                 + "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
                 + "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
                 + "                            <tbody>" + "                               <tr>"

@@ -132,6 +132,8 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	private int errTot;
 
+	private int errPlat;
+
 	private int pagIni;
 
 	private int pagFin;
@@ -466,6 +468,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 		regIni = 0;
 		regFin = 0;
 		errTot = 0;
+		errPlat = 0;
 		formIni = 0;
 		formFin = 0;
 		firmaIni = 0;
@@ -536,6 +539,8 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 		filtros.setSoloContar(false);
 		listaErrPlat = new ErroresPorTramiteCMPlataformaLazyDataModel(helpDeskService, rowCountPlat, filtros);
+
+		errPlat = helpDeskService.sumarErroresPlataformaCM(filtros).intValue();
 
 		datoSeleccionado = null;
 
@@ -984,6 +989,14 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	public final void setErrTot(int errTot) {
 		this.errTot = errTot;
+	}
+
+	public final int getErrPlat() {
+		return errPlat;
+	}
+
+	public final void setErrPlat(int errPlat) {
+		this.errPlat = errPlat;
 	}
 
 	public final Integer getMinutosRefresco() {

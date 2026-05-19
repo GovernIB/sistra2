@@ -96,6 +96,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 
 	private int errTot;
 
+	private int errPlat;
+
 	private int pagIni;
 
 	private int pagFin;
@@ -429,7 +431,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 
 	private String getPlantillaCatalan(){
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append( "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">                     " +
 				"          <head>                     " +
 				"          <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />               " +
@@ -466,9 +468,9 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				"            <p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>               " +
 				"                    </div>          <!-- /contenidor -->                </body>            " +
 				"          </html>");
-		
+
 		return sb.toString();
-		
+
 	}
 
 	private String getUrlHistorialAlerta(Long codigo, Date fecha, String idioma) {
@@ -725,7 +727,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
 					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">"
-					+ messageSource.getMessage("resumen.diario.mail.errores.titulo.plataforma", null, localeUsuario)  + messageSource.getMessage("resumen.diario.mail.errores.titulo.plataforma", null, localeUsuario) + "</span></td>"
+					+ messageSource.getMessage("resumen.diario.mail.errores.titulo.tramitacion", null, localeUsuario)  + "</span></td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ errTot + "</td>" + "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
@@ -817,18 +819,47 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                             </tr>";
 			}
-			msg += "                          </tbody>" + "                       </table>"
-					+ "                    </td>" + "                 </tr>" + "                  "
-					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
-					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>"
-					+ messageSource.getMessage("resumen.diario.mail.errores.plataforma" , null, new Locale(alert.getIdioma())) + "</u></span></td>"
-					+ "                              </tr>" + "                           </tbody>"
-					+ "                        </table>" + "                     </td>" + "                  </tr>"
-					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
-					+ "                            <tbody>" + "                               <tr>"
+			msg += "                        </tbody>"
+					+ "                     </table>"
+					+ "                  </td>"
+					+ "               </tr>"
+					+ "               <tr>"
+					+ "                  <td style=\"font-weight: bold;\">"
+					+ "                     <div style=\"height:20px;\"></div>"
+					+ "                  </td>"
+					+ "               </tr>"
+					+ "               <tr>"
+					+ "                  <td style=\"font-weight: bold;\">"
+					+ "                     <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
+					+ "                        <tbody>"
+					+ "                           <tr>"
+					+ "                              <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\">"
+					+ "                                 <span style=\"font-weight: bold; background-color: lightgrey; font-size: 1.2em !important;\">"
+					+                                      messageSource.getMessage("resumen.diario.mail.errores.titulo.plataforma", null, localeUsuario)
+					+ "                                 </span>"
+					+ "                              </td>"
+					+ "                              <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
+					+                                   errPlat
+					+ "                              </td>"
+					+ "                           </tr>"
+					+ "                        </tbody>"
+					+ "                     </table>"
+					+ "                  </td>"
+					+ "               </tr>"
+					+ "               <tr>"
+					+ "                  <td style=\"font-weight: bold;\">"
+					+ "                     <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
+					+ "                        <tbody>"
+					+ "                           <tr>"
+					+ "                              <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>" + messageSource.getMessage("resumen.diario.mail.errores.plataforma", null, new Locale(alert.getIdioma())) + "</u></span></td>"
+					+ "                           </tr>"
+					+ "                        </tbody>"
+					+ "                     </table>"
+					+ "                  </td>"
+					+ "               </tr>"
+	                + "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
+	                + "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
+	                + "                            <tbody>" + "                               <tr>"
 					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
 					+ messageSource.getMessage("resumen.diario.mail.errores.plataforma.error" , null, new Locale(alert.getIdioma())) +"</span></td>"
 					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">"
@@ -1044,6 +1075,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 		filtros.setSoloContar(false);
 		listaErrPlat = sistramitApiComponent.obtenerErroresPlataformaCM(filtros, null).getListaEventosCM();
 
+		errPlat = sistramitApiComponent.sumarErroresPlataformaCM(filtros).intValue();
+
 		listaAlertas = historialAlertaDao.getAllByFiltro(getYesterday(), getNow());
 	}
 
@@ -1229,6 +1262,20 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 	 */
 	public final void setErrTot(int errTot) {
 		this.errTot = errTot;
+	}
+
+	/**
+	 * @return the errPlat
+	 */
+	public final int getErrPlat() {
+		return errPlat;
+	}
+
+	/**
+	 * @param errPlat the errPlat to set
+	 */
+	public final void setErrPlat(int errPlat) {
+		this.errPlat = errPlat;
 	}
 
 	/**

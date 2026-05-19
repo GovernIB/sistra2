@@ -136,6 +136,8 @@ public interface HelpDeskService {
 	ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
 
+	Long sumarErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda);
+
 	ResultadoSoporte obtenerFormularioSoporte(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
 

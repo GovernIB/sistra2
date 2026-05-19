@@ -23,6 +23,7 @@ public class DatosResumen {
     private Pair<Integer, Integer> tramIniFin;
 
     private int errTot;
+    private int errPlat;
     private Integer umbralNormalAtencion;
 
     private Integer umbralAtencionRevisar;
@@ -121,6 +122,14 @@ public class DatosResumen {
 
     public void setErrTot(int errTot) {
         this.errTot = errTot;
+    }
+
+    public int getErrPlat() {
+    	return errPlat;
+    }
+
+    public void setErrPlat(int errPlat) {
+    	this.errPlat = errPlat;
     }
 
     public Integer getUmbralNormalAtencion() {

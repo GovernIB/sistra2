@@ -734,6 +734,30 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	}
 
 	@Override
+	public Long sumarErroresPlataformaCM(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINEventoAuditoria param = new RINEventoAuditoria();
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
+
+		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<Long> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/sumarErroresPlataformaCM", request, Long.class);
+		} catch (Exception e) {
+			log.error("Error al sumar errores de plataforma", e);
+		}
+
+		return (response != null && response.getStatusCodeValue() == 200 && response.getBody() != null)
+			? response.getBody()
+			: 0L;
+	}
+
+	@Override
 	public void updateFormularioSoporte(Soporte soporte) {
 		List<RSoporte> listaREventos = null;
 

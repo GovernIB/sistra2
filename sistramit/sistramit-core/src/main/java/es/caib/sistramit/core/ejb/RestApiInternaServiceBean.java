@@ -157,6 +157,11 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	}
 
 	@Override
+	public Long sumarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaService.sumarErroresPlataformaCM(pFiltroBusqueda);
+	}
+
+	@Override
 	public List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion) {
 		return restApiInternaService.recuperarFormularioSoporte(pFiltroBusqueda, filtroPaginacion);

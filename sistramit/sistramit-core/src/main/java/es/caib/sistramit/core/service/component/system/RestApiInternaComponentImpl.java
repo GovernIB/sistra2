@@ -299,6 +299,11 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 	}
 
 	@Override
+	public Long sumarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiDao.sumarErroresPlataformaCM(pFiltroBusqueda);
+	}
+
+	@Override
 	public List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion) {
 		return restApiDao.recuperarFormularioSoporte(pFiltroBusqueda, filtroPaginacion);

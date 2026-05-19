@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import es.caib.sistramit.core.api.model.security.types.TypeNivelSeguridad;
+import es.caib.sistramit.core.service.component.flujo.RestriccionesFirmaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -300,17 +301,21 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 			// Se debe verificar firmante (calcular firmantes) si:
 			//  - Si no es FH
 			//  - Si nivel seguridad es sustancial certificado o alto
+
+			// Nivel seguridad si esta autenticado
+			TypeAutenticacion nivelAutenticacion = pVariablesFlujo.getNivelAutenticacion();
 			TypeNivelSeguridad nivelSeguridadAutenticado = UtilsSTG.obtenerNivelSeguridadAutenticado(pDefinicionTramite);
-			boolean verificarFirmante = !pVariablesFlujo.isFuncionarioHabilitado()
-					&& (
-						nivelSeguridadAutenticado == TypeNivelSeguridad.SUSTANCIAL_CERTIFICADO ||
-						nivelSeguridadAutenticado == TypeNivelSeguridad.ALTO
-			);
+
+			// Formulario completamente rellenado
+			boolean rellenadoOk = (docPer != null && docPer.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
+
+			// Calcular firmantes: rellenado correctamente + se tiene que firmar + verificar firmante + no es FH
+			boolean calcularFirmantes = rellenadoOk && formulario.getFirmar() == TypeSiNo.SI &&
+										RestriccionesFirmaUtil.verificarFirmante(nivelAutenticacion, nivelSeguridadAutenticado) &&
+										!pVariablesFlujo.isFuncionarioHabilitado();
 
 			// Si se tiene que firmar y está completado, calculamos firmantes
-			if (formulario.getFirmar() == TypeSiNo.SI && verificarFirmante &&
-					docPer != null && docPer.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE
-				) {
+			if (calcularFirmantes) {
 				// Si tiene script de firmantes lo ejecutamos
 				if (UtilsSTG.existeScript(formularioDef.getScriptFirmantes())) {
 					final List<Firmante> firmantes = calcularFirmantes(pVariablesFlujo, pDefinicionTramite,
@@ -336,6 +341,8 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 
 		return formularios;
 	}
+
+
 
 	/**
 	 * Calcula el detalle de un formulario fijo.
