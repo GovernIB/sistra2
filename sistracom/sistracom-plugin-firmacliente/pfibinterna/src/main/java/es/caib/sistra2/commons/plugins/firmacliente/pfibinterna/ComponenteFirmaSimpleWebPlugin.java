@@ -289,21 +289,22 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
             // Evalua estado firma y en funcion de ello, retorna el fichero firmado o el error
             FicheroFirmado fic = null;
             final TypeEstadoFirmado fst = TypeEstadoFirmado.fromInt(fssr.getStatus().getStatus());
-            if (fst == TypeEstadoFirmado.FINALIZADO_CON_ERROR) {
-                // Retornamos estado de firma con el mensaje de error
+            if (fst != TypeEstadoFirmado.FINALIZADO_OK) {
+                // Retornamos estado de firma no correcto con el mensaje de error
                 EstadoFirma estadoFirma = new EstadoFirma();
-                estadoFirma.setEstadoFirmado(TypeEstadoFirmado.FINALIZADO_CON_ERROR);
+                estadoFirma.setEstadoFirmado(fst);
                 estadoFirma.setMensajeError(fssr.getStatus().getErrorMessage());
                 fic = new FicheroFirmado();
                 fic.setEstadoFirma(estadoFirma);
             } else {
-                // Tipo firma
+                // Retornamos firma correcta
+                // - Tipo firma
                 final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fssr.getSignedFileInfo().getEniTipoFirma());
                 if (tipoFirma == null) {
                     throw new FirmaPluginException(
                             "No se reconoce tipo de firma " + fssr.getSignedFileInfo().getEniTipoFirma());
                 }
-                // Metodo firma
+                // - Metodo firma
                 String metodoFirma = null;
                 // TODO VER SI LIST SOLO TIENE 1 FIRMANTE
                 if (fssr.getSignedFileInfo().getSigners() != null &&
@@ -316,7 +317,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
                         metodoFirma = pluginName + " - " + pluginDesc;
                     }
                 }
-                // Retornamos fichero firmado
+                // - Retornamos fichero firmado
                 EstadoFirma estadoFirma = new EstadoFirma();
                 estadoFirma.setEstadoFirmado(TypeEstadoFirmado.FINALIZADO_OK);
                 RDocument fsf = fssr.getSignedFile();
