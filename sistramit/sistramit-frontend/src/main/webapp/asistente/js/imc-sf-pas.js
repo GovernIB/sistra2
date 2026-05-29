@@ -656,6 +656,7 @@ $.fn.appPas = function(options) {
 								,txtSignants: txtSignants
 								,txtSignatEl: txtSignatEl
 								,txtSignatura: txtSignatura
+								,txtSignarSenseVerificar: txtSignarSenseVerificar
 							}
 						};
 
