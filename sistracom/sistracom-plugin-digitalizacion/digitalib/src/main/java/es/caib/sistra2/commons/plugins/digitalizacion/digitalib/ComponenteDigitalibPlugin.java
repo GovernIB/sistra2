@@ -1,5 +1,6 @@
 package es.caib.sistra2.commons.plugins.digitalizacion.digitalib;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Properties;
 
@@ -11,11 +12,17 @@ import org.slf4j.LoggerFactory;
 
 import es.caib.sistra2.commons.plugins.digitalizacion.api.*;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -210,11 +217,11 @@ public class ComponenteDigitalibPlugin extends AbstractPluginProperties implemen
 		String url = endpoint + "secure/apimassivescanwebsimple/v1/" + method;
 
 
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(user, pwd));
+		final RestTemplate restTemplate = createRestTemplate(user, pwd);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		// headers.setContentType(MediaType.parseMediaType("application/json; charset=UTF-8"));
 
 		String jsonRequest = null;
         try {
@@ -244,6 +251,47 @@ public class ComponenteDigitalibPlugin extends AbstractPluginProperties implemen
 				cleanName.append('_');
 		}
 		return cleanName.toString();
+	}
+
+	private RestTemplate createRestTemplate(String usuario, String password) {
+
+		boolean debug = "true".equalsIgnoreCase(this.getPropiedadOpcional("debug"));
+
+		RestTemplate restTemplate;
+		if (debug) {
+			restTemplate = new RestTemplate(
+					new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory())
+			);
+			restTemplate.getInterceptors().add(loggingInterceptor());
+			restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(usuario, password));
+		} else {
+			restTemplate = new RestTemplate();
+			restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(usuario, password));
+		}
+		return restTemplate;
+	}
+
+	// ---- Logging interceptor
+	@Bean
+	public ClientHttpRequestInterceptor loggingInterceptor() {
+		return (request, body, execution) -> {
+
+			log.info("URI: {}", request.getURI());
+			log.info("Method: {}", request.getMethod());
+			log.info("Headers: {}", request.getHeaders());
+			log.info("Request body: {}", new String(body, StandardCharsets.UTF_8));
+
+			ClientHttpResponse response = execution.execute(request, body);
+
+			byte[] responseBytes = StreamUtils.copyToByteArray(response.getBody());
+			String responseBody = new String(responseBytes, StandardCharsets.UTF_8);
+
+			log.info("Response status: {}", response.getStatusCode());
+			log.info("Response headers: {}", response.getHeaders());
+			log.info("Response body: {}", responseBody);
+
+			return response;
+		};
 	}
 
 }
