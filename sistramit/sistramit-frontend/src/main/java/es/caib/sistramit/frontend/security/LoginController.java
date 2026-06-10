@@ -5,9 +5,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -157,8 +159,7 @@ public final class LoginController {
 				login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
 						ConstantesSeguridad.PARAM_TICKETAUTH);
 			} else {
-				// Si no existe ticket carpeta, autenticamos form login (anonimo o mediante
-				// clave)
+				// Si no existe ticket carpeta, autenticamos form login (anonimo o mediante clave)
 				login = autenticarFormLogin(savedRequest, false);
 			}
 		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN.equals(puntoEntrada)) {
@@ -202,17 +203,21 @@ public final class LoginController {
 			@RequestParam("metodosAutenticado") final String metodosAutenticado,
 			@RequestParam(name = "qaa", required = false) final String qaa,
 			@RequestParam(name = "debug", required = false) final boolean debug) {
+
+		// Idioma
 		String lang = sesionHttp.getIdioma();
 		if (lang == null) {
 			lang = "es";
 		}
 
+		// Tipos de autenticación
 		final List<TypeAutenticacion> authList = new ArrayList<>();
 		final String[] auths = nivelesAutenticacion.split(";");
 		for (final String a : auths) {
 			authList.add(TypeAutenticacion.fromString(a));
 		}
 
+		// Métodos de autenticación
 		final List<TypeMetodoAutenticacion> metAuthList = new ArrayList<>();
 		if (authList.contains(TypeAutenticacion.ANONIMO)) {
 			metAuthList.add(TypeMetodoAutenticacion.ANONIMO);
@@ -224,14 +229,16 @@ public final class LoginController {
 			}
 		}
 
+		// Url callback
 		final String urlCallback = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
 				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN + "?idioma=" + lang;
 		final String urlCallbackError = sesionHttp.getUrlInicio();
+		// QAA
 		TypeQAA tipoQAA = null;
 		if (StringUtils.isNotBlank(qaa)) {
 			tipoQAA = TypeQAA.fromString(qaa);
 		}
-
+		// Redirigimos a componente de autenticación
 		return new ModelAndView("redirect:" + securityService.iniciarSesionAutenticacion(idEntidad, lang, metAuthList,
 				tipoQAA, urlCallback, urlCallbackError, debug));
 	}
@@ -395,6 +402,12 @@ public final class LoginController {
 			final String paramVersionTramite = getParamValue(savedRequest, PARAM_VERSION);
 			final String paramIdTramiteCP = getParamValue(savedRequest, PARAM_TRAMITECP);
 			final String servicioCP = getParamValue(savedRequest, PARAM_SERVICIOCP, "false");
+			// - Controlamos limitación tramitación
+			securityService.verificarLimiteTramitacionTramite(
+					paramCodigoTramite,
+					Integer.parseInt(paramVersionTramite),
+					sesionHttp.getIdioma());
+			// - Obtenemos info trámite
 			infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
 					Integer.parseInt(paramVersionTramite), paramIdTramiteCP,
 					Boolean.parseBoolean(servicioCP.toLowerCase()), sesionHttp.getIdioma());
@@ -519,7 +532,13 @@ public final class LoginController {
 	 * @return Respuesta JSON indicando el mensaje producido
 	 */
 	@ExceptionHandler({ Exception.class })
-	public ModelAndView handleServiceException(final Exception ex, final HttpServletRequest request) {
+	public ModelAndView handleServiceException(final Exception pex, final HttpServletRequest request) {
+
+		// Si viene de la capa EJB viene envuelta en una EJBException
+		Exception ex = pex;
+		if (pex instanceof EJBException && pex.getCause() instanceof ServiceException) {
+			ex = (Exception) pex.getCause();
+		}
 
 		// TODO V0 Auditar ErrorFrontException en login
 		LOGGER.error("Excepcion login", ex);

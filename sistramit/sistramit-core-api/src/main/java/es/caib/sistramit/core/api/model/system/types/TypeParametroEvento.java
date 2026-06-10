@@ -101,9 +101,13 @@ public enum TypeParametroEvento {
 	 */
 	NIF("NIF"),
 	/**
-	 * PROBLEMA FIRMA.
+	 * FIRMA MENSAJE ERROR.
 	 */
 	FIRMA_ERROR("FIRERROR"),
+	/**
+	 * FIRMA CODIGO ERROR.
+	 */
+	FIRMA_ERROR_CODIGO("FIRERRCOD"),
 	/**
 	 * FIRMA SESION.
 	 */

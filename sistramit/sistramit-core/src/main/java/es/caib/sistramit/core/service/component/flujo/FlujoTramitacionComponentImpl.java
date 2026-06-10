@@ -337,7 +337,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		final String idiomaSesion = defTramSTG.getDefinicionVersion().getIdioma();
 
 		// Control limitacion de tramitacion
-		controlLimitacionTramitacion(defTramSTG);
+		UtilsFlujo.controlLimitacionTramitacion(defTramSTG, dao);
 
 		// Control QAA
 		controlQAA(inicio, idSesionTramitacion, defTramSTG);
@@ -495,29 +495,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		}
 	}
 
-	/**
-	 * Control limitación
-	 *
-	 * @param defTram
-	 *                    Definición trámite
-	 */
-	private void controlLimitacionTramitacion(final DefinicionTramiteSTG defTram) {
 
-		final RVersionTramiteControlAcceso controlAcceso = defTram.getDefinicionVersion().getControlAcceso();
-		if (controlAcceso.isLimitarTramitacion()) {
-
-			final String idTramite = defTram.getDefinicionVersion().getIdentificador();
-			final int version = defTram.getDefinicionVersion().getVersion();
-			final long limitNumero = controlAcceso.getLimiteTramitacionInicios();
-			final int limitIntervalo = controlAcceso.getLimiteTramitacionIntervalo();
-
-			final Long total = dao.contadorLimiteTramitacion(idTramite, version, limitIntervalo, new Date());
-			if (total.longValue() >= limitNumero) {
-				throw new LimiteTramitacionException(idTramite, version, limitNumero, limitIntervalo);
-			}
-		}
-
-	}
 
 	/**
 	 * Devuelve id sesion tramitacion.

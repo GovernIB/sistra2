@@ -19,6 +19,9 @@ public final class FirmaVerificacion {
 	/** Indica si se ha cancelado la firma. */
 	private TypeSiNo cancelada = TypeSiNo.NO;
 
+	/** Codigo error. */
+	private String codigoError;
+
 	/** Mensaje error. */
 	private String detalleError;
 
@@ -130,5 +133,21 @@ public final class FirmaVerificacion {
 	 */
 	public void setMetodoFirma(final String metodoFirma) {
 		this.metodoFirma = metodoFirma;
+	}
+
+	/**
+	 * Método de acceso a codigoError.
+	 * @return codigoError
+	 */
+	public String getCodigoError() {
+		return codigoError;
+	}
+
+	/**
+	 * Método para establecer codigoError.
+	 * @param codigoError codigoError a establecer
+	 */
+	public void setCodigoError(String codigoError) {
+		this.codigoError = codigoError;
 	}
 }

@@ -54,6 +54,9 @@ public class TestFirma {
 			jsonConfig = StringUtils.replace(jsonConfig, ConfiguradorPluginFirmaWeb.PWD_FA, "sistra2_fa_portafib_dev");
 
 
+			System.out.println(jsonConfig);
+			if (true) return;
+
 			// Configuración del plugin de firma web
 			final String classname = "es.caib.sistra2.commons.plugins.firmacliente.pfibinterna.ComponenteFirmaSimpleWebPlugin";
 			final String prefijoGlobal = "es.caib.sistra2.";
@@ -121,7 +124,7 @@ public class TestFirma {
 					Files.write(path, ficheroFirmado1.getFirmaFichero());
 					System.out.println("Almacenando firma en: " + path.toAbsolutePath().toString());
 				} else {
-					System.out.println("Fichero firmado con error: " + ficheroFirmado1.getEstadoFirma().getMensajeError());
+					System.out.println("Fichero firmado con error: " + ficheroFirmado1.getEstadoFirma().getCodigoError() + " - " + ficheroFirmado1.getEstadoFirma().getMensajeError());
 				}
 			}
 

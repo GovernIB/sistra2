@@ -35,6 +35,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	/** En caso correcto, indica método de firma (proporcionado por plugin). */
 	private String metodoFirma;
 
+	/** En caso error, indica código error. */
+	private String codigoError;
+
 	/** En caso error, indica detalle error. */
 	private String detalleError;
 
@@ -229,4 +232,19 @@ public final class FirmaClienteRespuesta implements Serializable {
 		this.metodoFirma = metodoFirma;
 	}
 
+	/**
+	 * Método de acceso a codigoError.
+	 * @return codigoError
+	 */
+	public String getCodigoError() {
+		return codigoError;
+	}
+
+	/**
+	 * Método para establecer codigoError.
+	 * @param codigoError codigoError a establecer
+	 */
+	public void setCodigoError(String codigoError) {
+		this.codigoError = codigoError;
+	}
 }

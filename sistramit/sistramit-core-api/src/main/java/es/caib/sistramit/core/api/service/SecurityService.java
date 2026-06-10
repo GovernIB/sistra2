@@ -184,4 +184,12 @@ public interface SecurityService {
 	 * @return Info usuario
 	 */
 	UsuarioAutenticadoInfo validarTicketFH(SesionInfo sesionInfo, String ticket);
+
+	/**
+	 * Verifica el límite de tramitación para un trámite.
+	 * @param codigoTramite
+	 * @param versionTramite
+	 * @param idioma
+	 */
+	void verificarLimiteTramitacionTramite(String codigoTramite, int versionTramite, String idioma);
 }

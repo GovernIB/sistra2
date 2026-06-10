@@ -189,6 +189,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 				case CANCELADO:
 					// Indica que está cancelada
 					resFirma.setCancelada(true);
+					resFirma.setCodigoError(estado.getCodigoError());
 					resFirma.setDetalleError("Signatura cancel·lada");
 					resFirma.setMetodoFirma(estado.getMetodoFirma());
 					break;
@@ -196,6 +197,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 				case FINALIZADO_CON_ERROR:
 					// Indica que ha finalizado con error
 					resFirma.setDetalleError(estado.getMensajeError());
+					resFirma.setCodigoError(estado.getCodigoError());
 					resFirma.setMetodoFirma(estado.getMetodoFirma());
 					break;
 

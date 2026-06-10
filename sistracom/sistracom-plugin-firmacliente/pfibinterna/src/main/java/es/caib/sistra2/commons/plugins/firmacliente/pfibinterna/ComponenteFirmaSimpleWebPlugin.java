@@ -249,6 +249,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
             // Calcula estado firma a partir del status de la transaction
             RProcessStatus transactionStatus = fullTransactionStatus.getTransactionStatus();
             TypeEstadoFirmado estadoFirmado = TypeEstadoFirmado.fromInt(transactionStatus.getStatus());
+            final String errorCode = transactionStatus.getErrorCode();
             final String errorMessage = transactionStatus.getErrorMessage();
 
             // Calcula metodo firma
@@ -260,6 +261,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 
             // Retorna estado firma
             EstadoFirma estado = new EstadoFirma();
+            estado.setCodigoError(errorCode);
             estado.setEstadoFirmado(estadoFirmado);
             estado.setMensajeError(errorMessage);
             estado.setMetodoFirma(metodoFirma);
@@ -293,6 +295,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
                 // Retornamos estado de firma no correcto con el mensaje de error
                 EstadoFirma estadoFirma = new EstadoFirma();
                 estadoFirma.setEstadoFirmado(fst);
+                estadoFirma.setCodigoError(fssr.getStatus().getErrorCode());
                 estadoFirma.setMensajeError(fssr.getStatus().getErrorMessage());
                 fic = new FicheroFirmado();
                 fic.setEstadoFirma(estadoFirma);

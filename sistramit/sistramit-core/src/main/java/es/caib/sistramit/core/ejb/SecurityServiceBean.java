@@ -62,6 +62,11 @@ public class SecurityServiceBean implements SecurityService {
 	}
 
 	@Override
+	public void verificarLimiteTramitacionTramite(String codigoTramite, int versionTramite, String idioma) {
+		securityService.verificarLimiteTramitacionTramite(codigoTramite, versionTramite, idioma);
+	}
+
+	@Override
 	public UsuarioAutenticadoInfo validarTicketAutenticacionClave(final SesionInfo sesionInfo, final String ticket) {
 		return securityService.validarTicketAutenticacionClave(sesionInfo, ticket);
 	}

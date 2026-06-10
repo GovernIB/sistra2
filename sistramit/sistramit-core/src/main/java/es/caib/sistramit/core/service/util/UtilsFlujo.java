@@ -25,6 +25,7 @@ import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
+import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -896,6 +897,31 @@ public final class UtilsFlujo {
 		return resultado;
 	}
 
+
+	/**
+	 * Control limitación
+	 *
+	 * @param defTram
+	 *                    Definición trámite
+	 * @param flujoTramiteDao Dao acceso a flujo trámite
+	 */
+	public static void controlLimitacionTramitacion(final DefinicionTramiteSTG defTram, FlujoTramiteDao flujoTramiteDao) {
+
+		final RVersionTramiteControlAcceso controlAcceso = defTram.getDefinicionVersion().getControlAcceso();
+		if (controlAcceso.isLimitarTramitacion()) {
+
+			final String idTramite = defTram.getDefinicionVersion().getIdentificador();
+			final int version = defTram.getDefinicionVersion().getVersion();
+			final long limitNumero = controlAcceso.getLimiteTramitacionInicios();
+			final int limitIntervalo = controlAcceso.getLimiteTramitacionIntervalo();
+
+			final Long total = flujoTramiteDao.contadorLimiteTramitacion(idTramite, version, limitIntervalo, new Date());
+			if (total.longValue() >= limitNumero) {
+				throw new LimiteTramitacionException(idTramite, version, limitNumero, limitIntervalo);
+			}
+		}
+
+	}
 
 
 }

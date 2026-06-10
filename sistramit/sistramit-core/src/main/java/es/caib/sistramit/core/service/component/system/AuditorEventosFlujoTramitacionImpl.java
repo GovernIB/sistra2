@@ -382,6 +382,9 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 					if (StringUtils.isNotBlank(fv.getDetalleError())) {
 						propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_ERROR.toString(), fv.getDetalleError());
 					}
+					if (StringUtils.isNotBlank(fv.getCodigoError())) {
+						propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_ERROR_CODIGO.toString(), fv.getCodigoError());
+					}
 					propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_SESION.toString(), fv.getSesionFirma());
 					typeEvento = resultadoFirma ? TypeEvento.FIRMA_FIN_OK : TypeEvento.FIRMA_FIN_KO;
 					if (StringUtils.isNotBlank(fv.getMetodoFirma())) {

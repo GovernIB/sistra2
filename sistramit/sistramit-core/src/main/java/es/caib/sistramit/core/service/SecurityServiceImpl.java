@@ -87,6 +87,10 @@ public class SecurityServiceImpl implements SecurityService {
 	@Autowired
 	private TicketCDCDao ticketCDCDao;
 
+	/** Acceso a persistencia. */
+	@Autowired
+	private FlujoTramiteDao dao;
+
 	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -313,6 +317,13 @@ public class SecurityServiceImpl implements SecurityService {
 		// FH
 		usu.setFuncionarioHabilitado(new FuncionarioHabilitado(fh.getUsername(), fh.getNif(), fh.getNombre(), fh.getApellido1(), fh.getApellido2(), infoTicket.getInfoAccesoFH().getDir3FH(), infoTicket.getInfoAccesoFH().getIdActuacionFH()));
 		return usu;
+	}
+
+	@Override
+	public void verificarLimiteTramitacionTramite(String codigoTramite, int versionTramite, String idioma) {
+		final DefinicionTramiteSTG defTramSTG = configuracionComponent.recuperarDefinicionTramite(codigoTramite,
+				versionTramite, idioma);
+		UtilsFlujo.controlLimitacionTramitacion(defTramSTG, dao);
 	}
 
 	@Override

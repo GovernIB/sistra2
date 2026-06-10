@@ -8,6 +8,9 @@ public class EstadoFirma {
     /** Estado de la firma. */
     private TypeEstadoFirmado estadoFirmado;
 
+    /** Código de error. */
+    private String codigoError;
+
     /** Mensaje de error. */
     private String mensajeError;
 
@@ -69,5 +72,21 @@ public class EstadoFirma {
      */
     public void setMetodoFirma(final String metodoFirma) {
         this.metodoFirma = metodoFirma;
+    }
+
+    /**
+     * Método de acceso a codigoError.
+     * @return codigoError
+     */
+    public String getCodigoError() {
+        return codigoError;
+    }
+
+    /**
+     * Método para establecer codigoError.
+     * @param codigoError codigoError a establecer
+     */
+    public void setCodigoError(String codigoError) {
+        this.codigoError = codigoError;
     }
 }

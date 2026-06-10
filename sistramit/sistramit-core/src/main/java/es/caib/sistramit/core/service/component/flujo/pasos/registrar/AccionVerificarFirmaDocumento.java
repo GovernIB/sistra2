@@ -90,6 +90,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		fv.setRealizada(TypeSiNo.fromBoolean(resFirma.isFinalizada()));
 		fv.setVerificada(TypeSiNo.fromBoolean(resFirma.isValida()));
 		fv.setCancelada(TypeSiNo.fromBoolean(resFirma.isCancelada()));
+		fv.setCodigoError(resFirma.getCodigoError());
 		fv.setDetalleError(resFirma.getDetalleError());
 		fv.setMetodoFirma(resFirma.getMetodoFirma());
 		rp.addParametroRetorno("resultado", fv);

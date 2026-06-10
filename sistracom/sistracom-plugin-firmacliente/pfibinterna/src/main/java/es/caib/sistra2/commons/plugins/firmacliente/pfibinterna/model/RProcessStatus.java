@@ -4,6 +4,8 @@ public class RProcessStatus {
 
     private Integer status;
 
+    private String errorCode;
+
     private String errorMessage;
 
     private String errorStackTrace;
@@ -30,5 +32,13 @@ public class RProcessStatus {
 
     public void setErrorStackTrace(String errorStackTrace) {
         this.errorStackTrace = errorStackTrace;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 }
