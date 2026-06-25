@@ -1,6 +1,9 @@
 package es.caib.sistramit.frontend.controller.asistente.pasos;
 
+import es.caib.sistramit.core.api.model.flujo.*;
+import es.caib.sistramit.core.api.service.RegistroIsolatedService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -8,10 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.RedireccionFirmaCliente;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
@@ -40,6 +39,10 @@ public class PasoRegistrarController extends TramitacionController {
 
 	/** Constante parametro firmante. */
 	private static final String PARAM_FIRMANTE = "firmante";
+
+	/** Registro isolated service. */
+	@Autowired
+	private RegistroIsolatedService registroIsolatedService;
 
 	/**
 	 * Realiza download de un documento rellenado en el trámite.
@@ -202,7 +205,13 @@ public class PasoRegistrarController extends TramitacionController {
 
 		ParametrosAccionPaso pParametros;
 
-		// Si no es reintentar, iniciamos sesion registro
+		// TODO REGISTRO ISOLATED
+		//  -- SI QUEREMOS AISLAR INICIO SESION REGISTRO:
+		//  	1) PREPARAR REGISTRO
+		//  	2) FUERA DE TX INICIAR SESION REGISTRO EN REGISTROISOLATEDSERVICE (CONTRA RW3, CES2...)
+		//  	3) INICIAR SESION REGISTRO EN FLUJO PASANDO EL ID SESION REGISTRO
+
+		// Inicia sesion registro
 		if (reintentar == TypeSiNo.NO) {
 			pParametros = new ParametrosAccionPaso();
 			final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
@@ -211,18 +220,27 @@ public class PasoRegistrarController extends TramitacionController {
 			this.debug("Sesión registro: " + idSesionRegistro);
 		}
 
-		// Registramos / reintentamos
+		// Prepara registro
 		pParametros = new ParametrosAccionPaso();
-		pParametros.addParametroEntrada("reintentar", reintentar);
+		final ResultadoAccionPaso rapAsiento = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoRegistrar.PREPARAR_REGISTRO, pParametros);
+		RegistroIsolatedData registroIsolatedData = (RegistroIsolatedData) rapAsiento.getParametroRetorno("registroIsolatedData");
+
+		// Realiza registro/reintento fuera de la transacción
+		ResultadoRegistrar resultadoRegistro = registroIsolatedService.registrar(idSesionTramitacion, registroIsolatedData, (reintentar == TypeSiNo.SI));
+
+		// Finalizamos registro
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada("asientoRegistral", registroIsolatedData.getAsiento());
+		pParametros.addParametroEntrada("resultadoRegistrar", resultadoRegistro);
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoRegistrar.REGISTRAR_TRAMITE, pParametros);
-		final ResultadoRegistrar resReg = (ResultadoRegistrar) rap.getParametroRetorno("resultado");
+				TypeAccionPasoRegistrar.FINALIZAR_REGISTRO, pParametros);
 
 		// Generamos mensaje respuesta
 		TypeRespuestaJSON estado = null;
 		String titulo = null;
 		String literal = null;
-		switch (resReg.getResultado()) {
+		switch (resultadoRegistro.getResultado()) {
 		case CORRECTO:
 			estado = TypeRespuestaJSON.SUCCESS;
 			titulo = "registroRealizado";

@@ -20,7 +20,10 @@ import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 
 @Stateless
-@Interceptors(SpringBeanAutowiringInterceptor.class)
+@Interceptors({
+		SpringBeanAutowiringInterceptor.class,
+		EJBExceptionInterceptor.class
+})
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class SystemServiceBean implements SystemService {
 

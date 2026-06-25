@@ -221,9 +221,12 @@
 			        		</h:panelGroup>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w14">
-
-		        	</p:column>
+		        	<p:column styleClass="noPadding columna-filtros align-content-center">
+						<h:panelGrid columns="2" styleClass="w100 table-centered" rowClasses="centrar-celda-tabla">
+							<p:outputLabel for="filtroCaducados" value="#{msg['viewInformacionPersistencia.filtroMostrarCaducados']}:"/>
+							<p:selectBooleanCheckbox id="filtroCaducados" value="#{viewInformacionPersistencia.filtros.mostrarCaducados}" styleClass="fondoAzul" />
+						</h:panelGrid>
+					</p:column>
 				</p:row>
 				<p:row style="border-color:#f0f0f0">
 					<p:column styleClass="w33">

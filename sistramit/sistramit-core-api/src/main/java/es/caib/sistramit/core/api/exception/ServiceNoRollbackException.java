@@ -20,6 +20,9 @@ public abstract class ServiceNoRollbackException extends Exception implements Se
 	 */
 	private final ServiceExceptionData serviceDataSNRE = new ServiceExceptionData();
 
+	/** Indica si se debe auditar excepcion. */
+	private boolean auditarExcepcion = true;
+
 	/**
 	 * Genera excepción ServiceNoRollbackException estableciendo un mensaje.
 	 *
@@ -114,5 +117,21 @@ public abstract class ServiceNoRollbackException extends Exception implements Se
 	 */
 	protected final void setDetallesExcepcion(final ListaPropiedades detallesSNRE) {
 		serviceDataSNRE.setDetallesExcepcion(detallesSNRE);
+	}
+
+	/**
+	 * Obtiene auditarExcepcion.
+	 * @return auditarExcepcion
+	 */
+	public boolean isAuditarExcepcion() {
+		return auditarExcepcion;
+	}
+
+	/**
+	 * Establece auditarExcepcion.
+	 * @param auditarExcepcion auditarExcepcion
+	 */
+	public void setAuditarExcepcion(boolean auditarExcepcion) {
+		this.auditarExcepcion = auditarExcepcion;
 	}
 }

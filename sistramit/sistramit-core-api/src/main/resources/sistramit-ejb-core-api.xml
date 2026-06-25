@@ -55,4 +55,10 @@
 			id="restApiExternaService"
 			jndi-name="java:app/sistramit-core/RestApiExternaServiceBean"
 			business-interface="es.caib.sistramit.core.api.service.RestApiExternaService"/>
+
+	<jee:local-slsb
+			id="registroIsolatedService"
+			jndi-name="java:app/sistramit-core/RegistroIsolatedServiceBean"
+			business-interface="es.caib.sistramit.core.api.service.RegistroIsolatedService"/>
+
 </beans>

@@ -165,6 +165,16 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	 */
 	public void abrirDialogErrores() {
 		Map<String, String> params = new HashMap<>();
+		if (this.filtros.getIdSesionTramitacion() != null) params.put("fSesion", this.filtros.getIdSesionTramitacion());
+		if (this.filtros.getNif() != null) params.put("fNif", this.filtros.getNif());
+		if (this.filtros.getNombre() != null) params.put("fNombre", this.filtros.getNombre());
+		if (this.filtros.getIdTramite() != null) params.put("fIdTra", this.filtros.getIdTramite());
+		if (this.filtros.getVersionTramite() != null) params.put("fVer", String.valueOf(this.filtros.getVersionTramite()));
+		if (this.filtros.getCodSia() != null) params.put("fSia", this.filtros.getCodSia());
+		if (this.filtros.getIdProcedimientoCP() != null) params.put("fProc", this.filtros.getIdProcedimientoCP());
+		if (this.filtros.getFechaDesde() != null) params.put("fDesde", String.valueOf(this.filtros.getFechaDesde().getTime()));
+		if (this.filtros.getFechaHasta() != null) params.put("fHasta", String.valueOf(this.filtros.getFechaHasta().getTime()));
+		params.put("tipoEvento", TypeEvento.ERROR.name());
 		params.put("eventoPlataforma", Boolean.TRUE.toString());
 		params.put("checkTipoError", String.valueOf(checkTipoErrorDE));
 		params.put("checkTextoTraza", String.valueOf(checkTextoTrazaDE));
@@ -195,18 +205,23 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 			setFiltroTablaErroresDE((String) valores.get("filtroTablaErrores"));
 
 			List<String> tiposErrores = (List<String>) valores.get("tiposErrorSeleccionados");
+			List<String> tiposErroresRaw = tiposErrores != null ? new ArrayList<>(tiposErrores) : null;
+			if (tiposErrores != null) {
+				List<String> tiposErroresNormalizados = new ArrayList<>();
+				for (String tipoError : tiposErrores) {
+					if (tipoError != null && !tipoError.isEmpty()) {
+						tiposErroresNormalizados.add(tipoError);
+					}
+				}
+				tiposErrores = tiposErroresNormalizados;
+			}
+
 			if (tiposErrores == null || tiposErrores.isEmpty()) {
-				setErroresSeleccionadosDE("");
+				setErroresSeleccionadosDE(null);
 				filtros.setTiposErrores(null);
 			} else {
 				setErroresSeleccionadosDE(String.join(";", tiposErrores));
 				if (checkTipoErrorDE) {
-					if (filtroTablaErroresDE != null && !filtroTablaErroresDE.isEmpty()) {
-						Pattern pattern = Pattern.compile(filtroTablaErroresDE, Pattern.CASE_INSENSITIVE);
-						tiposErrores = tiposErrores.stream()
-								.filter(te -> pattern.matcher(te).find())
-								.collect(Collectors.toList());
-					}
 					filtros.setTiposErrores(tiposErrores);
 				} else {
 					filtros.setTiposErrores(null);

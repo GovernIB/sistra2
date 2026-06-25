@@ -1,7 +1,6 @@
 package es.caib.sistramit.core.ejb;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -30,7 +29,10 @@ import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditori
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 
 @Stateless
-@Interceptors(SpringBeanAutowiringInterceptor.class)
+@Interceptors({
+		SpringBeanAutowiringInterceptor.class,
+		EJBExceptionInterceptor.class
+})
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class RestApiInternaServiceBean implements RestApiInternaService {
 

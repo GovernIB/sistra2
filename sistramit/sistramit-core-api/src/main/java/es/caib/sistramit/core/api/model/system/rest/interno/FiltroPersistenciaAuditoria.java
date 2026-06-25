@@ -28,6 +28,7 @@ public class FiltroPersistenciaAuditoria implements Serializable {
 	private String idProcedimientoSIA;
 
 	private boolean soloContar;
+	private boolean mostrarCaducados;
 
 	private String sortField;
 	private String sortOrder;
@@ -128,6 +129,14 @@ public class FiltroPersistenciaAuditoria implements Serializable {
 	public void setSoloContar(final boolean soloContar) {
 		this.soloContar = soloContar;
 	}
+	
+	public boolean isMostrarCaducados() {
+        return mostrarCaducados;
+    }
+
+    public void setMostrarCaducados(final boolean mostrarCaducados) {
+        this.mostrarCaducados = mostrarCaducados;
+    }
 
 	public String getSortField() {
 		return sortField;

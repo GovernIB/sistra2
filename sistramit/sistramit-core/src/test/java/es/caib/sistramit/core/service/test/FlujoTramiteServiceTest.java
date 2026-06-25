@@ -49,8 +49,6 @@ import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 
-import javax.persistence.EntityManager;
-
 //TODO Meter en test la funcionalidad que se pueda: convertir pdf,
 //anexar firmado, script validacion, anexos dinamicos, opcionales,...
 
@@ -87,6 +85,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	/** Api externa service. */
 	@Autowired
 	private RestApiExternaService restApiExternaService;
+
+	/** Registro isolated service. */
+	@Autowired
+	private RegistroIsolatedService registroIsolatedService;
 
 	/** Url inicio. */
 	private static final String URL_INICIO = "localhost:8080/sistramitfront/asistente/iniciarTramite.html?tramite="
@@ -1483,15 +1485,24 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		}
 
 		// -- Registrar
+		//	** Inicia sesion registro
 		parametros = new ParametrosAccionPaso();
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.INICIAR_SESION_REGISTRO, parametros);
+		// 	** Prepara registro
 		parametros = new ParametrosAccionPaso();
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoRegistrar.REGISTRAR_TRAMITE, parametros);
-		Assert.isTrue(((ResultadoRegistrar) resPaso.getParametroRetorno("resultado"))
-				.getResultado() == TypeResultadoRegistro.CORRECTO, "No se podido registrar");
-
+		final ResultadoAccionPaso rapAsiento = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoRegistrar.PREPARAR_REGISTRO, parametros);
+		RegistroIsolatedData registroIsolatedData = (RegistroIsolatedData) rapAsiento.getParametroRetorno("registroIsolatedData");
+		//	** Realiza registro/reintento fuera de la transacción
+		ResultadoRegistrar resultadoRegistro = registroIsolatedService.registrar(idSesionTramitacion, registroIsolatedData, false);
+		Assert.isTrue(resultadoRegistro.getResultado() == TypeResultadoRegistro.CORRECTO, "No se podido registrar");
+		//	** Finaliza registro
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("asientoRegistral", registroIsolatedData.getAsiento());
+		parametros.addParametroEntrada("resultadoRegistrar", resultadoRegistro);
+		flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoRegistrar.FINALIZAR_REGISTRO, parametros);
 		// -- Paso terminado, pasa automáticamente a Guardar
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		idPaso = dp.getActual().getId();

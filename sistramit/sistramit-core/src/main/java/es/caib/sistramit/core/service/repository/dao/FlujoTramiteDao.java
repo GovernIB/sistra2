@@ -143,14 +143,11 @@ public interface FlujoTramiteDao {
 	 *                            Id tramite
 	 * @param version
 	 *                            Version tramite
-	 * @param limiteIntervalo
-	 *                            Intervalo (minutos)
-	 * @param finIntervalo
-	 *                            Fin intervalo
+	 * @param minutoActual
+	 *                            Minuto actual
 	 * @return número de inicios
 	 */
-	Long contadorLimiteTramitacion(final String idTramite, final int version, int limiteIntervalo,
-			final Date finIntervalo);
+	Long contadorLimiteTramitacion(final String idTramite, final int version, final Date minutoActual);
 
 	/**
 	 * Registra formulario soporte.

@@ -27,10 +27,8 @@ public final class LimiteTramitacionException extends ServiceRollbackException {
 	 * @param pIdTramite Id tramite
 	 * @param version    Version tramite
 	 * @param limite     limite
-	 * @param intervalo  intervalo
 	 */
-	public LimiteTramitacionException(final String pIdTramite, final int version, final long limite,
-			final int intervalo) {
+	public LimiteTramitacionException(final String pIdTramite, final int version, final long limite, final boolean auditarExcepcion) {
 
 		super("Límit de tramitació aconseguit");
 
@@ -38,9 +36,10 @@ public final class LimiteTramitacionException extends ServiceRollbackException {
 		detalles.addPropiedad("idTramite", pIdTramite);
 		detalles.addPropiedad("version", Integer.toString(version));
 		detalles.addPropiedad("limiteNumero", Long.toString(limite));
-		detalles.addPropiedad("limiteIntervalo", Integer.toString(intervalo));
 
 		this.setDetallesExcepcion(detalles);
+
+		this.setAuditarExcepcion(auditarExcepcion);
 
 	}
 

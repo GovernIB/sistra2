@@ -20,11 +20,12 @@ public class Test {
         final String prefijoPlugin = "pluginsib.digitalizacion.digitalib.";
 
         final Properties prop = new Properties();
+        prop.put(prefijoGlobal + prefijoPlugin + "debug", "true");
         prop.put(prefijoGlobal + prefijoPlugin + "iframe", "false");
-        prop.put(prefijoGlobal + prefijoPlugin + "profileCode", "APLICACIONS_FIRMA");
+        prop.put(prefijoGlobal + prefijoPlugin + "profileCode", "APP_ESCAN_FIRSER");
         prop.put(prefijoGlobal + prefijoPlugin + "endpoint", "https://dev.caib.es/digitalibapi/interna");
-        prop.put(prefijoGlobal + prefijoPlugin + "username", "$sistra2_digitalib");
-        prop.put(prefijoGlobal + prefijoPlugin + "password", "sistra2_digitalib");
+        prop.put(prefijoGlobal + prefijoPlugin + "username", "$sistra2_digitalib_dev");
+        prop.put(prefijoGlobal + prefijoPlugin + "password", "sistra2_digitalib_dev");
 
         final ComponenteDigitalibPlugin plg = (ComponenteDigitalibPlugin) PluginsManager
                 .instancePluginByClassName(classname, prefijoGlobal, prop);
@@ -43,7 +44,7 @@ public class Test {
         infoSesion.setIdioma("es");
 
         InfoPersonaDigitalizacion funcionarioHabilitado = new InfoPersonaDigitalizacion();
-        funcionarioHabilitado.setNombre("nombre");
+        funcionarioHabilitado.setNombre("Victor");
         funcionarioHabilitado.setApellido1("apellido1");
         funcionarioHabilitado.setApellido2("apellido2");
         funcionarioHabilitado.setNif("00000000T");

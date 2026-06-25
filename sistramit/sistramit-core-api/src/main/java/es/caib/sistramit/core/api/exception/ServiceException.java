@@ -41,4 +41,9 @@ public interface ServiceException {
 	 */
 	Date getFechaExcepcion();
 
+	/**
+	 * Indica si se debe auditar la excepción.
+	 * @return si se debe auditar la excepción.
+	 */
+	boolean isAuditarExcepcion();
 }

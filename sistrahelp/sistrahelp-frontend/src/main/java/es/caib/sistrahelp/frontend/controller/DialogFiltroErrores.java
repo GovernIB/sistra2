@@ -97,10 +97,10 @@ public class DialogFiltroErrores extends DialogControllerBase {
 
 	        listaTiposError = helpDeskService.obtenerListaErroresAuditoria(eventoPlataforma, filtro);
 
-	        if(erroresSeleccionadosInit != null) {
+	        if(erroresSeleccionadosInit != null && !erroresSeleccionadosInit.isEmpty()) {
 	        	listaSeleccionados = Arrays.asList(erroresSeleccionadosInit.split(";"));
 	        } else {
-	        	listaSeleccionados = listaTiposError;
+	        	listaSeleccionados = new ArrayList<>(listaTiposError != null ? listaTiposError : new ArrayList<>());
 	        }
 
 	    } else if (isModoFirma()) {

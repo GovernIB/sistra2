@@ -12,10 +12,11 @@ public class TestUtilPdf {
     }
 
     private static void verificarAdjuntos() throws Exception {
-        String[] files = {"PDF-CON-ANEXOS-A.pdf", "PDF-CON-ANEXOS-B.pdf", "VACIO_signed.PDF"};
+        String[] files = {"PDF-CON-ANEXOS-A.pdf", "PDF-CON-ANEXOS-B.pdf", "VACIO_signed.PDF", "PortfolioPDF.pdf"};
         for (String f : files) {
             final byte[] arrayBytes = IOUtils.toByteArray(TestPdfCaib.class.getResourceAsStream("/" + f));
             System.out.println(f + " tiene adjuntos? " + UtilPDF.tieneAdjuntos(arrayBytes));
+            System.out.println(f + " está protegido por contraseña? " +   UtilPDF.esProtegidoPwd(arrayBytes));
         }
     }
 }

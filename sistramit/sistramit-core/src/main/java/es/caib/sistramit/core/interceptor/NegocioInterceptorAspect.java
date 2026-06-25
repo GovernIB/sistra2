@@ -265,10 +265,12 @@ public final class NegocioInterceptorAspect {
 			auditoriaComponent.auditarExcepcionNegocio(flujoInfo.getIdSesionTramitacion(), exBD);
 			exNew = exBD;
 		} else if (ex instanceof ServiceException) {
-			if (flujoInfo.isDebugEnabled()) {
-				logJP.error(ex.getMessage(), ex);
+			if (((ServiceException) ex).isAuditarExcepcion()) {
+				if (flujoInfo.isDebugEnabled()) {
+					logJP.error(ex.getMessage(), ex);
+				}
+				auditoriaComponent.auditarExcepcionNegocio(flujoInfo.getIdSesionTramitacion(), (ServiceException) ex);
 			}
-			auditoriaComponent.auditarExcepcionNegocio(flujoInfo.getIdSesionTramitacion(), (ServiceException) ex);
 			exNew = null;
 		} else if (ex instanceof RuntimeException) {
 			// 1. Para excepciones no controladas que no sean excepciones de

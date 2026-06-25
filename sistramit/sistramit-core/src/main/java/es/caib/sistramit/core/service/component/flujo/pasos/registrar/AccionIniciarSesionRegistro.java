@@ -73,10 +73,6 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 		// Valida si se puede registrar el tramite
 		validacionesRegistrar(pDipa, pDpp, pVariablesFlujo, pDefinicionTramite);
 
-		// Verificamos si esta habilitado modo entrega
-		final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
-				.devuelveDefinicionPaso(pDipa.getIdPaso(), pDefinicionTramite);
-
 		// Iniciamos sesión registro
 		final String idSesionRegistro = iniciarSesionRegistro(pVariablesFlujo.getIdSesionTramitacion(),
 				pVariablesFlujo.getTipoDestino(), pDipa.getParametrosRegistro(), pDefinicionTramite,
@@ -217,13 +213,12 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 	 *                             Datos internos paso
 	 * @param pDpp
 	 *                             Datos persistencia
-	 * @param resReg
-	 *                             Resultado registro
+	 * @param idSesionRegistro
+	 *                             Id sesion registro
 	 */
 	private void actualizarPersistencia(final DatosInternosPasoRegistrar pDipa, final DatosPersistenciaPaso pDpp,
 			final String idSesionRegistro) {
-		// Marcamos documento como incompleto, estado reintentar y apuntamos id sesion
-		// registro
+		// Marcamos documento como incompleto, estado reintentar y apuntamos id sesion registro
 		final DocumentoPasoPersistencia docAsientoDpp = pDpp
 				.getDocumentoPasoPersistencia(ConstantesFlujo.ID_ASIENTO_REGISTRO, ConstantesNumero.N1);
 		docAsientoDpp.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);

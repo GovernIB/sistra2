@@ -50,8 +50,6 @@ public interface SistragesComponent {
 
 	/**
 	 * Borra caché de configuracion entidad.
-	 *
-	 * @param idEntidad
 	 */
 	@CacheEvict(value = "cacheConfiguracion", allEntries = true)
 	void evictConfiguracionEntidad();

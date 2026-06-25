@@ -269,15 +269,19 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	}
 
 	@Override
-	public Long contadorLimiteTramitacion(final String idTramite, final int version, final int pLimiteIntervalo,
-			final Date finIntervalo) {
+	public Long contadorLimiteTramitacion(final String idTramite, final int version, final Date minutoActual) {
 
 		Long res = null;
 
+		// Inicio intervalo: minuto actual con segundos a 0
+		final Date inicioIntervalo = minutoActual;
+
+		// Fin intervalo: minuto actual con segundos a 59
 		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(finIntervalo);
-		calendar.add(Calendar.MINUTE, pLimiteIntervalo * ConstantesNumero.N_1);
-		final Date inicioIntervalo = calendar.getTime();
+		calendar.setTime(minutoActual);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 0);
+		final Date finIntervalo = calendar.getTime();
 
 		final String hql = "SELECT COUNT(*) FROM HTramite WHERE idTramite = :idTramite AND versionTramite = :versionTramite "
 				+ " AND fechaInicio >= :fechaInicio AND fechaInicio <= :fechaFin";
@@ -287,7 +291,6 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		query.setParameter("fechaInicio", inicioIntervalo);
 		query.setParameter("fechaFin", finIntervalo);
 		res = (Long) query.getSingleResult();
-
 		return res;
 	}
 
@@ -401,7 +404,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	private HTramite getHTramite(final String pIdSesionTramitacion) {
 		final HTramite hTramite = findHTramite(pIdSesionTramitacion);
 		if (hTramite == null) {
-			throw new RepositoryException("No existeix tràmit: " + pIdSesionTramitacion);
+			throw new RepositoryException("No existeix tràmit amb id sessió: " + pIdSesionTramitacion);
 		}
 		return hTramite;
 	}

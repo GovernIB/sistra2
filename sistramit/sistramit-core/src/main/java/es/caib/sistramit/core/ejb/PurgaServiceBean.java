@@ -12,7 +12,10 @@ import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
 import es.caib.sistramit.core.api.service.PurgaService;
 
 @Stateless
-@Interceptors(SpringBeanAutowiringInterceptor.class)
+@Interceptors({
+		SpringBeanAutowiringInterceptor.class,
+		EJBExceptionInterceptor.class
+})
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class PurgaServiceBean implements PurgaService {
 

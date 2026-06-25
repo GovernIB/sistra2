@@ -422,6 +422,17 @@ public final class RestApiDaoImpl implements RestApiDao {
 					builder.equal(tableD.get("estado"), TypeEstadoDocumento.RELLENADO_CORRECTAMENTE.toString()));
 		}
 
+		if (pFiltroBusqueda.isMostrarCaducados()) {
+			predicate = builder.and(predicate, builder.isNotNull(tableT.get("fechaCaducidad")));
+            predicate = builder.and(predicate, builder.lessThanOrEqualTo(tableT.get("fechaCaducidad"), new java.util.Date()));
+        } else {
+			Predicate noCaducado = builder.or(
+				builder.isNull(tableT.get("fechaCaducidad")),
+				builder.greaterThan(tableT.get("fechaCaducidad"), new Date())
+			);
+			predicate = builder.and(predicate, noCaducado);
+		}
+
 		query.where(predicate);
 
 		if (pCount) {
@@ -2699,13 +2710,20 @@ public final class RestApiDaoImpl implements RestApiDao {
 	    StringBuilder sql = new StringBuilder();
 	    sql.append("SELECT DISTINCT f.LOG_ERRCOD FROM STT_LOGINT f ");
 
-	    // Triple Join para llegar a los datos del trámite e Id de sesión
-	    sql.append("INNER JOIN STT_SESION s ON f.LOG_CODSES = s.SES_CODIGO ");
-	    if (!eventoPlataforma) {
+	    // Para plataforma necesitamos detectar eventos sin sesión enlazada.
+	    // Usamos LEFT JOIN para que puedan salir filas sin correspondencia en STT_SESION.
+	    if (eventoPlataforma) {
+	        sql.append("LEFT JOIN STT_SESION s ON f.LOG_CODSES = s.SES_CODIGO ");
+	    } else {
+	        sql.append("INNER JOIN STT_SESION s ON f.LOG_CODSES = s.SES_CODIGO ");
 	        sql.append("LEFT JOIN STT_TRAPER t ON s.SES_CODIGO = t.TRP_CODSTR ");
 	    }
 
 	    sql.append("WHERE f.LOG_EVETIP = 'ERROR' AND f.LOG_ERRCOD IS NOT NULL ");
+	    // Alineado con ViewEventosPlataforma: solo eventos sin sesión tramitación asociada.
+	    if (eventoPlataforma) {
+	        sql.append("AND s.SES_CODIGO IS NULL ");
+	    }
 
 	    Map<String, Object> params = new HashMap<>();
 	    appendFiltrosAuditoria(sql, pFiltro, params, eventoPlataforma);

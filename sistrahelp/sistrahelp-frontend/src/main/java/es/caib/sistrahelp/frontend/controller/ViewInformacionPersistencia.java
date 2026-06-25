@@ -72,7 +72,7 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 
 		filtros = new FiltroPersistenciaAuditoria(convierteListaAreas());
 
-		filtros.setMostrarCaducados(true);
+		filtros.setMostrarCaducados(false);
 	}
 
 	/**

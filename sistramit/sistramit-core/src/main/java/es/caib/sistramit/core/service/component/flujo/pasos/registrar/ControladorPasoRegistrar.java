@@ -72,7 +72,10 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	private AccionIniciarSesionRegistro accionIniciarSesionRegistro;
 	/** Accion registrar tramite. */
 	@Autowired
-	private AccionRegistrarTramite accionRegistrarTramite;
+	private AccionFinalizarRegistro accionFinalizarRegistro;
+	/** Accion generar asiento. */
+	@Autowired
+	private AccionPrepararRegistro accionPrepararRegistro;
 	/** Componente registro. */
 	@Autowired
 	private RegistroComponent registroComponent;
@@ -152,8 +155,11 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		case INICIAR_SESION_REGISTRO:
 			accionPaso = accionIniciarSesionRegistro;
 			break;
-		case REGISTRAR_TRAMITE:
-			accionPaso = accionRegistrarTramite;
+		case PREPARAR_REGISTRO:
+			accionPaso = accionPrepararRegistro;
+			break;
+		case FINALIZAR_REGISTRO:
+			accionPaso = accionFinalizarRegistro;
 			break;
 		default:
 			throw new AccionPasoNoExisteException("No existeix acció " + pAccionPaso + " en la passa registrar");
@@ -530,8 +536,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 			// Libro se establece por script
 			datosRegistrales.setLibro(resRegistro.getLibro());
 		} else {
-			// Verificamos si libro se calcula automáticamente o a nivel de versión de
-			// trámite
+			// Verificamos si libro se calcula automáticamente o a nivel de versión de trámite
 			if (entidadInfo.isRegistroCentralizado()) {
 				final String libro = registroComponent.obtenerLibroOrganismo(entidadInfo.getIdentificador(),
 						datosRegistrales.getCodigoOrganoDestino(), pVariablesFlujo.isDebugEnabled());

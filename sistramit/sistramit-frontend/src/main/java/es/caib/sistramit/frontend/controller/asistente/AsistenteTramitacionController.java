@@ -775,6 +775,11 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 */
 	private void cargarTramiteImpl(final String pIdSesion, final boolean recarga) {
 
+		// Verificamos id sesion no es nulo
+		if (StringUtils.isBlank(pIdSesion)) {
+			throw new ErrorFrontException("No s'ha indicat id sessió tramitació");
+		}
+
 		// Obtenemos info usuario autenticado
 		final UsuarioAutenticado user = SecurityUtils.obtenerUsuarioAutenticado();
 		final UsuarioAutenticadoInfo userInfo = user.getUsuario();

@@ -365,12 +365,8 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			} else {
 				if (rResultado.getListaPersistencia() != null) {
 					resultado.setListaPersistencia(new ArrayList<>());
-					Date now = new Date();
 					for (final RPersistenciaAuditoria rPersistencia : rResultado.getListaPersistencia()) {
-						if (pFiltroBusqueda.isMostrarCaducados() || rPersistencia.getFechaCaducidad() == null
-								|| rPersistencia.getFechaCaducidad().getTime() - now.getTime() > 0) {
-							resultado.getListaPersistencia().add(conviertePersistencia(rPersistencia));
-						}
+						resultado.getListaPersistencia().add(conviertePersistencia(rPersistencia));
 					}
 				}
 			}
@@ -1325,6 +1321,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			rFiltro.setIdProcedimientoCP(pFiltro.getIdProcedimientoCP());
 			rFiltro.setIdProcedimientoSIA(pFiltro.getIdProcedimientoSIA());
 			rFiltro.setSoloContar(pFiltro.isSoloContar());
+			rFiltro.setMostrarCaducados(pFiltro.isMostrarCaducados());
 
 			rFiltro.setSortField(pFiltro.getSortField());
 			rFiltro.setSortOrder(pFiltro.getSortOrder());

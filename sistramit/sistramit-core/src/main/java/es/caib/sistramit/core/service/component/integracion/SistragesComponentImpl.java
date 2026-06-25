@@ -46,6 +46,7 @@ public final class SistragesComponentImpl implements SistragesComponent {
 		log.debug("evictConfiguracionEntidad: " + idEntidad);
 	}
 
+
 	@Override
 	public RVersionTramite recuperarDefinicionTramite(final String idTramite, final int version, final String idioma) {
 		return sistragesApiComponent.recuperarDefinicionTramite(idTramite, version, idioma);

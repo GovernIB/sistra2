@@ -11,7 +11,10 @@ import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
 @Stateless
-@Interceptors(SpringBeanAutowiringInterceptor.class)
+@Interceptors({
+		SpringBeanAutowiringInterceptor.class,
+		EJBExceptionInterceptor.class
+})
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class EntregaServiceBean implements EntregaService {
 

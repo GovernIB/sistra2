@@ -16,7 +16,10 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 
 @Stateless
-@Interceptors(SpringBeanAutowiringInterceptor.class)
+@Interceptors({
+		SpringBeanAutowiringInterceptor.class,
+		EJBExceptionInterceptor.class
+})
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 

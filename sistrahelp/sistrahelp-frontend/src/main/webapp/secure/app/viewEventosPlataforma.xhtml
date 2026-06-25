@@ -263,7 +263,7 @@
 
 					<p:commandButton id="btnDialogErrores" styleClass="rotar-icono" icon="fa fa-sliders"
 									 actionListener="#{viewEventosPlataforma.abrirDialogErrores}"
-									 process="@this" update="growl"
+									 process="@this panelFiltro" update="growl"
 									 disabled="#{viewEventosPlataforma.filtros.evento ne 'ERROR'}" >
 						<p:ajax event="dialogReturn" listener="#{viewEventosPlataforma.onDialogErroresReturn}" process="@this" update="growl"/>
 					</p:commandButton>

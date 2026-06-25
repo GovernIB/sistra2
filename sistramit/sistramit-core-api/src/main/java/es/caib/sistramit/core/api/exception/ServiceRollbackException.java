@@ -21,6 +21,9 @@ public abstract class ServiceRollbackException extends RuntimeException implemen
 	 */
 	private final ServiceExceptionData serviceDataSRE = new ServiceExceptionData();
 
+	/** Indica si se debe auditar excepcion. */
+	private boolean auditarExcepcion = true;
+
 	/**
 	 * Genera excepción ServiceRollbackException estableciendo un mensaje .
 	 *
@@ -115,5 +118,21 @@ public abstract class ServiceRollbackException extends RuntimeException implemen
 	 */
 	protected final void setDetallesExcepcion(final ListaPropiedades detallesSRE) {
 		serviceDataSRE.setDetallesExcepcion(detallesSRE);
+	}
+
+	/**
+	 * Obtiene logExcepcion.
+	 * @return logExcepcion
+	 */
+	public boolean isAuditarExcepcion() {
+		return auditarExcepcion;
+	}
+
+	/**
+	 * Establece logExcepcion.
+	 * @param logExcepcion logExcepcion
+	 */
+	public void setAuditarExcepcion(boolean logExcepcion) {
+		this.auditarExcepcion = logExcepcion;
 	}
 }

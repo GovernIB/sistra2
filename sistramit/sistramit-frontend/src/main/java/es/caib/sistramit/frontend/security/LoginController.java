@@ -5,12 +5,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import es.caib.sistramit.core.api.exception.ServiceException;
-import es.caib.sistramit.frontend.literales.LiteralesFront;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -536,12 +534,13 @@ public final class LoginController {
 
 		// Si viene de la capa EJB viene envuelta en una EJBException
 		Exception ex = pex;
-		if (pex instanceof EJBException && pex.getCause() instanceof ServiceException) {
+		if ( !(pex instanceof ServiceException) && pex.getCause() instanceof ServiceException) {
 			ex = (Exception) pex.getCause();
 		}
 
-		// TODO V0 Auditar ErrorFrontException en login
-		LOGGER.error("Excepcion login", ex);
+		if (!(ex instanceof ServiceException)) {
+			LOGGER.error("Excepcion login", ex);
+		}
 
 		// Obtenemos idioma
 		String idioma;

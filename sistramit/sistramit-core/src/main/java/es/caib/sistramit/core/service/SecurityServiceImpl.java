@@ -320,6 +320,7 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void verificarLimiteTramitacionTramite(String codigoTramite, int versionTramite, String idioma) {
 		final DefinicionTramiteSTG defTramSTG = configuracionComponent.recuperarDefinicionTramite(codigoTramite,
 				versionTramite, idioma);

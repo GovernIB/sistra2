@@ -2,9 +2,7 @@ package es.caib.sistramit.core.service.component.system;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.UserAgentUtil;
-import es.caib.sistramit.core.api.exception.AnexarFirmadoFirmaIncorrectaException;
 import es.caib.sistramit.core.api.exception.ServiceException;
-import es.caib.sistramit.core.api.exception.SesionFirmaClienteConnectException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.*;
@@ -46,10 +44,12 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	public List<EventoAuditoria> interceptaExcepcion(final String idSesionTramitacion, final String pMetodo,
 													 final Object[] pArgumentos, final ServiceException pExcepcion,
 													 boolean debugEnabled) {
-		List<EventoAuditoria> eventosFlujoTramitacion = null;
-		// Auditamos invocaciones si debug esta habilitado
-		eventosFlujoTramitacion = eventoFlujoTramitacionExcepcion(idSesionTramitacion, pMetodo, pArgumentos, pExcepcion,
-				debugEnabled);
+		List<EventoAuditoria> eventosFlujoTramitacion = new ArrayList<>();
+		if (pExcepcion.isAuditarExcepcion()) {
+			// Auditamos invocaciones si debug esta habilitado
+			eventosFlujoTramitacion = eventoFlujoTramitacionExcepcion(idSesionTramitacion, pMetodo, pArgumentos, pExcepcion,
+					debugEnabled);
+		}
 		return eventosFlujoTramitacion;
 	}
 
@@ -402,10 +402,9 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			}
 
 			// Registro tramite
-			if (accionPasoRegistrar == TypeAccionPasoRegistrar.REGISTRAR_TRAMITE) {
+			if (accionPasoRegistrar == TypeAccionPasoRegistrar.FINALIZAR_REGISTRO) {
 				// Comprobamos si se ha conseguido registrar
-				final ResultadoRegistrar resReg = ((ResultadoRegistrar) respuestaAccionPaso
-						.getParametroRetorno("resultado"));
+				final ResultadoRegistrar resReg = ((ResultadoRegistrar) parametrosPaso.getParametroEntrada("resultadoRegistrar"));
 				if (resReg.getResultado() == TypeResultadoRegistro.CORRECTO) {
 					final EventoAuditoria eventoRegistrarTramite = crearEvento(TypeEvento.REGISTRAR_TRAMITE,
 							idSesionTramitacion);

@@ -48,6 +48,9 @@ public class RFiltroPersistenciaAuditoria {
 	@ApiModelProperty(value = "Solo contar numero de elementos")
 	private boolean soloContar;
 
+	@ApiModelProperty(value = "Mostrar registros caducados")
+    private boolean mostrarCaducados;
+
 	private String sortField;
 	private String sortOrder;
 
@@ -138,6 +141,14 @@ public class RFiltroPersistenciaAuditoria {
 	public void setSoloContar(final boolean soloContar) {
 		this.soloContar = soloContar;
 	}
+	
+	public boolean isMostrarCaducados() {
+        return mostrarCaducados;
+    }
+
+    public void setMostrarCaducados(final boolean mostrarCaducados) {
+        this.mostrarCaducados = mostrarCaducados;
+    }
 
 	public String getSortField() {
 		return sortField;

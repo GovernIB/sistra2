@@ -334,7 +334,7 @@ public abstract class TramitacionController {
 		// Si viene de la capa EJB viene envuelta en una EJBException
 		Exception ex = pex;
 
-		if (pex instanceof EJBException && pex.getCause() instanceof ServiceException) {
+		if ( !(pex instanceof ServiceException) && pex.getCause() instanceof ServiceException) {
 			ex = (Exception) pex.getCause();
 		} else if (!(pex instanceof ServiceException) && !(pex instanceof ErrorFrontException)) {
 			ex = new ErrorFrontException("Excepcion no controlada en front: " + pex.getMessage(), pex);

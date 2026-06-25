@@ -1036,6 +1036,7 @@ public class ApiInternaRestController {
 			filtro.setIdProcedimientoSIA(pRFiltro.getIdProcedimientoSIA());
 
 			filtro.setSoloContar(pRFiltro.isSoloContar());
+			filtro.setMostrarCaducados(pRFiltro.isMostrarCaducados());
 
 			filtro.setSortField(pRFiltro.getSortField());
 			filtro.setSortOrder(pRFiltro.getSortOrder());
