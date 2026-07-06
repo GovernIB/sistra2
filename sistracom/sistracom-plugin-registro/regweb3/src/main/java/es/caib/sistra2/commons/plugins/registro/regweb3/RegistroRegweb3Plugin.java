@@ -156,7 +156,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					asientoRegistral.getDatosOrigen().getCodigoEntidad(),
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
-					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
+					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutRegistrarMillis(), logCalls);
 
 			// creacion de asiento registral de entrada con tipo de operacion normal
 			result = service.crearAsientoRegistral(Long.parseLong(idSesionRegistro),
@@ -190,7 +190,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					asientoRegistral.getDatosOrigen().getCodigoEntidad(),
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
-					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
+					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutRegistrarMillis(), logCalls);
 			// creacion de asiento registral de salida con tipo de operacion normal
 			result = service.crearAsientoRegistral(Long.parseLong(idSesionRegistro),
 					asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
@@ -542,6 +542,19 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	private Long getTimeoutMillis() throws RegistroPluginException {
 		Long timeout = null;
 		final String timeoutStr = getPropiedad(ConstantesRegweb3.PROP_TIMEOUT);
+		timeout = (new Long(timeoutStr)) * 1000L;
+		return timeout;
+	}
+
+	/**
+	 * Obtiene timeout.
+	 *
+	 * @return timeout
+	 * @throws RegistroPluginException
+	 */
+	private Long getTimeoutRegistrarMillis() throws RegistroPluginException {
+		Long timeout = null;
+		final String timeoutStr = getPropiedad(ConstantesRegweb3.PROP_TIMEOUT_REGISTRAR);
 		timeout = (new Long(timeoutStr)) * 1000L;
 		return timeout;
 	}

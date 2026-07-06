@@ -35,7 +35,12 @@ public interface SystemService {
 	 */
 	void auditarErrorFront(String idSesionTramitacion, ErrorFrontException error);
 
-	/**
+    /**
+	 * Genera error de concurrencia en registro.
+	 */
+    void generarErrorConcurrenciaRegistrar();
+
+    /**
 	 * Permite recuperar la lista de eventos internos parametrizada por fecha e
 	 * identificador de sesión.
 	 *

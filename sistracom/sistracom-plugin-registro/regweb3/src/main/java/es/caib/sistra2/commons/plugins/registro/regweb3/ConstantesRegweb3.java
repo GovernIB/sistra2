@@ -32,8 +32,11 @@ public class ConstantesRegweb3 {
 	public final static String PROP_WSDL_DIR = "wsdl.dir";
 	/** Nombre de propiedad de password del usuario de conexion */
 	public final static String PROP_LOG_PETICIONES = "log.peticionesWS";
-	/** Nombre de propiedad que indica timeout registro (segundos) */
+	/** Nombre de propiedad que indica timeout registro para operaciones diferentes a registrar (segundos) */
 	public final static String PROP_TIMEOUT = "timeout";
+	/** Nombre de propiedad que indica timeout registro para operacion registrar (segundos) */
+	public static final String PROP_TIMEOUT_REGISTRAR = "timeoutRegistrar";
+
 	/**
 	 * Nombre de propiedad para indicar si los justificantes se generan como CSV
 	 * (true/false).
@@ -183,4 +186,4 @@ public class ConstantesRegweb3 {
 	public static final int MAX_SIZE_TLF = 20;
 	/** Tamanyo max. direccion electronica */
 	public static final int MAX_SIZE_DIRECCION_ELECTRONICA = 160;
-}
+	}

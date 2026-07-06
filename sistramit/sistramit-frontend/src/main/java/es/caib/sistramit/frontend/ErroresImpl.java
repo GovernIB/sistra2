@@ -1,18 +1,11 @@
 package es.caib.sistramit.frontend;
 
+import es.caib.sistramit.core.api.exception.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
-import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
-import es.caib.sistramit.core.api.exception.LoginException;
-import es.caib.sistramit.core.api.exception.RegistroJustificanteException;
-import es.caib.sistramit.core.api.exception.ServiceException;
-import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
-import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
-import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -55,7 +48,7 @@ public final class ErroresImpl implements Errores {
 	private static final String[] SERVICE_EXCEPTION_NO_RECARGAR = { AccesoNoPermitidoException.class.getName(),
 			LoginException.class.getName(), TramiteFinalizadoException.class.getName(),
 			TramiteNoExisteException.class.getName(), UsuarioNoPermitidoException.class.getName(),
-			LimiteTramitacionException.class.getName(), RegistroJustificanteException.class.getName() };
+			LimiteTramitacionException.class.getName(), RegistroJustificanteException.class.getName()};
 
 	@Override
 	public RespuestaJSON generarRespuestaJsonExcepcion(final Exception pEx, final String idioma) {
@@ -169,9 +162,8 @@ public final class ErroresImpl implements Errores {
 			url = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "url." + keyLiteralExcepcion, pIdioma, url);
 		}
 
-		// Si es una excepción para la que no hay que recargar, intentamos redirigir a
-		// entidad
-		if (!isExceptionServiceRecargar(pEx)) {
+		// Si es una excepción para la que no hay que recargar, intentamos redirigir a entidad
+		if (isEvitarRecargarTramite(pEx)) {
 
 			// Por defecto sin url
 			url = null;
@@ -273,17 +265,16 @@ public final class ErroresImpl implements Errores {
 	 *                Exception
 	 * @return true si se debe intentar recargar el tramite.
 	 */
-	private boolean isExceptionServiceRecargar(final Exception pEx) {
-		boolean res = false;
-		if (pEx instanceof ServiceException && ((ServiceException) pEx).getNivel() == TypeNivelExcepcion.FATAL) {
-			res = true;
+	private boolean isEvitarRecargarTramite(final Exception pEx) {
+		boolean evitarRecargar = false;
+		if (pEx instanceof ServiceException) {
 			for (final String exceptionName : SERVICE_EXCEPTION_NO_RECARGAR) {
 				if (StringUtils.equals(exceptionName, pEx.getClass().getName())) {
-					res = false;
+					evitarRecargar = true;
 					break;
 				}
 			}
 		}
-		return res;
+		return evitarRecargar;
 	}
 }

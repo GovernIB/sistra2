@@ -1,5 +1,6 @@
 package es.caib.sistramit.frontend.controller.asistente.pasos;
 
+import es.caib.sistramit.core.api.exception.ControlConcurrenciaRegistroException;
 import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.service.RegistroIsolatedService;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +44,10 @@ public class PasoRegistrarController extends TramitacionController {
 	/** Registro isolated service. */
 	@Autowired
 	private RegistroIsolatedService registroIsolatedService;
+
+	/** Concurrencia limiter. */
+	@Autowired
+	private RegistrarConcurrencyLimiter registrarConcurrencyLimiter;
 
 	/**
 	 * Realiza download de un documento rellenado en el trámite.
@@ -203,71 +208,87 @@ public class PasoRegistrarController extends TramitacionController {
 	private ModelAndView procesoRegistrar(final String idPaso, final TypeSiNo reintentar) {
 		final String idSesionTramitacion = getIdSesionTramitacionActiva();
 
-		ParametrosAccionPaso pParametros;
+		RegistrarConcurrencyLimiter.Permit permit = registrarConcurrencyLimiter.tryAcquire();
 
-		// TODO REGISTRO ISOLATED
-		//  -- SI QUEREMOS AISLAR INICIO SESION REGISTRO:
-		//  	1) PREPARAR REGISTRO
-		//  	2) FUERA DE TX INICIAR SESION REGISTRO EN REGISTROISOLATEDSERVICE (CONTRA RW3, CES2...)
-		//  	3) INICIAR SESION REGISTRO EN FLUJO PASANDO EL ID SESION REGISTRO
+		// Si salta limite concurrencia, generamos error
+		if (permit == null) {
+			// Genera service exception
+			getSystemService().generarErrorConcurrenciaRegistrar();
+		}
 
-		// Inicia sesion registro
-		if (reintentar == TypeSiNo.NO) {
+		// Si no salta limite concurrencia, realizamos registro
+		try {
+
+			ParametrosAccionPaso pParametros;
+
+			// TODO REGISTRO ISOLATED
+			//  -- SI QUEREMOS AISLAR INICIO SESION REGISTRO:
+			//  	1) PREPARAR REGISTRO
+			//  	2) FUERA DE TX INICIAR SESION REGISTRO EN REGISTROISOLATEDSERVICE (CONTRA RW3, CES2...)
+			//  	3) INICIAR SESION REGISTRO EN FLUJO PASANDO EL ID SESION REGISTRO
+
+			// Inicia sesion registro
+			if (reintentar == TypeSiNo.NO) {
+				pParametros = new ParametrosAccionPaso();
+				final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+						TypeAccionPasoRegistrar.INICIAR_SESION_REGISTRO, null);
+				final String idSesionRegistro = (String) rap.getParametroRetorno("idSesionRegistro");
+				this.debug("Sesión registro: " + idSesionRegistro);
+			}
+
+			// Prepara registro
 			pParametros = new ParametrosAccionPaso();
-			final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
-					TypeAccionPasoRegistrar.INICIAR_SESION_REGISTRO, null);
-			final String idSesionRegistro = (String) rap.getParametroRetorno("idSesionRegistro");
-			this.debug("Sesión registro: " + idSesionRegistro);
-		}
-
-		// Prepara registro
-		pParametros = new ParametrosAccionPaso();
-		final ResultadoAccionPaso rapAsiento = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+			final ResultadoAccionPaso rapAsiento = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 					TypeAccionPasoRegistrar.PREPARAR_REGISTRO, pParametros);
-		RegistroIsolatedData registroIsolatedData = (RegistroIsolatedData) rapAsiento.getParametroRetorno("registroIsolatedData");
+			RegistroIsolatedData registroIsolatedData = (RegistroIsolatedData) rapAsiento.getParametroRetorno("registroIsolatedData");
 
-		// Realiza registro/reintento fuera de la transacción
-		ResultadoRegistrar resultadoRegistro = registroIsolatedService.registrar(idSesionTramitacion, registroIsolatedData, (reintentar == TypeSiNo.SI));
+			// Realiza registro/reintento fuera de la transacción
+			ResultadoRegistrar resultadoRegistro = registroIsolatedService.registrar(idSesionTramitacion, registroIsolatedData, (reintentar == TypeSiNo.SI));
 
-		// Finalizamos registro
-		pParametros = new ParametrosAccionPaso();
-		pParametros.addParametroEntrada("asientoRegistral", registroIsolatedData.getAsiento());
-		pParametros.addParametroEntrada("resultadoRegistrar", resultadoRegistro);
-		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoRegistrar.FINALIZAR_REGISTRO, pParametros);
+			// Finalizamos registro
+			pParametros = new ParametrosAccionPaso();
+			pParametros.addParametroEntrada("asientoRegistral", registroIsolatedData.getAsiento());
+			pParametros.addParametroEntrada("resultadoRegistrar", resultadoRegistro);
+			final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoRegistrar.FINALIZAR_REGISTRO, pParametros);
 
-		// Generamos mensaje respuesta
-		TypeRespuestaJSON estado = null;
-		String titulo = null;
-		String literal = null;
-		switch (resultadoRegistro.getResultado()) {
-		case CORRECTO:
-			estado = TypeRespuestaJSON.SUCCESS;
-			titulo = "registroRealizado";
-			literal = "registroRealizado.literal";
-			break;
-		case ERROR:
-			estado = TypeRespuestaJSON.ERROR;
-			titulo = "registroError";
-			literal = "registroError.literal";
-			break;
-		case REINTENTAR:
-			estado = TypeRespuestaJSON.WARNING;
-			titulo = "registroReintentar";
-			literal = "registroReintentar.literal";
-			break;
-		default:
-			estado = TypeRespuestaJSON.FATAL;
-			titulo = "registroError";
-			literal = "registroError.literal";
-			break;
+			// Generamos mensaje respuesta
+			TypeRespuestaJSON estado = null;
+			String titulo = null;
+			String literal = null;
+			switch (resultadoRegistro.getResultado()) {
+				case CORRECTO:
+					estado = TypeRespuestaJSON.SUCCESS;
+					titulo = "registroRealizado";
+					literal = "registroRealizado.literal";
+					break;
+				case ERROR:
+					estado = TypeRespuestaJSON.ERROR;
+					titulo = "registroError";
+					literal = "registroError.literal";
+					break;
+				case REINTENTAR:
+					estado = TypeRespuestaJSON.WARNING;
+					titulo = "registroReintentar";
+					literal = "registroReintentar.literal";
+					break;
+				default:
+					estado = TypeRespuestaJSON.FATAL;
+					titulo = "registroError";
+					literal = "registroError.literal";
+					break;
+			}
+
+			final RespuestaJSON respuesta = new RespuestaJSON();
+			respuesta.setEstado(estado);
+			respuesta.setMensaje(generarMensajeUsuario(titulo, literal));
+			respuesta.setUrl("asistente.html");
+			return generarJsonView(respuesta);
+		} finally {
+			// Liberamos el permiso de concurrencia para permitir que otros usuarios puedan registrar
+			permit.close();
 		}
 
-		final RespuestaJSON respuesta = new RespuestaJSON();
-		respuesta.setEstado(estado);
-		respuesta.setMensaje(generarMensajeUsuario(titulo, literal));
-		respuesta.setUrl("asistente.html");
-		return generarJsonView(respuesta);
 	}
 
 }

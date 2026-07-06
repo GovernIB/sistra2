@@ -3,9 +3,11 @@ package es.caib.sistramit.core.service;
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.PostConstruct;
 
+import es.caib.sistramit.core.api.exception.*;
 import es.caib.sistramit.core.service.repository.dao.EntregaTramiteDao;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,9 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
-import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.exception.ErrorFrontException;
-import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
@@ -82,6 +81,9 @@ public class SystemServiceImpl implements SystemService {
 	/** Log. */
 	private static Logger log = LoggerFactory.getLogger(SystemServiceImpl.class);
 
+	/** Ultima excepcion de concurrencia registrar. */
+	private final AtomicLong ultimaExcepcionConcurrenciaRegistrar = new AtomicLong(0);
+
 	@PostConstruct
 	public void init() {
 		// Establecemos fecha inicial revision invalidaciones
@@ -98,6 +100,24 @@ public class SystemServiceImpl implements SystemService {
 	@NegocioInterceptor
 	public void auditarErrorFront(final String idSesionTramitacion, final ErrorFrontException error) {
 		auditoriaComponent.auditarErrorFront(idSesionTramitacion, error);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void generarErrorConcurrenciaRegistrar() {
+		// TODO --- LO SUYO ES QUE GENERASE UN EVENTO EN LUGAR DE UN ERROR. SE PODRIA HACER DEFINIENDO QUE UNA SERVICEEXCEPTION PUEDE MAPEARSE A UN EVENTO.
+		// 		---- EN AuditoriaComponent.auditarExcepcionNegocio SERIA SIMPLEMENTE CAMBIAR EL MAPEO
+		// Obtenemos el tiempo actual
+		long now = System.currentTimeMillis();
+		// Obtenemos el tiempo de la última excepción registrada
+		long last = ultimaExcepcionConcurrenciaRegistrar.get();
+		// Verificamos si ha pasado más de 1 minuto desde la última excepción
+		boolean auditarExcepcion = false;
+		if (now - last >= 60L * 1000) {
+			auditarExcepcion = ultimaExcepcionConcurrenciaRegistrar.compareAndSet(last, now);
+		}
+		// Generamos la excepcion de concurrencia indicando si se debe auditar o no
+		throw new ControlConcurrenciaRegistroException(auditarExcepcion);
 	}
 
 	@Override

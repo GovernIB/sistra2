@@ -145,7 +145,10 @@ public enum TypePropiedadConfiguracion {
 	IFRAME_DIGITALIZACION_HEIGHT("iframeDigitalizacionHeight"),
 
 	/** Sistrahelp view url. **/
-	SISTRAHELP_VIEW_URL("sistrahelp.view.url");
+	SISTRAHELP_VIEW_URL("sistrahelp.view.url"),
+
+	/** Control concurrencia registrar (por instancia de STT). */
+	REGISTRO_CONTROL_CONCURRENCIA("registro.controlConcurrencia");
 
 	/**
 	 * Valor como string.

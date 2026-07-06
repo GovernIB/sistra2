@@ -41,6 +41,11 @@ public class SystemServiceBean implements SystemService {
 	}
 
 	@Override
+	public void generarErrorConcurrenciaRegistrar() {
+		systemService.generarErrorConcurrenciaRegistrar();
+	}
+
+	@Override
 	public List<EventoAuditoria> recuperarLogSesionTramitacion(final String idSesionTramitacion, final Date fechaDesde,
 			final Date fechaHasta, final boolean ordenAsc) {
 		return systemService.recuperarLogSesionTramitacion(idSesionTramitacion, fechaDesde, fechaHasta, ordenAsc);

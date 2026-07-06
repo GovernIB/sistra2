@@ -90,6 +90,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		tramiteVersion = tramiteService.getTramiteVersion(id);
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
+		tramiteVersion.setIntLimiteTramitacion(1);
 		eliminarAviso = false;
 		avisos = avisoEntidadService
 				.getAvisoEntidadByTramite(tramiteVersion.getCodigo() + "#" + tramiteVersion.getNumeroVersion());
