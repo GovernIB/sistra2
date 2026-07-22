@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
 
 /**
@@ -39,7 +40,7 @@ public interface HistorialAlertaDao {
 	 * @param String filtro
 	 * @return lista de Alerta
 	 */
-	List<HistorialAlerta> getAllByFiltro(Date desde, Date hasta);
+	List<HistorialAlerta> getAllByFiltro(Date desde, Date hasta, FiltroAlerta filtro);
 
 	/**
 	 * Devuelve las alertas que tienen ese nombre.

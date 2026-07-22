@@ -967,7 +967,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			log.debug("ALERTAS STH: Resumen diario enviado");
 			//enviarEmail(msg, DatatypeConverter.printBase64Binary(imageBytes));
 			enviarEmail(alert, msg, null);
-			purgarHistorial(historialAlertaDao.getAllByFiltro(null, null));
+			purgarHistorial(historialAlertaDao.getAllByFiltro(null, null, null));
 			purgarAlertas();
 	//		TimerHilosAlertas tAl = new TimerHilosAlertas();
 	//		tAl.run(aService, hService, confService, historialService);
@@ -1077,7 +1077,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 
 		errPlat = sistramitApiComponent.sumarErroresPlataformaCM(filtros).intValue();
 
-		listaAlertas = historialAlertaDao.getAllByFiltro(getYesterday(), getNow());
+		listaAlertas = historialAlertaDao.getAllByFiltro(getYesterday(), getNow(), null);
 	}
 
 	private String txtHacer(EventoAuditoriaTramitacion terr, String tipo) {

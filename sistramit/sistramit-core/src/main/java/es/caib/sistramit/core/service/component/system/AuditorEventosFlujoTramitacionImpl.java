@@ -490,6 +490,9 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_ID_SESION.toString(), sp.getIdentificadorPago());
 		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_PASARELA.toString(), sp.getPasarelaId());
 		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), String.format(Locale.US, "%.2f", sp.getImporte() / 100.0));
+		if (sp.getMultiplicador() > 1) {
+			propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_MULTIPLICADOR.toString(), Integer.toString(sp.getMultiplicador()));
+		}
 		// Metodo pago y localizador solo se guardan en sesion pago cuando se verifica pago
 		if (StringUtils.isNotBlank(sp.getMetodoPagoSeleccionado())) {
 			propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_METODO.toString(), sp.getMetodoPagoSeleccionado());

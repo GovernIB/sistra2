@@ -33,6 +33,7 @@ import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.EventoCM;
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
 import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
@@ -544,7 +545,12 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 		datoSeleccionado = null;
 
-		listaAlertas = historialAlertaService.listHistorialAlerta(filtros.getFechaDesde(), filtros.getFechaHasta());
+		final FiltroAlerta filtroHistorial = new FiltroAlerta(
+			null,
+			UtilJSF.getSessionBean().getEntidad() != null ? UtilJSF.getSessionBean().getEntidad().getCodigoDIR3() : null,
+			convierteListaAreas()
+		);
+		listaAlertas = historialAlertaService.listHistorialAlerta(filtros.getFechaDesde(), filtros.getFechaHasta(), filtroHistorial);
 	}
 
 	public void mail() {
@@ -946,16 +952,19 @@ public class ViewCuadroMando extends ViewControllerBase {
 		List<String> areasEnt = convierteListaAreas();
 		if (filtroArea != null && !filtroArea.isEmpty() && areasEnt != null) {
 			filtros.getListaAreas().clear();
+			filtrosInacabados.getListaAreas().clear();
 			for (String ar : areasEnt) {
 				Pattern pattern = Pattern.compile(filtroArea, Pattern.CASE_INSENSITIVE);
 				Matcher matcher = pattern.matcher(ar.split("\\.")[1]);
 				boolean matchFound = matcher.find();
 				if (matchFound) {
 					filtros.getListaAreas().add(ar);
+					filtrosInacabados.getListaAreas().add(ar);
 				}
 			}
 		} else {
 			filtros.setListaAreas(areasEnt);
+			filtrosInacabados.setListaAreas(areasEnt);
 		}
 	}
 

@@ -57,6 +57,10 @@ public enum TypeParametroEvento {
 	 */
 	PAGO_IMPORTE("PAGIMP"),
 	/**
+	 * Pago: Multiplicador.
+	 */
+	PAGO_MULTIPLICADOR("PAGMULT"),
+	/**
 	 * Pago: Error pasarela.
 	 */
 	PAGO_ERROR("PAGERR"),

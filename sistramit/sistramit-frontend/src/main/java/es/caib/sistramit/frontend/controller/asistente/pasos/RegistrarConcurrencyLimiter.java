@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -39,7 +40,7 @@ public class RegistrarConcurrencyLimiter {
     private SystemService systemService;
 
     /** Inicializa el límite de concurrencia al iniciar el componente. */
-    /* PROBLEMA AL METER JAVAX NOTATION EN EL FRONT
+    /*  QUITAMOS POR SI CAUSA PROBLEMAS AL AÑADIR JAVAXNOTATION
     @PostConstruct
     public void init() {
         refrescaLimiteConcurrencia();

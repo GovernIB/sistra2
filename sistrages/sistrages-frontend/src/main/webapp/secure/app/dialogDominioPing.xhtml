@@ -199,7 +199,7 @@
 					<c:if test="${not empty dialogDominioPing.valoresDominio.datos}">
 						<!-- Columnas, sin el rowIndex no va muy bien que se diga -->
 						<c:forEach items="#{dialogDominioPing.valoresDominio.datos.get(rowIndex)}" var="dato">
-							<p:column headerText="#{dato.key}" sortBy="#{dato.value}">
+							<p:column headerText="#{dato.key eq 'CODIGO' ? 'CODI' : dato.key eq 'DESCRIPCION' ? 'DESCRIPCIO' : dato.key}" sortBy="#{dato.value}">
 						        <h:outputText value="#{dato.value}" />
 						    </p:column>
 						</c:forEach>

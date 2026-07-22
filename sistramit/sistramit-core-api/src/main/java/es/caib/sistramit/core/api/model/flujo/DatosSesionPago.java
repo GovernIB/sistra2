@@ -55,6 +55,9 @@ public class DatosSesionPago implements ModelApi {
 	/** Importe (en cents). */
 	private int importe;
 
+	/** Multiplicador (cuando el pago implique multiplicar n veces el importe). */
+	private int multiplicador = 1;
+
 	/** Detalle pago (info debug a pasar a pasarela pago). */
 	private String detallePago;
 
@@ -418,5 +421,13 @@ public class DatosSesionPago implements ModelApi {
 	 */
 	public void setMetodoPagoSeleccionado(String metodoPagoSeleccionado) {
 		this.metodoPagoSeleccionado = metodoPagoSeleccionado;
+	}
+
+	public int getMultiplicador() {
+		return multiplicador;
+	}
+
+	public void setMultiplicador(int multiplicador) {
+		this.multiplicador = multiplicador;
 	}
 }

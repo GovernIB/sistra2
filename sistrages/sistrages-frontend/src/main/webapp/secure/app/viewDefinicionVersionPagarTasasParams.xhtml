@@ -100,6 +100,13 @@
 				<p:outputLabel value=" " />
 			</h:panelGrid>
 
+			<p:outputLabel for="listadinamica" value="#{msg['script.SCRIPT_LISTA_DINAMICA_PAGOS.titulo']}" />
+			<p:commandButton id="listadinamica" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.editarScriptListaDinamicaPagos()}"
+				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoTSSeleccionado.scriptPagosDinamicos)}"
+				process="@this" update="growl">
+					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoScriptListaDinamicaPagos}" update="growl listadinamica" />
+			</p:commandButton>
+
 
 			<p:confirmDialog global="true" >
 					<p:outputPanel styleClass="confirmar_botonera">

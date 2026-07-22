@@ -1,0 +1,79 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PAGOSDINAMICOS.addPago(pago)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PAGOSDINAMICOS">DATOS_PAGOSDINAMICOS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PAGOSDINAMICOS&metodo=addPago">addPago</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	addPago(<a href="AyudaServlet?lang=es&plugin=PAGO_DINAMICO">PagoDinamico</a> pago): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite añadir un nuevo pago de forma dinámica a la versión del trámite.</li>
+    </ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>pago</b>: variable de tipo Pago Dinámico con los valores establecidos.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+<p>Si deseamos añadir un nuevo pago de manera dinámica a la versión de un trámite, ejecutaríamos lo siguiente: </p>
+ <p class="codigoScript">
+var nif = 'nif1'; <br>
+var apellido1 = 'ape1'; <br>
+var apellido2 = 'ape2'; <br>
+var concepto = 'concepto1'; <br>
+var nombreCompleto = 'nom1'; <br>
+var modelo = 'modelo1'; <br>
+var unidades = 3; <br>
+
+if ( !PLUGIN_UTILS.esCadenaVacia( apellido1 ) ) <br>
+{ <br>
+  nombreCompleto += ' ' + apellido1; <br>
+  if ( !PLUGIN_UTILS.esCadenaVacia( apellido2 ) ) <br>
+  { <br>
+    nombreCompleto += ' ' + apellido2; <br>
+  } <br>
+} <br>
+ 
+DATOS_PAGOSDINAMICOS.setContribuyente( nif, nombreCompleto ); <br>
+DATOS_PAGOSDINAMICOS.setPasarela( 'ATIB' ); <br>
+DATOS_PAGOSDINAMICOS.setOrganismo( 'ORG1' ); <br>
+DATOS_PAGOSDINAMICOS.setMetodosPago('TJ'); <br>
+
+var tasa = 'TASA1'; <br>
+var importe = 1; <br>
+if (PLUGIN_UTILS.esCadenaVacia(unidades)) { <br>
+    DATOS_PAGOSDINAMICOS.setDetallePago( modelo, concepto, tasa, importe ); <br>
+} else { <br>
+    DATOS_PAGOSDINAMICOS.setDetallePago( modelo, concepto, tasa, unidades, importe );   <br>
+} <br>
+</p>
+<p>El resultado de la ejecución del script "Lista dinámica de pagos" con esta sentencia será un pago que es obligatorio con los datos establecidos. Dependiendo de si se introduce un número específico de unidades, el pago se realizará una o más veces.</p>
+</body>
+</html>

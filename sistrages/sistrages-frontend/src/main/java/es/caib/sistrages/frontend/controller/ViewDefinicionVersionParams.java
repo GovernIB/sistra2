@@ -1175,6 +1175,37 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	}
 
 	/**
+	 * Editar Script lista dinamica de pagos.
+	 *
+	 */
+	public void editarScriptListaDinamicaPagos() {
+
+		final Script script = this.getTramitePasoTSSeleccionado().getScriptPagosDinamicos();
+		final Map<String, String> map = new HashMap<>();
+		map.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
+				UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_PAGOS));
+		map.put(TypeParametroVentana.TRAMITEPASO.toString(),
+				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
+
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+
+		if (script != null) {
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
+		}
+
+		map.put(TypeParametroVentana.TRAMITEVERSION.toString(), id.toString());
+		if (this.permiteEditar()) {
+			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.EDICION.toString());
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, map, true, 700);
+		} else {
+			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 700);
+		}
+
+	}
+
+	/**
 	 * Retorno dialogo.
 	 *
 	 * @param event respuesta dialogo
@@ -1195,6 +1226,34 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		}
 
 		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_TRAMITE);
+
+	}
+
+	/**
+	 * Retorno dialogo para pagos dinámicos.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoScriptListaDinamicaPagos(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Script script = (Script) respuesta.getResult();
+			this.getTramitePasoTSSeleccionado().setScriptPagosDinamicos(script);
+			tramiteService.updateTramitePaso(this.getTramitePasoTSSeleccionado());
+
+			message = UtilJSF.getLiteral(Constantes.LITERAL_INFO_MODIFICADO_OK);
+
+		}
+
 		if (message != null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		}

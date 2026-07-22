@@ -220,8 +220,8 @@ public class ComponenteDigitalibPlugin extends AbstractPluginProperties implemen
 		final RestTemplate restTemplate = createRestTemplate(user, pwd);
 
 		HttpHeaders headers = new HttpHeaders();
+		// headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setContentType(MediaType.parseMediaType("application/json; charset=UTF-8"));
-		// headers.setContentType(MediaType.parseMediaType("application/json; charset=UTF-8"));
 
 		String jsonRequest = null;
         try {

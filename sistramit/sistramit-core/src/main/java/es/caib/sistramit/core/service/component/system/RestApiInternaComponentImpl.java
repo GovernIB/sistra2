@@ -161,6 +161,7 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 					pagoAuditoria.setPresentacion(sesionPago.getPresentacion().toString());
 					pagoAuditoria.setPasarelaId(sesionPago.getPasarelaId());
 					pagoAuditoria.setImporte(sesionPago.getImporte());
+					pagoAuditoria.setMultiplicador(sesionPago.getMultiplicador());
 					pagoAuditoria.setTasaId(sesionPago.getTasaId());
 					pagoAuditoria.setLocalizador(sesionPago.getLocalizador());
 					pagoAuditoria.setFechaPago(sesionPago.getFechaPago());

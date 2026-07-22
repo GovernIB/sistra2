@@ -8,6 +8,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import es.caib.sistramit.core.service.component.script.plugins.flujo.*;
+import es.caib.sistramit.core.service.model.script.flujo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,25 +31,6 @@ import es.caib.sistramit.core.service.component.script.plugins.PlgLog;
 import es.caib.sistramit.core.service.component.script.plugins.PlgMensajes;
 import es.caib.sistramit.core.service.component.script.plugins.PlgUtils;
 import es.caib.sistramit.core.service.component.script.plugins.PlgValidacion;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgFormularios;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgPago;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgSesionTramitacion;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgValidacionAnexo;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAnexosDinamicos;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAviso;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResDatosInicialesFormulario;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResFirmantes;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResInstrucciones;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResModificacionFormularios;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPago;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResParametrosFormulario;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResParametrosIniciales;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersona;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersonalizacionTramite;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPlantillaInfo;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRegistro;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRepresentacion;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResVariableFlujo;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.PlgDatosFormulario;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.PlgSesionFormulario;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
@@ -62,21 +45,6 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.PlgErrorInt;
 import es.caib.sistramit.core.service.model.script.PlgValidacionInt;
 import es.caib.sistramit.core.service.model.script.PluginScript;
-import es.caib.sistramit.core.service.model.script.flujo.ResAnexosDinamicosInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResAvisoInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResDatosInicialesFormularioInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResFirmantesInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResInstruccionesInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResModificacionFormulariosInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResPagoInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResParametrosFormularioInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResParametrosInicialesInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResPersonaInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResPersonalizacionTramiteInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResPlantillaInfoInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResRegistroInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResRepresentacionInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResVariableFlujoInt;
 import es.caib.sistramit.core.service.model.script.formulario.ResEstadoCampoInt;
 import es.caib.sistramit.core.service.model.script.formulario.ResValorCampoInt;
 import es.caib.sistramit.core.service.model.script.types.TypeScript;
@@ -354,6 +322,9 @@ public final class ScriptExecImpl implements ScriptExec {
 		case SCRIPT_LISTA_DINAMICA_ANEXOS:
 			res = ResAnexosDinamicosInt.ID;
 			break;
+		case SCRIPT_LISTA_DINAMICA_PAGOS:
+			res = ResPagosDinamicosInt.ID;
+			break;
 		case SCRIPT_PLANTILLA_INFO:
 			res = ResPlantillaInfoInt.ID;
 			break;
@@ -444,6 +415,9 @@ public final class ScriptExecImpl implements ScriptExec {
 			break;
 		case SCRIPT_LISTA_DINAMICA_ANEXOS:
 			plugins.add(new ResAnexosDinamicos());
+			break;
+		case SCRIPT_LISTA_DINAMICA_PAGOS:
+			plugins.add(new ResPagosDinamicos());
 			break;
 		case SCRIPT_DATOS_PAGO:
 			plugins.add(new PlgPago(pagoComponent, pDefinicionTramite.getDefinicionVersion().getIdEntidad()));

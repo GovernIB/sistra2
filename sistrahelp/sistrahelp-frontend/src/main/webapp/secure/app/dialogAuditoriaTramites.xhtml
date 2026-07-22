@@ -309,6 +309,13 @@
 					</f:facet>
 
 					<f:facet name="right">
+						<p:commandButton id="btnPIB" value="#{msg['botones.pib']}" icon="fa fa-send"
+										 actionListener="#{dialogAuditoriaTramites.abrirPaymentib()}"
+										 process="@this" rendered="#{dialogAuditoriaTramites.eventoPago}"
+										 style="margin-right:4px; width:200px;">
+							<p:ajax event="dialogReturn" listener="#{dialogAuditoriaTramites.returnDialogoPago}" update="growlDialog"/>
+						</p:commandButton>
+
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" actionListener="#{dialogAuditoriaTramites.ayuda()}" />
 						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogAuditoriaTramites.cerrar}" process="@this" styleClass="boton-azul" />
 					</f:facet>

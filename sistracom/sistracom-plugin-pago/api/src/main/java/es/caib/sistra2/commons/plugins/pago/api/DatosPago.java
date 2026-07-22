@@ -41,6 +41,9 @@ public class DatosPago {
 	/** Importe (en cents). */
 	private int importe;
 
+	/** Multiplicador (cuando el pago implique multiplicar n veces el importe). */
+	private int multiplicador = 1;
+
 	/**
 	 * Indica si se filtran los métodos de pago (lista separada por ; ). Si no se
 	 * establece, se mostarán los activos por defecto.
@@ -309,5 +312,11 @@ public class DatosPago {
 		this.versionTramite = versionTramite;
 	}
 
+	public int getMultiplicador() {
+		return multiplicador;
+	}
 
+	public void setMultiplicador(int multiplicador) {
+		this.multiplicador = multiplicador;
+	}
 }

@@ -25,6 +25,7 @@ public class TestPago {
         datosPago.setMODELO("modelo");
         datosPago.setCONCEPTO("concepto");
         datosPago.setIMPORTE(1000);
+        datosPago.setMULTIPLICADOR(2);
         datosPago.setTASA("tasa");
         datosPago.setDETALLEPAGO("detallepago");
         final CONTRIBUYENTE contribuyente = datosPago.addNewCONTRIBUYENTE();

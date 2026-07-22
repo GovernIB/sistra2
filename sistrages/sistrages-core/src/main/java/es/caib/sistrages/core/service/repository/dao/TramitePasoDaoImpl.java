@@ -1874,11 +1874,15 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	@Override
 	public void borrarScriptsPago(Long idTramiteVersion) {
 		final JPasoPagos jpaso = entityManager.find(JPasoPagos.class, idTramiteVersion);
-		if (jpaso != null && jpaso.getPagosTramite() != null) {
-			for (JPagoTramite pago : jpaso.getPagosTramite()) {
-				pago.setScriptDatosPago(null);
-				pago.setScriptObligatoriedad(null);
-				entityManager.merge(pago);
+		if (jpaso != null) {
+			jpaso.setScriptPagosDinamicos(null);
+			entityManager.merge(jpaso);
+			if (jpaso.getPagosTramite() != null) {
+				for (JPagoTramite pago : jpaso.getPagosTramite()) {
+					pago.setScriptDatosPago(null);
+					pago.setScriptObligatoriedad(null);
+					entityManager.merge(pago);
+				}
 			}
 		}
 	}

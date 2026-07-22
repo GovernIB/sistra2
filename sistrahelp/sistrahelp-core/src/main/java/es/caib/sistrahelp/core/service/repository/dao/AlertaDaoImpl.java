@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.service.repository.model.JAlerta;
 import es.caib.sistrahelp.core.service.repository.model.JProceso;
 
@@ -82,7 +83,7 @@ public class AlertaDaoImpl implements AlertaDao {
 	}
 
 	@Override
-	public List<Alerta> listarAlertaActivo(final String filtro, final boolean activo) {
+	public List<Alerta> listarAlertaActivo(final FiltroAlerta filtro, final boolean activo) {
 		final List<Alerta> als = new ArrayList<>();
 		final List<JAlerta> results = listarJAlertaActivo(filtro, activo);
 
@@ -120,23 +121,59 @@ public class AlertaDaoImpl implements AlertaDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<JAlerta> listarJAlertaActivo(final String filtro, final boolean activo) {
+	private List<JAlerta> listarJAlertaActivo(final FiltroAlerta filtro, final boolean activo) {
 		StringBuilder sql = new StringBuilder("SELECT DISTINCT d FROM JAlerta d WHERE d.eliminar = :activo");
-		if (StringUtils.isNotBlank(filtro)) {
-			sql.append(" AND (LOWER(d.nombre) LIKE :filtro OR LOWER(d.email)");
+		
+		// Aplica filtro textual si viene en el objeto filtro
+		if (filtro != null && StringUtils.isNotBlank(filtro.getFiltroTexto())) {
+			sql.append(" AND (LOWER(d.nombre) LIKE :filtroTexto OR LOWER(d.email) LIKE :filtroTexto)");
 		}
+
+		// Aplica filtro de entidad si viene en el objeto filtro
+		if (filtro != null && StringUtils.isNotBlank(filtro.getIdEntidad())) {
+			sql.append(" AND d.idEntidad = :idEntidad");
+		}
+
+		// Aplica filtro de áreas si viene en el objeto filtro (solo si hay al menos una área)
+		if (filtro != null && filtro.getListaAreas() != null && !filtro.getListaAreas().isEmpty()) {
+			// Genera condición: las áreas de la alerta (separadas por ;) deben contener alguna de las permitidas
+			StringBuilder areasCondition = new StringBuilder(" AND (");
+			for (int i = 0; i < filtro.getListaAreas().size(); i++) {
+				if (i > 0) {
+					areasCondition.append(" OR ");
+				}
+				areasCondition.append("CONCAT(CONCAT(';', d.listaAreas), ';') LIKE :area").append(i);
+			}
+			areasCondition.append(")");
+			sql.append(areasCondition);
+		}
+
 		sql.append(" ORDER BY d.nombre");
 
 		final Query query = entityManager.createQuery(sql.toString());
 
-		if (StringUtils.isNotBlank(filtro)) {
-			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");
-		}
-
+		// Parámetro: activo
 		if (activo) {
 			query.setParameter("activo", "F");
 		} else {
 			query.setParameter("activo", "T");
+		}
+
+		// Parámetro: filtro textual
+		if (filtro != null && StringUtils.isNotBlank(filtro.getFiltroTexto())) {
+			query.setParameter("filtroTexto", "%" + filtro.getFiltroTexto().toLowerCase() + "%");
+		}
+
+		// Parámetro: entidad
+		if (filtro != null && StringUtils.isNotBlank(filtro.getIdEntidad())) {
+			query.setParameter("idEntidad", filtro.getIdEntidad());
+		}
+
+		// Parámetros: áreas
+		if (filtro != null && filtro.getListaAreas() != null && !filtro.getListaAreas().isEmpty()) {
+			for (int i = 0; i < filtro.getListaAreas().size(); i++) {
+				query.setParameter("area" + i, "%;" + filtro.getListaAreas().get(i) + ";%");
+			}
 		}
 
 		return query.getResultList();

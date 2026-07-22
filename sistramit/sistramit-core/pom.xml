@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistramit</artifactId>
-		<version>1.8.4</version>
+		<version>1.8.5</version>
 	</parent>
 	<artifactId>sistramit-core</artifactId>
 	<name>sistramit-core</name>
@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-lib</artifactId>
-			<version>1.8.4</version>
+			<version>1.8.5</version>
 			<type>pom</type>
 		</dependency>
 
@@ -256,10 +256,32 @@
 					<dependency>
 						<groupId>es.caib.sistra2</groupId>
 						<artifactId>sistramit-lib</artifactId>
-						<version>1.8.4</version>
+						<version>1.8.5</version>
 						<type>pom</type>
 					</dependency>
 				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>copy-i3-label-es</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<target>
+								<copy file="${basedir}/src/main/resources/i3-label.properties"
+								      tofile="${project.build.outputDirectory}/i3-label_es.properties"
+								      overwrite="true" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 		</plugins>

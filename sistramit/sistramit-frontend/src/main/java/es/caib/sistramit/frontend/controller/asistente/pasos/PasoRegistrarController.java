@@ -1,8 +1,14 @@
 package es.caib.sistramit.frontend.controller.asistente.pasos;
 
-import es.caib.sistramit.core.api.exception.ControlConcurrenciaRegistroException;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.*;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
 import es.caib.sistramit.core.api.service.RegistroIsolatedService;
+import es.caib.sistramit.frontend.controller.TramitacionController;
+import es.caib.sistramit.frontend.literales.LiteralesFront;
+import es.caib.sistramit.frontend.model.MensajeUsuario;
+import es.caib.sistramit.frontend.model.RespuestaJSON;
+import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,14 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
-import es.caib.sistramit.frontend.controller.TramitacionController;
-import es.caib.sistramit.frontend.literales.LiteralesFront;
-import es.caib.sistramit.frontend.model.MensajeUsuario;
-import es.caib.sistramit.frontend.model.RespuestaJSON;
-import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 
 /**
  * Interacción con paso Registrar.

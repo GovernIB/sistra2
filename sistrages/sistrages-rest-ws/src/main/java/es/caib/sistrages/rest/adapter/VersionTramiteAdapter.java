@@ -367,12 +367,15 @@ public class VersionTramiteAdapter {
 	 */
 	private RPasoTramitacion crearPasoTasa(final TramitePasoTasa paso, final String idioma) {
 		RPasoTramitacionPagar resPaso = null;
-		if (paso.getTasas() != null && !paso.getTasas().isEmpty()) {
+		if ((paso.getTasas() != null && !paso.getTasas().isEmpty())
+				|| (paso.getScriptPagosDinamicos() != null
+						&& !StringUtils.isEmpty(paso.getScriptPagosDinamicos().getContenido()))) {
 			resPaso = new RPasoTramitacionPagar();
 			resPaso.setIdentificador(paso.getIdPasoTramitacion());
 			resPaso.setTipo(paso.getTipo().toString());
 			resPaso.setPasoFinal(paso.isPasoFinal());
 			resPaso.setPagos(generarPagos(paso.getTasas(), idioma));
+			resPaso.setScriptPagosDinamicos(AdapterUtils.generaScript(paso.getScriptPagosDinamicos(), idioma));
 			resPaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 		}
 		return resPaso;

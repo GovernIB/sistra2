@@ -146,6 +146,9 @@ public class UtilScripts {
 		case SCRIPT_LISTA_DINAMICA_ANEXOS:
 			plugins.add(0, TypePluginScript.DATOS_ANEXOSDINAMICOS);
 			break;
+		case SCRIPT_LISTA_DINAMICA_PAGOS:
+			plugins.add(0, TypePluginScript.DATOS_PAGOSDINAMICOS);
+			break;
 		case SCRIPT_DATOS_PAGO:
 			plugins.add(TypePluginScript.PLUGIN_PAGO);
 			plugins.add(0, TypePluginScript.DATOS_PAGO);

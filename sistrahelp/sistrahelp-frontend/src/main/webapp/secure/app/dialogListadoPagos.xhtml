@@ -156,6 +156,8 @@
 
 		</h:outputScript>
 
+		<p:growl id="growldialogListadoPagos" widgetVar="growldialogListadoPagos" showDetail="false" life="2000" sticky="false" />
+
 		<p:commandButton id="cerrar" action="#{dialogListadoPagos.closeDialog()}" process="@this @form:msg" style="display:none;"/>
 		<p:inputText id="msg" value="#{dialogListadoPagos.mensaje}" style="display:none;" onblur="this.value = this.value.trim();"/>
   		<p:outputPanel styleClass="w100 h100">

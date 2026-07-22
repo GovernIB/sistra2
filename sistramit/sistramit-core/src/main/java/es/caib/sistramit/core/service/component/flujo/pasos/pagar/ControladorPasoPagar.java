@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ClzPagoDinamico;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPagosDinamicos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
@@ -86,6 +89,8 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	/** Accion carta de pago presencial. */
 	@Autowired
 	private AccionCartaPagoPresencial accionCartaPagoPresencial;
+    @Autowired
+    private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
 	@Override
 	protected void actualizarDatosInternos(final DatosPaso pDatosPaso, final DatosPersistenciaPaso dpp,
@@ -218,15 +223,82 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 		// Obtenemos definición del paso
 		final RPasoTramitacionPagar defPaso = (RPasoTramitacionPagar) UtilsSTG.devuelveDefinicionPaso(pDipa.getIdPaso(),
 				pDefinicionTramite);
-		// Recorremos la lista fija de documentos (genera en los datos internos
-		// del paso los datos de los pagos a realizar)
+		// Calculamos pagos fijos
 		final List<Pago> pagosFij = calcularDetalleListaFijaPagos(pDipa, pDefinicionTramite, defPaso, pVariablesFlujo);
+		// Calculamos pagos dinamicos
+		final List<Pago> pagosDin = calcularDetalleListaDinamicaPagos(pDipa, pDefinicionTramite, defPaso, pVariablesFlujo);
+
 		// Creamos detalle paso
 		final DetallePasoPagar dpa = new DetallePasoPagar();
 		dpa.setId(defPaso.getIdentificador());
 		dpa.getPagos().addAll(pagosFij);
+		dpa.getPagos().addAll(pagosDin);
 		dpa.setCompletado(TypeSiNo.NO);
 		return dpa;
+	}
+
+	/**
+	 * Calcula la lista dinamica de pagos (script pagos dinamicos).
+	 * @param pDipa
+	 * @param pDefinicionTramite
+	 * @param defPaso
+	 * @param pVariablesFlujo
+	 * @return
+	 */
+	private List<Pago> calcularDetalleListaDinamicaPagos(DatosInternosPasoPagar pDipa, DefinicionTramiteSTG pDefinicionTramite, RPasoTramitacionPagar defPaso, VariablesFlujo pVariablesFlujo) {
+		final List<Pago> pagos = new ArrayList<Pago>();
+		// Comprobamos si existe script de anexos dinamicos
+		if (UtilsSTG.existeScript(defPaso.getScriptPagosDinamicos())) {
+			// Ejecutamos script
+			final Map<String, String> codigosError = UtilsSTG
+					.convertLiteralesToMap(defPaso.getScriptPagosDinamicos().getLiterales());
+			final RespuestaScript rs = getScriptFlujo().executeScriptFlujo(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_PAGOS,
+					defPaso.getIdentificador(), defPaso.getScriptPagosDinamicos().getScript(), pVariablesFlujo, null,
+					null, codigosError, pDefinicionTramite);
+			final ResPagosDinamicos rsa = (ResPagosDinamicos) rs.getResultado();
+			// Recorremos pagos dinamicos y establecemos datos de cada pago
+			for (final ClzPagoDinamico pagoDinamico : rsa.getPagos()) {
+				// Establecemos datos pago
+				Pago pago = new Pago();
+				pago.setId(pagoDinamico.getIdentificador());
+				pago.setTitulo(pagoDinamico.getDescripcion());
+				pago.setRellenado(TypeEstadoDocumento.SIN_RELLENAR);
+				pago.setObligatorio(pagoDinamico.isObligatorio()? TypeObligatoriedad.OBLIGATORIO : TypeObligatoriedad.OPCIONAL);
+				pago.getPresentacionesPermitidas().add(TypePresentacion.ELECTRONICA);
+				// Añadimos a lista de pagos dinamicos
+				pagos.add(pago);
+				// Guardamos datos pago en datos internos paso
+				final DatosCalculoPago dp = calcularDatosPagoDinamico(pagoDinamico, pVariablesFlujo);
+				pDipa.addDatosPago(pago.getId(), dp);
+			}
+		}
+		return pagos;
+	}
+
+	/**
+	 * Calcula los datos del pago dinamico y los almacena en datos internos del paso.
+	 * @param pagoDinamico pago dinamico
+	 * @param pVariablesFlujo variables flujo
+	 * @return DatosCalculoPago
+	 */
+	private DatosCalculoPago calcularDatosPagoDinamico(ClzPagoDinamico pagoDinamico, VariablesFlujo pVariablesFlujo) {
+		final DatosCalculoPago dp = new DatosCalculoPago();
+		dp.setPasarelaId(pagoDinamico.getPasarela());
+		dp.setModelo(pagoDinamico.getModelo());
+		dp.setConcepto(pagoDinamico.getConcepto());
+		dp.setTasa(pagoDinamico.getTasa());
+		dp.setImporte(pagoDinamico.getImporte());
+		dp.setMultiplicador(pagoDinamico.getMultiplicador());
+		dp.setOrganismo(pagoDinamico.getOrganismo());
+		dp.setMetodosPago(pagoDinamico.getMetodosPago());
+		dp.setSimularPago(pagoDinamico.isSimularPago());
+		dp.setFecha(UtilsFlujo.formateaFechaFront(new Date()));
+		// Si no se indica contribuyente, por defecto sera el iniciador (para anonimo hay que establecer contribuyente)
+		if (pagoDinamico.getContribuyente() == null && pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
+				throw new ErrorConfiguracionException("No s'ha especificat contribuent per a pagament dinàmic y el tràmit s'ha iniciat de forma anònima");
+		}
+		dp.setContribuyente(pagoDinamico.getContribuyente() != null ? pagoDinamico.getContribuyente() : UtilsFlujo.usuarioPersona(pVariablesFlujo.getUsuario()));
+		return dp;
 	}
 
 	/**
@@ -277,9 +349,8 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 				pago.getPresentacionesPermitidas().add(TypePresentacion.PRESENCIAL);
 			}
 
-			// Calculamos los datos del pago y los almacenamos en datos internos
-			// paso
-			final DatosCalculoPago dp = calcularDatosPagoFijo(pDefinicionTramite, detalle, pVariablesFlujo);
+			// Calculamos los datos del pago y los almacenamos en datos internos paso
+			final DatosCalculoPago dp = calcularDatosPagoFijo(pDipa, pDefinicionTramite, detalle, pVariablesFlujo);
 			// Almacenamos datos pago en datos internos del paso
 			pDipa.addDatosPago(detalle.getIdentificador(), dp);
 
@@ -294,16 +365,14 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	/**
 	 * Calcula datos pago fijo.
 	 *
-	 * @param pDefinicionTramite
-	 *                               Definición trámite
-	 * @param pPagoDef
-	 *                               Definición pago
-	 * @param pVariablesFlujo
-	 *                               Variables flujo
+	 * @param pDipa
+	 * @param pDefinicionTramite Definición trámite
+	 * @param pPagoDef           Definición pago
+	 * @param pVariablesFlujo    Variables flujo
 	 * @return Datos del pago
 	 */
-	private DatosCalculoPago calcularDatosPagoFijo(final DefinicionTramiteSTG pDefinicionTramite,
-			final RPagoTramite pPagoDef, final VariablesFlujo pVariablesFlujo) {
+	private DatosCalculoPago calcularDatosPagoFijo(DatosInternosPasoPagar pDipa, final DefinicionTramiteSTG pDefinicionTramite,
+												   final RPagoTramite pPagoDef, final VariablesFlujo pVariablesFlujo) {
 
 		if (pPagoDef.getScriptPago() == null) {
 			throw new ErrorConfiguracionException(
@@ -318,6 +387,8 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 				codigosError, pDefinicionTramite);
 		final ResPago resf = (ResPago) rs.getResultado();
 		final DatosCalculoPago dp = resf.getDatosPago();
+		// Verificamos si hay que simular pago
+		dp.setSimularPago(UtilsSTG.isPagoSimulado(pDipa.getIdPaso(), pPagoDef.getIdentificador(), pDefinicionTramite));
 		// Establecemos fecha del pago
 		final Date hoy = new Date();
 		dp.setFecha(UtilsFlujo.formateaFechaFront(hoy));
@@ -436,7 +507,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 *                                   Datos internos paso
 	 * @param pDocumentoPersistencia
 	 *                                   Documento persistencia
-	 * @param pDetallePago
+	 * @param detallePagoPasarela
 	 *                                   Detalle del pago
 	 * @param pVariablesFlujo
 	 *                                   Variables flujo

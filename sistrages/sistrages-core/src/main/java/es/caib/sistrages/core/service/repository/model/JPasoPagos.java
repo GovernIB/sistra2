@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -47,6 +48,11 @@ public class JPasoPagos implements IModelApi {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoPagos", cascade = { CascadeType.ALL })
 	@OrderBy("orden ASC")
 	private Set<JPagoTramite> pagosTramite = new HashSet<>(0);
+
+	/** Script para pagos dinámicos. **/
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "PPG_SCRDIN")
+	private JScript scriptPagosDinamicos;
 
 	/** Indica si se habilita subsanación. **/
 	@Column(name = "PPG_SUBSAN", nullable = false, precision = 1, scale = 0)
@@ -117,12 +123,28 @@ public class JPasoPagos implements IModelApi {
 		this.pagosTramite = pagosTramite;
 	}
 
+	/**
+	 * @return the scriptPagosDinamicos
+	 */
+	public JScript getScriptPagosDinamicos() {
+		return scriptPagosDinamicos;
+	}
+
+	/**
+	 * @param scriptPagosDinamicos
+	 *            the scriptPagosDinamicos to set
+	 */
+	public void setScriptPagosDinamicos(final JScript scriptPagosDinamicos) {
+		this.scriptPagosDinamicos = scriptPagosDinamicos;
+	}
+
 	public static JPasoPagos fromModel(final TramitePasoTasa paso) {
 		JPasoPagos jpaso = null;
 		if (paso != null) {
 			jpaso = new JPasoPagos();
 			jpaso.setCodigo(paso.getCodigo());
 			jpaso.setPermiteSubsanar(paso.isPermiteSubsanar());
+			jpaso.setScriptPagosDinamicos(JScript.fromModel(paso.getScriptPagosDinamicos()));
 			if (paso.getTasas() != null) {
 				final Set<JPagoTramite> pagos = new HashSet<>(0);
 				for (final Tasa tasa : paso.getTasas()) {
@@ -150,6 +172,7 @@ public class JPasoPagos implements IModelApi {
 			jpasoPagos.setCodigo(null);
 			jpasoPagos.setPasoTramitacion(jpasoTramitacion);
 			jpasoPagos.setPermiteSubsanar(origPasoPagos.isPermiteSubsanar());
+			jpasoPagos.setScriptPagosDinamicos(JScript.clonar(origPasoPagos.getScriptPagosDinamicos()));
 
 			if (origPasoPagos.getPagosTramite() != null) {
 				int ordenPago = 1;

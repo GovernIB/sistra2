@@ -8,10 +8,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
-import es.caib.sistrahelp.core.service.repository.model.JAlerta;
 import es.caib.sistrahelp.core.service.repository.model.JHistorialAlerta;
 
 /**
@@ -62,13 +63,13 @@ public class HistorialAlertaDaoImpl implements HistorialAlertaDao {
 	}
 
 	@Override
-	public List<HistorialAlerta> getAllByFiltro(Date desde, Date hasta) {
-		return listarHistorialAlerta(desde, hasta);
+	public List<HistorialAlerta> getAllByFiltro(Date desde, Date hasta, FiltroAlerta filtro) {
+		return listarHistorialAlerta(desde, hasta, filtro);
 	}
 
-	private List<HistorialAlerta> listarHistorialAlerta(final Date desde, final Date hasta) {
+	private List<HistorialAlerta> listarHistorialAlerta(final Date desde, final Date hasta, final FiltroAlerta filtro) {
 		final List<HistorialAlerta> als = new ArrayList<>();
-		final List<JHistorialAlerta> results = listarJHistorialAlerta(desde, hasta);
+		final List<JHistorialAlerta> results = listarJHistorialAlerta(desde, hasta, filtro);
 
 		if (results != null && !results.isEmpty()) {
 			for (final JHistorialAlerta jal : results) {
@@ -88,7 +89,7 @@ public class HistorialAlertaDaoImpl implements HistorialAlertaDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<JHistorialAlerta> listarJHistorialAlerta(final Date desde, final Date hasta) {
+	private List<JHistorialAlerta> listarJHistorialAlerta(final Date desde, final Date hasta, final FiltroAlerta filtro) {
 		StringBuilder sql = new StringBuilder("SELECT DISTINCT d FROM JHistorialAlerta d WHERE 1 = 1 ");
 		if (desde != null) {
 			sql.append(" AND (d.fecha > :desde)");
@@ -96,6 +97,33 @@ public class HistorialAlertaDaoImpl implements HistorialAlertaDao {
 
 		if (hasta != null) {
 			sql.append(" AND (d.fecha <= :hasta)");
+		}
+
+		if (filtro != null) {
+			if (StringUtils.isNotBlank(filtro.getIdEntidad())) {
+				sql.append(" AND d.idEntidad = :idEntidad");
+			}
+
+			if (StringUtils.isNotBlank(filtro.getFiltroTexto())) {
+				sql.append(" AND LOWER(d.nombre) LIKE :filtroTexto");
+			}
+
+			if (filtro.getListaAreas() != null) {
+				if (filtro.getListaAreas().isEmpty()) {
+					// Fail-closed: en cuadro de mando, sin áreas permitidas no debe haber historial.
+					sql.append(" AND 1 = 0");
+				} else {
+					sql.append(" AND (");
+					for (int i = 0; i < filtro.getListaAreas().size(); i++) {
+						if (i > 0) {
+							sql.append(" OR ");
+						}
+						// Coincidencia exacta de token evitando falsos positivos (A1 vs A10)
+						sql.append("CONCAT(CONCAT(';', d.listaAreas), ';') LIKE :area").append(i);
+					}
+					sql.append(")");
+				}
+			}
 		}
 
 		sql.append(" ORDER BY d.fecha DESC");
@@ -108,6 +136,22 @@ public class HistorialAlertaDaoImpl implements HistorialAlertaDao {
 
 		if (hasta != null) {
 			query.setParameter("hasta", hasta);
+		}
+
+		if (filtro != null) {
+			if (StringUtils.isNotBlank(filtro.getIdEntidad())) {
+				query.setParameter("idEntidad", filtro.getIdEntidad());
+			}
+
+			if (StringUtils.isNotBlank(filtro.getFiltroTexto())) {
+				query.setParameter("filtroTexto", "%" + filtro.getFiltroTexto().toLowerCase() + "%");
+			}
+
+			if (filtro.getListaAreas() != null && !filtro.getListaAreas().isEmpty()) {
+				for (int i = 0; i < filtro.getListaAreas().size(); i++) {
+					query.setParameter("area" + i, "%;" + filtro.getListaAreas().get(i) + ";%");
+				}
+			}
 		}
 
 		return query.getResultList();

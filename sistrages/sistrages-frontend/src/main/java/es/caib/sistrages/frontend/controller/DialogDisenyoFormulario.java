@@ -3482,11 +3482,24 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			ComponenteFormularioCampoTexto campoTexto = ((ComponenteFormularioCampoTexto) objetoFormularioEdit);
 			// Si el rango contiene un numero negativo se marca el check de numero con signo
             campoTexto.setNumeroConSigno(campoTexto.getNumeroRangoMinimo() != null && campoTexto.getNumeroRangoMinimo() < 0 || campoTexto.getNumeroRangoMaximo() != null && campoTexto.getNumeroRangoMaximo() < 0);
+
+            //Calculamos la precisión entera evitando la notación científica
+            int digitosMax = 0;
+            int digitosMin = 0;
+
+            if (campoTexto.getNumeroRangoMinimo() != null) {
+            	//Convertimos a BigDecimal para forzar una representación de cadena plana limpia
+            	String plainStr = java.math.BigDecimal.valueOf(campoTexto.getNumeroRangoMinimo()).toPlainString();
+            	digitosMin = plainStr.replaceAll("\\..*", "").replaceAll("[^\\d]", "").length();
+            }
+
+            if (campoTexto.getNumeroRangoMaximo() != null) {
+            	//Convertimos a BigDecimal para forzar una representación de cadena plana limpia
+            	String plainStr = java.math.BigDecimal.valueOf(campoTexto.getNumeroRangoMaximo()).toPlainString();
+            	digitosMax = plainStr.replaceAll("\\..*", "").replaceAll("[^\\d]", "").length();
+            }
 			// Se actualiza la precisión entera de forma automática
-			campoTexto.setNumeroDigitosEnteros(Math.max(
-					campoTexto.getNumeroRangoMinimo() != null ? String.valueOf(campoTexto.getNumeroRangoMinimo()).replaceAll("\\..*", "").replaceAll("[^\\d]", "").length() : 0,
-					campoTexto.getNumeroRangoMaximo() != null ? String.valueOf(campoTexto.getNumeroRangoMaximo()).replaceAll("\\..*", "").replaceAll("[^\\d]", "").length() : 0
-			));
+			campoTexto.setNumeroDigitosEnteros(Math.max(digitosMin, digitosMax));
 		}
 	}
 

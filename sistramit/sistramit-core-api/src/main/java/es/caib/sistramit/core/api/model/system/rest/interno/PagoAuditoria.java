@@ -66,6 +66,7 @@ public final class PagoAuditoria implements Serializable {
 	private String presentacion;
 	private String pasarelaId;
 	private int importe;
+	private int multiplicador;
 	private String tasaId;
 	private String localizador;
 	private Date fechaPago;
@@ -214,5 +215,13 @@ public final class PagoAuditoria implements Serializable {
 
 	public void setMensajeError(String mensajeError) {
 		this.mensajeError = mensajeError;
+	}
+
+	public int getMultiplicador() {
+		return multiplicador;
+	}
+
+	public void setMultiplicador(int multiplicador) {
+		this.multiplicador = multiplicador;
 	}
 }

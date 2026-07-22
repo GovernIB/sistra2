@@ -141,7 +141,7 @@ public class RFiltroPersistenciaAuditoria {
 	public void setSoloContar(final boolean soloContar) {
 		this.soloContar = soloContar;
 	}
-	
+
 	public boolean isMostrarCaducados() {
         return mostrarCaducados;
     }

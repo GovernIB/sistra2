@@ -208,6 +208,7 @@ public final class PagoComponentImpl implements PagoComponent {
 		datosPago.setTasaId(sesionPago.getTasaId());
 		datosPago.setDetallePago(sesionPago.getDetallePago());
 		datosPago.setImporte(sesionPago.getImporte());
+		datosPago.setMultiplicador(sesionPago.getMultiplicador());
 		datosPago.setSujetoPasivoNif(sesionPago.getSujetoPasivo().getNif());
 		datosPago.setSujetoPasivoNombre(sesionPago.getSujetoPasivo().getNombre());
 		datosPago.setMetodosPago(sesionPago.getMetodosPago());
@@ -307,6 +308,8 @@ public final class PagoComponentImpl implements PagoComponent {
 			generaPdfMockLinea(lineas, "SUBJECTE",
 					sesionPago.getSujetoPasivo().getNif() + " - " + sesionPago.getSujetoPasivo().getNombre());
 			generaPdfMockLinea(lineas, "IMPORT (CENTS)", Integer.toString(sesionPago.getImporte()));
+			generaPdfMockLinea(lineas, "MULTIPLICADOR", Integer.toString(sesionPago.getMultiplicador()));
+
 
 			// Generar PDF
 			final GeneradorPdf generadorPdf = new GeneradorPdf();

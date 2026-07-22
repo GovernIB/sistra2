@@ -521,6 +521,13 @@ public class ApiInternaRestController {
 	    f.setIdTramite((String) params.get("f_idTra"));
 	    f.setCodSia((String) params.get("f_sia"));
 	    f.setIdProcedimientoCP((String) params.get("f_proc"));
+	    if (params.get("f_iniciadoPor") instanceof String) {
+	    	try {
+	    		f.setIniciadoPor(TypeIniciadoPor.valueOf((String) params.get("f_iniciadoPor")));
+	    	} catch (IllegalArgumentException e) {
+	    		// Ignoramos valores no reconocidos
+	    	}
+	    }
 
 	    // Control de nulidad para evitar Error 500
 	    if (params.get("f_ver") != null) {
@@ -571,8 +578,8 @@ public class ApiInternaRestController {
 				rDatos.setConcepto(pDetallePago.getDatos().getConcepto());
 				rDatos.setTasaId(pDetallePago.getDatos().getTasaId());
 				rDatos.setImporte(pDetallePago.getDatos().getImporte());
+				rDatos.setMultiplicador(pDetallePago.getDatos().getMultiplicador());
 				rDatos.setDetallePago(pDetallePago.getDatos().getDetallePago());
-
 				rDetalle.setDatos(rDatos);
 			}
 

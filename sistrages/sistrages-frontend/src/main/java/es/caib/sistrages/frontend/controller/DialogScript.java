@@ -645,20 +645,20 @@ public class DialogScript extends DialogControllerBase {
 				}
 			}
 
-			// Vamos a comprobar si alguna no tiene las comillas simples
-			Matcher matcherComprobarIncorrectas = Pattern.compile("setExtensiones\\((.*?)\\)").matcher(contenido);
+			// // Vamos a comprobar si alguna no tiene las comillas simples
+			// Matcher matcherComprobarIncorrectas = Pattern.compile("setExtensiones\\((.*?)\\)").matcher(contenido);
 
-			Integer totalCoincidenciasGenerico = 0;
-			while (matcherComprobarIncorrectas.find()) {
-				totalCoincidenciasGenerico++;
-				// EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
-			}
+			// Integer totalCoincidenciasGenerico = 0;
+			// while (matcherComprobarIncorrectas.find()) {
+			// 	totalCoincidenciasGenerico++;
+			// 	// EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
+			// }
 
-			if (totalCoincidenciasGenerico.compareTo(totalCoincidencias) != 0) {
-				addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
-						UtilJSF.getLiteral("dialogScript.error.setExtensionesErroneo"));
-				return true;
-			}
+			// if (totalCoincidenciasGenerico.compareTo(totalCoincidencias) != 0) {
+			// 	addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+			// 			UtilJSF.getLiteral("dialogScript.error.setExtensionesErroneo"));
+			// 	return true;
+			// }
 
 			if(!extensionesAnexos.isEmpty()) {
 				String[] listaExtensionesPermitidas = {};

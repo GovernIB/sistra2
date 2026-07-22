@@ -1,14 +1,14 @@
 package es.caib.sistramit.core.api.service;
 
-import java.util.Date;
-import java.util.List;
-
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Servicio funcionalidades sistema.

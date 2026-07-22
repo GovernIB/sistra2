@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 
 /**
@@ -60,7 +61,7 @@ public class AlertaServiceBean implements AlertaService {
 
 	@Override
 	@PermitAll
-	public List<Alerta> listAlertaActivo(final String filtro, final boolean activo) {
+	public List<Alerta> listAlertaActivo(final FiltroAlerta filtro, final boolean activo) {
 		return alertaService.listAlertaActivo(filtro, activo);
 	}
 

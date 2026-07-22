@@ -13,18 +13,20 @@
 	<title><h:outputText value="#{msg['dialogErroresValidacion.titulo']}"/></title>
 	<style type="text/css">
 
-		html, #dialogErroresValidacion {height:100% !important;}
 
-		body {height:97% !important;}
+		#dialogErroresValidacion {
+	        height: 100% !important;
+	        margin-top: 0px !important;
+	    }
 
-		#dialogErroresValidacion\:dataTableErrores > div.ui-datatable-scrollable-body {height:97% !important;}
+	    #dialogErroresValidacion\:dataTableErrores > div.ui-datatable-scrollable-body {
+	        height: 97% !important;
+	    }
 
-		#dialogErroresValidacion\:dataTableErrores {
-			padding-bottom: 30px;
-   			height: calc(100% - 33px) !important;
-		}
-
-		#dialogErroresValidacion { margin-top: 0px !important; }
+	    #dialogErroresValidacion\:dataTableErrores {
+	        padding-bottom: 30px;
+	        height: calc(100% - 33px) !important;
+	    }
 	</style>
 	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
 	<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />

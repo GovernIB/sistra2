@@ -55,13 +55,20 @@ public final class ResPago implements ResPagoInt {
 	@Override
 	public void setDetallePago(final String modelo, final String concepto, final String tasa, final int importe)
 			throws ScriptException {
+			setDetallePago(modelo, concepto, tasa, 1, importe);
+	}
 
-		validarDatosPago(tasa, modelo, concepto);
+	@Override
+	public void setDetallePago(final String modelo, final String concepto, final String tasa, final int unidades, final int importeUnidad)
+			throws ScriptException {
+
+		validarDatosPago(tasa, modelo, concepto, importeUnidad, unidades);
 
 		datosPago.setModelo(modelo);
 		datosPago.setConcepto(concepto);
 		datosPago.setTasa(tasa);
-		datosPago.setImporte(importe);
+		datosPago.setImporte(importeUnidad * unidades);
+		datosPago.setMultiplicador(unidades);
 	}
 
 	@Override
@@ -101,18 +108,14 @@ public final class ResPago implements ResPagoInt {
 	/**
 	 * Valida datos pago.
 	 *
-	 * @param codigo
-	 *                     Codigo
-	 * @param modelo
-	 *                     Modelo
-	 * @param concepto
-	 *                     Concepto
-	 * @param importe
-	 *                     importe en cents
-	 * @throws ScriptException
-	 *                             Exception
+	 * @param codigo   Codigo
+	 * @param modelo   Modelo
+	 * @param concepto Concepto
+	 * @param importe  importe en cents
+	 * @param unidades
+	 * @throws ScriptException Exception
 	 */
-	private void validarDatosPago(final String codigo, final String modelo, final String concepto)
+	private void validarDatosPago(final String codigo, final String modelo, final String concepto, int importe, int unidades)
 			throws ScriptException {
 		if (!XssFilter.filtroXss(codigo)) {
 			throw new ScriptException("El codi conté caràcters no permesos");
@@ -122,6 +125,12 @@ public final class ResPago implements ResPagoInt {
 		}
 		if (!XssFilter.filtroXss(concepto)) {
 			throw new ScriptException("El concepte conté caràcters no permesos");
+		}
+		if (importe < 0) {
+			throw new ScriptException("Import no válid, ha de ser major o igual a 0");
+		}
+		if (unidades < 1 || unidades > 999) {
+			throw new ScriptException("Unitats no vàlides, ha de ser major que 0 i menor que 1000");
 		}
 	}
 

@@ -13,6 +13,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
 import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
@@ -57,8 +58,8 @@ public class HistorialAlertaServiceBean implements HistorialAlertaService {
 
 	@Override
 	@PermitAll
-	public List<HistorialAlerta> listHistorialAlerta(final Date desde, final Date hasta) {
-		return historialAlertaService.listHistorialAlerta(desde, hasta);
+	public List<HistorialAlerta> listHistorialAlerta(final Date desde, final Date hasta, final FiltroAlerta filtro) {
+		return historialAlertaService.listHistorialAlerta(desde, hasta, filtro);
 	}
 
 	@Override

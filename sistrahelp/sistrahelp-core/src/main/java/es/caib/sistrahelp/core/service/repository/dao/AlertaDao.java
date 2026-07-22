@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 
 /**
  * La interface DominioDao.
@@ -55,7 +56,7 @@ public interface AlertaDao {
 	 */
 	boolean remove(final Long idAlerta);
 
-	List<Alerta> listarAlertaActivo(final String filtro, final boolean activo);
+	List<Alerta> listarAlertaActivo(final FiltroAlerta filtro, final boolean activo);
 
 	void updateUltimaVerificacion(Long codigoAlerta);
 

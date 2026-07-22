@@ -19,7 +19,7 @@ En la pantalla de '<i>Detalle de persistencia</i>' se puede consultar la Informa
 			<li><span class="nombreCampo">Cancelado:</span> Indica si el trámite ha sido cancelado por el ciudadano.</li>
 		</ul>
 	</li>
-	
+
 	<li><span class="nombreCampo">Acceso:</span> Información referente al acceso al trámite
 		<ul>
 			<li><span class="nombreCampo">F. inicio:</span> Fecha en la que se inició el trámite.</li>
@@ -31,15 +31,20 @@ En la pantalla de '<i>Detalle de persistencia</i>' se puede consultar la Informa
 	<li><span class="nombreCampo">Persistencia:</span> Información referente a la persistencia del trámite
 		<ul>
 			<li><span class="nombreCampo">Persistente:</span> Indica si el trámite podrá ser retomado por el ciudadano para su finalización.</li>
-			<li><span class="nombreCampo">F. caducidad:</span> fecha de caducidad del trámite. Si se ha superado esta fecha, el ciudadano no podrá recuperar la solicitud para finalizarla.</li>			
+			<li><span class="nombreCampo">F. caducidad:</span> fecha de caducidad del trámite. Si se ha superado esta fecha, el ciudadano no podrá recuperar la solicitud para finalizarla.</li>
 		</ul>
 	</li>
 
 	<li><span class="nombreCampo">Purga:</span> Información referente a la purga de datos
 		<ul>
+			<li>Los trámites se purgan en 2 fases:</li>
+			<ul>
+				<li>En la primera fase se borran los documentos asociados y solo se deja la información de los eventos, los elementos de tramitación se marcan para purgar.</li>
+				<li>En la segunda fase se eliminan definitivamente.</li>
+			</ul>
 			<li><span class="nombreCampo">Purgar:</span> Indica si el trámite ha sido marcado para purgar.</li>
 			<li><span class="nombreCampo">Purgado:</span> Indica si el trámite ha sido purgado o no.</li>
-			<li><span class="nombreCampo">F. purgado:</span> Indica la fecha en que se realizó el purgado (Solo si procede).</li>			
+			<li><span class="nombreCampo">F. purgado:</span> Indica la fecha en que se realizó el purgado (Solo si procede).</li>
 		</ul>
 	</li>
 	<li><span class="nombreCampo">URL inicio::</span> Indica la URL con la que se inició el trámite.</li>
@@ -47,9 +52,9 @@ En la pantalla de '<i>Detalle de persistencia</i>' se puede consultar la Informa
 		<ul>
 			<li><span class="nombreCampo">Paso:</span> Indica el paso de tramitación al que pertenece el documento.</li>
 			<li><span class="nombreCampo">Tipo Paso:</span> Indica el tipo de paso en el que se ha anexado/generado el fichero.</li>
-			<li><span class="nombreCampo">Tipo:</span> Indica el tipo de fichero.</li>			
-			<li><span class="nombreCampo">Fichero:</span> Indica el nombre del fichero.</li>		
-		</ul>	
+			<li><span class="nombreCampo">Tipo:</span> Indica el tipo de fichero.</li>
+			<li><span class="nombreCampo">Fichero:</span> Indica el nombre del fichero.</li>
+		</ul>
 	</li>
 </ul>
 </p>

@@ -22,6 +22,10 @@ public class RPasoTramitacionPagar extends RPasoTramitacion {
 	@ApiModelProperty(value = "Permite subsanar")
 	private boolean permiteSubsanar;
 
+	/** Script anexos dinámicos. */
+	@ApiModelProperty(value = "Script pagos dinámicos")
+	private RScript scriptPagosDinamicos;
+
 	/**
 	 * @return the permiteSubsanar
 	 */
@@ -75,4 +79,11 @@ public class RPasoTramitacionPagar extends RPasoTramitacion {
 		this.pagos = pagos;
 	}
 
+	public RScript getScriptPagosDinamicos() {
+		return scriptPagosDinamicos;
+	}
+
+	public void setScriptPagosDinamicos(RScript scriptPagosDinamicos) {
+		this.scriptPagosDinamicos = scriptPagosDinamicos;
+	}
 }

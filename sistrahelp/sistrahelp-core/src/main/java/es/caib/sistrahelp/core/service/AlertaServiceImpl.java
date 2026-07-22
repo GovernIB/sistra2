@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
 import es.caib.sistrahelp.core.service.repository.dao.AlertaDao;
@@ -93,7 +94,7 @@ public class AlertaServiceImpl implements AlertaService {
 
 	@Override
 	@NegocioInterceptor
-	public List<Alerta> listAlertaActivo(final String filtro, final boolean activo) {
+	public List<Alerta> listAlertaActivo(final FiltroAlerta filtro, final boolean activo) {
 		return alertaDao.listarAlertaActivo(filtro, activo);
 	}
 

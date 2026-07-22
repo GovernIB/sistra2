@@ -1,22 +1,10 @@
 package es.caib.sistramit.core.service;
 
-import java.net.InetAddress;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.annotation.PostConstruct;
-
-import es.caib.sistramit.core.api.exception.*;
-import es.caib.sistramit.core.service.repository.dao.EntregaTramiteDao;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistramit.core.api.exception.ControlConcurrenciaRegistroException;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
+import es.caib.sistramit.core.api.exception.ErrorFrontException;
+import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
@@ -31,9 +19,23 @@ import es.caib.sistramit.core.service.component.integracion.EnvioAvisoComponent;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.repository.dao.EntregaTramiteDao;
 import es.caib.sistramit.core.service.repository.dao.InvalidacionDao;
 import es.caib.sistramit.core.service.repository.dao.ProcesoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
 
 @Service
 @Transactional

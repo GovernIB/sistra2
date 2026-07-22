@@ -351,7 +351,7 @@
                     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl areas dataTableTramites toolbarArea toolbarTramites" oncomplete="refrescarHeight();"/>
                   </p:commandButton>
                   <p:commandButton id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
-                    <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoArea']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+                    <p:confirm header="#{msg['confirm.titulo']}" message="#{viewTramites.mensajeConfirmacionBorradoArea}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
                   </p:commandButton>
 
           </f:facet>

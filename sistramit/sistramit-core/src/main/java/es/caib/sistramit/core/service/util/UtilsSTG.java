@@ -778,7 +778,8 @@ public final class UtilsSTG {
 			switch (tipoPaso) {
 				case PAGAR:
 					final RPasoTramitacionPagar pasoPagar = (RPasoTramitacionPagar) paso;
-					pago = pasoPagar.getPagos() != null && !pasoPagar.getPagos().isEmpty();
+					pago = (pasoPagar.getPagos() != null && !pasoPagar.getPagos().isEmpty())
+							|| existeScript(pasoPagar.getScriptPagosDinamicos());
 					break;
 				default:
 					break;

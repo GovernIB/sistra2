@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.api.exception;
 
-import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 
 /**

@@ -3,6 +3,7 @@ package es.caib.sistrahelp.core.api.service;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
 
 /**
@@ -59,7 +60,7 @@ public interface HistorialAlertaService {
 	 * @param filtro Filro aplicado al código o descripcion.
 	 * @return lista de Alerta
 	 */
-	public List<HistorialAlerta> listHistorialAlerta(Date desde, Date hasta);
+	public List<HistorialAlerta> listHistorialAlerta(Date desde, Date hasta, FiltroAlerta filtro);
 
 	public HistorialAlerta getSiguienteHistorialAlerta(Long codigoAviso, Date fechaUltimaEjecucion);
 

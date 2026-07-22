@@ -27,21 +27,37 @@
 
 	</f:metadata>
 
-	<c:choose>
-		    <c:when test="#{viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA or viewAuditoriaTramites.esDialogParams}">
-		         <title><h:outputText value = "a" /></title>
-
-		    </c:when>
-		    <c:otherwise>
-
-		    </c:otherwise>
-		</c:choose>
-
 	<ui:define name="content">
 		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
 		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
 
 		<script type="text/javascript">
+			//<![CDATA[
+			    $(document).ready(function() {
+			        // Obtenemos los parámetros desde JSF
+			        var esDialogo = #{viewAuditoriaTramites.esDialogParams != null ? viewAuditoriaTramites.esDialogParams : false};
+			        var idSesion = "#{viewAuditoriaTramites.idSesionParam}";
+			        var paramNif = "#{viewAuditoriaTramites.nifParam}";
+
+			        if (esDialogo && window.parent) {
+			            // Construimos el título
+			            var tituloLimpio = "";
+			            if (idSesion != null && idSesion.trim() !== '') {
+			                tituloLimpio = "Sesión: " + idSesion;
+			            } else if (paramNif != null && paramNif.trim() !== '') {
+			                tituloLimpio = "NIF: " + paramNif;
+			            }
+
+			            // Si tenemos un título, lo reemplazamos
+			            if (tituloLimpio !== "") {
+			                setTimeout(function() {
+			                    window.parent.$('.ui-dialog-title').text(tituloLimpio);
+			                }, 100);
+			            }
+			        }
+			    });
+			//]]>
+
 			function setHeight(){
 				// Altura de la pantalla
 				var altura = window.innerHeight - 50;

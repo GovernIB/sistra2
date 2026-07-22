@@ -3,6 +3,7 @@ package es.caib.sistrahelp.core.api.service;
 import java.util.List;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 
 /**
  * Dominio service.
@@ -63,11 +64,11 @@ public interface AlertaService {
 	/**
 	 * Listar Alerta Activo
 	 *
-	 * @param idVa   Id de la area
-	 * @param filtro Filro aplicado al código o descripcion.
+	 * @param filtro Filtro
+	 * @param activo boolean
 	 * @return lista de Alerta
 	 */
-	public List<Alerta> listAlertaActivo(String filtro, boolean activo);
+	public List<Alerta> listAlertaActivo(FiltroAlerta filtro, boolean activo);
 
 	/**
 	 * Duplica una alerta dejándola inactiva y con el nombre vacío.

@@ -1,43 +1,18 @@
 package es.caib.sistra2.commons.plugins.registro.regweb3;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
+import es.caib.regweb3.ws.api.v3.*;
+import es.caib.sistra2.commons.plugins.registro.api.*;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.types.*;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.caib.regweb3.ws.api.v3.AnexoWs;
-import es.caib.regweb3.ws.api.v3.AsientoRegistralSesionWs;
-import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
-import es.caib.regweb3.ws.api.v3.InteresadoWs;
-import es.caib.regweb3.ws.api.v3.JustificanteReferenciaWs;
-import es.caib.regweb3.ws.api.v3.JustificanteWs;
-import es.caib.regweb3.ws.api.v3.LibroWs;
-import es.caib.regweb3.ws.api.v3.OficinaWs;
-import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
-import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
-import es.caib.sistra2.commons.plugins.registro.api.DocumentoAsiento;
-import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
-import es.caib.sistra2.commons.plugins.registro.api.Interesado;
-import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
-import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
-import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
-import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.VerificacionRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeEstadoRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
-import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Implementacion REGWEB3 del plugin registro.

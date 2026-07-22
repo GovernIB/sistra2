@@ -2,6 +2,7 @@ package es.caib.sistrages.frontend.controller;
 
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -314,6 +315,44 @@ public class ViewTramites extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
 
+	}
+
+	/**
+	 * Construye el mensaje dinámico de confirmación para el borrado del área.
+	 */
+	public String getMensajeConfirmacionBorradoArea() {
+		if (!verificarFilaSeleccionadaArea()) {
+			return UtilJSF.getLiteral("confirm.borradoArea");
+		}
+
+		Area area = listaAreasSeleccionadas.get(0);
+		List<Rol> roles = rolService.getRolesByArea(area.getCodigo());
+
+		String nombreArea = area.getIdentificador();
+
+		// Si no tiene roles asociados
+		if (roles == null || roles.isEmpty()) {
+			String patternSinRoles = UtilJSF.getLiteral("confirm.borradoArea.sinRoles");
+			return MessageFormat.format(patternSinRoles, nombreArea);
+		}
+
+		// Si tiene roles asociados, recopilamos sus nombres
+		List<String> nombresRoles = new ArrayList<>();
+		for (Rol rol : roles) {
+			nombresRoles.add(rol.getValor());
+		}
+
+		String listaRolesStr = String.join(", ", nombresRoles);
+
+		// Obtenemos el texto de "el rol" o "los roles" según corresponda
+		String literalRol = roles.size() == 1 ?
+				UtilJSF.getLiteral("etiqueta.rol.singular") :
+				UtilJSF.getLiteral("etiqueta.rol.plural");
+
+		// Obtenemos el patrón principal y sustituimos
+		String patternConRoles = UtilJSF.getLiteral("confirm.borradoArea.conRoles");
+
+		return MessageFormat.format(patternConRoles, nombreArea, literalRol, listaRolesStr);
 	}
 
 	private boolean borrarRolesAsociados(Long codArea) {

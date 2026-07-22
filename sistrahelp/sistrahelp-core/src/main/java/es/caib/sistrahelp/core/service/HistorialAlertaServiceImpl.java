@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
@@ -88,8 +89,8 @@ public class HistorialAlertaServiceImpl implements HistorialAlertaService {
 
 	@Override
 	@NegocioInterceptor
-	public List<HistorialAlerta> listHistorialAlerta(Date desde, Date hasta) {
-		return historialAlertaDao.getAllByFiltro(desde, hasta);
+	public List<HistorialAlerta> listHistorialAlerta(Date desde, Date hasta, FiltroAlerta filtro) {
+		return historialAlertaDao.getAllByFiltro(desde, hasta, filtro);
 	}
 
 	@Override

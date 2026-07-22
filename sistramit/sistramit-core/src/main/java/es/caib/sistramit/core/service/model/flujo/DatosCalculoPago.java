@@ -43,6 +43,9 @@ public final class DatosCalculoPago implements Serializable {
 	 */
 	private int importe;
 
+	/** Multiplicador (cuando el pago implique multiplicar n veces el importe). */
+	private int multiplicador = 1;
+
 	/**
 	 * Organismo (depende pasarela).
 	 */
@@ -54,6 +57,17 @@ public final class DatosCalculoPago implements Serializable {
 	private String tasa;
 
 	/**
+	 * Simular pago.
+	 */
+	private boolean simularPago;
+
+	/**
+	 * Indica si se filtran los métodos de pago (lista separada por ; ). Si no se
+	 * establece, se mostarán los activos por defecto.
+	 */
+	private String metodosPago;
+
+	/**
 	 * Método de acceso a contribuyente.
 	 *
 	 * @return contribuyente
@@ -61,12 +75,6 @@ public final class DatosCalculoPago implements Serializable {
 	public Persona getContribuyente() {
 		return contribuyente;
 	}
-
-	/**
-	 * Indica si se filtran los métodos de pago (lista separada por ; ). Si no se
-	 * establece, se mostarán los activos por defecto.
-	 */
-	private String metodosPago;
 
 	/**
 	 * Método para establecer contribuyente.
@@ -228,5 +236,32 @@ public final class DatosCalculoPago implements Serializable {
 	 */
 	public void setMetodosPago(final String metodosPago) {
 		this.metodosPago = metodosPago;
+	}
+
+	/**
+	 * Método de acceso a simularPago.
+	 *
+	 * @return simularPago
+	 */
+	public boolean isSimularPago() {
+		return simularPago;
+	}
+
+	/**
+	 * Método para establecer simularPago.
+	 *
+	 * @param simularPago
+	 *                        simularPago a establecer
+	 */
+	public void setSimularPago(final boolean simularPago) {
+		this.simularPago = simularPago;
+	}
+
+	public int getMultiplicador() {
+		return multiplicador;
+	}
+
+	public void setMultiplicador(int multiplicador) {
+		this.multiplicador = multiplicador;
 	}
 }

@@ -64,6 +64,7 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 		rdatosPago.setEntidadId(datosPago.getEntidadId());
 		rdatosPago.setIdioma(datosPago.getIdioma());
 		rdatosPago.setImporte(datosPago.getImporte());
+		rdatosPago.setMultiplicador(datosPago.getMultiplicador());
 		rdatosPago.setModelo(datosPago.getModelo());
 		rdatosPago.setOrganismoId(datosPago.getOrganismoId());
 		rdatosPago.setPasarelaId(datosPago.getPasarelaId());

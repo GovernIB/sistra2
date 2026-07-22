@@ -132,6 +132,9 @@ public final class ControladorPasoPagarHelper {
 			res.setTasaId(doc.getPAGO().getDATOSPAGO().getTASA());
 			res.setOrganismoId(doc.getPAGO().getDATOSPAGO().getORGANISMO());
 			res.setImporte(doc.getPAGO().getDATOSPAGO().getIMPORTE());
+			if (doc.getPAGO().getDATOSPAGO().isSetMULTIPLICADOR()) {
+				res.setMultiplicador(doc.getPAGO().getDATOSPAGO().getMULTIPLICADOR());
+			}
 			res.setDetallePago(doc.getPAGO().getDATOSPAGO().getDETALLEPAGO());
 			res.setSujetoPasivo(new Persona(doc.getPAGO().getDATOSPAGO().getCONTRIBUYENTE().getNIF(),
 					doc.getPAGO().getDATOSPAGO().getCONTRIBUYENTE().getNOMBRE()));
@@ -168,6 +171,9 @@ public final class ControladorPasoPagarHelper {
 			datosPago.setMODELO(datosSesionPago.getModelo());
 			datosPago.setCONCEPTO(datosSesionPago.getConcepto());
 			datosPago.setIMPORTE(datosSesionPago.getImporte());
+			if (datosSesionPago.getMultiplicador() > 1) {
+				datosPago.setMULTIPLICADOR(datosSesionPago.getMultiplicador());
+			}
 			if (StringUtils.isNotBlank(datosSesionPago.getTasaId())) {
 				datosPago.setTASA(datosSesionPago.getTasaId());
 			}
@@ -227,15 +233,12 @@ public final class ControladorPasoPagarHelper {
 		final DatosCalculoPago datosPago = pDipa.recuperarCalculoPago(idPago);
 		datosPago.setFecha(UtilsFlujo.formateaFechaFront(new Date()));
 
-		// Verifica si el pago es simulado
-		final boolean pagoSimulado = UtilsSTG.isPagoSimulado(pDipa.getIdPaso(), idPago, pDefinicionTramite);
-
 		// - Establecemos datos sesion de pago
 		final DatosSesionPago datosSesionPago = new DatosSesionPago();
 		datosSesionPago.setEntidadId(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
 		datosSesionPago.setPasarelaId(datosPago.getPasarelaId());
 		datosSesionPago.setPresentacion(presentacion);
-		datosSesionPago.setSimulado(pagoSimulado);
+		datosSesionPago.setSimulado(datosPago.isSimularPago());
 		datosSesionPago.setIdioma(pIdioma);
 		datosSesionPago.setSujetoPasivo(datosPago.getContribuyente());
 		datosSesionPago.setDetallePago("[" + idSesionTramitacion + "]");
@@ -243,6 +246,7 @@ public final class ControladorPasoPagarHelper {
 		datosSesionPago.setConcepto(datosPago.getConcepto());
 		datosSesionPago.setTasaId(datosPago.getTasa());
 		datosSesionPago.setImporte(datosPago.getImporte());
+		datosSesionPago.setMultiplicador(datosPago.getMultiplicador());
 		datosSesionPago.setOrganismoId(datosPago.getOrganismo());
 		datosSesionPago.setMetodosPago(datosPago.getMetodosPago());
 		datosSesionPago.setIdTramite(pDefinicionTramite.getDefinicionVersion().getIdentificador());

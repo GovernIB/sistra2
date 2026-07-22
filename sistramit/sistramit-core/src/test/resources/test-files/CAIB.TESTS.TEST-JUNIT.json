@@ -951,7 +951,11 @@
         }
       ],
       "permiteSubsanar": false,
-      "instruccionesSubsanacion": null
+      "instruccionesSubsanacion": null,
+      "scriptPagosDinamicos":{
+        "script": "var pago = DATOS_PAGOSDINAMICOS.crearPago(); \npago.setSimularPago(true); \npago.setIdentificador('PD1');\npago.setDescripcion('Pago dinamico 1');\npago.setObligatorio(true);\npago.setPasarela('ATIB'); \npago.setOrganismo('ORG1'); \npago.setDetallePago('046','C1','T1', 100);\nDATOS_PAGOSDINAMICOS.addPago(pago);",
+        "literales": []
+      }
     },
     {
       "type": "RPasoTramitacionRegistrar",

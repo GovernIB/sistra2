@@ -259,6 +259,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	        filtros.setSortField("fecha");
 	        filtros.setSortOrder("DESCENDING");
 	    }
+
+		comboIniciado = entidad != null && entidad.isModoFuncionarioHabilitado();
 	}
 
 	/**
@@ -388,28 +390,28 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * Abre dialogo sesión
 	 */
 	public void pantallaSesion() {
-		final Map<String, String> params = new HashMap<>();
+	    final Map<String, String> params = new HashMap<>();
+	    String idSesion = datoSeleccionado.getIdSesionTramitacion();
 
-		String idSesion = datoSeleccionado.getIdSesionTramitacion();
+	    params.put("idSesionParam", idSesion);
+	    params.put("esDialogParams", "true");
+	    params.put("dialogTitle", "Sesión: " + idSesion);
 
-		params.put("idSesionParam", idSesion);
-		params.put("esDialogParams", "true");
-
-		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
+	    UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
 	}
 
 	/**
 	 * Abre dialogo nif
 	 */
 	public void pantallaNif() {
-		final Map<String, String> params = new HashMap<>();
+	    final Map<String, String> params = new HashMap<>();
+	    String nif = datoSeleccionado.getNif();
 
-		String nif = datoSeleccionado.getNif();
+	    params.put("nifParam", nif);
+	    params.put("esDialogParams", "true");
+	    params.put("dialogTitle", "NIF: " + nif);
 
-		params.put("nifParam", nif);
-		params.put("esDialogParams", "true");
-
-		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
+	    UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
 	}
 
 	/**
@@ -425,8 +427,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	    if (this.filtros.getVersionTramite() != null) params.put("fVer", String.valueOf(this.filtros.getVersionTramite()));
 	    if (this.filtros.getCodSia() != null) params.put("fSia", this.filtros.getCodSia());
 	    if (this.filtros.getIdProcedimientoCP() != null) params.put("fProc", this.filtros.getIdProcedimientoCP());
-	    if (this.filtroArea != null && !this.filtroArea.isEmpty()) {
+	    if (this.filtros.getListaAreas() != null && !this.filtros.getListaAreas().isEmpty()) {
+	        params.put("fAreas", String.join(",", this.filtros.getListaAreas()));
+	    } else if (this.filtroArea != null && !this.filtroArea.isEmpty()) {
 	        params.put("fArea", this.filtroArea);
+	    }
+	    if (this.filtros.getIniciadoPor() != null) {
+	    	params.put("fIniciadoPor", this.filtros.getIniciadoPor().name());
 	    }
 	    if (this.filtros.getFechaDesde() != null) {
 	    	params.put("fDesde", String.valueOf(this.filtros.getFechaDesde().getTime()));
@@ -597,6 +604,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
                 case "BB":  msgKey = "entidadPago.BB.titulo"; break;
                 case "MKP": msgKey = "entidadPago.MKP.titulo"; break;
                 case "MKX": msgKey = "entidadPago.MKX.titulo"; break;
+				case "MKN": msgKey = "entidadPago.MKN.titulo"; break;
                 default: return valor; // Si no es una sigla conocida, muestra el valor original
             }
             try {
@@ -708,14 +716,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	}
 
 	public void cambioTipoEvento(){
-
-		if( TypeEvento.INICIAR_TRAMITE.equals(this.filtros.getEvento()) && entidad.isModoFuncionarioHabilitado()){
-			comboIniciado = true;
-
-		} else {
-			comboIniciado = false;
-			filtros.setIniciadoPor(null);
-		}
+		comboIniciado = entidad != null && entidad.isModoFuncionarioHabilitado();
 
 	}
 

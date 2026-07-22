@@ -60,6 +60,25 @@ public interface ResPagoInt extends PluginScriptRes {
 	 */
 	void setDetallePago(String modelo, String concepto, String tasa, int importe) throws ScriptException;
 
+
+	/**
+	 * Establece detalle pago.
+	 *
+	 * @param tasa
+	 *                     codigo
+	 * @param modelo
+	 *                     modelo
+	 * @param concepto
+	 *                     concepto
+	 * @param unidades
+	 *
+	 * @param importeUnidad
+	 *                     importe unidad en cents
+	 * @throws ScriptException
+	 */
+	void setDetallePago(String modelo, String concepto, String tasa, int unidades, int importeUnidad) throws ScriptException;
+
+
 	/**
 	 * Indica si se filtran los métodos de pago . Si no se establece, se mostarán
 	 * los activos por defecto.

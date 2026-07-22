@@ -72,6 +72,10 @@ public enum TypePluginScript {
 	 */
 	PLUGIN_PAGO,
 	/**
+	 * Resultado pagos dinámicos (exclusivo dentro del flujo)
+	 */
+	DATOS_PAGOSDINAMICOS,
+	/**
 	 * Resultado del pago (exclusivo dentro del flujo)
 	 */
 	DATOS_PAGO,

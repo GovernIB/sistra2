@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.service.util.UtilsSTG;
 import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
@@ -84,14 +85,13 @@ public final class RTPasosInicialesNormalizado implements ReglaTramitacion {
                 // Si no tiene anexos ni script dinamico
                 final RPasoTramitacionAnexar pa = (RPasoTramitacionAnexar) paso;
                 saltar = (pa.getAnexos() == null || pa.getAnexos().isEmpty())
-                        && (pa.getScriptAnexosDinamicos() == null || StringUtils
-                                .isEmpty(pa.getScriptAnexosDinamicos()
-                                        .getScript()));
+                        && !UtilsSTG.existeScript(pa.getScriptAnexosDinamicos());
                 break;
             case PAGAR:
-                // Si no tiene pagos
+                // Si no tiene pagos ni script dinamico
                 final RPasoTramitacionPagar pt = (RPasoTramitacionPagar) paso;
-                saltar = (pt.getPagos() == null || pt.getPagos().isEmpty());
+                saltar = (pt.getPagos() == null || pt.getPagos().isEmpty())
+                        && !UtilsSTG.existeScript(pt.getScriptPagosDinamicos());
                 break;
             default:
                 saltar = false;

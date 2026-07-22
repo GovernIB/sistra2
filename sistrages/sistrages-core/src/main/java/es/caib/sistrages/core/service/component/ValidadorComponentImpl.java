@@ -919,6 +919,14 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 		params.put("TRAMITEVERSION", String.valueOf(pTramiteVersion.getCodigo()));
 		params.put("TRAMITEPASO", String.valueOf(pasoTasa.getCodigo()));
 
+		params.put("TIPO_SCRIPT_FLUJO", UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_PAGOS));
+
+		comprobarScript(pasoTasa.getScriptPagosDinamicos(), "tramitePasoTasa.listaDinamicaPagos",
+				new String[] { literales.getLiteral("validador", "tramitePasoTasa", pIdioma) },
+				"literal.script.mensaje.paso", "compilar.script.paso", "dominio.script.paso", "script.comentario",
+				pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma, pListaDominiosNoUsados,
+				listaErrores, UtilJSON.toJSON(params));
+
 		if (pasoTasa.getTasas() != null) {
 			for (final Tasa tasa : pasoTasa.getTasas()) {
 

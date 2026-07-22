@@ -2,6 +2,7 @@ package es.caib.sistrahelp.frontend.controller;
 
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.model.types.TypeIniciadoPor;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
@@ -72,8 +73,14 @@ public class DialogFiltroErrores extends DialogControllerBase {
 		    this.filtro.setIdTramite(requestParams.get("fIdTra"));
 		    this.filtro.setCodSia(requestParams.get("fSia"));
 		    this.filtro.setIdProcedimientoCP(requestParams.get("fProc"));
+		    if (requestParams.get("fIniciadoPor") != null && !requestParams.get("fIniciadoPor").isEmpty()) {
+		    	this.filtro.setIniciadoPor(TypeIniciadoPor.valueOf(requestParams.get("fIniciadoPor")));
+		    }
 
-		    String areaParam = requestParams.get("fArea");
+		    String areaParam = requestParams.get("fAreas");
+		    if (areaParam == null || areaParam.isEmpty()) {
+		    	areaParam = requestParams.get("fArea");
+		    }
 		    if (areaParam != null && !areaParam.isEmpty()) {
 		        this.filtro.setListaAreas(Arrays.asList(areaParam.split(",")));
 		    }
@@ -132,6 +139,7 @@ public class DialogFiltroErrores extends DialogControllerBase {
 	}
 
 	public void aceptar() {
+
 
 		if (this.filtroTablaErrores != null && !this.filtroTablaErrores.trim().isEmpty()
 				&& this.listaSeleccionados != null) {
@@ -252,6 +260,7 @@ public class DialogFiltroErrores extends DialogControllerBase {
 				case "BB":  key = "entidadPago.BB.titulo"; break;
 				case "MKP": key = "entidadPago.MKP.titulo"; break;
 				case "MKX": key = "entidadPago.MKX.titulo"; break;
+				case "MKN": key = "entidadPago.MKN.titulo"; break;
 				default: return codigo;
 			}
 			try {

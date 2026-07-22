@@ -4,6 +4,8 @@ import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ProcesoAlertaService;
+import es.caib.sistrahelp.core.api.model.FiltroAlerta;
+import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
@@ -17,6 +19,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -65,7 +68,12 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		listaDatos = alertaService.listAlertaActivo(null, true);
+		// Construye filtro desde sesión con entidad y áreas activas
+		final FiltroAlerta filtroAlerta = new FiltroAlerta(null,
+			UtilJSF.getSessionBean().getEntidad() != null ? UtilJSF.getSessionBean().getEntidad().getCodigoDIR3() : null,
+			convierteListaAreas());
+
+		listaDatos = alertaService.listAlertaActivo(filtroAlerta, true);
 
 	}
 
@@ -80,9 +88,14 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 	/**
 	 * Buscar.
 	 */
-	private void buscar(String filtros) {
+	private void buscar(String filtroTexto) {
+		// Construye filtro con texto + entidad + áreas desde sesión
+		final FiltroAlerta filtroAlerta = new FiltroAlerta(filtroTexto,
+			UtilJSF.getSessionBean().getEntidad() != null ? UtilJSF.getSessionBean().getEntidad().getCodigoDIR3() : null,
+			convierteListaAreas());
+
 		// Filtra
-		listaDatos = alertaService.listAlertaActivo(filtros, true);
+		listaDatos = alertaService.listAlertaActivo(filtroAlerta, true);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -430,6 +443,26 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Convierte lista de áreas de sesión a identificadores (formato DIR3.ÁREA)
+	 *
+	 * @return lista de identificadores de áreas permitidas
+	 */
+	private List<String> convierteListaAreas() {
+		List<String> resultado = null;
+
+		final List<Area> lista = UtilJSF.getSessionBean().getListaAreasEntidad();
+
+		if (lista != null && !lista.isEmpty()) {
+			resultado = new ArrayList<>();
+			for (final Area area : lista) {
+				resultado.add(area.getIdentificador());
+			}
+		}
+
+		return resultado;
 	}
 
 	/**

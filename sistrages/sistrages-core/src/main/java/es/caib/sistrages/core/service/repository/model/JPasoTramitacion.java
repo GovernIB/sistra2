@@ -373,6 +373,10 @@ public class JPasoTramitacion implements IModelApi {
 			}
 			paso.setTasas(tasas);
 		}
+
+		if (this.getPasoPagos().getScriptPagosDinamicos() != null) {
+			paso.setScriptPagosDinamicos(this.getPasoPagos().getScriptPagosDinamicos().toModel());
+		}
 		return paso;
 	}
 

@@ -1169,8 +1169,6 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		DetallePasos dp;
 		ResultadoIrAPaso rp;
-		ResultadoAccionPaso ra;
-		ParametrosAccionPaso params;
 
 		String idPasoPagar;
 
@@ -1184,14 +1182,27 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		idPasoPagar = dp.getActual().getId();
 		this.logger.info("Detalle paso: " + dp.print());
 
-		// - Iniciamos pago electronico
-		this.logger.info("Iniciamos pago electronico...");
+		// - Iniciamos pago electronico FIJO
+		this.logger.info("Iniciamos pago electronico FIJO...");
+		flujo_realizar_pago(idSesionTramitacion, usuarioAutenticadoInfo, ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId(), idPasoPagar);
+
+		// - Iniciamos pago electronico DINAMICO
+		this.logger.info("Iniciamos pago electronico DINAMICO...");
+		flujo_realizar_pago(idSesionTramitacion, usuarioAutenticadoInfo, ((DetallePasoPagar) dp.getActual()).getPagos().get(1).getId(), idPasoPagar);
+
+	}
+
+	private void flujo_realizar_pago(String idSesionTramitacion, UsuarioAutenticadoInfo usuarioAutenticadoInfo, String idPago, String idPasoPagar) {
+		ParametrosAccionPaso params;
+		ResultadoAccionPaso ra;
+		DetallePasos dp;
 		params = new ParametrosAccionPaso();
-		params.addParametroEntrada("idPago", ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId());
+		params.addParametroEntrada("idPago", idPago);
 		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoPagar, TypeAccionPasoPagar.INICIAR_PAGO,
 				params);
 		final String url = (String) ra.getParametroRetorno("url");
 		Assert.isTrue(StringUtils.isNotBlank(url), "No se ha devuelto URL de redireccion a pago");
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		this.logger.info("Detalle paso: " + dp.print());
 
 		// - Simulamos retorno (carga de trámite desde fuera sesión activa)
@@ -1201,7 +1212,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		Assert.isTrue(dp.getActual().getTipo() == TypePaso.PAGAR, "Paso actual no es pagar");
 		params = new ParametrosAccionPaso();
-		params.addParametroEntrada("idPago", ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId());
+		params.addParametroEntrada("idPago", idPago);
 		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoPagar,
 				TypeAccionPasoPagar.VERIFICAR_PAGO_PASARELA, params);
 		final PagoVerificacion verificacionPago = (PagoVerificacion) ra.getParametroRetorno("verificacion");
@@ -1211,7 +1222,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		this.logger.info("Descargamos justificante...");
 		params = new ParametrosAccionPaso();
-		params.addParametroEntrada("idPago", ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId());
+		params.addParametroEntrada("idPago", idPago);
 		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoPagar,
 				TypeAccionPasoPagar.DESCARGAR_JUSTIFICANTE, params);
 		final byte[] justif = (byte[]) ra.getParametroRetorno("datos");

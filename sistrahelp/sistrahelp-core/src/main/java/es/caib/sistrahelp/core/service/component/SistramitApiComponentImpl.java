@@ -2,7 +2,6 @@ package es.caib.sistrahelp.core.service.component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -830,6 +829,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	        params.put("f_idTra", f.getIdTramite());
 	        params.put("f_ver", f.getVersionTramite());
 	        params.put("f_areas", f.getListaAreas());
+	        params.put("f_iniciadoPor", f.getIniciadoPor() != null ? f.getIniciadoPor().name() : null);
 
 	        // Mapeo de campos específicos
 	        params.put("f_proc", f.getIdProcedimientoCP()); // Cod. Trámite Catálogo

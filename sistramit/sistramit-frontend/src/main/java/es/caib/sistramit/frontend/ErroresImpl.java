@@ -1,11 +1,7 @@
 package es.caib.sistramit.frontend;
 
-import es.caib.sistramit.core.api.exception.*;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.exception.*;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -16,6 +12,9 @@ import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
 import es.caib.sistramit.frontend.model.types.TypeEstiloError;
 import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Errores.

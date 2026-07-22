@@ -18,6 +18,9 @@ public class TramitePasoTasa extends TramitePaso {
 	/** Tasas. **/
 	private List<Tasa> tasas;
 
+	/** Script pagos dinámicos. **/
+	private Script scriptPagosDinamicos;
+
 	/** Permite subsanación paso registrar. **/
 	private boolean permiteSubsanar;
 
@@ -34,6 +37,21 @@ public class TramitePasoTasa extends TramitePaso {
 	 */
 	public void setTasas(final List<Tasa> tasas) {
 		this.tasas = tasas;
+	}
+
+	/**
+	 * @return the scriptPagosDinamicos
+	 */
+	public Script getScriptPagosDinamicos() {
+		return scriptPagosDinamicos;
+	}
+
+	/**
+	 * @param scriptPagosDinamicos
+	 *            the scriptPagosDinamicos to set
+	 */
+	public void setScriptPagosDinamicos(final Script scriptPagosDinamicos) {
+		this.scriptPagosDinamicos = scriptPagosDinamicos;
 	}
 
 	/**
@@ -93,6 +111,10 @@ public class TramitePasoTasa extends TramitePaso {
         	   texto.append(tabulacion +"\t ScriptVariables: \n");
         	   texto.append(getScriptVariables().toString(tabulacion+"\t", idioma)+ "\n");
            }
+    	   if (scriptPagosDinamicos != null) {
+    	   	   texto.append(tabulacion +"\t ScriptPagosDinamicos: \n");
+    	   	   texto.append(scriptPagosDinamicos.toString(tabulacion+"\t", idioma)+ "\n");
+    	   }
            texto.append(tabulacion +"\t PermetSubsanar:" + permiteSubsanar + "\n");
            if (getTasas() != null) {
         	   texto.append(tabulacion +"\t Tasas: \n");

@@ -73,6 +73,10 @@ public class RDatosSesionPago {
 	@ApiModelProperty(value = "Importe")
 	private int importe;
 
+	/** Multiplicador. */
+	@ApiModelProperty(value = "Multiplicador")
+	private int multiplicador;
+
 	/** Detalle pago (info debug a pasar a pasarela pago). */
 	@ApiModelProperty(value = "Detalle Pago")
 	private String detallePago;
@@ -379,5 +383,13 @@ public class RDatosSesionPago {
 	 */
 	public void setSujetoPasivoNif(final String sujetoPasivoNif) {
 		this.sujetoPasivoNif = sujetoPasivoNif;
+	}
+
+	public int getMultiplicador() {
+		return multiplicador;
+	}
+
+	public void setMultiplicador(int multiplicador) {
+		this.multiplicador = multiplicador;
 	}
 }

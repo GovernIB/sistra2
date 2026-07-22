@@ -175,6 +175,56 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 	}
 
 	/**
+	 * Abre el diálogo del listado de pagos
+	 */
+	public void abrirPaymentib() {
+	    final Map<String, String> params = new HashMap<>();
+	    String identificadorPago = null;
+
+	    // 1. Buscamos de forma segura la propiedad 'PAGIDE' en la lista/mapa de propiedades del evento
+	    if (this.dato != null && this.dato.getPropiedadesEvento() != null) {
+	        // Asumiendo que propiedadesEvento expone un método get(key) o similar
+	        identificadorPago = this.dato.getPropiedadesEvento().getPropiedad("PAGIDE");
+	    }
+
+	    // 2. Si no se encontrara en el mapa, usamos como fallback el Localizador de la cabecera
+	    if (identificadorPago == null && this.dato != null) {
+	        identificadorPago = this.dato.getLocalizador();
+	    }
+
+	    // 3. Si tenemos el identificador, levantamos el diálogo de pagos
+	    if (identificadorPago != null && !identificadorPago.trim().isEmpty()) {
+	        params.put("IDENTIFICADOR", identificadorPago.trim());
+	        UtilJSF.openDialog(DialogListadoPagos.class, TypeModoAcceso.CONSULTA, params, true, 1300, 550);
+	    } else {
+	        UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "No se pudo extraer el identificador de pago (PAGIDE) para este trámite.");
+	    }
+	}
+
+	/**
+	 * Captura la respuesta devuelta por el iframe de pagos al cerrarse.
+	 */
+	public void returnDialogoPago(final SelectEvent event) {
+	    final DialogResult respuesta = (DialogResult) event.getObject();
+	    if (respuesta != null && !respuesta.isCanceled() && respuesta.getResult() != null) {
+	        // Si el JavaScript del iframe cazó un error de excepción, lo pinta en el growlDialog actual
+	        UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, (String) respuesta.getResult());
+	    }
+	}
+
+	/**
+	 * Determina si el evento actual corresponde a pago verificado
+	 */
+	public boolean isPagoVerificado() {
+	    if (this.dato == null) {
+	        return false;
+	    }
+
+	    TypeEvento tipo = this.dato.getTipoEvento();
+	    return TypeEvento.PAGO_ELECTRONICO_VERIFICADO.equals(tipo);
+	}
+
+	/**
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr(AjaxBehaviorEvent event) {

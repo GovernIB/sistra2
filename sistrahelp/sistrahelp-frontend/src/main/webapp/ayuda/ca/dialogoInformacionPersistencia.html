@@ -37,6 +37,11 @@ A la finestra <i>'Detall de persistència</i>' es pot consultar la Informació d
 
 	<li><span class="nombreCampo">Purga:</span> Informació referent a la purga de dades
 		<ul>
+			<li>Els tràmits es purguen en 2 fases:</li>
+			<ul>
+				<li>A la primera fase esborren els documents associats i només es deixa la informació dels esdeveniments, els elements de tramitació es marquen per purgar.</li>
+				<li>En la segona fase s'eliminen definitivament.</li>
+			</ul>
 			<li><span class="nombreCampo">Purgar:</span> Indica si el tràmit ha estat marcat per a purgar.</li>
 			<li><span class="nombreCampo">Purgat:</span> Indica si el tràmit ha estat purgat o no.</li>
 			<li><span class="nombreCampo">D. purgat:</span> Indica la data en què es va realitzar la purga (només si escau).</li>

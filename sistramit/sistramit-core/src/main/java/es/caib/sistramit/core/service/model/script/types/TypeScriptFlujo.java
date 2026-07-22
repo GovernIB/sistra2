@@ -49,6 +49,10 @@ public enum TypeScriptFlujo implements TypeScript {
 	 */
 	SCRIPT_LISTA_DINAMICA_ANEXOS,
 	/**
+	 * Script para indicar lista dinámica de pagos.
+	 */
+	SCRIPT_LISTA_DINAMICA_PAGOS,
+	/**
 	 * Script para indicar los datos de un pago.
 	 */
 	SCRIPT_DATOS_PAGO,

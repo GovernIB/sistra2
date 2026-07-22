@@ -1633,6 +1633,10 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	private List<ScriptInfo> listScriptsInfo(final TramitePasoTasa paso) {
 		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
+		if (paso.getScriptPagosDinamicos() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptPagosDinamicos().getCodigo(), TypePaso.PAGAR,
+					TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_PAGOS));
+		}
 		if (paso.getTasas() != null) {
 			for (final Tasa tasa : paso.getTasas()) {
 				if (tasa.getScriptObligatoriedad() != null) {
