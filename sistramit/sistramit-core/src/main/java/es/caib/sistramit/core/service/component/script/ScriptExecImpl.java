@@ -417,6 +417,7 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new ResAnexosDinamicos());
 			break;
 		case SCRIPT_LISTA_DINAMICA_PAGOS:
+			plugins.add(new PlgPago(pagoComponent, pDefinicionTramite.getDefinicionVersion().getIdEntidad()));
 			plugins.add(new ResPagosDinamicos());
 			break;
 		case SCRIPT_DATOS_PAGO:
