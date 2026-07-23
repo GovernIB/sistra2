@@ -64,10 +64,10 @@ if ( !PLUGIN_UTILS.esCadenaVacia( apellido1 ) ) <br>
 DATOS_PAGOSDINAMICOS.setContribuyente( nif, nombreCompleto ); <br>
 DATOS_PAGOSDINAMICOS.setPasarela( 'ATIB' ); <br>
 DATOS_PAGOSDINAMICOS.setOrganismo( 'ORG1' ); <br>
-DATOS_PAGOSDINAMICOS.setMetodosPago('TJ'); <br>
+DATOS_PAGOSDINAMICOS.setMetodosPago('TJ;BZ'); <br>
 
 var tasa = 'TASA1'; <br>
-var importe = 1; <br>
+var importe = PLUGIN_PAGO.consultarTasa( 'ATIB', tasa ); <br>
 if (PLUGIN_UTILS.esCadenaVacia(unidades)) { <br>
     DATOS_PAGOSDINAMICOS.setDetallePago( modelo, concepto, tasa, importe ); <br>
 } else { <br>
