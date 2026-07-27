@@ -705,7 +705,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO_NAVEGACION, navegacionEventos);
 
 		// Muestra dialogo
-		UtilJSF.openDialog(DialogAuditoriaTramites.class, TypeModoAcceso.CONSULTA, null, true, 950, 750);
+		
+		UtilJSF.openDialog(DialogAuditoriaTramites.class, TypeModoAcceso.CONSULTA, null, true, 950, 820);
 	}
 
 	/**

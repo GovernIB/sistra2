@@ -178,7 +178,7 @@
         	</pe:clipboard>
 
 		    <p:inputText id="auxCopiar" value="#{dialogAuditoriaTramites.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
-  			<p:outputPanel>
+  			<p:outputPanel style="padding-bottom: 50px;">
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
@@ -234,7 +234,7 @@
 				</p:fieldset>
 				<p:spacer height="5px"/>
 				<p:fieldset legend="#{msg['dialogAuditoriaTramites.detalle']}" styleClass="margin-left-10 margin-right-10 margin-bottom-10 noPadding"  rendered="#{dialogAuditoriaTramites.mostrarDetalle}">
-			 		<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w18 grid-right,padding-right-18 w75, w5" columns="3" styleClass="w100 h100">
+			 		<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w18 grid-right,padding-right-18 w75, w5" columns="3" styleClass="w100">
 				 	 	<p:outputLabel for="codigoError" value="#{msg['dialogAuditoriaTramites.codigoError']}:" rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" />
 				 		<h:panelGroup rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" >
 							<p:inputText id="codigoError" value="#{dialogAuditoriaTramites.dato.codigoError}" readonly="true" size="70"/>
@@ -261,8 +261,6 @@
 						<p:column>
 							<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogAuditoriaTramites.dato.propiedadesEvento.asArrayList}"
 										  emptyMessage="#{msg['error.emptyRows']}"
-										  styleClass="h100"
-										  scrollable="true"
 				                          paginator="false"
 				                          selection="#{dialogAuditoriaTramites.valorSeleccionado}"
 								          selectionMode="single" rowKey="#{td.key}"
@@ -292,7 +290,7 @@
 				</p:fieldset>
 
 			</p:outputPanel>
-		  	 <p:outputPanel styleClass="botonera">
+		  	<p:outputPanel styleClass="botonera" style="position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 5px 10px;">
 		     	<p:toolbar>
 					<f:facet name="left" >
 						<c:if test="#{dialogAuditoriaTramites.mostrarNavegacion}">

@@ -86,6 +86,16 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 					throw new ErrorParametroObligatorioException("El paràmetre <Nombre representante> és obligatori");
 				}
 			}
+			// - Tramite
+			if (pInfoTicketAcceso.getInfoAccesoFH().getTramiteFH() == null) {
+				throw new ErrorParametroObligatorioException("El paràmetre <Tramite FH> és obligatori");
+			}
+			if (pInfoTicketAcceso.getInfoAccesoFH().getTramiteFH().getTramite() == null) {
+				throw new ErrorParametroObligatorioException("El paràmetre <Tramite FH> ha de contindre el codi del tràmit");
+			}
+			if (pInfoTicketAcceso.getInfoAccesoFH().getTramiteFH().getIdioma() == null) {
+				throw new ErrorParametroObligatorioException("El paràmetre <Tramite FH> ha de contindre l'idioma del tràmit");
+			}
 			// - Validamos que esté habilitado en la entidad el acceso por FH
 			// 		* Obtenemos definicion trámite
 			final DefinicionTramiteSTG defTramite = configuracionComponent.recuperarDefinicionTramite(
