@@ -70,6 +70,8 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 	private String errorCopiar;
 
+    private Boolean permiteOmitir = false;
+
 	/**
 	 * Inicialización.
 	 */
@@ -127,6 +129,22 @@ public class DialogErroresValidacion extends DialogControllerBase {
 			}
 		}
 	}
+
+	public Boolean getPermiteOmitir() {
+        return permiteOmitir;
+    }
+
+    public void setPermiteOmitir(Boolean permiteOmitir) {
+        this.permiteOmitir = permiteOmitir;
+    }
+
+    public void omitirYContinuar() {
+        final DialogResult result = new DialogResult();
+        result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+        result.setCanceled(false); 
+        result.setResult("OMITIR_ERRORES_DESBLOQUEO");
+        UtilJSF.closeDialog(result);
+    }
 
 	/**
 	 * cerrar.

@@ -46,6 +46,7 @@
 		<f:viewParam name="IDIOMAS" value="#{dialogErroresValidacion.idiomas}"/>
 		<f:viewParam name="TRAMITE" value="#{dialogErroresValidacion.idTramite}"/>
 		<f:viewParam name="TRAMITEVERSION" value="#{dialogErroresValidacion.idTramiteVersion}"/>
+		<f:viewParam name="PERMITE_OMITIR" value="#{dialogErroresValidacion.permiteOmitir}"/>
 		<f:viewAction action="#{dialogErroresValidacion.init}" />
 	</f:metadata>
 	<h:form id="dialogErroresValidacion" styleClass="margin-top-10" style="width:100%;">
@@ -200,6 +201,12 @@
 
 						<p:commandButton id="btnValidar" value="#{msg['botones.validar']}" actionListener="#{dialogErroresValidacion.validar}" rendered="#{dialogErroresValidacion.isEdicion()}" process="@this" styleClass="boton" update="growl dataTableErrores"/>
 
+						<p:commandButton value="#{msg['botones.desbloquear']}" 
+							actionListener="#{dialogErroresValidacion.omitirYContinuar}" 
+							rendered="#{dialogErroresValidacion.permiteOmitir}" 
+							process="@this" 
+							styleClass="boton-azul" 
+							icon="fa fa-arrow-right"/>
 
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogErroresValidacion.cerrar}" process="@this" styleClass="boton-azul"/>
 					</f:facet>

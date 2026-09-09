@@ -20,6 +20,11 @@ public interface FuenteDatosComponent {
 	ValoresDominio realizarConsultaFuenteDatos(final TypeAmbito ambito, final String idEntidad, final String idArea, final String idDominio, final List<ValorParametroDominio> parametros);
 
 	/**
+     * Cuenta el total absoluto de registros de una fuente de datos.
+     */
+    long contarRegistrosTotalesAbsolutos(TypeAmbito ambito, String idEntidad, String idArea, String idDominio);
+
+	/**
 	 * Realiza consulta BD
 	 *
 	 * @param datasource

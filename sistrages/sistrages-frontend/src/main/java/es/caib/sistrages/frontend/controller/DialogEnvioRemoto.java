@@ -32,6 +32,7 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilVariablesArea;
 
 @ManagedBean
 @ViewScoped
@@ -192,7 +193,7 @@ public class DialogEnvioRemoto extends DialogControllerBase {
 			msg.setMensaje(UtilJSF.getLiteral("variable.area.no.existe"));
 			result.setMensaje(msg);
 		} else if (data.getAmbito().equals(TypeAmbito.AREA)
-				&& data.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")) {
+				&& !UtilVariablesArea.obtenerIdentificadores(data.getUrl()).isEmpty()) {
 			DialogResultMessage msg = new DialogResultMessage();
 			msg.setNivel(TypeNivelGravedad.INFO);
 			msg.setMensaje(UtilJSF.getLiteral("variable.area.existe"));
@@ -202,14 +203,14 @@ public class DialogEnvioRemoto extends DialogControllerBase {
 	}
 
 	public boolean noExisteVarArea() {
-		if (data.getAmbito().equals(TypeAmbito.AREA) && data.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")
-				&& vaService.loadVariableAreaByIdentificador(this.data.getUrl()
-						.substring(this.data.getUrl().indexOf('{'), this.data.getUrl().indexOf('}') + 1)
-						.replace("{@@", "").replace("@@}", ""), Long.valueOf(area)) == null) {
-			return true;
-		} else {
-			return false;
+		if (data.getAmbito().equals(TypeAmbito.AREA)) {
+			for (final String identificador : UtilVariablesArea.obtenerIdentificadores(data.getUrl())) {
+				if (vaService.loadVariableAreaByIdentificador(identificador, Long.valueOf(area)) == null) {
+					return true;
+				}
+			}
 		}
+		return false;
 	}
 
 	/**

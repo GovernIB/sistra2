@@ -32,15 +32,20 @@ import org.primefaces.model.SortOrder;
 
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeErrorValidacion;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
+import es.caib.sistrages.core.api.service.DominioResolucionService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -62,6 +67,8 @@ public class ViewTramites extends ViewControllerBase {
 
 	@Inject
 	FormularioInternoService formIntService;
+	@Inject
+	private DominioResolucionService dominioResolucionService;
 	/** Service. */
 	@Inject
 	private TramiteService tramiteService;
@@ -76,6 +83,9 @@ public class ViewTramites extends ViewControllerBase {
 	/** System service. **/
 	@Inject
 	private SystemService systemService;
+
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
@@ -636,16 +646,19 @@ public class ViewTramites extends ViewControllerBase {
 	 * Abre un dialogo para previsualizar tramite.
 	 */
 	public void previsualizar() {
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
+        if (!procesarValidaciones(false)) {
+            return;
+        }
 
-		if (this.isPermiteDesbloquear() && this.getTienePermisosVersion()) {
-			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 460);
-		} else {
-			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 830,
-					460);
-		}
-	}
+        final Map<String, String> params = new HashMap<>();
+        params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
+
+        if (this.isPermiteDesbloquear() && this.getTienePermisosVersion()) {
+            UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 460);
+        } else {
+            UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 830, 460);
+        }
+    }
 
 	/**
 	 * Abre un dialogo para previsualizar tramite.
@@ -1831,21 +1844,128 @@ public class ViewTramites extends ViewControllerBase {
 	 * Bloquear version.
 	 */
 	public void desbloquear() {
+        if (!isPermiteDesbloquear() || !getTienePermisosTramite()) {
+            return;
+        }
 
-		if (!isPermiteDesbloquear() || !getTienePermisosTramite()) {
-			return;
+        if (!procesarValidaciones(true)) {
+            return; 
+        }
+
+        abrirDialogoDesbloquear();
+    }
+
+	private boolean procesarValidaciones(boolean permiteOmitir) {
+		List<ErrorValidacion> erroresTotales = new ArrayList<>();
+		erroresTotales.addAll(getErroresDominiosMaxRegistros());
+		erroresTotales.addAll(getErroresSinFormulario());
+		
+		if (erroresTotales.isEmpty()) {
+			return true; 
 		}
 
-		boolean usuarioVersion = Objects.equals(versionSeleccionada.getDatosUsuarioBloqueo(), UtilJSF.getSessionBean().getUserName());
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
+				erroresTotales.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 
-		if ( !usuarioVersion || validoTramiteVersion(true)) {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.IDIOMAS.toString(), tramiteService.getIdiomasDisponibles(String.valueOf(this.versionSeleccionada.getCodigo())));
+		params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(this.versionSeleccionada.getIdTramite()));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
 
-			final Map<String, String> params = new HashMap<>();
-			params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
-
-			UtilJSF.openDialog(DialogTramiteDesbloquear.class, TypeModoAcceso.EDICION, params, true, 500, 320);
-
+		if (permiteOmitir) {
+			params.put("PERMITE_OMITIR", "true");
 		}
+
+		UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, params, true, 1050, 530);
+		
+		return false;
+	}
+
+	/**
+	 * Validación manual de fuentes de datos
+	 */
+	private List<ErrorValidacion> getErroresDominiosMaxRegistros() {
+		final List<ErrorValidacion> errores = new ArrayList<>();
+		if (this.versionSeleccionada == null) {
+			return errores;
+		}
+
+		// Intentamos leer la configuración global, y si no por defecto usamos 200
+		int maxRegistrosPermitidos = 200; 
+		try {
+			String valorConfig = configuracionGlobalService.getConfiguracionGlobal("maximo.fd.exportacion").getValor();
+			if (valorConfig != null && !valorConfig.trim().isEmpty()) {
+				maxRegistrosPermitidos = Integer.parseInt(valorConfig.trim());
+			}
+		} catch (Exception e) {
+			UtilJSF.loggearErrorFront("Error al leer maximo.fd.exportacion", e);
+		}
+
+		final List<Dominio> dominios = tramiteService.getDominioSimpleByTramiteId(this.versionSeleccionada.getCodigo());
+		if (dominios == null) {
+			return errores;
+		}
+
+		for (final Dominio dominio : dominios) {
+			if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
+				try {
+					long totalFilas = dominioResolucionService.contarRegistrosTotalesAbsolutos(dominio.getIdentificadorCompuesto());
+					
+					if (totalFilas > maxRegistrosPermitidos) {
+						errores.add(crearErrorMaxRegistros(dominio, maxRegistrosPermitidos));
+					}
+				} catch (final Exception e) {
+					UtilJSF.loggearErrorFront("Error al contar filas del dominio " + dominio.getIdentificador(), e);
+				}
+			}
+		}
+		
+		return errores;
+	}
+
+	/**
+	 * Validación manual de formularios
+	 */
+	private List<ErrorValidacion> getErroresSinFormulario() {
+		final List<ErrorValidacion> errores = new ArrayList<>();
+
+		boolean tieneFormulario = false;
+		
+		List<TramitePaso> pasos = tramiteService.getTramitePasos(this.versionSeleccionada.getCodigo()); 
+		
+		if (pasos != null) {
+			for (TramitePaso paso : pasos) {
+				if (paso instanceof TramitePasoRellenar) {
+					TramitePasoRellenar pasoRellenar = (TramitePasoRellenar) paso;
+					if (pasoRellenar.getFormulariosTramite() != null && !pasoRellenar.getFormulariosTramite().isEmpty()) {
+						tieneFormulario = true;
+						break;
+					}
+				}
+			}
+		}
+
+		if (!tieneFormulario) {
+			final ErrorValidacion error = new ErrorValidacion();
+			error.setElemento("Formularios");
+			
+			error.setDescripcion("El trámite debe contener al menos un formulario asociado."); 
+			
+			error.setTipo(TypeErrorValidacion.TRAMITE); 
+			errores.add(error);
+		}
+		return errores;
+	}
+
+	private ErrorValidacion crearErrorMaxRegistros(final Dominio dominio, final int maxRegistrosPermitidos) {
+		final ErrorValidacion error = new ErrorValidacion();
+		error.setElemento(dominio.getIdentificadorCompuesto());
+		error.setDescripcion(UtilJSF.getLiteral("error.dominio.maxRegistros", 
+				new Object[] { dominio.getIdentificador(), maxRegistrosPermitidos }));
+		error.setTipo(TypeErrorValidacion.DOMINIOS_MAX_REGISTROS);
+		error.setItem(dominio);
+		return error;
 	}
 
 	/**
@@ -1880,16 +2000,37 @@ public class ViewTramites extends ViewControllerBase {
 	 * @param event
 	 */
 	public void returnDialogoDesbloquear(final SelectEvent event) {
-
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled()) {
-
-			recuperdatosVersion();
-			this.versionSeleccionada.setBloqueada(false);
-			// buscarTramites();
+			
+			if ("OMITIR_ERRORES_DESBLOQUEO".equals(respuesta.getResult())) {
+				
+				PrimeFaces.current().executeScript("setTimeout(function() { $('.btnAbrirDesbloqueo').click(); }, 300);");
+				
+			} 
+			else {
+				recuperdatosVersion();
+				this.versionSeleccionada.setBloqueada(false);
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Trámite desbloqueado correctamente");
+				
+				buscarTramites();
+				
+				PrimeFaces.current().ajax().update(":form");
+				
+				PrimeFaces.current().executeScript("setTimeout(function() { setHeight(); }, 300);");
+			}
 		}
+	}
+
+	/**
+	 * Abre el modal para escribir el motivo del desbloqueo
+	 */
+	public void abrirDialogoDesbloquear() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
+		UtilJSF.openDialog(DialogTramiteDesbloquear.class, TypeModoAcceso.EDICION, params, true, 500, 320);
 	}
 
 	private void recuperdatosVersion() {
@@ -2033,23 +2174,26 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Exportar version.
-	 */
-	public void exportarTramiteVersion(final String modo) {
+     * Exportar version.
+     */
+    public void exportarTramiteVersion(final String modo) {
 		if (!verificarFilaSeleccionadaVersion()) {
 			return;
 		}
 
-		/** No se pueden exportar las bloqueadas. **/
+		// Validaciones manuales
+		if (!procesarValidaciones(false)) {
+			return;
+		}
+
 		if (this.versionSeleccionada.getBloqueada()) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteExportar.error.tramiteBloqueado"));
 			return;
 		}
 
-		// validamos antes de exportar
-		if (!validoTramiteVersion(false)) {
-			return;
+		if (!validoTramiteVersion(false)) { 
+			return; 
 		}
 
 		final Map<String, String> params = new HashMap<>();

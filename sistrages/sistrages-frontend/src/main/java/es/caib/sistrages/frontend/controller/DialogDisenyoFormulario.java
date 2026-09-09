@@ -81,6 +81,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/** Id. seccion **/
 	private String idSeccion;
 	private String identificadorSeccion;
+	private Long idSeccionReutilizableSeleccionada;
 
 	/** id tramite. */
 	private String idTramiteVersion;
@@ -514,7 +515,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarComponente(final boolean check) {
 
-		if (!this.desactivarAplicarCambios && check && isModificadoSinGuardar(TypeAccionFormulario.SELECCIONAR_OTRO_COMPONENTE)) {
+		if ((!this.desactivarAplicarCambios || isPuedeAplicarLetraSeccionReutilizable())
+				&& check
+				&& isModificadoSinGuardar(TypeAccionFormulario.SELECCIONAR_OTRO_COMPONENTE)) {
 			return;
 		}
 
@@ -551,6 +554,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private void cambiarEdicionComponente(final String idComponente, boolean isTipoSeccion, Long seccionID,
 			Long seccionFormID) {
 		limpiaSeleccion();
+		idSeccionReutilizableSeleccionada = isTipoSeccion ? seccionID : null;
 
 		if (idComponente != null) {
 			ObjetoFormulario cf = null;
@@ -1075,6 +1079,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 **/
 	public void aplicarCambios() {
 		FacesContext.getCurrentInstance().isValidationFailed();
+		if (isPuedeAplicarLetraSeccionReutilizable()) {
+			aplicarLetraSeccionReutilizable();
+			return;
+		}
 		if (objetoFormularioEdit != null && !desactivarAplicarCambios) {
 
 			final PaginaFormulario pagina;
@@ -1125,15 +1133,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					throw new ErrorNoControladoException(e);
 				}
 				if (this.cambios) {
-					if (isTipoSeccion()) {
-						seccionService.actualizarFechaSeccion(Long.parseLong(idSeccion),
-								UtilJSF.getSessionBean().getUserName(),
-								UtilJSF.getLiteral("info.modificado.formulario"));
-					} else {
-						tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
-								UtilJSF.getSessionBean().getUserName(),
-								UtilJSF.getLiteral("info.modificado.formulario"));
-					}
+					actualizarFechaModificacionFormulario();
 				}
 				this.cambios = false;
 				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
@@ -1186,7 +1186,56 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (traduccionesEdit != null && ((ComponenteFormulario) objetoFormularioEdit).getTexto() == null) {
 			((ComponenteFormulario) objetoFormularioEdit).setTexto(traduccionesEdit);
 		}
+	}
 
+	public boolean isPuedeAplicarLetraSeccionReutilizable() {
+		return isNotConsulta() && idSeccionReutilizableSeleccionada != null
+				&& objetoFormularioEdit instanceof ComponenteFormularioSeccion
+				&& ((ComponenteFormulario) objetoFormularioEdit).isTipoSeccionReutilizable();
+	}
+
+	private void aplicarLetraSeccionReutilizable() {
+		final ComponenteFormularioCampoSeccionReutilizable componenteSR = obtenerSeccionReutilizableSeleccionada();
+		if (componenteSR == null) {
+			throw new FrontException("No se ha encontrado la sección reutilizable seleccionada");
+		}
+
+		final String letra = ((ComponenteFormularioSeccion) objetoFormularioEdit).getLetra();
+		componenteSR.setLetra(letra);
+		final ObjetoFormulario componenteActualizado = formIntService.updateComponenteFormulario(componenteSR);
+		if (!(componenteActualizado instanceof ComponenteFormularioCampoSeccionReutilizable)) {
+			throw new FrontException("No se ha podido actualizar la letra de la sección reutilizable");
+		}
+
+		componenteSR.setLetra(
+				((ComponenteFormularioCampoSeccionReutilizable) componenteActualizado).getLetra());
+		if (this.cambios) {
+			actualizarFechaModificacionFormulario();
+		}
+		this.cambios = false;
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
+		urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
+	}
+
+	private ComponenteFormularioCampoSeccionReutilizable obtenerSeccionReutilizableSeleccionada() {
+		if (formulario == null || formulario.getPaginas() == null || paginaActual < 1
+				|| paginaActual > formulario.getPaginas().size()) {
+			return null;
+		}
+		return formulario.getPaginas().get(paginaActual - 1)
+				.getCampoSeccionReutilizable(idSeccionReutilizableSeleccionada);
+	}
+
+	private void actualizarFechaModificacionFormulario() {
+		if (isTipoSeccion()) {
+			seccionService.actualizarFechaSeccion(Long.parseLong(idSeccion),
+					UtilJSF.getSessionBean().getUserName(),
+					UtilJSF.getLiteral("info.modificado.formulario"));
+		} else {
+			tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+					UtilJSF.getSessionBean().getUserName(),
+					UtilJSF.getLiteral("info.modificado.formulario"));
+		}
 	}
 
 	/**
@@ -1424,7 +1473,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 		}
 
-		if (!UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit) || this.cambios) {
+		final boolean modificado;
+		if (isPuedeAplicarLetraSeccionReutilizable()) {
+			final ComponenteFormularioCampoSeccionReutilizable componenteSR =
+					obtenerSeccionReutilizableSeleccionada();
+			modificado = componenteSR == null
+					|| !Objects.equals(componenteSR.getLetra(),
+							((ComponenteFormularioSeccion) objetoFormularioEdit).getLetra())
+					|| this.cambios;
+		} else {
+			modificado = !UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit) || this.cambios;
+		}
+
+		if (modificado) {
 			// Guardamos componente destino
 			codigoObjFormularioDestino = idComponente;
 			// Invocamos a boton para que dispare ventana de confirmacion
@@ -2300,6 +2361,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private void limpiaSeleccion() {
 		panelPropiedadesUrl = URL_FORMULARIO_VACIO;
 		objetoFormularioEdit = null;
+		idSeccionReutilizableSeleccionada = null;
 	}
 
 	private void seleccionaComponente(final ObjetoFormulario pComponente) {

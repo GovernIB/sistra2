@@ -26,6 +26,12 @@ public class FuenteDatosComponentImpl implements FuenteDatosComponent {
 	}
 
 	@Override
+    public long contarRegistrosTotalesAbsolutos(final TypeAmbito ambito, final String idEntidad, 
+            final String idArea, final String idDominio) {
+        return fuenteDatosDao.contarRegistrosTotalesAbsolutos(ambito, idEntidad, idArea, idDominio);
+    }
+
+	@Override
 	public ValoresDominio realizarConsultaBD(final String datasource, final String sql,
 			final List<ValorParametroDominio> parametros) {
 		return fuenteDatosDao.realizarConsultaBD(datasource, sql, parametros);

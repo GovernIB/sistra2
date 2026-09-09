@@ -92,7 +92,16 @@ public class DialogPrevisualizarFH extends DialogControllerBase {
 		}
 
 		// Llamamos a API externa STT
-		setUrl(sistramitApiExternaService.obtenerTicketAccesoFH(funcionarioHabilitado, interesado, (representante.getNif() != null && !representante.getNif().isEmpty()) ? representante : null, tramiteFH));
+		final String ticketAcceso = sistramitApiExternaService.obtenerTicketAccesoFH(funcionarioHabilitado, interesado,
+				(representante.getNif() != null && !representante.getNif().isEmpty()) ? representante : null,
+				tramiteFH);
+		if (ticketAcceso == null || ticketAcceso.trim().isEmpty()) {
+			setUrl(null);
+			addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogPrevisualizarFH.error.sistramit"));
+			return;
+		}
+		setUrl(ticketAcceso);
 	}
 
 	/**

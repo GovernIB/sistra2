@@ -184,7 +184,7 @@ public class VariableAreaDaoImpl implements VariableAreaDao {
 	@Override
 	public List<Dominio> dominioByVariable(VariableArea va) {
 		final StringBuilder sql = new StringBuilder(
-				"select d from JDominio d where d.area.id = :idArea AND d.tipo = 'R' AND d.servicioRemotoUrl = :url");
+				"select d from JDominio d where d.area.id = :idArea AND d.tipo = 'R' AND LOCATE(:url, d.servicioRemotoUrl) > 0");
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("idArea", va.getArea().getCodigo());
 		query.setParameter("url", "{@@" + va.getIdentificador() + "@@}");
@@ -201,7 +201,7 @@ public class VariableAreaDaoImpl implements VariableAreaDao {
 	@Override
 	public List<GestorExternoFormularios> gfeByVariable(VariableArea va) {
 		final StringBuilder sql = new StringBuilder(
-				"select d from JGestorExternoFormularios d where d.area.id = :idArea AND d.url = :url");
+				"select d from JGestorExternoFormularios d where d.area.id = :idArea AND LOCATE(:url, d.url) > 0");
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("idArea", va.getArea().getCodigo());
 		query.setParameter("url", "{@@" + va.getIdentificador() + "@@}");
@@ -218,7 +218,7 @@ public class VariableAreaDaoImpl implements VariableAreaDao {
 	@Override
 	public List<EnvioRemoto> envioRemotoByVariable(VariableArea va) {
 		final StringBuilder sql = new StringBuilder(
-				"select d from JEnvioRemoto d where d.area.id = :idArea AND d.url = :url");
+				"select d from JEnvioRemoto d where d.area.id = :idArea AND LOCATE(:url, d.url) > 0");
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("idArea", va.getArea().getCodigo());
 		query.setParameter("url", "{@@" + va.getIdentificador() + "@@}");

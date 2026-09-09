@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistramit</artifactId>
-		<version>1.8.5</version>
+		<version>1.8.6</version>
 	</parent>
 	<artifactId>sistramit-lib</artifactId>
 	<name>sistramit-lib</name>
@@ -23,38 +23,38 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-utils</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-ws-utils</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-pdf</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-xml</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-core-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<!-- MODEL API REST STG -->
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-rest-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 			<exclusions>
 				<exclusion>
 		          <groupId>io.springfox</groupId>
@@ -67,37 +67,37 @@
 		<dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-autenticacion-api</artifactId>
-            <version>1.8.5</version>
+            <version>1.8.6</version>
         </dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-catalogoprocedimientos-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-dominio-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-email-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-firmacliente-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-pago-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
@@ -109,19 +109,19 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-registro-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-digitalizacion-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-funcionariohabilitado-api</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<!-- plugins MOCK -->
@@ -129,61 +129,61 @@
         <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-autenticacion-mock</artifactId>
-            <version>1.8.5</version>
+            <version>1.8.6</version>
         </dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-catalogoprocedimientos-mock</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-email-mock</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-firmacliente-mock</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-validacionfirma-mock</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-registro-mock</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-formulario-mock</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-dominio-mock</artifactId>
-            <version>1.8.5</version>
+            <version>1.8.6</version>
         </dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-digitalizacion-mock</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-funcionariohabilitado-mock</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 
@@ -191,61 +191,61 @@
 		<dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-dominio-rest</artifactId>
-            <version>1.8.5</version>
+            <version>1.8.6</version>
         </dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-pago-paymentib</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-autenticacion-loginib</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-catalogoprocedimientos-rolsac</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-catalogoprocedimientos-rolsac2</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-email-mailservice</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-firmacliente-firmaweb</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-firmacliente-pfibinterna</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-digitalizacion-digitalib</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-funcionariohabilitado-rfhab</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
@@ -309,19 +309,19 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-registro-regweb3</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-registro-envio</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-formulario-rest</artifactId>
-			<version>1.8.5</version>
+			<version>1.8.6</version>
 		</dependency>
 
 

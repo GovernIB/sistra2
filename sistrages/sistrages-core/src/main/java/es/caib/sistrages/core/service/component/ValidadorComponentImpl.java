@@ -16,6 +16,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.plugins.documentconverter.openoffice.OpenOfficeDocumentConverterPlugin;
 import org.fundaciobit.pluginsib.documentconverter.IDocumentConverterPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
@@ -57,6 +60,7 @@ import es.caib.sistrages.core.api.model.VariableArea;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
+import es.caib.sistrages.core.api.service.DominioResolucionService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
 import es.caib.sistrages.core.service.component.literales.Literales;
@@ -73,6 +77,10 @@ import es.caib.sistrages.core.service.repository.dao.VariableAreaDao;
 
 @Component("validadorComponent")
 public class ValidadorComponentImpl implements ValidadorComponent {
+
+	private static final Logger log = LoggerFactory.getLogger(ValidadorComponentImpl.class);
+
+	private static final Pattern VARIABLE_AREA_PATTERN = Pattern.compile("\\{@@([A-Za-z0-9_-]+)@@\\}");
 
 	private static final Pattern PLUGINDOMI_INVOCAR_PATTERN = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'("
 			+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + "*?)\\'");
@@ -109,6 +117,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 	@Autowired
 	VariableAreaDao vaDao;
+
+	@Autowired
+	DominioResolucionService dominioResolucionService;
 
 	@Autowired
 	Literales literales;
@@ -237,6 +248,38 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 				listaErrores.add(errorVal);
 			}
 
+			// Límite máximo de registros de fuente de datos: propiedad global (por defecto 100)
+			int maxRegistrosPermitidos = 100;
+			try {
+				final ConfiguracionGlobal cfgMax = cfService.getConfiguracionGlobal("maximo.fd.exportacion");
+				if (cfgMax != null && StringUtils.isNotBlank(cfgMax.getValor())) {
+					maxRegistrosPermitidos = Integer.parseInt(cfgMax.getValor().trim());
+				}
+			} catch (final Exception e) {
+				log.error("Error al leer la configuración global maximo.fd.exportacion", e);
+			}
+
+			for (Dominio dominio : pTramiteVersion.getListaAuxDominios()) {
+				if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
+					try {
+						// Cuenta el total de registros ignorando los parámetros obligatorios del dominio
+						final long numeroFilas = dominioResolucionService
+								.contarRegistrosTotalesAbsolutos(dominio.getIdentificadorCompuesto());
+						if (numeroFilas > maxRegistrosPermitidos) {
+							final ErrorValidacion errorVal = new ErrorValidacion();
+							errorVal.setDescripcion(literales.getLiteral("validador", "dominio.maxRegistros", pIdioma));
+							errorVal.setElemento(dominio.getIdentificadorCompuesto());
+							errorVal.setTipo(TypeErrorValidacion.DOMINIOS_MAX_REGISTROS);
+							errorVal.setItem(dominio);
+							listaErrores.add(errorVal);
+						}
+					} catch (final Exception e) {
+						log.error("Error validando la fuente de datos del dominio "
+								+ dominio.getIdentificadorCompuesto(), e);
+					}
+				}
+			}
+
 			for (Dominio dom : pTramiteVersion.getListaAuxDominios()) {
 				comprobarVariablesArea(dom, listaErrores, pIdioma);
 			}
@@ -250,62 +293,78 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 		if (obj instanceof Dominio) {
 			Dominio dom = (Dominio) obj;
 			if (dom.getAmbito().equals(TypeAmbito.AREA) && TypeDominio.CONSULTA_REMOTA.equals(dom.getTipo())
-					&& dom.getUrl().matches("\\{@@[A-Z0-9]*@@\\}")) {
-				VariableArea va = vaDao.getVariableAreaByIdentificador(
-						dom.getUrl().replaceAll("\\{@@", "").replaceAll("@@\\}", ""), dom.getArea().getCodigo());
-				if (va == null) {
-					final ErrorValidacion errorVal = new ErrorValidacion();
-					errorVal.setDescripcion(literales.getLiteral("validador", "variableArea.noExiste", pIdioma) + ": "
-							+ dom.getUrl().replaceAll("\\{@@", "").replaceAll("@@\\}", ""));
-					errorVal.setElemento(literales.getLiteral("validador", "dominio", pIdioma) + ": "
-							+ dom.getIdentificadorCompuesto());
-					errorVal.setTipo(TypeErrorValidacion.VARIABLE_AREA_NO_EXISTE);
-					errorVal.setItem(dom);
-					listaErrores.add(errorVal);
+					&& !obtenerIdentificadoresVariablesArea(dom.getUrl()).isEmpty()) {
+				for (final String identificador : obtenerIdentificadoresVariablesArea(dom.getUrl())) {
+					VariableArea va = vaDao.getVariableAreaByIdentificador(identificador, dom.getArea().getCodigo());
+					if (va == null) {
+						final ErrorValidacion errorVal = new ErrorValidacion();
+						errorVal.setDescripcion(
+								literales.getLiteral("validador", "variableArea.noExiste", pIdioma) + ": "
+										+ identificador);
+						errorVal.setElemento(literales.getLiteral("validador", "dominio", pIdioma) + ": "
+								+ dom.getIdentificadorCompuesto());
+						errorVal.setTipo(TypeErrorValidacion.VARIABLE_AREA_NO_EXISTE);
+						errorVal.setItem(dom);
+						listaErrores.add(errorVal);
+					}
 				}
 			}
 		} else if (obj instanceof FormularioTramite) {
 			FormularioTramite gfe = (FormularioTramite) obj;
 			if (TypeFormularioGestor.EXTERNO.equals(gfe.getTipoFormulario()) && gfe.getFormularioGestorExterno() != null
-					&& gfe.getFormularioGestorExterno().getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")) {
-				VariableArea va = vaDao
-						.getVariableAreaByIdentificador(
-								gfe.getFormularioGestorExterno().getUrl().replaceAll("\\{@@", "").replaceAll("@@\\}",
-										""),
-								areaDao.getAreaByIdentificador(
+					&& !obtenerIdentificadoresVariablesArea(gfe.getFormularioGestorExterno().getUrl()).isEmpty()) {
+				final Long idArea = areaDao.getAreaByIdentificador(
 										gfe.getFormularioGestorExterno().getIdentificadorCompuesto().substring(0,
 												gfe.getFormularioGestorExterno().getIdentificadorCompuesto()
 														.indexOf('.')),
-										gfe.getFormularioGestorExterno().getAreaIdentificador()).getCodigo());
-				if (va == null) {
-					final ErrorValidacion errorVal = new ErrorValidacion();
-					errorVal.setDescripcion(literales.getLiteral("validador", "variableArea.noExiste", pIdioma) + ": "
-							+ gfe.getFormularioGestorExterno().getUrl().replaceAll("\\{@@", "").replaceAll("@@\\}",
-									""));
-					errorVal.setElemento(literales.getLiteral("validador", "fExterno", pIdioma) + ": "
-							+ gfe.getFormularioGestorExterno().getIdentificadorCompuesto());
-					errorVal.setTipo(TypeErrorValidacion.VARIABLE_AREA_NO_EXISTE);
-					errorVal.setItem(gfe.getFormularioGestorExterno());
-					listaErrores.add(errorVal);
+										gfe.getFormularioGestorExterno().getAreaIdentificador()).getCodigo();
+				for (final String identificador : obtenerIdentificadoresVariablesArea(
+						gfe.getFormularioGestorExterno().getUrl())) {
+					VariableArea va = vaDao.getVariableAreaByIdentificador(identificador, idArea);
+					if (va == null) {
+						final ErrorValidacion errorVal = new ErrorValidacion();
+						errorVal.setDescripcion(
+								literales.getLiteral("validador", "variableArea.noExiste", pIdioma) + ": "
+										+ identificador);
+						errorVal.setElemento(literales.getLiteral("validador", "fExterno", pIdioma) + ": "
+								+ gfe.getFormularioGestorExterno().getIdentificadorCompuesto());
+						errorVal.setTipo(TypeErrorValidacion.VARIABLE_AREA_NO_EXISTE);
+						errorVal.setItem(gfe.getFormularioGestorExterno());
+						listaErrores.add(errorVal);
+					}
 				}
 			}
 		} else if (obj instanceof EnvioRemoto) {
 			EnvioRemoto er = (EnvioRemoto) obj;
-			if (er.getAmbito().equals(TypeAmbito.AREA) && er.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")) {
-				VariableArea va = vaDao.getVariableAreaByIdentificador(
-						er.getUrl().replaceAll("\\{@@", "").replaceAll("@@\\}", ""), er.getArea().getCodigo());
-				if (va == null) {
-					final ErrorValidacion errorVal = new ErrorValidacion();
-					errorVal.setDescripcion(literales.getLiteral("validador", "variableArea.noExiste", pIdioma) + ": "
-							+ er.getUrl().replaceAll("\\{@@", "").replaceAll("@@\\}", ""));
-					errorVal.setElemento(literales.getLiteral("validador", "envioRemoto", pIdioma) + ": "
-							+ er.getIdentificadorCompuesto());
-					errorVal.setTipo(TypeErrorValidacion.VARIABLE_AREA_NO_EXISTE);
-					errorVal.setItem(er);
-					listaErrores.add(errorVal);
+			if (er.getAmbito().equals(TypeAmbito.AREA)
+					&& !obtenerIdentificadoresVariablesArea(er.getUrl()).isEmpty()) {
+				for (final String identificador : obtenerIdentificadoresVariablesArea(er.getUrl())) {
+					VariableArea va = vaDao.getVariableAreaByIdentificador(identificador, er.getArea().getCodigo());
+					if (va == null) {
+						final ErrorValidacion errorVal = new ErrorValidacion();
+						errorVal.setDescripcion(
+								literales.getLiteral("validador", "variableArea.noExiste", pIdioma) + ": "
+										+ identificador);
+						errorVal.setElemento(literales.getLiteral("validador", "envioRemoto", pIdioma) + ": "
+								+ er.getIdentificadorCompuesto());
+						errorVal.setTipo(TypeErrorValidacion.VARIABLE_AREA_NO_EXISTE);
+						errorVal.setItem(er);
+						listaErrores.add(errorVal);
+					}
 				}
 			}
 		}
+	}
+
+	private List<String> obtenerIdentificadoresVariablesArea(final String url) {
+		final List<String> identificadores = new ArrayList<>();
+		if (url != null) {
+			final Matcher matcher = VARIABLE_AREA_PATTERN.matcher(url);
+			while (matcher.find()) {
+				identificadores.add(matcher.group(1));
+			}
+		}
+		return identificadores;
 	}
 
 	/**

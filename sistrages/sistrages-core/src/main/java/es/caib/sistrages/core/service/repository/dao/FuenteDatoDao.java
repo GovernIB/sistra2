@@ -54,6 +54,8 @@ public interface FuenteDatoDao {
 
 	ValoresDominio realizarConsultaFuenteDatos(final TypeAmbito ambito, final String idEntidad, final String idArea, final String idDominio, final List<ValorParametroDominio> parametros);
 
+	long contarRegistrosTotalesAbsolutos(final TypeAmbito ambito, final String idEntidad, final String idArea, final String idDominio);
+
 	JFuenteDatos importarFD(FilaImportarDominio filaDominio, TypeAmbito ambito, Long idDominio, final Long idArea)
 			throws Exception;
 

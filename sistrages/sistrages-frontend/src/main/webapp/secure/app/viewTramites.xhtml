@@ -63,6 +63,12 @@
 
     <h:form id="form" style="height: 94% !important">
 
+		<p:commandButton styleClass="btnAbrirDesbloqueo" 
+                 actionListener="#{viewTramites.abrirDialogoDesbloquear}" 
+                 style="display:none;" process="@this">
+			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoDesbloquear}" />
+		</p:commandButton>
+
       <!-- Growl mensajes -->
       <p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 

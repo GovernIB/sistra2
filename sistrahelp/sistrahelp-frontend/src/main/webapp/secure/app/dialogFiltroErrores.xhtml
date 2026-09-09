@@ -11,12 +11,99 @@
 
 <h:head>
 	<title>
-    <h:outputText value="#{msg[dialogFiltroErrores.tituloPantalla]}" />
+    	<h:outputText value="#{msg[dialogFiltroErrores.tituloPantalla]}" />
 	</title>
 	<style type="text/css">
+		/* Ocupa 100% de alto de la ventana del diálogo */
+		html, body {
+			height: 100vh;
+			margin: 0;
+			padding: 0;
+			overflow: hidden; /* Evita doble scroll */
+		}
+
 		.checkbox-disabled {
 			pointer-events: none;
 			opacity: 0.8;
+		}
+
+		/* Contenedor principal */
+		.flex-wrapper {
+			display: flex;
+			flex-direction: column;
+			height: 100vh; 
+			width: 100%;
+			margin: 0 !important;
+		}
+
+		/* Área de contenido que toma todo el espacio entre arriba y la botonera */
+		.flex-content {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			min-height: 0; 
+			padding: 10px;
+			gap: 10px; /* Separación uniforme entre los bloques */
+		}
+
+		/* Elementos que ocupan solo su propio contenido (Checkbox superior e inferior) */
+		.fila-fija {
+			flex: 0 0 auto;
+		}
+
+		/* El contenedor de la tabla se expande */
+		.fila-expandible {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto; /* Toma todo el espacio disponible */
+			min-height: 0;
+		}
+
+		/* OVERRIDE A PRIMEFACES PARA FORZAR FLEXBOX EN LA TABLA */
+		.fila-expandible .ui-datatable {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			min-height: 0;
+		}
+		
+		/* Algunas versiones de Primefaces envuelven en un wrapper extra */
+		.fila-expandible .ui-datatable-scrollable-wrapper,
+		.fila-expandible .ui-datatable-scrollable-view {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			min-height: 0;
+		}
+
+		.fila-expandible .ui-datatable-scrollable-header {
+			flex: 0 0 auto;
+		}
+
+		.fila-expandible .ui-datatable-scrollable-body {
+			flex: 1 1 auto;
+			min-height: 0;
+			height: auto !important;     /* Anula el alto fijo inyectado por JS */
+			max-height: none !important; /* Libera el límite máximo */
+			overflow-y: auto;            /* Habilita el scroll interno nativo */
+			background-color: #ffffff;
+		}
+
+		.fila-expandible .ui-datatable-scrollable-header-box > table,
+		.fila-expandible .ui-datatable-scrollable-body > table {
+			width: 100% !important;
+			table-layout: fixed !important;
+		}
+
+		/* Botonera */
+		.flex-footer {
+			flex: 0 0 auto;
+		}
+		.flex-footer .ui-toolbar {
+			margin: 0 !important;
+			border-left: none;
+			border-right: none;
+			border-bottom: none;
 		}
 	</style>
 </h:head>
@@ -41,190 +128,194 @@
         <f:viewParam name="filtroTextoTraza" value="#{dialogFiltroErrores.filtroTextoTraza}"/>
 		<f:viewAction action="#{dialogFiltroErrores.init}" />
 	</f:metadata>
-	<h:form id="dialogFiltroErrores" styleClass="w100 h100">
-		<p:outputPanel>
-			<!-- Contenido dialogo -->
-			<!-- Growl mensajes -->
-			<p:growl id="growl" widgetVar="growl" />
-					<h:outputScript >
 
-		var arrayCm = [];
+	<h:form id="dialogFiltroErrores" styleClass="flex-wrapper">
+		
+		<p:growl id="growl" widgetVar="growl" />
 
-		window.onload=function(){
-			let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-			onVisible(contextMenu, () => eliminarResaltar());
+		<p:outputPanel styleClass="flex-content">
+			
+			<!-- Checkbox superior -->
+			<h:panelGroup layout="block" styleClass="fila-fija ui-datatable-even" style="padding: 5px;" rendered="#{dialogFiltroErrores.tipoEvento eq 'ERROR'}">
+				<p:selectBooleanCheckbox id="buscarPorTipoError" value="#{dialogFiltroErrores.checkTipoError}" style="margin-right:5px;" >
+					<p:ajax event="change" process="@this" update="tablaTiposError" />
+				</p:selectBooleanCheckbox>
+				<p:outputLabel for="buscarPorTipoError" value="#{msg['dialogFiltroErrores.buscarPorTipoError']}" />
+			</h:panelGroup>
 
-			document.addEventListener('contextmenu', function(ev) {
-				ev.preventDefault();
-				getPos();
-				return false;
-				}, false);
-		}
-
-		function onVisible(element, callback) {
-			new IntersectionObserver((entries, observer) => {
-				entries.forEach(entry => {
-					if(entry.intersectionRatio == 0) {
-						callback(element);
-					}
-				});
-			}).observe(element);
-		}
-
-		function eliminarResaltar(){
-			let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-			let elementos = document.getElementsByClassName('resaltar');
-			if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
-				for(let i = 0; i &lt; elementos.length; i++){
-					elementos[i].classList.remove('resaltar');
-				}
-			}
-		}
-
-		function getPos(){
-			var e = window.event;
-            debugger;
-			var posX = e.clientX;
-			var posY = e.clientY;
-			var el = document.elementFromPoint(posX, posY);
-			let elementos = document.getElementsByClassName('resaltar');
-			if(elementos.length &gt; 0){
-				for(let i = 0; i &lt; elementos.length; i++){
-					elementos[i].classList.remove('resaltar');
-				}
-			}
-
-			el.classList.add("resaltar");
-			var aux = document.getElementById("dialogFiltroErrores:auxCopiar");
-			if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
-				aux.value = el.textContent;
-			}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
-				aux.value = el.firstChild.value;
-			}else if(el.value!=null &amp;&amp; el.value!=''){
-				aux.value = el.value;
-			}else{
-				aux.value = '';
-			}
-
-			if(aux.value!='' ){
-				var multiple = false;
-				var hijos = el.children;
-				if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
-					multiple = true;
-				}else if(hijos.length &gt;= 1 ){
-					if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
-						hijos = hijos[0].children;
-					}
-					for(i=0;i&lt;hijos.length;i++){
-						if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
-							multiple=true;
-						}
-					}
-				}
-				var listaCm = document.getElementsByClassName('ui-contextmenu');
-				if(multiple){
-					for(i=0;i&lt;listaCm.length;i++){
-						if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-							arrayCm.push(listaCm[i]);
-						}
-						listaCm[i].classList.add("d-none");
-					}
-				}else{
-					for(i=0;i&lt;listaCm.length;i++){
-						if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-							arrayCm.push(listaCm[i]);
-						}
-						listaCm[i].classList.remove("d-none");
-					}
-					if(arrayCm.length&gt;1){
-						arrayCm.pop();
-						for(let i=0; i&lt;arrayCm.length; i++){
-							arrayCm[i].style.display='none';
-						}
-					}
-					arrayCm = [];
-				}
-			}
-        }
-
-        function ocultarContextMenu() {
-			  ['mainCm'].forEach(function(widget) {
-				  var menu = PF(widget);
-				  if (menu &amp;&amp; menu.isVisible()) {
-					  menu.hide();
-				  }
-			  });
-		  }
-
-
-		</h:outputScript>
-
-			<p:panelGrid columns="1" style="width:100%;" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-5">
-				<!-- Checkbox y label en línea -->
-				<h:panelGroup layout="inline" rendered="#{dialogFiltroErrores.tipoEvento eq 'ERROR'}">
-					<p:selectBooleanCheckbox id="buscarPorTipoError" value="#{dialogFiltroErrores.checkTipoError}" style="margin-right:5px;" >
-						<p:ajax event="change" process="@this" update="tablaTiposError" />
-					</p:selectBooleanCheckbox>
-					<p:outputLabel for="buscarPorTipoError" value="#{msg['dialogFiltroErrores.buscarPorTipoError']}" />
-				</h:panelGroup>
-
-				<!-- Tabla en su propia fila -->
+			<!-- Tabla expandible -->
+			<h:panelGroup layout="block" styleClass="fila-expandible">
 				<p:dataTable id="tablaTiposError" widgetVar="tablaTiposError"
-				             value="#{dialogFiltroErrores.listaTiposError}" var="tipoError" styleClass="w100"
-				             selection="#{dialogFiltroErrores.listaSeleccionados}" rowKey="#{tipoError}"
-				             selectionRowMode="new" autoResize="true" selectionMode="multiple"
-				             scrollHeight="400px" scrollable="true" style="margin-bottom: 15px; table-layout: fixed;"
-				             filteredValue="#{dialogFiltroErrores.listaErroresFiltrados}">
+							 value="#{dialogFiltroErrores.listaTiposError}" var="tipoError" 
+							 selection="#{dialogFiltroErrores.listaSeleccionados}" rowKey="#{tipoError}"
+							 selectionRowMode="new" autoResize="true" selectionMode="multiple"
+							 scrollable="true" 
+							 filteredValue="#{dialogFiltroErrores.listaErroresFiltrados}">
 
-				    <p:ajax event="rowSelectCheckbox" process="@this" update="tablaTiposError"/>
-				    <p:ajax event="rowSelect" process="@this" update="tablaTiposError"/>
-				    <p:ajax event="rowUnselect" process="@this" update="tablaTiposError"/>
-				    <p:ajax event="rowUnselectCheckbox" process="@this" update="tablaTiposError"/>
-				    <p:ajax event="toggleSelect" process="@this" update="tablaTiposError"/>
-				    <p:ajax event="rowDblselect" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowSelectCheckbox" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowSelect" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowUnselect" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowUnselectCheckbox" process="@this" update="tablaTiposError"/>
+					<p:ajax event="toggleSelect" process="@this" update="tablaTiposError"/>
+					<p:ajax event="rowDblselect" process="@this" update="tablaTiposError"/>
 
-				    <p:column selectionBox="true" style="width:16px; text-align:center"
-				              styleClass="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and !dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and !dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and !dialogFiltroErrores.checkTipoPago) ? 'checkbox-disabled' : '' }" />
+					<p:column selectionBox="true" style="width:16px; text-align:center"
+							  styleClass="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and !dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and !dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and !dialogFiltroErrores.checkTipoPago) ? 'checkbox-disabled' : '' }" />
 
-				    <p:column style="width:auto;"
-				              headerText="#{dialogFiltroErrores.tipoEvento eq 'ERROR' ? msg['dialogFiltroErrores.headError'] : (dialogFiltroErrores.modoFirma ? 'Método de firma' : (dialogFiltroErrores.modoPago ? 'Método de pago' : 'Otros'))}"
-				              filterBy="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
-				              filterValue="#{dialogFiltroErrores.filtroTablaErrores}"
-				              filterMatchMode="contains"
-				              sortBy="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
-				              selectRow="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and dialogFiltroErrores.checkTipoPago) }">
+					<p:column style="width:auto;"
+							  headerText="#{dialogFiltroErrores.tipoEvento eq 'ERROR' ? msg['dialogFiltroErrores.headError'] : (dialogFiltroErrores.modoFirma ? 'Método de firma' : (dialogFiltroErrores.modoPago ? 'Método de pago' : 'Otros'))}"
+							  filterBy="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
+							  filterValue="#{dialogFiltroErrores.filtroTablaErrores}"
+							  filterMatchMode="contains"
+							  sortBy="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
+							  selectRow="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and dialogFiltroErrores.checkTipoPago) }">
 
-				        <h:outputText value="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
-				                      styleClass="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and !dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and !dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and !dialogFiltroErrores.checkTipoPago) ? 'checkbox-disabled' : '' }"/>
-				    </p:column>
-
+						<h:outputText value="#{dialogFiltroErrores.obtenerEtiqueta(tipoError)}"
+									  styleClass="#{ (dialogFiltroErrores.tipoEvento eq 'ERROR' and !dialogFiltroErrores.checkTipoError) or (dialogFiltroErrores.modoFirma and !dialogFiltroErrores.checkTipoFirma) or (dialogFiltroErrores.modoPago and !dialogFiltroErrores.checkTipoPago) ? 'checkbox-disabled' : '' }"/>
+					</p:column>
 				</p:dataTable>
+			</h:panelGroup>
 
-				<h:panelGroup layout="block" rendered="#{dialogFiltroErrores.tipoEvento eq 'ERROR'}">
-				    <div style="display: flex; align-items: center;">
-				        <p:selectBooleanCheckbox id="buscarPorTextoTraza" value="#{dialogFiltroErrores.checkTextoTraza}" style="margin-right:5px;">
+			<!-- Checkbox y búsqueda por texto en traza -->
+			<h:panelGroup layout="block" styleClass="fila-fija ui-datatable-even" rendered="#{dialogFiltroErrores.tipoEvento eq 'ERROR'}">
+				<div style="display: flex; flex-direction: column; gap: 5px;">
+					<div style="display: flex; align-items: center;">
+						<p:selectBooleanCheckbox id="buscarPorTextoTraza" value="#{dialogFiltroErrores.checkTextoTraza}" style="margin-right:5px;">
 									<p:ajax event="change" process="@this" update="textoTraza" />
 						</p:selectBooleanCheckbox>
-				        <p:outputLabel for="buscarPorTextoTraza" value="#{msg['dialogFiltroErrores.buscarPorTextoTraza']}" />
-				    </div>
-				    <p:inputText id="textoTraza" value="#{dialogFiltroErrores.filtroTextoTraza}" styleClass="w100" style="margin-top:2px;" disabled="#{!dialogFiltroErrores.checkTextoTraza}">
+						<p:outputLabel for="buscarPorTextoTraza" value="#{msg['dialogFiltroErrores.buscarPorTextoTraza']}" />
+					</div>
+					<p:inputText id="textoTraza" value="#{dialogFiltroErrores.filtroTextoTraza}" style="width: 100%; box-sizing: border-box;" disabled="#{!dialogFiltroErrores.checkTextoTraza}">
 							<p:ajax event="change" process="@this" update="textoTraza" />
 					</p:inputText>
-				</h:panelGroup>
-			</p:panelGrid>
+				</div>
+			</h:panelGroup>
+
+			<h:outputScript>
+				var arrayCm = [];
+
+				window.onload=function(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					if(contextMenu) onVisible(contextMenu, () => eliminarResaltar());
+
+					document.addEventListener('contextmenu', function(ev) {
+						ev.preventDefault();
+						getPos();
+						return false;
+						}, false);
+				}
+
+				function onVisible(element, callback) {
+					new IntersectionObserver((entries, observer) => {
+						entries.forEach(entry => {
+							if(entry.intersectionRatio == 0) {
+								callback(element);
+							}
+						});
+					}).observe(element);
+				}
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					let elementos = document.getElementsByClassName('resaltar');
+					if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+				}
+
+				function getPos(){
+					var e = window.event;
+					var posX = e.clientX;
+					var posY = e.clientY;
+					var el = document.elementFromPoint(posX, posY);
+					let elementos = document.getElementsByClassName('resaltar');
+					if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+
+					if(el) {
+						el.classList.add("resaltar");
+						var aux = document.getElementById("dialogFiltroErrores:auxCopiar");
+						if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
+							aux.value = el.textContent;
+						}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+							aux.value = el.firstChild.value;
+						}else if(el.value!=null &amp;&amp; el.value!=''){
+							aux.value = el.value;
+						}else{
+							aux.value = '';
+						}
+
+						if(aux.value!='' ){
+							var multiple = false;
+							var hijos = el.children;
+							if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
+								multiple = true;
+							}else if(hijos.length &gt;= 1 ){
+								if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
+									hijos = hijos[0].children;
+								}
+								for(i=0;i&lt;hijos.length;i++){
+									if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+										multiple=true;
+									}
+								}
+							}
+							var listaCm = document.getElementsByClassName('ui-contextmenu');
+							if(multiple){
+								for(i=0;i&lt;listaCm.length;i++){
+									if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+										arrayCm.push(listaCm[i]);
+									}
+									listaCm[i].classList.add("d-none");
+								}
+							}else{
+								for(i=0;i&lt;listaCm.length;i++){
+									if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+										arrayCm.push(listaCm[i]);
+									}
+									listaCm[i].classList.remove("d-none");
+								}
+								if(arrayCm.length&gt;1){
+									arrayCm.pop();
+									for(let i=0; i&lt;arrayCm.length; i++){
+										arrayCm[i].style.display='none';
+									}
+								}
+								arrayCm = [];
+							}
+						}
+					}
+				}
+
+				function ocultarContextMenu() {
+					['mainCm'].forEach(function(widget) {
+						var menu = PF(widget);
+						if (menu &amp;&amp; menu.isVisible()) {
+							menu.hide();
+						}
+					});
+				}
+			</h:outputScript>
 
 			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
 				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFiltroErrores:auxCopiar" update="growl" />
 			</p:contextMenu>
+			
 			<pe:clipboard id="clipContextCopy" trigger="dialogFiltroErrores:mnuCopy" action="copy" target="dialogFiltroErrores:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{dialogFiltroErrores.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{dialogFiltroErrores.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>
+			
+			<p:inputText id="auxCopiar" value="#{dialogFiltroErrores.portapapeles}" style="position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; opacity: 0; overflow: hidden;"/>
 
-			<p:inputText id="auxCopiar" value="#{dialogFiltroErrores.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		</p:outputPanel>
 
-		<p:outputPanel styleClass="botonera">
+		<p:outputPanel styleClass="flex-footer">
 			<p:toolbar>
 				<f:facet name="right">
 					<!-- Botones de acción -->
@@ -239,5 +330,4 @@
 
 </h:body>
 </f:view>
-
 </html>

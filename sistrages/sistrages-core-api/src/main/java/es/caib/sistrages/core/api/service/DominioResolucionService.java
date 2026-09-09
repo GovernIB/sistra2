@@ -24,6 +24,15 @@ public interface DominioResolucionService {
 	 * @return valoresDominio
 	 */
 	public ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros);
+	
+	/**
+     * Cuenta el total absoluto de registros de una fuente de datos, 
+     * ignorando dependencias o parámetros requeridos.
+     * 
+     * @param idDominioCompuesto Identificador compuesto del dominio
+     * @return El número total de filas
+     */
+    public long contarRegistrosTotalesAbsolutos(String idDominioCompuesto);
 
 	/**
 	 * Realiza consulta a la bbdd

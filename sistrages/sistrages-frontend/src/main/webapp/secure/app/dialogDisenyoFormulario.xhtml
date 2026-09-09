@@ -368,7 +368,7 @@
 
 				<p:outputPanel styleClass="confirmar_botonera">
 					<p:commandButton id="btnAbrirLE" value="ABRIR LE" actionListener="#{dialogDisenyoFormulario.abrirListaElementos}" process="@form" update="formulario-panel growlDisenyoFormulario componente-panel panelBotonesSuperiores panelBotonesInferiores"  style="margin-right:4px;display:none;"  />
-					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isNotConsulta()}"  style="margin-right:4px;" disabled="#{dialogDisenyoFormulario.desactivarAplicarCambios}" />
+					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isNotConsulta()}"  style="margin-right:4px;" disabled="#{dialogDisenyoFormulario.desactivarAplicarCambios and not dialogDisenyoFormulario.puedeAplicarLetraSeccionReutilizable}" />
 					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.pagina']}" actionListener="#{dialogDisenyoFormulario.editarPagina}" process="@this" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isTipoTramite()}" >
 						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoPagina}" update="growlDisenyoFormulario"/>
         			</p:commandButton>

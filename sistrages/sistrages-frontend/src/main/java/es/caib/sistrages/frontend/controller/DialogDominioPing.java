@@ -28,6 +28,7 @@ import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilVariablesArea;
 
 @ManagedBean
 @ViewScoped
@@ -173,16 +174,15 @@ public class DialogDominioPing extends DialogControllerBase {
 	private ValoresDominio pingConsultaRemota(final List<ParametroDominio> parametros) {
 		String user = null;
 		String pwd = null;
-		if (this.dominio.getAmbito().equals(TypeAmbito.AREA)
-				&& this.dominio.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")) {
-			VariableArea va = vaService.loadVariableAreaByIdentificador(this.dominio.getUrl()
-					.substring(this.dominio.getUrl().indexOf('{'), this.dominio.getUrl().indexOf('}') + 1)
-					.replace("{@@", "").replace("@@}", ""), this.dominio.getArea().getCodigo());
-			if (va == null) {
-				throw new VariableAreaNoExisteException(UtilJSF.getLiteral("variable.area.no.existe"));
-			} else {
-				this.dominio.setUrl(this.dominio.getUrl().replace(this.dominio.getUrl().substring(
-						this.dominio.getUrl().indexOf('{'), this.dominio.getUrl().indexOf('}') + 1), va.getUrl()));
+		if (this.dominio.getAmbito().equals(TypeAmbito.AREA)) {
+			for (final String identificador : UtilVariablesArea.obtenerIdentificadores(this.dominio.getUrl())) {
+				final VariableArea va = vaService.loadVariableAreaByIdentificador(identificador,
+						this.dominio.getArea().getCodigo());
+				if (va == null) {
+					throw new VariableAreaNoExisteException(UtilJSF.getLiteral("variable.area.no.existe"));
+				}
+				this.dominio.setUrl(StringUtils.replace(this.dominio.getUrl(), "{@@" + identificador + "@@}",
+						va.getUrl()));
 			}
 		}
 		if (this.dominio.getConfiguracionAutenticacion() != null) {

@@ -659,6 +659,49 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 	}
 
+	public long contarRegistrosTotalesAbsolutos(final TypeAmbito ambito, final String idEntidad, 
+        final String idArea, final String idDominio) {
+		// Buscamos el dominio
+		Dominio result = null;
+		final StringBuilder sql = new StringBuilder(
+				"SELECT d FROM JDominio d where d.ambito =:ambito and d.identificador = :idDominio");
+		if (ambito == TypeAmbito.ENTIDAD) {
+			sql.append(" and d.entidad.identificador = :idEntidad");
+		}
+		if (ambito == TypeAmbito.AREA) {
+			sql.append(" and d.area.entidad.identificador = :idEntidad and d.area.identificador = :idArea");
+		}
+		
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("idDominio", idDominio);
+		query.setParameter("ambito", ambito.toString());
+		if (ambito == TypeAmbito.ENTIDAD) {
+			query.setParameter("idEntidad", idEntidad);
+		}
+		if (ambito == TypeAmbito.AREA) {
+			query.setParameter("idEntidad", idEntidad);
+			query.setParameter("idArea", idArea);
+		}
+
+		final List<JDominio> list = query.getResultList();
+		if (!list.isEmpty()) {
+			result = list.get(0).toModel();
+		}
+
+		if (result == null) {
+			return 0L; // Si no existe, tiene 0 registros
+		}
+
+		// Obtenemos ID de la fuente de datos
+		final ConsultaFuenteDatos cfd = FuenteDatosUtil.decodificarConsulta(result.getSqlDecoded());
+
+        // Obtenemos el total de todos los registros con listas vacías, evitando así que exija los parámetros
+		final List<JFilasFuenteDatos> filasTotales = realizarConsulta(cfd.getIdFuenteDatos(), 
+				new ArrayList<>(), new ArrayList<>(), ambito, idEntidad, idArea);
+
+		return filasTotales != null ? filasTotales.size() : 0L;
+	}
+
 	private List<JFilasFuenteDatos> realizarConsulta(final String idFuenteDatos,
 			final List<FiltroConsultaFuenteDatos> list, final List<ValorParametroDominio> parametros, TypeAmbito ambito,
 			String idEntidad, String idArea) {

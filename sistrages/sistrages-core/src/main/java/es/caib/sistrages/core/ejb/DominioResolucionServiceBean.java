@@ -42,6 +42,12 @@ public class DominioResolucionServiceBean implements DominioResolucionService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+    public long contarRegistrosTotalesAbsolutos(String idDominioCompuesto) {
+		return dominioResolucionService.contarRegistrosTotalesAbsolutos(idDominioCompuesto);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public ValoresDominio realizarConsultaBD(final String datasource, final String sql,
 			final List<ValorParametroDominio> parametros) {
 		return dominioResolucionService.realizarConsultaBD(datasource, sql, parametros);

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistra2.commons.plugins.dominio.api.DominioPluginException;
@@ -63,6 +64,7 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 
 	@Override
 	@NegocioInterceptor
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
 			final List<ValorParametroDominio> parametros) {
 		ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idDominio);
@@ -78,6 +80,23 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 			final List<ValorParametroDominio> parametros) {
 		return fuenteDatosComponent.realizarConsultaBD(datasource, sql, parametros);
 	}
+
+	@Override
+    @NegocioInterceptor
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public long contarRegistrosTotalesAbsolutos(final String idDominioCompuesto) {
+        
+        ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idDominioCompuesto);
+        if (valor.isError()) {
+            throw new ValorIdentificadorIncorrectoException("Error obteniendo el identificador compuesto de: " + idDominioCompuesto);
+        }
+        
+        return fuenteDatosComponent.contarRegistrosTotalesAbsolutos(
+                valor.getAmbito(), 
+                valor.getIdentificadorEntidad(), 
+                valor.getIdentificadorArea(), 
+                valor.getIdentificador());
+    }
 
 	@Override
 	public ValoresDominio realizarConsultaRemota(final TypeAmbito ambito, final Long idEntidad, final String idDominio,

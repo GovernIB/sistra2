@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import es.caib.sistrages.core.api.model.types.*;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
@@ -53,6 +54,8 @@ import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.service.ComponenteService;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
+import es.caib.sistrages.core.api.service.DominioResolucionService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.RolService;
@@ -111,6 +114,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Componente systemservice **/
 	@Inject
 	private SystemService systemService;
+
+	@Inject
+    private ConfiguracionGlobalService configuracionGlobalService;
+
+    @Inject
+    private DominioResolucionService dominioResolucionService;
 
 	/** id. */
 	private Long id;
@@ -588,19 +597,137 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
 	}
 
-	/**
-	 * Abre un di&aacute;logo para previsualizar tramite.
-	 */
-	public void previsualizar() {
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteVersion.getCodigo()));
-		if (this.permiteEditar()) {
-			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 460);
-		} else {
-			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 830,
-					460);
+    private boolean procesarValidaciones(boolean permiteOmitir) {
+		List<ErrorValidacion> erroresTotales = new ArrayList<>();
+		erroresTotales.addAll(getErroresDominiosMaxRegistros());
+		erroresTotales.addAll(getErroresSinFormulario());
+		
+		if (erroresTotales.isEmpty()) {
+			return true; 
 		}
+
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
+				erroresTotales.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.IDIOMAS.toString(), tramiteService.getIdiomasDisponibles(String.valueOf(this.tramiteVersion.getCodigo())));
+		params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(this.tramiteVersion.getIdTramite()));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(this.tramiteVersion.getCodigo()));
+
+		if (permiteOmitir) {
+			params.put("PERMITE_OMITIR", "true");
+		}
+
+		UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, params, true, 1050, 530);
+		
+		return false;
 	}
+
+	/**
+	 * Validación manual de formularios (Exclusivo para ViewDefinicionVersion)
+	 */
+	private List<ErrorValidacion> getErroresSinFormulario() {
+		final List<ErrorValidacion> errores = new ArrayList<>();
+		if (this.tramiteVersion == null) {
+			return errores;
+		}
+
+		boolean tieneFormulario = false;
+		
+		List<TramitePaso> pasos = this.tramiteVersion.getListaPasos();
+		
+		if (pasos != null) {
+			for (TramitePaso paso : pasos) {
+				if (paso instanceof TramitePasoRellenar) {
+					TramitePasoRellenar pasoRellenar = (TramitePasoRellenar) paso;
+					if (pasoRellenar.getFormulariosTramite() != null && !pasoRellenar.getFormulariosTramite().isEmpty()) {
+						tieneFormulario = true;
+						break;
+					}
+				}
+			}
+		}
+
+		if (!tieneFormulario) {
+			final ErrorValidacion error = new ErrorValidacion();
+			error.setElemento("Formularios");
+			error.setDescripcion("El trámite debe contener al menos un formulario asociado."); 
+			error.setTipo(TypeErrorValidacion.TRAMITE); 
+			errores.add(error);
+		}
+
+		return errores;
+	}
+
+	/**
+	 * Validación manual de dominios con máximo de registros para ViewDefinicionVersion
+	 */
+    private List<ErrorValidacion> getErroresDominiosMaxRegistros() {
+        final List<ErrorValidacion> errores = new ArrayList<>();
+        if (this.tramiteVersion == null) {
+            return errores;
+        }
+
+        int maxRegistrosPermitidos = 200; 
+        try {
+            String valorConfig = configuracionGlobalService.getConfiguracionGlobal("maximo.fd.exportacion").getValor();
+            if (valorConfig != null && !valorConfig.trim().isEmpty()) {
+                maxRegistrosPermitidos = Integer.parseInt(valorConfig.trim());
+            }
+        } catch (Exception e) {
+            UtilJSF.loggearErrorFront("Error al leer maximo.fd.exportacion", e);
+        }
+
+        final List<Dominio> dominios = tramiteService.getDominioSimpleByTramiteId(this.tramiteVersion.getCodigo());
+        if (dominios == null) {
+            return errores;
+        }
+
+        for (final Dominio dominio : dominios) {
+            if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
+                try {
+                    long totalFilas = dominioResolucionService.contarRegistrosTotalesAbsolutos(dominio.getIdentificadorCompuesto());
+                    
+                    if (totalFilas > maxRegistrosPermitidos) {
+                        errores.add(crearErrorMaxRegistros(dominio, maxRegistrosPermitidos));
+                    }
+                } catch (final Exception e) {
+                    UtilJSF.loggearErrorFront("Error al contar filas del dominio " + dominio.getIdentificador(), e);
+                }
+            }
+        }
+        
+        return errores;
+    }
+
+    private ErrorValidacion crearErrorMaxRegistros(final Dominio dominio, final int maxRegistrosPermitidos) {
+        final ErrorValidacion error = new ErrorValidacion();
+        error.setElemento(dominio.getIdentificadorCompuesto());
+        error.setDescripcion(UtilJSF.getLiteral("error.dominio.maxRegistros", 
+                new Object[] { dominio.getIdentificador(), maxRegistrosPermitidos }));
+        error.setTipo(TypeErrorValidacion.DOMINIOS_MAX_REGISTROS);
+        error.setItem(dominio);
+        return error;
+    }
+
+	/**
+     * Abre un di&aacute;logo para previsualizar tramite.
+     */
+    public void previsualizar() {
+        if (!procesarValidaciones(false)) {
+            return;
+        }
+
+        final Map<String, String> params = new HashMap<>();
+        params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteVersion.getCodigo()));
+        if (this.permiteEditar()) {
+            UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 830, 460);
+        } else {
+            UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 830,
+                    460);
+        }
+    }
 
 	/**
 	 * Vuelve a recuperar los datos.

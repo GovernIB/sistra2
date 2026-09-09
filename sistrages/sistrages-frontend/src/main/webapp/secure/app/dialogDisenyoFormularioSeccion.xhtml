@@ -18,7 +18,7 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}"  columnClasses="w30,w70" styleClass="w100">
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.letra']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.letra}" onblur="this.value = this.value.trim();" maxlength="2" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.letra}" onblur="this.value = this.value.trim();" maxlength="2" readonly="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="blur" process="@this" />
 	         			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 	         		</p:inputText>

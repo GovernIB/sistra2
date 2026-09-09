@@ -1,0 +1,44 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul id="luBreadCrumb">
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PAGOSDINAMICOS">DATOS_PAGOSDINAMICOS</a></li>
+       	  <li>></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=PAGO_DINAMICO">PAGO_DINAMICO</a></li>
+  	</ul>
+</div>
+<h1 class="cabeceraPlugin">PAGO_DINAMICO</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Objeto que modeliza un pago que se puede añadir de forma dinámica.</li>
+	</ul>
+</p>
+<p>
+	<b>MÉTODOS</b>
+</p>
+
+<p>
+	<div class="seccionMetodos">
+	 <ul>
+		<li><b>setContribuyente(String nif, String nombreCompleto)</b>: Identificador del contribuyente del pago (Obligatorio).</li>
+		<li><b>setPasarela(String pasarela)</b>: Pasarela de pago asociada al pago (Obligatorio).</li>
+		<li><b>setOrganismo(String organismo)</b>: Organismo asociado al pago (Obligatorio).</li>
+		<li><b>setMetodosPago(String metodosPago)</b>: Métodos de pago asociados al pago. Para introducir varios métodos, separados de ';' (Obligatorio).</li>
+        <li><b>setDetallePago(String modelo, String concepto, String tasa, int importe)</b>: Permite establecer los detalles del pago, incluyendo el modelo, concepto, tasa e importe.</li>
+        <li><b>setDetallePago(String modelo, String concepto, String tasa, int unidades, int importe)</b>: Permite establecer los detalles del pago, incluyendo el modelo, concepto, tasa, unidades e importe.</li>
+	    </ul>
+	</div>
+</p>
+
+</body>
+</html>

@@ -1,298 +1,417 @@
 <!DOCTYPE html>
 <html lang="#{sessionBean.lang}"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pe="http://primefaces.org/ui/extensions">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypePlugin" var="TypePlugin"/>
 
-
 <h:head>
-	<title><h:outputText value="#{msg['dialogPlugin.titulo']}"/></title>
-	<style type="text/css">
-		.dContents{
-			display:contents;
-		}
+    <title><h:outputText value="#{msg['dialogPlugin.titulo']}"/></title>
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+        }
 
-		.alturaPropiedadesPlugin{
-			height: 360px !important;
-		}
+        .dContents {
+            display: contents;
+        }
 
-	</style>
+        .dialogPlugin-form {
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+            margin: 0 !important;
+            padding: 8px 0 0 0 !important;
+            box-sizing: border-box;
+        }
+
+        .dialogPlugin-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .dialogPlugin-row {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            padding: 4px 10px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .dialogPlugin-label {
+            min-width: 150px;
+            width: 18%;
+            padding-left: 1.8em;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        .dialogPlugin-field {
+            flex: 1;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .dialogPlugin-field .ui-inputfield,
+        .dialogPlugin-field .ui-selectonemenu {
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .dialogPlugin-row-expand {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            align-items: stretch;
+            min-height: 140px;
+            flex-shrink: 1;
+            padding: 4px 10px;
+        }
+
+        .dialogPlugin-row-expand .dialogPlugin-label {
+            align-self: flex-start;
+            padding-top: 8px;
+        }
+
+        .dialogPlugin-row-expand .dialogPlugin-field {
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .dialogPlugin-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-left: 6px;
+            flex-shrink: 0;
+        }
+
+        .dialogPlugin-buttons p {
+            margin: 0;
+        }
+
+        .dialogPlugin-row-expand .ui-datatable {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+            width: 100%;
+        }
+
+        .dialogPlugin-row-expand .ui-datatable-scrollable-header {
+            flex-shrink: 0;
+        }
+
+        .dialogPlugin-row-expand .ui-datatable-scrollable-body {
+            flex: 1;
+            max-height: none !important;
+            overflow-y: auto !important; 
+            background-color: #F2F5F9;
+        }
+
+        .dialogPlugin-row-expand .ui-datatable-scrollable-header-box > table,
+        .dialogPlugin-row-expand .ui-datatable-scrollable-body > table {
+            width: 100% !important;
+            table-layout: fixed !important;
+            border-collapse: collapse !important;
+        }
+
+        .dialogPlugin-row-expand .ui-datatable th,
+        .dialogPlugin-row-expand .ui-datatable td {
+            box-sizing: border-box !important;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+        .botonera {
+            flex-shrink: 0;
+            margin-top: 6px;
+            margin-bottom: 0 !important;
+            padding: 0 10px 0 10px !important; 
+            width: 100%;
+            box-sizing: border-box; 
+        }
+        
+        .botonera .ui-toolbar {
+            margin-bottom: 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+    </style>
 </h:head>
 
 <h:body>
-	<f:facet name="last">
-		<h:outputStylesheet library="css" name="style.css" />
-		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
-		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
-		<h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
-	</f:facet>
+    <f:facet name="last">
+        <h:outputStylesheet library="css" name="style.css" />
+        <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/solid.min-jsf.css" />
+        <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/fontawesome.min-jsf.css" />
+        <h:outputStylesheet library="webjars" name="font-awesome/5.9.0/css/v4-shims.min-jsf.css" />
+    </f:facet>
 
-	<!-- Parametros dialogo -->
-	<f:metadata>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogPlugin.modoAcceso}"/>
-		<f:viewParam name="ID" value="#{dialogPlugin.id}"/>
-		<f:viewParam name="AMBITO" value="#{dialogPlugin.ambito}"/>
-		<f:viewAction action="#{dialogPlugin.init}" />
-	</f:metadata>
-	<h:form id="dialogPlugin" styleClass="margin-top-10">
+    <!-- Parámetros diálogo -->
+    <f:metadata>
+        <f:viewParam name="MODO_ACCESO" value="#{dialogPlugin.modoAcceso}"/>
+        <f:viewParam name="ID" value="#{dialogPlugin.id}"/>
+        <f:viewParam name="AMBITO" value="#{dialogPlugin.ambito}"/>
+        <f:viewAction action="#{dialogPlugin.init}" />
+    </f:metadata>
 
-  			<p:outputPanel style="height:497px;">
-				<!-- Contenido dialogo -->
-				<!-- Growl mensajes -->
-				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+    <h:form id="dialogPlugin" styleClass="dialogPlugin-form">
 
-				<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd, ui-datatable-even, ui-datatable-odd, ui-datatable-even, ui-datatable-odd alturaPropiedadesPlugin, ui-datatable-even" columnClasses="ui-g-12 ui-sm-3 ui-md-3 ui-lg-3 padding-left-18 w15, ui-g-12 ui-sm-9 ui-md-9 ui-lg-9 w80, wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
+            <p:outputPanel styleClass="dialogPlugin-content">
+                <!-- Growl mensajes -->
+                <p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" style="padding-left: 2px; display: block;"/>
-					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}"  required="true" disabled="#{dialogPlugin.isConsulta()}" style="width:94%;">
-    					 <f:selectItems value="#{dialogPlugin.tipos}" var="tipo" itemLabel="#{msg['typePlugin.' += tipo]}"/>
-					</p:selectOneMenu >
-					<p:outputLabel value=""/>
+                <h:panelGroup layout="block" styleClass="dialogPlugin-row ui-datatable-even">
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-label">
+                        <p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" style="padding-left: 2px; display: block;"/>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-field">
+                        <p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}" required="true" disabled="#{dialogPlugin.isConsulta()}" style="width:100%;">
+                            <f:selectItems value="#{dialogPlugin.tipos}" var="tipo" itemLabel="#{msg['typePlugin.' += tipo]}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                </h:panelGroup>
 
-					<p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="valor" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.realClassname}" readonly="#{dialogPlugin.isReal ? false : true}" required="false" style="width:98%;" maxlength="500">
-						<p:ajax event="keyup" process="@this" />
-					</p:inputText>
-					<p:outputLabel value="" />
+                <h:panelGroup layout="block" styleClass="dialogPlugin-row ui-datatable-odd">
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-label">
+                        <p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" style="padding-left: 2px; display: block;"/>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-field">
+                        <p:inputText id="valor" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.realClassname}" readonly="#{dialogPlugin.isReal ? false : true}" required="false" style="width:100%;" maxlength="500">
+                            <p:ajax event="keyup" process="@this" />
+                        </p:inputText>
+                    </h:panelGroup>
+                </h:panelGroup>
 
-					<p:outputLabel for="mockClassname" value="#{msg['dialogPlugin.headerMockClassname']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="mockClassname" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.mockClassname}" readonly="#{dialogPlugin.isReal ? true : false}" required="false" style="width:98%;" maxlength="500">
-						<p:ajax event="keyup" process="@this" />
-					</p:inputText>
-					<p:outputLabel value="" />
+                <h:panelGroup layout="block" styleClass="dialogPlugin-row ui-datatable-even">
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-label">
+                        <p:outputLabel for="mockClassname" value="#{msg['dialogPlugin.headerMockClassname']}" style="padding-left: 2px; display: block;"/>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-field">
+                        <p:inputText id="mockClassname" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.mockClassname}" readonly="#{dialogPlugin.isReal ? true : false}" required="false" style="width:100%;" maxlength="500">
+                            <p:ajax event="keyup" process="@this" />
+                        </p:inputText>
+                    </h:panelGroup>
+                </h:panelGroup>
 
-					<p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.descripcion}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="255"/>
-					<p:outputLabel value="" />
+                <h:panelGroup layout="block" styleClass="dialogPlugin-row ui-datatable-odd">
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-label">
+                        <p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}" style="padding-left: 2px; display: block;"/>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-field">
+                        <p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.descripcion}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:100%;" maxlength="255"/>
+                    </h:panelGroup>
+                </h:panelGroup>
 
-					<p:outputLabel for="prefijoPropiedades" value="#{msg['dialogPlugin.headerPrefijo']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="prefijoPropiedades" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.prefijoPropiedades}" readonly="#{dialogPlugin.isConsulta()}" style="width:98%;" maxlength="100"/>
-					<p:outputLabel value="" />
+                <h:panelGroup layout="block" styleClass="dialogPlugin-row ui-datatable-even">
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-label">
+                        <p:outputLabel for="prefijoPropiedades" value="#{msg['dialogPlugin.headerPrefijo']}" style="padding-left: 2px; display: block;"/>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-field">
+                        <p:inputText id="prefijoPropiedades" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.prefijoPropiedades}" readonly="#{dialogPlugin.isConsulta()}" style="width:100%;" maxlength="100"/>
+                    </h:panelGroup>
+                </h:panelGroup>
 
-   					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" style="padding-left: 2px; display: block;"/>
-					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
-								  rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="328"
-								  paginator="false" selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">
+                <h:panelGroup layout="block" styleClass="dialogPlugin-row dialogPlugin-row-expand ui-datatable-odd">
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-label">
+                        <p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" style="padding-left: 2px; display: block;"/>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-field">
+                        <p:dataTable id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
+                                     rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="100%"
+                                     paginator="false" selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">
+                            <p:ajax event="rowSelect" global="false" />
+                            <p:ajax event="rowUnselect" />
+                            <p:ajax event="rowDblselect"
+                                    oncomplete="rcEditarPropiedad();"
+                                    disabled="#{dialogPlugin.isConsulta()}"
+                                    />
+                            <p:ajax event="contextMenu" global="false" process="@this" update="@form:botones"/>
+                            
+                            <p:column headerText="#{msg['dialogPlugin.headerParametros.codigo']}" style="width:35%;">
+                                <h:outputText value="#{td.codigo}" />
+                            </p:column>
+                            <p:column headerText="#{msg['dialogPlugin.headerParametros.valor']}" style="width:65%;">
+                                <h:outputText value="#{td.valor}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
 
-						<!-- Necesario para actualizar en controlador la fila seleccionada -->
-						<p:ajax event="rowSelect" global="false" />
-						<p:ajax event="rowUnselect" />
-						<p:ajax event="rowDblselect"
-		                  		oncomplete="rcEditarPropiedad();"
-		                        disabled="#{dialogPlugin.isConsulta()}"
-		                        />
-		                <p:ajax event="contextMenu" global="false" process="@this" update="@form:botones"/>
+                    <h:panelGroup layout="block" styleClass="dialogPlugin-buttons" id="botones">
+                        <p>
+                            <p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+                                <p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
+                            </p:commandButton>
+                        </p>
+                        <p>
+                            <p:commandButton id="btnEditarPropiedad" icon="fa fa-pencil" title="#{msg['botones.editar']}" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+                                <p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
+                            </p:commandButton>
+                        </p>
+                        <p>
+                            <p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" title="#{msg['botones.eliminar']}" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+                                <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+                            </p:commandButton>
+                        </p>
+                        <p>
+                            <p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+                        </p>
+                        <p>
+                            <p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+                        </p>
+                    </h:panelGroup>
+                </h:panelGroup>
 
-						<!-- Columnas -->
-					    <p:column headerText="#{msg['dialogPlugin.headerParametros.codigo']}" class="ui-panelgrid-cell">
-					        <h:outputText value="#{td.codigo}" />
-					    </p:column>
+                <h:outputScript rendered="#{!dialogPlugin.isConsulta()}">
+                      function rcEditarPropiedad() {
+                        document.getElementById("dialogPlugin:btnEditarPropiedad").click();
+                      }
 
-					    <p:column headerText="#{msg['dialogPlugin.headerParametros.valor']}" class="ui-panelgrid-cell">
-					        <h:outputText value="#{td.valor}" />
-					    </p:column>
+                      function rcBorrarPropiedad() {
+                        document.getElementById("dialogPlugin:btnEliminarPropiedad").click();
+                      }
+                </h:outputScript>
+            </p:outputPanel>
 
-		 			</p:dataTable>
-		 			<p:column id="botones" style="margin-left: 0px">
-						    <p>
-					    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
-	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
-	        					</p:commandButton>
-	        				</p>
-	        				<p>
-					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-pencil" title="#{msg['botones.editar']}" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
-	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
-	        					</p:commandButton>
-	        				</p>
-					    	<p>
-					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
-					    			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-					    		</p:commandButton>
-					    	</p>
-					    	<p>
-					    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
-					    	</p>
-					    	<p>
-					    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
-					    	</p>
-					</p:column>
+            <p:outputPanel styleClass="botonera">
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton id="switchButton" 
+                                         value="#{dialogPlugin.isReal ? msg['botones.switchMock'] : msg['botones.switchReal']}" 
+                                         actionListener="#{dialogPlugin.switchClassname()}" 
+                                         process="@this" 
+                                         update="@this growlDialog valor mockClassname" />
+                    </f:facet>
+                    <f:facet name="right">
+                        <p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+                        <p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+                        <p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this" rendered="#{dialogPlugin.isConsulta()}"/>
+                        <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogPlugin.ayuda}" process="@this"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:outputPanel>
 
-					<p:commandButton id="switchButton" value="#{dialogPlugin.isReal ? msg['botones.switchMock'] : msg['botones.switchReal']}" actionListener="#{dialogPlugin.switchClassname()}" process="@this" update="@this growlDialog valor mockClassname" style="margin-top: 5px;"/>
-
-				</h:panelGrid>
-				<h:outputScript rendered="#{!dialogPlugin.isConsulta()}">
-				      function rcEditarPropiedad() {
-				      	document.getElementById("dialogPlugin:btnEditarPropiedad").click();
-				      }
-
-				      function  rcBorrarPropiedad() {
-				      	document.getElementById("dialogPlugin:btnEliminarPropiedad").click();
-				      }
-			    </h:outputScript>
-			</p:outputPanel>
-		  	 <p:outputPanel styleClass="botonera">
-		     	<p:toolbar>
-					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"  rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
-						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"  rendered="#{dialogPlugin.isConsulta()}"/>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" actionListener="#{dialogPlugin.ayuda}" process="@this"/>
-					</f:facet>
-				</p:toolbar>
-		    </p:outputPanel>
-
-			<!-- dialogo para confirmar -->
+            <!-- diálogo para confirmar -->
             <p:confirmDialog global="true" >
                 <p:outputPanel styleClass="confirmar_botonera">
-                    <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+                    <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check" process="@form"/>
                     <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" process="@this"/>
                 </p:outputPanel>
             </p:confirmDialog>
 
-			<h:outputScript >
+            <h:outputScript>
+                var arrayCm = [];
 
-				var arrayCm = [];
+                window.onload=function(){
+                    let contextMenu = document.getElementsByClassName('ui-contextmenu')[0];
+                    if(contextMenu) onVisible(contextMenu, () => eliminarResaltar());
 
-				window.onload=function(){
-					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-					onVisible(contextMenu, () => eliminarResaltar());
+                    document.addEventListener('contextmenu', function(ev) {
+                        ev.preventDefault();
+                        getPos();
+                        return false;
+                    }, false);
+                }
 
-					document.addEventListener('contextmenu', function(ev) {
-						ev.preventDefault();
-						getPos();
-						return false;
-						}, false);
-				}
+                function onVisible(element, callback) {
+                    new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            if(entry.intersectionRatio == 0) {
+                                callback(element);
+                            }
+                        });
+                    }).observe(element);
+                }
 
-				function onVisible(element, callback) {
-					new IntersectionObserver((entries, observer) => {
-						entries.forEach(entry => {
-							if(entry.intersectionRatio == 0) {
-								callback(element);
-							}
-						});
-					}).observe(element);
-				}
+                function eliminarResaltar(){
+                    let contextMenu = document.getElementsByClassName('ui-contextmenu')[0];
+                    let elementos = document.getElementsByClassName('resaltar');
+                    if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+                        for(let i = 0; i &lt; elementos.length; i++){
+                            elementos[i].classList.remove('resaltar');
+                        }
+                    }
+                }
 
-				function eliminarResaltar(){
-					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
-					let elementos = document.getElementsByClassName('resaltar');
-					if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
-						for(let i = 0; i &lt; elementos.length; i++){
-							elementos[i].classList.remove('resaltar');
-						}
-					}
-				}
+                function getPos(){
+                    var e = window.event;
+                    var posX = e.clientX;
+                    var posY = e.clientY;
+                    var el = document.elementFromPoint(posX, posY);
+                    let elementos = document.getElementsByClassName('resaltar');
+                    if(elementos.length &gt; 0){
+                        for(let i = 0; i &lt; elements.length; i++){
+                            elementos[i].classList.remove('resaltar');
+                        }
+                    }
 
-				function getPos(){
-					var e = window.event;
-		            debugger;
-					var posX = e.clientX;
-					var posY = e.clientY;
-					var el = document.elementFromPoint(posX, posY);
-					let elementos = document.getElementsByClassName('resaltar');
-					if(elementos.length &gt; 0){
-						for(let i = 0; i &lt; elementos.length; i++){
-							elementos[i].classList.remove('resaltar');
-						}
-					}
+                    if(el) {
+                        el.classList.add("resaltar");
+                        var aux = document.getElementById("dialogPlugin:auxCopiar");
+                        if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+                            aux.value = el.textContent;
+                        }else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+                            aux.value = el.firstChild.value;
+                        }else if(el.value!=null &amp;&amp; el.value!=''){
+                            aux.value = el.value;
+                        }else{
+                            aux.value = '';
+                        }
+                    }
+                }
 
-					el.classList.add("resaltar");
-					debugger;
-					var aux = document.getElementById("dialogPlugin:auxCopiar");
-					if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
-						aux.value = el.textContent;
-					}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
-						aux.value = el.firstChild.value;
-					}else if(el.value!=null &amp;&amp; el.value!=''){
-						aux.value = el.value;
-					}else{
-						aux.value = '';
-					}
+                function ocultarContextMenu() {
+                    ['mainCm','cMenuPropiedadesWV'].forEach(function(widget) {
+                        var menu = PF(widget);
+                        if (menu &amp;&amp; menu.isVisible()) {
+                            menu.hide();
+                        }
+                    });
+                }
+            </h:outputScript>
 
-					if(aux.value!='' ){
-						var multiple = false;
-						var hijos = el.children;
-						if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
-							multiple = true;
-						}else if(hijos.length &gt;= 1 ){
-							if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
-								hijos = hijos[0].children;
-							}
-							for(i=0;i&lt;hijos.length;i++){
-								if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
-									multiple=true;
-								}
-							}
-						}
-						var listaCm = document.getElementsByClassName('ui-contextmenu');
-						if(multiple){
-							for(i=0;i&lt;listaCm.length;i++){
-								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-									arrayCm.push(listaCm[i]);
-								}
-								listaCm[i].classList.add("d-none");
-							}
-						}else{
-							for(i=0;i&lt;listaCm.length;i++){
-								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
-									arrayCm.push(listaCm[i]);
-								}
-								listaCm[i].classList.remove("d-none");
-							}
-							if(arrayCm.length&gt;1){
-								arrayCm.pop();
-								for(let i=0; i&lt;arrayCm.length; i++){
-									arrayCm[i].style.display='none';
-								}
-							}
-							arrayCm = [];
-						}
-					}
-		        }
-
-		        function ocultarContextMenu() {
-					  ['mainCm','cMenuPropiedadesWV'].forEach(function(widget) {
-						  var menu = PF(widget);
-						  if (menu &amp;&amp; menu.isVisible()) {
-							  menu.hide();
-						  }
-					  });
-				  }
-
-
-			</h:outputScript>
-
-			<p:contextMenu for="dataTablePropiedades" id="cMenuPropiedades" widgetVar="cMenuPropiedadesWV" beforeShow="return true;">
+            <p:contextMenu for="dataTablePropiedades" id="cMenuPropiedades" widgetVar="cMenuPropiedadesWV" beforeShow="return true;">
                 <p:menuitem id="mnuCopyPropiedades" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" />
                 <p:separator/>
-				<p:menuitem id="mnuNuevoPropiedades" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogPlugin:btnNuevaPropiedad').click();" />
-				<p:menuitem id="mnuEditarPropiedades" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('dialogPlugin:btnEditarPropiedad').click();"/>
-				<p:menuitem id="mnuEliminarPropiedades" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('dialogPlugin:btnEliminarPropiedad').click();" />
+                <p:menuitem id="mnuNuevoPropiedades" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogPlugin:btnNuevaPropiedad').click();" />
+                <p:menuitem id="mnuEditarPropiedades" value="#{msg['botones.editar']}" icon="fa fa-pencil" process="@this" onclick="document.getElementById('dialogPlugin:btnEditarPropiedad').click();"/>
+                <p:menuitem id="mnuEliminarPropiedades" value="#{msg['botones.eliminar']}" icon="fa fa-trash" process="@this" onclick="document.getElementById('dialogPlugin:btnEliminarPropiedad').click();" />
             </p:contextMenu>
+
             <pe:clipboard id="clipContextCopyPropiedades" trigger="mnuCopyPropiedades" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
                 <p:ajax event="success" listener="#{dialogPlugin.copiadoCorr}" process="@this" update="@this growlDialog"/>
                 <p:ajax event="error" listener="#{dialogPlugin.copiadoErr}" update="@this growlDialog"/>
             </pe:clipboard>
 
-			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
+            <p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
                 <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" />
             </p:contextMenu>
+
             <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
                 <p:ajax event="success" listener="#{dialogPlugin.copiadoCorr}" process="@this" update="@this growlDialog"/>
                 <p:ajax event="error" listener="#{dialogPlugin.copiadoErr}" update="@this growlDialog"/>
             </pe:clipboard>
 
-           <p:inputText id="auxCopiar" value="#{dialogPlugin.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+            <p:inputText id="auxCopiar" value="#{dialogPlugin.portapapeles}" style="position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; opacity: 0; overflow: hidden;"/>
 
-	</h:form>
+    </h:form>
 </h:body>
 
 </f:view>

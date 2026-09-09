@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClientException;
 
 /**
  * Implementación del acceso a componente SISTRAMIT.
@@ -36,7 +37,8 @@ public class SistramitApiExternaComponentImpl implements SistramitApiExternaComp
     private ConfiguracionComponent configuracionComponent;
 
     @Override
-    public String obtenerTicketAccesoFH(FuncionarioHabilitadoInfo funcionarioHabilitadoInfo, PersonaInfo interesado, PersonaInfo representante, TramiteFH tramiteFH) {
+    public String obtenerTicketAccesoFH(FuncionarioHabilitadoInfo funcionarioHabilitadoInfo, PersonaInfo interesado,
+            PersonaInfo representante, TramiteFH tramiteFH) {
         String resultado = "";
         final RestTemplate restTemplate = new RestTemplate();
         restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
@@ -54,15 +56,21 @@ public class SistramitApiExternaComponentImpl implements SistramitApiExternaComp
 
         final HttpEntity<RInfoTicketAccesoFH> request = new HttpEntity<>(param, headers);
         ResponseEntity<String> response = null;
+        final String url = getUrl();
 
         try {
-            response = restTemplate.postForEntity(getUrl() + "/ticketAccesoFH", request, String.class);
-        } catch (Exception e) {
-
+            response = restTemplate.postForEntity(url + "/ticketAccesoFH", request, String.class);
+        } catch (RestClientException | IllegalArgumentException e) {
+            log.warn("Error obteniendo ticket de acceso FH desde Sistramit. URL: " + url, e);
+            return resultado;
         }
 
         if (response != null && response.getStatusCodeValue() == 200) {
             resultado = response.getBody();
+        }
+
+        if (resultado == null || resultado.trim().isEmpty()) {
+            log.warn("Sistramit no ha devuelto un ticket de acceso FH válido. URL: " + url);
         }
 
         return resultado;
