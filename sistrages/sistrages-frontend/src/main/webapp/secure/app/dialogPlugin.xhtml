@@ -357,7 +357,7 @@
                     var el = document.elementFromPoint(posX, posY);
                     let elementos = document.getElementsByClassName('resaltar');
                     if(elementos.length &gt; 0){
-                        for(let i = 0; i &lt; elements.length; i++){
+                        for(let i = 0; i &lt; elementos.length; i++){
                             elementos[i].classList.remove('resaltar');
                         }
                     }
@@ -409,7 +409,7 @@
                 <p:ajax event="error" listener="#{dialogPlugin.copiadoErr}" update="@this growlDialog"/>
             </pe:clipboard>
 
-            <p:inputText id="auxCopiar" value="#{dialogPlugin.portapapeles}" style="position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; opacity: 0; overflow: hidden;"/>
+            <p:inputText id="auxCopiar" value="#{dialogPlugin.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
     </h:form>
 </h:body>

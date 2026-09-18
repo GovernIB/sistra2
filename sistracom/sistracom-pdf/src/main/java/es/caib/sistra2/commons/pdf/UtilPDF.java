@@ -465,7 +465,7 @@ public class UtilPDF {
 
 			for (int j = 0; j < annots.size(); j++) {
 				PdfDictionary annot = annots.getAsDict(j);
-				if (PdfName.FILEATTACHMENT.equals(annot.getAsName(PdfName.SUBTYPE))) {
+				if ((annot != null) && (PdfName.FILEATTACHMENT.equals(annot.getAsName(PdfName.SUBTYPE)))) {
 					return true;
 				}
 			}
