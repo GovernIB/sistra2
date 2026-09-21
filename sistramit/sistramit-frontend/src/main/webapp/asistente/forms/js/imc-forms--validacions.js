@@ -369,24 +369,16 @@ $.fn.appValida = function(opcions) {
 
 		var validacions_arr = [];
 
-		if (isNaN(valor)) {
-
-			validacions_arr
-				.push("e");
-
+		// -- Validacion estricta de 9 digitos
+		var numberExpReg = /^\d{9}$/;
+		if ( !numberExpReg.test(valor) ) {
+			validacions_arr.push("e");
 		}
 
-		var valor_primerDigit = parseInt( valor.substr(0,1), 10),
-			valor_string = valor.toString();
+		// - Validacion primer digito
+		var valor_primerDigit = parseInt( valor.substr(0,1), 10);
 
 		if (valor_primerDigit !== 9 && valor_primerDigit !== 8 && valor_primerDigit !== 6 && valor_primerDigit !== 7) {
-
-			validacions_arr
-				.push("e");
-
-		}
-
-		if (valor_string.length !== 9) {
 
 			validacions_arr
 				.push("e");
