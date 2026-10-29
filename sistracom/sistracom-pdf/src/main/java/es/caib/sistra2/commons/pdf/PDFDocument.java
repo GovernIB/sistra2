@@ -29,6 +29,8 @@ import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 
+import es.caib.sistra2.commons.pdfcaib.FontResourceLoader;
+
 public class PDFDocument {
 
 	public static final String TYPE_HEAD_NORMAL = "NORMAL";
@@ -262,7 +264,7 @@ public class PDFDocument {
 			// rectangle.setBackgroundColor(new Color(223,223,223));
 			cb.rectangle(rectangle);
 
-			final BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+			final BaseFont bf = FontResourceLoader.getNotoSansFont(7, false).getBaseFont();
 			cb.beginText();
 			cb.setFontAndSize(bf, 7);
 			cb.setColorStroke(Color.BLACK);
@@ -344,7 +346,7 @@ public class PDFDocument {
 			// rectangle.setBackgroundColor(new Color(223,223,223));
 			cb.rectangle(rectangle);
 
-			final BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+			final BaseFont bf = FontResourceLoader.getNotoSansFont(7, false).getBaseFont();
 			cb.beginText();
 			cb.setFontAndSize(bf, 7);
 			cb.setColorStroke(Color.BLACK);
@@ -360,7 +362,9 @@ public class PDFDocument {
 	}
 
 	public void separador(final float height) throws Exception {
-		final Font font = new Font(Font.HELVETICA, 8, Font.ITALIC, Color.GRAY);
+		final Font font = FontResourceLoader.getNotoSansFont(8, false);
+		font.setStyle(Font.ITALIC);
+		font.setColor(Color.GRAY);
 		final PdfPTable sep = new PdfPTable(1);
 		final PdfPCell cell = new PdfPCell(new Phrase(14, "", font));
 		cell.setBorder(0);
@@ -482,7 +486,9 @@ public class PDFDocument {
 			} else {
 				final Rectangle page = document.getPageSize();
 
-				final Font font = new Font(Font.HELVETICA, 7, Font.ITALIC, Color.GRAY);
+				final Font font = FontResourceLoader.getNotoSansFont(7, false);
+				font.setStyle(Font.ITALIC);
+				font.setColor(Color.GRAY);
 
 				if (cabecera != null) {
 					final PdfPTable head = new PdfPTable(1);
@@ -528,7 +534,9 @@ public class PDFDocument {
 			final Rectangle page = document.getPageSize();
 			final PdfContentByte cb = writer.getDirectContent();
 
-			final Font font = new Font(Font.HELVETICA, 7, Font.ITALIC, Color.GRAY);
+			final Font font = FontResourceLoader.getNotoSansFont(7, false);
+			font.setStyle(Font.ITALIC);
+			font.setColor(Color.GRAY);
 
 			if (cabecera != null) {
 				final PdfPTable head = new PdfPTable(1);
@@ -594,7 +602,7 @@ public class PDFDocument {
 				tplTotal = writer.getDirectContent().createTemplate(100, 100);
 				tplTotal.setBoundingBox(new Rectangle(-20, -20, 100, 100));
 				try {
-					bFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
+					bFont = FontResourceLoader.getNotoSansFont(7, false).getBaseFont();
 				} catch (final Exception e) {
 					throw new ExceptionConverter(e);
 				}

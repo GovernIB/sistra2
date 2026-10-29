@@ -32,6 +32,9 @@ public class Cabecera {
 	private int anchoLogo;
 	private int altoLogo;
 
+	/** Color de la cabecera */
+	private String colorCabecera;
+
 	/**
 	 * @return Devuelve logo
 	 */
@@ -146,6 +149,20 @@ public class Cabecera {
 
 	public void setAltoLogo(final int altoLogo) {
 		this.altoLogo = altoLogo;
+	}
+
+	/**
+	 * @return Devuelve colorCabecera
+	 */
+	public String getColorCabecera() {
+		return colorCabecera;
+	}
+
+	/**
+	 * @param colorCabecera Modifica colorCabecera
+	 */
+	public void setColorCabecera(final String colorCabecera) {
+		this.colorCabecera = colorCabecera;
 	}
 
 }

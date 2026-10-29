@@ -15,14 +15,14 @@ public class PersonalizacionTexto {
   private boolean negrita;
   /**Boolean que indica si el texto se vera en cursiva*/
   private boolean cursiva;
-  /**Type que contiene el tipo de fuente*/
+    /**Type que contiene el tipo de fuente*/
   private TypeFuente fuente;
+  /**Type que contiene el nombre del tipo de fuente*/
+  private String nombreFuente;
   /**Tamaño del texto*/
   private int tamanio;
   /** Indica que es HTML. */
   private boolean html = false;
-
-
 
   /**
    * Constructor
@@ -40,7 +40,14 @@ public class PersonalizacionTexto {
     this.tamanio = tamanio;
   }
 
-
+    public PersonalizacionTexto(boolean negrita, boolean cursiva,
+      String nombreFuente, int tamanio) {
+    super();
+    this.negrita = negrita;
+    this.cursiva = cursiva;
+    this.nombreFuente = nombreFuente;
+    this.tamanio = tamanio;
+  }
 
   /**
    * @return Devuelve negrita
@@ -49,16 +56,12 @@ public class PersonalizacionTexto {
     return negrita;
   }
 
-
-
   /**
    * @param negrita Modifica negrita
    */
   public void setNegrita(boolean negrita) {
     this.negrita = negrita;
   }
-
-
 
   /**
    * @return Devuelve cursiva
@@ -67,16 +70,12 @@ public class PersonalizacionTexto {
     return cursiva;
   }
 
-
-
   /**
    * @param cursiva Modifica cursiva
    */
   public void setCursiva(boolean cursiva) {
     this.cursiva = cursiva;
   }
-
-
 
   /**
    * @return Devuelve fuente
@@ -85,7 +84,12 @@ public class PersonalizacionTexto {
     return fuente;
   }
 
-
+  /**
+   * @return Devuelve nombreFuente
+   */
+  public String getNombreFuente() {
+    return nombreFuente;
+  }
 
   /**
    * @param fuente Modifica fuente
@@ -93,8 +97,13 @@ public class PersonalizacionTexto {
   public void setFuente(TypeFuente fuente) {
     this.fuente = fuente;
   }
-
-
+  
+  /**
+   * @param nombreFuente Modifica nombreFuente
+   */
+  public void setNombreFuente(String nombreFuente) {
+    this.nombreFuente = nombreFuente;
+  }
 
   /**
    * @return Devuelve tamanio

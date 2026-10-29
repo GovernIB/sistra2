@@ -28,6 +28,7 @@ public final class ReglasFlujoNormalizadoImpl extends ReglasFlujoImpl {
 
 		// CARGAR TRAMITE
 		this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_CARGA);
+		this.addRegla(new RTDefinicionPasosTramite(), TypeFaseEjecucion.POST_CARGA);
 
 		// IR A PASO
 		// - PRE Navegación
@@ -47,6 +48,7 @@ public final class ReglasFlujoNormalizadoImpl extends ReglasFlujoImpl {
 
 		// CANCELAR
 		this.addRegla(new RTCancelacionPagoIniciado(), TypeFaseEjecucion.PRE_CANCELAR);
+		this.addRegla(new RTCancelacionRegistroPendienteReintento(), TypeFaseEjecucion.PRE_CANCELAR);
 
 	}
 }

@@ -614,6 +614,9 @@ $.fn.appPas = function(options) {
 								,jsonUsuariId: APP_USUARI_ID
 								,txtSignant: txtSignant
 								,txtSignants: txtSignants
+								,esFH: (APP_JSON_TRAMIT_D.funcionarioHabilitado && APP_JSON_TRAMIT_D.funcionarioHabilitado === "s") ? true : false
+								,txtSignarPerFH: txtSignarPerFH
+								,txtSignatPerFH: txtSignatPerFH
 								,txtSignarSenseVerificar: txtSignarSenseVerificar
 								,txtSignatEl: txtSignatEl
 								,txtSignatura: txtSignatura

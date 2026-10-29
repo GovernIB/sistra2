@@ -48,6 +48,7 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.ScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
@@ -84,6 +85,13 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 	private static final Pattern PLUGINDOMI_INVOCAR_PATTERN = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'("
 			+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + "*?)\\'");
+
+	private static final Pattern STYLE_TAG_PATTERN = Pattern.compile(
+			"<[a-z][^>]*?\\sstyle\\s*=\\s*\"([^\"]*)\"",
+			Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern FONT_SIZE_PATTERN = Pattern.compile(
+			"(?:^|;)\\s*font-size\\s*:", Pattern.CASE_INSENSITIVE);
 
 	@Autowired
 	EntidadDao entidadDao;
@@ -662,15 +670,19 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 									} else if (componente instanceof ComponenteFormularioEtiqueta) {
 										final ComponenteFormularioEtiqueta aviso = (ComponenteFormularioEtiqueta) componente;
 
+										final String[] opcionesTexto = { aviso.getIdComponente(),
+												literales.getLiteral("validador",
+														"tramitePasoRellenar.disenyoFormulario.pagina", pIdioma)
+														+ " " + Integer.toString(paginaFormulario.getOrden()),
+												formulario.getIdentificador() };
 										comprobarLiteral(aviso.getTexto(),
 												"tramitePasoRellenar.disenyoFormulario.texto",
-												new String[] { aviso.getIdComponente(),
-														literales.getLiteral("validador",
-																"tramitePasoRellenar.disenyoFormulario.pagina", pIdioma)
-																+ " " + Integer.toString(paginaFormulario.getOrden()),
-														formulario.getIdentificador() },
+												opcionesTexto,
 												"literal.formulario.disenyoFormulario.pagina.elemento",
 												pIdiomasTramiteVersion, pIdioma, listaErrores);
+										comprobarContenidoHTML(aviso.getTexto(),
+												"tramitePasoRellenar.disenyoFormulario.texto", opcionesTexto, pIdioma,
+												listaErrores);
 
 									} else if (componente instanceof ComponenteFormularioCampo) {
 										final ComponenteFormularioCampo campo = (ComponenteFormularioCampo) componente;
@@ -1208,6 +1220,39 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			final List<ErrorValidacion> listaErrores) {
 		comprobarLiteralAux(pLiteral, pTextoLiteral, pOpciones, pLiteralOpciones, pIdiomasTramiteVersion, pIdioma,
 				listaErrores, TypeErrorValidacion.LITERALES_HTML);
+	}
+
+	/**
+	 * Impide promocionar un trámite si alguna traducción del aviso declara font-size en un atributo style.
+	 */
+	private void comprobarContenidoHTML(final Literal pLiteral, final String pTextoLiteral, final String[] pOpciones,
+			final String pIdioma, final List<ErrorValidacion> listaErrores) {
+		if (pLiteral != null && pLiteral.getTraducciones() != null) {
+			for (final Traduccion traduccion : pLiteral.getTraducciones()) {
+				if (traduccion != null && contieneDeclaracionFontSize(traduccion.getLiteral())) {
+					final ErrorValidacion error = errorValidacion(pTextoLiteral, pOpciones,
+							"literal.html.fontSize", pIdioma);
+					error.setTipo(TypeErrorValidacion.LITERALES_HTML);
+					error.setItem(pLiteral);
+					listaErrores.add(error);
+					return;
+				}
+			}
+		}
+	}
+
+	private boolean contieneDeclaracionFontSize(final String pContenidoHTML) {
+		if (StringUtils.isBlank(pContenidoHTML)) {
+			return false;
+		}
+
+		final Matcher matcherEstilo = STYLE_TAG_PATTERN.matcher(pContenidoHTML);
+		while (matcherEstilo.find()) {
+			if (FONT_SIZE_PATTERN.matcher(matcherEstilo.group(1)).find()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

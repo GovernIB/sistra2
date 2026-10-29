@@ -415,6 +415,12 @@
 				</p:outputPanel>
 		</p:confirmDialog>
 
+		<p:confirmDialog widgetVar="avisoMaximoLineasDlg" header="#{msg['warning.titulo']}" message="#{msg['warning.componente.maxLineas']}">
+			<p:outputPanel styleClass="confirmar_botonera">
+				<p:commandButton value="#{msg['botones.aceptar']}" type="button" onclick="PF('avisoMaximoLineasDlg').hide();" styleClass="boton-azul" />
+			</p:outputPanel>
+		</p:confirmDialog>
+
 </h:body>
 
 </f:view>

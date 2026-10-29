@@ -4,7 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,8 +21,10 @@ import es.caib.sistra2.commons.pdf.ObjectStamp;
 import es.caib.sistra2.commons.pdf.UtilPDF;
 import es.caib.sistra2.commons.pdfcaib.GeneradorPdf;
 import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
+import es.caib.sistra2.commons.pdfcaib.model.CampoCheck;
 import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
 import es.caib.sistra2.commons.pdfcaib.model.ColumnaTabla;
+import es.caib.sistra2.commons.pdfcaib.model.ConfiguracionFuentes;
 import es.caib.sistra2.commons.pdfcaib.model.FilaTabla;
 import es.caib.sistra2.commons.pdfcaib.model.FormularioPdf;
 import es.caib.sistra2.commons.pdfcaib.model.HeaderTabla;
@@ -34,6 +38,7 @@ import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteAviso;
+import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteListaElementos;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
@@ -75,6 +80,21 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 	/** Propiedad plantilla que indica url logo. **/
 	public static final String PROP_LOGO_DINAMICO_URL = "logo.dinamico.url";
+
+	/** Propiedad plantilla que indica la fuente. **/
+	public static final String PROP_FUENTE = "fuente.formulario";
+
+	/** Propiedad plantilla que indica el tamaño de la cabecera. **/
+	public static final String PROP_TAMANIO_CABECERA = "tamanio.cabecera";
+
+	/** Propiedad plantilla que indica el tamaño de la etiqueta. **/
+	public static final String PROP_TAMANIO_ETIQUETA = "tamanio.etiqueta";
+
+	/** Propiedad plantilla que indica el tamaño de la sección. **/
+	public static final String PROP_TAMANIO_SECCION = "tamanio.seccion";
+
+	/** Propiedad plantilla que indica el color de la cabecera del formulario. **/
+	public static final String PROP_COLOR_FORMULARIO= "color.cabecera.formulario";
 
 	/** Propiedad plantilla que indica escalado alto logo en %. **/
 	public static final String PROP_LOGO_ALTO = "logo.escalado.alto";
@@ -133,8 +153,26 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Url de la imagen dinamico. **/
 	private String urlImagenDinamico;
 
+	/** Fuente del formulario. **/
+	private String fuenteFormulario;
+
 	/** Escalado alto imagen. */
 	private Integer escaladoAltoImagen;
+
+	/** Tamaño de la fuente de la cabecera. */
+	private Integer tamanioCabecera;
+
+	/** Tamaño de la fuente de la sección. */
+	private Integer tamanioSeccion;
+
+	/** Color de la cabecera. */
+	private String colorCabecera;
+
+	/** Color de la Sección. */
+	private String colorSeccion;
+
+	/** Tamaño de la fuente de la etiqueta. */
+	private Integer tamanioEtiqueta;
 
 	/** Escalado ancho imagen. */
 	private Integer escaladoAnchoImagen;
@@ -187,6 +225,50 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 		// Creamos formulario
 		final FormularioPdf formularioPdf = new FormularioPdf();
+		
+
+		// Configuración fuentes del formulario
+		final ConfiguracionFuentes configuracionFuentes = new ConfiguracionFuentes();
+		formularioPdf.setConfiguracionFuentes(configuracionFuentes);
+
+		// Fuente del formulario
+		final String fuente = StringUtils.isNotBlank(fuenteFormulario)
+				? fuenteFormulario : "NotoSans";
+		configuracionFuentes.setFuente(fuente);
+
+		if (TypeFuente.HELVETICA.toString().equalsIgnoreCase(fuente)) {
+			configuracionFuentes.setFuenteBold(fuente);
+			configuracionFuentes.setFuenteRegular(fuente);
+		} else {
+			configuracionFuentes.setFuenteBold(String.format("%s-Bold", fuente));
+			configuracionFuentes.setFuenteRegular(String.format("%s-Regular", fuente));
+		}
+
+		// Tamaño de la cabecera del formulario
+		if (tamanioCabecera != null) {
+				configuracionFuentes.setTamanioCabecera(tamanioCabecera);
+		}
+
+		// Tamaño de la sección del formulario
+		if (tamanioSeccion != null) {
+				configuracionFuentes.setTamanioSeccion(tamanioSeccion);
+		}
+
+		// Tamaño de la etiqueta del formulario
+		if (tamanioEtiqueta != null) {
+				configuracionFuentes.setTamanioEtiqueta(tamanioEtiqueta);
+		}
+
+		// Color de la cabecera del formulario
+		if (colorCabecera != null) {
+				configuracionFuentes.setColorCabecera(colorCabecera);
+		}
+
+
+		// Color de la seccion del formulario
+		if (colorSeccion != null) {
+				configuracionFuentes.setColorSeccion(colorSeccion);
+		}
 
 		// Cabecera
 		final Cabecera cabecera = new Cabecera();
@@ -235,6 +317,11 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			if (escaladoAnchoImagen != null) {
 				cabecera.setAnchoLogo(escaladoAnchoImagen);
 			}
+		}
+
+		// Color de la cabecera
+		if (colorCabecera != null) {
+			cabecera.setColorCabecera(colorCabecera);
 		}
 
 		// Recorremos las paginas
@@ -288,8 +375,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 		// Generar PDF
 		try {
-			// Genera PDF
-			final GeneradorPdf generadorPdf = new GeneradorPdf();
+			// Genera PDF 
+			final GeneradorPdf generadorPdf = new GeneradorPdf(configuracionFuentes);
 			byte[] pdf = generadorPdf.generarPdf(formularioPdf);
 			// Establece marca de agua
 			pdf = stampMarcaAgua(pdf);
@@ -334,7 +421,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		if (mostrarAviso != null && mostrarAviso) {
 			// Creamos texto aviso
 			final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false, true,
-					TypeFuente.NOTOSANS, 10);
+					TypeFuente.NOTOSANS.toString(), 10);
 
 			// TODO TRATAR TEXTO HTML (VERIFICAR QUE VA TODO BIEN)
 
@@ -409,9 +496,10 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		byte[] arrayBytes = null;
 		if (StringUtils.isNotBlank(url)) {
 			try {
+
 				if (url.startsWith("http")) {
 					arrayBytes = IOUtils.toByteArray(new URL(url));
-				} else {
+	   			} else {
 					arrayBytes = IOUtils.toByteArray(new FileInputStream(url));
 				}
 			} catch (final IOException e) {
@@ -495,6 +583,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		marcaAguaPosicionX = null;
 		marcaAguaPosicionY = null;
 		mostrarCamposOcultos = false;
+		colorCabecera = null;
+		colorSeccion = null;
 
 		if (plantilla != null) {
 			try (ByteArrayInputStream bis = new ByteArrayInputStream(plantilla)) {
@@ -505,12 +595,32 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 				urlImagen = propiedades.getProperty(PROP_LOGO_URL);
 				urlImagenDinamico = propiedades.getProperty(PROP_LOGO_DINAMICO_URL);
 
+				fuenteFormulario = propiedades.getProperty(PROP_FUENTE);
+
+				tamanioCabecera = (propiedades.getProperty(PROP_TAMANIO_CABECERA) != null
+						? Integer.parseInt(propiedades.getProperty(PROP_TAMANIO_CABECERA))
+						: null);
+
+				tamanioSeccion = (propiedades.getProperty(PROP_TAMANIO_SECCION) != null
+						? Integer.parseInt(propiedades.getProperty(PROP_TAMANIO_SECCION))
+						: null);
+
+				tamanioEtiqueta = (propiedades.getProperty(PROP_TAMANIO_ETIQUETA) != null
+						? Integer.parseInt(propiedades.getProperty(PROP_TAMANIO_ETIQUETA))
+						: null);
+
 				escaladoAltoImagen = (propiedades.getProperty(PROP_LOGO_ALTO) != null
 						? Integer.parseInt(propiedades.getProperty(PROP_LOGO_ALTO))
 						: null);
+
 				escaladoAnchoImagen = (propiedades.getProperty(PROP_LOGO_ANCHO) != null
 						? Integer.parseInt(propiedades.getProperty(PROP_LOGO_ANCHO))
 						: null);
+
+				/** Se cargan los colores de la cabecera y la sección  con el mismo valor**/
+
+				colorCabecera = propiedades.getProperty(PROP_COLOR_FORMULARIO);
+				colorSeccion = propiedades.getProperty(PROP_COLOR_FORMULARIO);
 
 				if (StringUtils.isNotBlank(propiedades.getProperty(PROP_VISUALIZACION_VALOR_INDEXADO))) {
 					visualizacionValorIndexado = TipoVisualizacionValorIndexado
@@ -617,7 +727,12 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 */
 	private void anyadirDato(final RComponente componente, final Linea linea, final ValorCampo valor) {
 		if (mostrarCamposOcultos || (!mostrarCamposOcultos && !componente.getTipo().equals("OC"))) {
-			if (valor == null) {
+			if (componente instanceof RComponenteCheckbox) {
+				final RComponenteCheckbox checkbox = (RComponenteCheckbox) componente;
+				final String valorActual = valor == null ? null : obtenerValorPresentacion(valor, componente);
+				final boolean checked = valorActual != null && valorActual.equals(checkbox.getValorChecked());
+				linea.getObjetosLinea().add(new CampoCheck(6, componente.getEtiqueta(), checked));
+			} else if (valor == null) {
 				linea.getObjetosLinea().add(new CampoTexto(6, false, componente.getEtiqueta(), ""));
 			} else {
 				final String vcfStr = obtenerValorPresentacion(valor, componente);

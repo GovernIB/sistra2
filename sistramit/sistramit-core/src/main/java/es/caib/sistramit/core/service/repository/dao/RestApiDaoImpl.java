@@ -793,6 +793,11 @@ public final class RestApiDaoImpl implements RestApiDao {
 					builder.equal(tableT.get("nifIniciador"), pFiltroBusqueda.getNif()));
 		}
 
+		if (StringUtils.isNotBlank(pFiltroBusqueda.getNumRegistro())) {
+			String jsonPattern = "%\"NUMREG\":\"" + pFiltroBusqueda.getNumRegistro() + "\"%";
+			predicate = builder.and(predicate, builder.like(tableE.get("detalle"), jsonPattern));
+		}		
+
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNombre())) {
 			predicate = builder.and(predicate,
 					builder.like(
@@ -1112,6 +1117,11 @@ public final class RestApiDaoImpl implements RestApiDao {
 
             predicate = builder.and(predicate, builder.or(predicatesPago.toArray(new Predicate[0])));
         }
+
+		if (StringUtils.isNotBlank(pFiltroBusqueda.getNumRegistro())) {
+			String jsonPattern = "%\"NUMREG\":\"" + pFiltroBusqueda.getNumRegistro() + "\"%";
+			predicate = builder.and(predicate, builder.like(tableE.get("detalle"), jsonPattern));
+		}
 
 		if(pFiltroBusqueda.getTextoTraza() != null) {
 			predicate = builder.and(predicate, builder.like(tableE.get("trazaError"), "%" + pFiltroBusqueda.getTextoTraza() + "%"));

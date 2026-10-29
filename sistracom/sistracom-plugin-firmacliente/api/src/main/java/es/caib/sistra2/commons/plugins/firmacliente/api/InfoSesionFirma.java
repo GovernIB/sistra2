@@ -38,11 +38,20 @@ public class InfoSesionFirma {
 	/** Email. **/
 	private String email;
 
-	/** NIF representante (quien firma). **/
+	/** NIF representante (quien firma en caso de representación). **/
 	private String nifRepresentante;
 
-	/** Nombre representante (quien firma).. **/
+	/** Nombre representante (quien firma en caso de representación). **/
 	private String nombreRepresentante;
+
+	/** Username FH. */
+	private String usernameFH;
+
+	/** NIF funcionario habilitado (quien firma en caso de FH). **/
+	private String nifFH;
+
+	/** Nombre funcionario habilitado (quien firma en caso de FH). **/
+	private String nombreFH;
 
 	/**
 	 * @return the idioma
@@ -209,5 +218,33 @@ public class InfoSesionFirma {
 
 	public void setMetodoAutenticacion(TipoMetodoAutenticacion metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
+	}
+
+	public String getNifFH() {
+		return nifFH;
+	}
+
+	public void setNifFH(String nifFH) {
+		this.nifFH = nifFH;
+	}
+
+	public String getNombreFH() {
+		return nombreFH;
+	}
+
+	public void setNombreFH(String nombreFH) {
+		this.nombreFH = nombreFH;
+	}
+
+	public boolean isFuncionarioHabilitado() {
+		return nifFH != null && !nifFH.isEmpty();
+	}
+
+	public String getUsernameFH() {
+		return usernameFH;
+	}
+
+	public void setUsernameFH(String usernameFH) {
+		this.usernameFH = usernameFH;
 	}
 }

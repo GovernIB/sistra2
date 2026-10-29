@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,12 @@ import es.caib.sistrages.core.api.service.SystemService;
 public class AyudaServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+
+	/** Token sustituido por la propiedad de extensiones permitidas en anexos. */
+	private static final String TOKEN_EXTENSIONES_PERMITIDAS = "@@EXTENSIONES_PERMITIDAS@@";
+
+	/** Única página de ayuda que usa el flujo con sustitución de tokens. */
+	private static final String PAGINA_ANEXO = "definicionVersionAnexoDialog.html";
 
 	@Inject
 	private SystemService systemService;
@@ -134,9 +142,22 @@ public class AyudaServlet extends HttpServlet {
 				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_AYUDA_PATH.toString());
 
 		// Retornamos contenido
-		if (StringUtils.isEmpty(url))
+		if (StringUtils.isEmpty(url)) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		else if (StringUtils.isBlank(dirAyudaExterna)) {
+		}
+
+		if ("text/html".equals(mimeType) && url.endsWith(PAGINA_ANEXO)) {
+			final String contenido = obtenerContenidoHtml(url, dirAyudaExterna);
+			if (contenido == null) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			} else {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().write(sustituirTokens(contenido));
+			}
+			return;
+		}
+
+		if (StringUtils.isBlank(dirAyudaExterna)) {
 			url = "/ayuda/" + url;
 			request.getRequestDispatcher(url).forward(request, response);
 		} else {
@@ -159,6 +180,55 @@ public class AyudaServlet extends HttpServlet {
 			}
 		}
 
+	}
+
+	/**
+	 * Obtiene el contenido HTML de la ayuda, bien del directorio externo o del
+	 * empaquetado interno.
+	 *
+	 * @param url             url relativa del recurso
+	 * @param dirAyudaExterna directorio externo de ayuda (puede ser vacío)
+	 * @return contenido HTML o null si no existe
+	 * @throws IOException error de lectura
+	 */
+	private String obtenerContenidoHtml(final String url, final String dirAyudaExterna) throws IOException {
+		InputStream is = null;
+		if (StringUtils.isBlank(dirAyudaExterna)) {
+			is = getServletContext().getResourceAsStream("/ayuda/" + url);
+		} else {
+			final File f = new File(dirAyudaExterna + "/" + url);
+			if (f.exists()) {
+				is = new FileInputStream(f);
+			}
+		}
+		if (is == null) {
+			return null;
+		}
+		try {
+			return IOUtils.toString(is, StandardCharsets.UTF_8);
+		} finally {
+			is.close();
+		}
+	}
+
+	/**
+	 * Sustituye los tokens dinámicos del contenido de ayuda.
+	 *
+	 * @param contenido contenido HTML original
+	 * @return contenido con los tokens sustituidos
+	 */
+	private String sustituirTokens(final String contenido) {
+		if (!contenido.contains(TOKEN_EXTENSIONES_PERMITIDAS)) {
+			return contenido;
+		}
+		String extensiones = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString());
+		if (extensiones == null) {
+			extensiones = "";
+		} else {
+			extensiones = extensiones.replace(",", "; ");
+		}
+		return contenido.replace(TOKEN_EXTENSIONES_PERMITIDAS, extensiones);
 	}
 
 }

@@ -205,6 +205,68 @@ public class AsistenteTramitacionController extends TramitacionController {
 		return generarJsonView(res);
 	}
 
+
+	/**
+	 * Cancela un trámite.
+	 *
+	 * @return Devuelve JSON indicando que se ha cancelado.
+	 *
+	 */
+	// @RequestMapping(value = "/cancelarTramitePersistencia.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/urlCancelarTramiteDesdePersistencia.json")
+	public ModelAndView cancelarTramiteDesdePersistencia(@RequestParam(name = "id") String idSesionTramitacion) {
+
+		debug("Cancelar tramite desde persistencia");
+
+		boolean cargado = false;
+		boolean borrado = false;
+
+		// Cargamos tramite
+		try {
+			cargarTramiteImpl(idSesionTramitacion, false);
+			cargado = true;
+			debug("Cargada instancia tramite");
+		} catch (Exception ex) {
+			cargado = false;
+		}
+
+		// Cancela trámite
+		if (cargado) {
+			// Si se ha podido cargar el trámite, lo cancelamos
+			try {
+				getFlujoTramitacionService().cancelarTramite(idSesionTramitacion);
+				borrado = true;
+				debug("Trámite cancelado");
+			} catch (Exception ex) {
+				borrado = false;
+			}
+		}
+
+		// Devolvemos mensaje con resultado
+		final RespuestaJSON res = new RespuestaJSON();
+		MensajeUsuario mensajeUsuario;
+		if (!cargado) {
+			res.setEstado(TypeRespuestaJSON.ERROR);
+			mensajeUsuario = new MensajeUsuario(
+					getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "atencion", getIdioma()),
+					getLiteralesFront().getLiteralFront(LiteralesFront.PERSISTENCIA, "cancelarTramite.errorCarga", getIdioma()));
+		} else if (!borrado) {
+			res.setEstado(TypeRespuestaJSON.ERROR);
+			mensajeUsuario = new MensajeUsuario(
+					getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "atencion", getIdioma()),
+					getLiteralesFront().getLiteralFront(LiteralesFront.PERSISTENCIA, "cancelarTramite.errorCancelar", getIdioma()));
+		} else {
+			res.setEstado(TypeRespuestaJSON.SUCCESS);
+			mensajeUsuario = new MensajeUsuario(
+					getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "atencion", getIdioma()),
+					getLiteralesFront().getLiteralFront(LiteralesFront.PERSISTENCIA, "cancelarTramite.cancelado", getIdioma()));
+		}
+		final MensajeUsuario mu = mensajeUsuario;
+		res.setMensaje(mu);
+
+		return generarJsonView(res);
+	}
+
 	/**
 	 * Realiza logout.
 	 *
@@ -502,7 +564,6 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 *
 	 * @param idPaso    id paso
 	 * @param idDocumento id documento
-	 * @param instancia  instancia
 	 * @return retorno de componente de firma externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoDigitalizacionExterno.html")
@@ -866,7 +927,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 					datosInicioTramite.getIdTramiteCatalogo(), datosInicioTramite.isServicioCatalogo(), datosInicioTramite.getIdioma());
 			// Literales pagina
 			final Map<String, String> literales = new HashMap<>();
-			final Properties literalesProps = getLiteralesFront().getLiteralesSeccion("persistencia", datosInicioTramite.getIdioma());
+			final Properties literalesProps = getLiteralesFront().getLiteralesSeccion(LiteralesFront.PERSISTENCIA, datosInicioTramite.getIdioma());
 			final Set<String> keys = literalesProps.stringPropertyNames();
 			for (final String key : keys) {
 				literales.put(key, literalesProps.getProperty(key));
@@ -887,7 +948,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 			model.put("tramitacionesIniciadas", tramitacionesIniciadas);
 			String urlInicioTramitePersistencia = getUrlAsistente() + "/asistente/iniciarTramiteDesdePersistencia.html";
 			model.put("urlIniciarTramiteNuevo", urlInicioTramitePersistencia);
-			model.put("urlReanudarTramiteNuevo", getUrlAsistente() + "/asistente/cargarTramite.html?idSesionTramitacion=");
+			model.put("urlReanudarTramite", getUrlAsistente() + "/asistente/cargarTramite.html?idSesionTramitacion=");
+			model.put("urlCancelarTramite", getUrlAsistente() + "/asistente/urlCancelarTramiteDesdePersistencia.json");
 			mav = new ModelAndView(URL_REDIRIGIR_PERSISTENCIA, model);
 		}  else {
 			// Si no tiene tramitaciones iniciadas, iniciamos trámite con el idioma será con el que se ha autenticado

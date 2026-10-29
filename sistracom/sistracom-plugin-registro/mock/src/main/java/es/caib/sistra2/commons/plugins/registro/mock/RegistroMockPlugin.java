@@ -209,7 +209,7 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	/**
 	 * Implementa retardo para testing.
 	 *
-	 * @param timeout
+	 * @param pTimeout
 	 *                    timeout en segundos
 	 */
 	private void retardo(final int pTimeout) {

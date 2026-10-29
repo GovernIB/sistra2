@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import com.lowagie.text.Font;
 
+import es.caib.sistra2.commons.pdfcaib.FontResourceLoader;
+
 public class ContextPDF {
 	
 	private HashMap fonts = new HashMap();
@@ -14,7 +16,13 @@ public class ContextPDF {
 	
 	public Font getDefaultFont()
 	{
-		return getFont(Font.HELVETICA,10,Font.NORMAL);
+		return getNotoSansFont(10, Font.NORMAL);
+	}
+
+	private Font getNotoSansFont(final float size, final int style) {
+		final Font font = FontResourceLoader.getNotoSansFont(size, (style & Font.BOLD) != 0);
+		font.setStyle(style);
+		return font;
 	}
 	
 	public Font getFont(int baseFont, float size, int style)
@@ -40,23 +48,23 @@ public class ContextPDF {
 	
 	public void initFonts()
 	{
-		Font font = new Font(Font.HELVETICA, 14, Font.NORMAL);
+		Font font = getNotoSansFont(14, Font.NORMAL);
 		fonts.put("Titulo1", font);
-		font = new Font(Font.HELVETICA, 10, Font.BOLD);
+		font = getNotoSansFont(10, Font.BOLD);
 		fonts.put("Titulo2", font);
-		font = new Font(Font.HELVETICA, 10, Font.NORMAL);
+		font = getNotoSansFont(10, Font.NORMAL);
 		fonts.put("Normal", font);
-		font = new Font(Font.HELVETICA, 9, Font.NORMAL);
+		font = getNotoSansFont(9, Font.NORMAL);
 		fonts.put("Arial9", font);
-		font = new Font(Font.HELVETICA, 9, Font.BOLD);
+		font = getNotoSansFont(9, Font.BOLD);
 		fonts.put("Arial9Bold", font);
-		font = new Font(Font.HELVETICA, 11, Font.NORMAL);
+		font = getNotoSansFont(11, Font.NORMAL);
 		fonts.put("Arial11", font);
-		font = new Font(Font.HELVETICA, 11, Font.BOLD);
+		font = getNotoSansFont(11, Font.BOLD);
 		fonts.put("Arial11Bold", font);
-		font = new Font(Font.HELVETICA, 8, Font.NORMAL);
+		font = getNotoSansFont(8, Font.NORMAL);
 		fonts.put("Arial8", font);		
-		font = new Font(Font.HELVETICA, 8, Font.BOLD);
+		font = getNotoSansFont(8, Font.BOLD);
 		fonts.put("Arial8Bold", font);
 
 		

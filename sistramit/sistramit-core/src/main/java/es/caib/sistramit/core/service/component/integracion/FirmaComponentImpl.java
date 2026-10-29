@@ -87,6 +87,13 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			}
 		}
 
+		// FH
+		if (usuarioAutenticado.getFuncionarioHabilitado() != null) {
+			infoSesionFirma.setUsernameFH(usuarioAutenticado.getFuncionarioHabilitado().getUserName());
+			infoSesionFirma.setNifFH(usuarioAutenticado.getFuncionarioHabilitado().getNif());
+			infoSesionFirma.setNombreFH(usuarioAutenticado.getFuncionarioHabilitado().getNombreApellidos());
+		}
+
 		// Genera sesión firma
 		String sf;
 		try {

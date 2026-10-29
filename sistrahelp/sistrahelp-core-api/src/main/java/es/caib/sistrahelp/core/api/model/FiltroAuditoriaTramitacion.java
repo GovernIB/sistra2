@@ -69,6 +69,8 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	private String textoTraza;
 
+	private String numRegistro;
+
 	public FiltroAuditoriaTramitacion() {
 		super();
 		this.fechaDesde = calcularFecha();
@@ -145,6 +147,8 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 			this.tiposFirma = pFiltroAuditoriaTramitacion.getTiposFirma();
 			this.tiposPago = pFiltroAuditoriaTramitacion.getTiposPago();
+
+			this.numRegistro = pFiltroAuditoriaTramitacion.numRegistro;
 		}
 	}
 
@@ -337,6 +341,14 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	public void setSortOrder(final String sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	public String getNumRegistro() {
+		return numRegistro;
+	}
+
+	public void setNumRegistro(String numRegistro) {
+		this.numRegistro = numRegistro;
 	}
 
 	/**

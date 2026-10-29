@@ -21,19 +21,19 @@ public interface FirmaComponent {
 	/**
      * Redirección a firma externa.
      *
-     * @param idEntidad          Entidad
-     * @param nivelSeguridad	 Nivel de seguridad del trámite
-     * @param usuarioAutenticado Usuario autenticado
-     * @param firmante           Firmante
-     * @param representante      En caso de estar autenticado con un certificado de
-     *                           representación, indica el representante (quien
-     *                           firmará con su cert de representación)
-     * @param fileId             Id fichero
-     * @param fileContent        Contenido fichero
-     * @param fileName           Nombre fichero con extensión
-     * @param tipoDocumental     Tipo documental
-     * @param urlCallBack        url callback
-     * @param idioma             idioma
+     * @param idEntidad             Entidad
+     * @param nivelSeguridad        Nivel de seguridad del trámite
+     * @param usuarioAutenticado    Usuario autenticado
+     * @param firmante              Firmante
+     * @param representante         En caso de estar autenticado con un certificado de
+     *                              representación, indica el representante (quien
+     *                              firmará con su cert de representación)
+     * @param fileId                Id fichero
+     * @param fileContent           Contenido fichero
+     * @param fileName              Nombre fichero con extensión
+     * @param tipoDocumental        Tipo documental
+     * @param urlCallBack           url callback
+     * @param idioma                idioma
      * @return Datos redirección firma
      */
 	RedireccionFirma redireccionFirmaExterna(String idEntidad, TypeNivelSeguridad nivelSeguridad, UsuarioAutenticadoInfo usuarioAutenticado,

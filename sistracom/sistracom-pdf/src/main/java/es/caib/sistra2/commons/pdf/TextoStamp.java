@@ -3,7 +3,8 @@ package es.caib.sistra2.commons.pdf;
 import java.awt.Color;
 
 import com.lowagie.text.Font;
-import com.lowagie.text.pdf.BaseFont;
+
+import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
 
 /**
  *
@@ -18,7 +19,7 @@ public class TextoStamp extends ObjectStamp {
 	/**
 	 * Fuente
 	 */
-	private String fontName = BaseFont.HELVETICA;
+	private String fontName = TypeFuente.NOTOSANS.toString();
 	/**
 	 * Tamanyo fuente
 	 */

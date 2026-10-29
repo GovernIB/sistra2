@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistramit.core.api.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,6 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
-import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
-import es.caib.sistramit.core.api.exception.AccesoPasoRegistroCatalogoSimulado;
-import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
-import es.caib.sistramit.core.api.exception.CancelacionNoPermitidaException;
-import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.exception.TipoNoControladoException;
-import es.caib.sistramit.core.api.exception.TramiteCaducadoException;
 import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -325,7 +319,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// No puede estar finalizado
 		if (pDatosSesion.getDatosTramite().getEstadoTramite() == TypeEstadoTramite.FINALIZADO) {
-			throw new CancelacionNoPermitidaException("Tràmit ja ha finalitzat");
+			throw new TramiteFinalizadoException(pDatosSesion.getDatosTramite().getIdSesionTramitacion());
 		}
 
 		// Obtenemos reglas del flujo

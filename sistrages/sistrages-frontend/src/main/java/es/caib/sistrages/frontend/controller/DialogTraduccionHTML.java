@@ -13,6 +13,7 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -154,6 +155,11 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 
 	/** Prepara si activamos el botón de source. **/
 	private void prepararCodeActivo() {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			sourceCode = " | code";
+			return;
+		}
+
 		try {
 			final ConfiguracionGlobal confGlobal = configuracionGlobalService
 					.getConfiguracionGlobal(TypePropiedadConfiguracion.TINYMCE_CODE);

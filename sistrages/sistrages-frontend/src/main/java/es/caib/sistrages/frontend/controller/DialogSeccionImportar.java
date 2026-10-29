@@ -31,6 +31,9 @@ import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.comun.FilaImportarSeccion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarExiste;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
@@ -92,6 +95,30 @@ public class DialogSeccionImportar extends DialogControllerBase {
 	/** Id. **/
 	private String id;
 
+	/** Identificador incluido en el fichero exportado. **/
+	private String identificadorExportado;
+
+	/** Identificador que tendrá la sección importada cuando se crea nueva. **/
+	private String identificadorDestino;
+
+	/** Descripción que tendrá la sección importada cuando se crea nueva. **/
+	private String descripcionDestino;
+
+	/** Acción seleccionada ('C' para CREAR, 'S' para SELECCIONAR). **/
+	private String accion;
+
+	/** Acciones disponibles. **/
+	private List<TypeImportarAccion> acciones = new ArrayList<>();
+
+	/** Secciones disponibles de la entidad. **/
+	private List<SeccionReutilizable> secciones = new ArrayList<>();
+
+	/** Id de la sección seleccionada en el desplegable. **/
+	private Long idSeccionSeleccionada;
+
+	/** Sección existente en la BBDD con el mismo identificador exportado (si existe). **/
+	private SeccionReutilizable seccionActual;
+
 	private String portapapeles;
 
 	private String errorCopiar;
@@ -103,6 +130,18 @@ public class DialogSeccionImportar extends DialogControllerBase {
 		LOGGER.debug("DialogSeccionImportar init");
 		setMostrarPanelInfo(false);
 		mostrarBotonImportar = false;
+		data = null;
+		scripts.clear();
+		tieneScriptSRI = false;
+		filaSeccion = null;
+		identificadorExportado = null;
+		identificadorDestino = null;
+		descripcionDestino = null;
+		accion = null;
+		acciones = new ArrayList<>();
+		secciones = new ArrayList<>();
+		idSeccionSeleccionada = null;
+		seccionActual = null;
 	}
 
 	/**
@@ -145,6 +184,10 @@ public class DialogSeccionImportar extends DialogControllerBase {
 	 * @throws IOException
 	 */
 	private void prepararImportacion(final byte[] contenido) throws IOException {
+		data = null;
+		scripts.clear();
+		tieneScriptSRI = false;
+		filaSeccion = null;
 
 		final File tempFile = File.createTempFile("fichero", "zip");
 		ZipFile zipFile = null;
@@ -189,32 +232,158 @@ public class DialogSeccionImportar extends DialogControllerBase {
 			return;
 		}
 
-		final SeccionReutilizable seccionActual = seccionService.getSeccionReutilizableByIdentificador(
-				TypeAmbito.ENTIDAD, data.getIdentificador(), UtilJSF.getIdEntidad(), null);
+		identificadorExportado = data.getIdentificador();
+		descripcionDestino = data.getDescripcion();
 
-		if (seccionActual == null) {
-			// No existe la seccion.
-			final String mensaje = UtilJSF.getLiteral("dialogSeccionImportar.info.noexisteseccion");
-			filaSeccion = FilaImportarSeccion.crearISnoexiste(data, seccionActual, UtilJSF.getIdEntidad(), mensaje);
+		secciones = seccionService.listSeccionReutilizable(UtilJSF.getIdEntidad(), null, null);
+		if (secciones == null) {
+			secciones = new ArrayList<>();
+		}
 
+		seccionActual = seccionService.getSeccionReutilizableByIdentificador(
+				TypeAmbito.ENTIDAD, identificadorExportado, UtilJSF.getIdEntidad(), null);
+
+		acciones = new ArrayList<>();
+		if (seccionActual != null) {
+			// Caso 1: La sección exportada ya existe en la entidad
+			acciones.add(TypeImportarAccion.SELECCIONAR);
+			acciones.add(TypeImportarAccion.CREAR);
+			accion = TypeImportarAccion.SELECCIONAR.toString();
+			idSeccionSeleccionada = seccionActual.getCodigo();
+			identificadorDestino = "";
+			actualizarEstadoSeleccionar(seccionActual);
 		} else {
-			// Exite la seccion.
-			if (seccionActual.getRelease() <= data.getRelease()) {
-				String mensaje = UtilJSF.getLiteral("dialogSeccionImportar.info.existeSeccionImportarMasNueva");
-				filaSeccion = FilaImportarSeccion.crearISexiste(data, seccionActual, UtilJSF.getIdEntidad(), mensaje,
-						true);
-			} else {
-				String mensaje = UtilJSF.getLiteral("dialogSeccionImportar.info.existeSeccionImportarMenosNueva");
-				filaSeccion = FilaImportarSeccion.crearISexiste(data, seccionActual, UtilJSF.getIdEntidad(), mensaje,
-						false);
+			// Caso 2: La sección exportada no existe en la entidad
+			acciones.add(TypeImportarAccion.CREAR);
+			if (!secciones.isEmpty()) {
+				acciones.add(TypeImportarAccion.SELECCIONAR);
+				idSeccionSeleccionada = secciones.get(0).getCodigo();
 			}
+			accion = TypeImportarAccion.CREAR.toString();
+			identificadorDestino = identificadorExportado;
+			actualizarEstadoCrear(identificadorDestino);
 		}
 
 		setMostrarPanelInfo(true);
-		if (filaSeccion.getResultado() != TypeImportarResultado.INFO
-				&& filaSeccion.getResultado() != TypeImportarResultado.ERROR) {
-			// Se muestra ya la info, otra cosa es que el botón se vea o no
+	}
+
+	/**
+	 * Actualiza el estado cuando la acción es SELECCIONAR.
+	 */
+	private void actualizarEstadoSeleccionar(final SeccionReutilizable sec) {
+		if (sec == null) {
+			filaSeccion = new FilaImportarSeccion(data, null, TypeImportarAccion.REEMPLAZAR,
+					TypeImportarExiste.EXISTE, TypeImportarEstado.ERROR, TypeImportarResultado.ERROR,
+					UtilJSF.getLiteral("dialogTramiteImportarTR.error.datosvacios"), false, acciones);
+			setMostrarBotonImportar(false);
+			return;
+		}
+
+		final String mensaje;
+		final boolean correcto;
+		if (sec.getRelease() <= data.getRelease()) {
+			mensaje = UtilJSF.getLiteral("dialogSeccionImportar.info.existeSeccionImportarMasNueva");
+			correcto = true;
+		} else {
+			mensaje = UtilJSF.getLiteral("dialogSeccionImportar.info.existeSeccionImportarMenosNueva");
+			correcto = false;
+		}
+		filaSeccion = FilaImportarSeccion.crearISexiste(data, sec, UtilJSF.getIdEntidad(), mensaje, correcto);
+		filaSeccion.setAccion(TypeImportarAccion.REEMPLAZAR);
+		filaSeccion.setAcciones(acciones);
+		setMostrarBotonImportar(true);
+	}
+
+	/**
+	 * Actualiza el estado cuando la acción es CREAR.
+	 */
+	private void actualizarEstadoCrear(final String nuevoIdentificador) {
+		final String idTrim = nuevoIdentificador == null ? null : nuevoIdentificador.trim();
+		if (idTrim == null || idTrim.isEmpty()) {
+			final String mensaje = UtilJSF.getLiteral("dialogSeccionImportar.error.identificadorvacio");
+			filaSeccion = new FilaImportarSeccion(data, null, TypeImportarAccion.CREAR,
+					TypeImportarExiste.NO_EXISTE, TypeImportarEstado.ERROR, TypeImportarResultado.ERROR,
+					mensaje, false, acciones);
+			setMostrarBotonImportar(false);
+			return;
+		}
+
+		if (idTrim.length() > 3) {
+			final String mensaje = UtilJSF.getLiteral("dialogSeccionImportar.error.identificadorLongitud");
+			filaSeccion = new FilaImportarSeccion(data, null, TypeImportarAccion.CREAR,
+					TypeImportarExiste.NO_EXISTE, TypeImportarEstado.ERROR, TypeImportarResultado.ERROR,
+					mensaje, false, acciones);
+			setMostrarBotonImportar(false);
+			return;
+		}
+
+		final SeccionReutilizable existente = seccionService.getSeccionReutilizableByIdentificador(
+				TypeAmbito.ENTIDAD, idTrim, UtilJSF.getIdEntidad(), null);
+
+		if (existente != null) {
+			final String mensaje = UtilJSF.getLiteral("dialogSeccionImportar.error.identificadorExiste");
+			filaSeccion = new FilaImportarSeccion(data, existente, TypeImportarAccion.CREAR,
+					TypeImportarExiste.EXISTE, TypeImportarEstado.ERROR, TypeImportarResultado.ERROR,
+					mensaje, false, acciones);
+			setMostrarBotonImportar(false);
+		} else {
+			final String mensaje = UtilJSF.getLiteral("dialogSeccionImportar.info.noexisteseccion");
+			data.setIdentificador(idTrim);
+			filaSeccion = FilaImportarSeccion.crearISnoexiste(data, null, UtilJSF.getIdEntidad(), mensaje);
+			filaSeccion.setAcciones(acciones);
 			setMostrarBotonImportar(true);
+		}
+	}
+
+	/**
+	 * Evento al cambiar la acción (CREAR / SELECCIONAR).
+	 */
+	public void cambioAccion() {
+		if (data == null || accion == null) {
+			return;
+		}
+		final TypeImportarAccion typeAccion = TypeImportarAccion.fromString(accion);
+		if (typeAccion == TypeImportarAccion.SELECCIONAR) {
+			if (idSeccionSeleccionada == null && secciones != null && !secciones.isEmpty()) {
+				if (seccionActual != null) {
+					idSeccionSeleccionada = seccionActual.getCodigo();
+				} else {
+					idSeccionSeleccionada = secciones.get(0).getCodigo();
+				}
+			}
+			cambioSeccionSeleccionada();
+		} else if (typeAccion == TypeImportarAccion.CREAR) {
+			if (identificadorDestino == null || identificadorDestino.isEmpty()) {
+				if (seccionActual == null) {
+					identificadorDestino = identificadorExportado;
+				}
+			}
+			actualizarEstadoCrear(identificadorDestino);
+		}
+	}
+
+	/**
+	 * Evento al cambiar la sección seleccionada en el combo.
+	 */
+	public void cambioSeccionSeleccionada() {
+		if (idSeccionSeleccionada != null) {
+			final SeccionReutilizable sec = seccionService.getSeccionReutilizable(idSeccionSeleccionada);
+			actualizarEstadoSeleccionar(sec);
+		} else {
+			actualizarEstadoSeleccionar(null);
+		}
+	}
+
+	/**
+	 * Comprueba si el identificador indicado permite crear una sección nueva.
+	 */
+	public void comprobarIdentificador() {
+		if (data == null) {
+			return;
+		}
+		actualizarEstadoCrear(identificadorDestino);
+		if (!mostrarBotonImportar && filaSeccion != null && filaSeccion.getMensaje() != null) {
+			addMessageContext(TypeNivelGravedad.WARNING, filaSeccion.getMensaje());
 		}
 	}
 
@@ -344,16 +513,54 @@ public class DialogSeccionImportar extends DialogControllerBase {
 	 * @throws Exception
 	 */
 	public void importar() throws Exception {
-
-		// Comprobamos que el dominio está checkeado
-		if (filaSeccion.getResultado() == TypeImportarResultado.WARNING
-				|| filaSeccion.getResultado() == TypeImportarResultado.ERROR) {
-			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.warning.check"));
+		if (data == null || accion == null) {
 			return;
 		}
 
-		filaSeccion.setScripts(scripts);
-		this.seccionService.importarSeccion(filaSeccion, UtilJSF.getIdEntidad());
+		final TypeImportarAccion typeAccion = TypeImportarAccion.fromString(accion);
+
+		if (typeAccion == TypeImportarAccion.CREAR) {
+			actualizarEstadoCrear(identificadorDestino);
+			if (filaSeccion == null || filaSeccion.getResultado() == TypeImportarResultado.ERROR) {
+				addMessageContext(TypeNivelGravedad.ERROR, filaSeccion != null && filaSeccion.getMensaje() != null
+						? filaSeccion.getMensaje() : UtilJSF.getLiteral("dialogSeccionImportar.error.identificadorvacio"));
+				return;
+			}
+			data.setIdentificador(identificadorDestino.trim().toUpperCase());
+			if (descripcionDestino != null && !descripcionDestino.trim().isEmpty()) {
+				data.setDescripcion(descripcionDestino.trim());
+			}
+			filaSeccion.setSeccion(data);
+			filaSeccion.setSeccionActual(null);
+			filaSeccion.setAccion(TypeImportarAccion.CREAR);
+			filaSeccion.setScripts(scripts);
+
+			this.seccionService.importarSeccion(filaSeccion, UtilJSF.getIdEntidad());
+
+		} else if (typeAccion == TypeImportarAccion.SELECCIONAR) {
+			if (idSeccionSeleccionada == null) {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogTramiteImportarTR.error.datosvacios"));
+				return;
+			}
+			final SeccionReutilizable seccionDestino = seccionService.getSeccionReutilizable(idSeccionSeleccionada);
+			if (seccionDestino == null) {
+				addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("dialogTramiteImportarTR.error.datosvacios"));
+				return;
+			}
+			data.setIdentificador(seccionDestino.getIdentificador());
+			if (descripcionDestino != null && !descripcionDestino.trim().isEmpty()) {
+				data.setDescripcion(descripcionDestino.trim());
+			}
+			actualizarEstadoSeleccionar(seccionDestino);
+			filaSeccion.setSeccion(data);
+			filaSeccion.setSeccionActual(seccionDestino);
+			filaSeccion.setAccion(TypeImportarAccion.REEMPLAZAR);
+			filaSeccion.setScripts(scripts);
+
+			this.seccionService.importarSeccion(filaSeccion, UtilJSF.getIdEntidad());
+		}
 
 		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();
@@ -539,6 +746,66 @@ public class DialogSeccionImportar extends DialogControllerBase {
 	 */
 	public void setId(final String id) {
 		this.id = id;
+	}
+
+	public String getIdentificadorExportado() {
+		return identificadorExportado;
+	}
+
+	public String getIdentificadorDestino() {
+		return identificadorDestino;
+	}
+
+	public void setIdentificadorDestino(final String identificadorDestino) {
+		this.identificadorDestino = identificadorDestino;
+	}
+
+	public String getDescripcionDestino() {
+		return descripcionDestino;
+	}
+
+	public void setDescripcionDestino(final String descripcionDestino) {
+		this.descripcionDestino = descripcionDestino;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(final String accion) {
+		this.accion = accion;
+	}
+
+	public List<TypeImportarAccion> getAcciones() {
+		return acciones;
+	}
+
+	public void setAcciones(final List<TypeImportarAccion> acciones) {
+		this.acciones = acciones;
+	}
+
+	public List<SeccionReutilizable> getSecciones() {
+		return secciones;
+	}
+
+	public void setSecciones(final List<SeccionReutilizable> secciones) {
+		this.secciones = secciones;
+	}
+
+	public Long getIdSeccionSeleccionada() {
+		return idSeccionSeleccionada;
+	}
+
+	public void setIdSeccionSeleccionada(final Long idSeccionSeleccionada) {
+		this.idSeccionSeleccionada = idSeccionSeleccionada;
+	}
+
+	public SeccionReutilizable getSeccionActual() {
+		return seccionActual;
+	}
+
+	public void setSeccionActual(final SeccionReutilizable seccionActual) {
+		this.seccionActual = seccionActual;
 	}
 
 	/**

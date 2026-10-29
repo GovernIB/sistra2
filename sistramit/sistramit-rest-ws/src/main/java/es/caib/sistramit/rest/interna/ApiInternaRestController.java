@@ -671,6 +671,7 @@ public class ApiInternaRestController {
 
 			filtro.setTiposFirma(pRFiltro.getTiposFirma());
 			filtro.setTiposPago(pRFiltro.getTiposPago());
+			filtro.setNumRegistro(pRFiltro.getNumRegistro());
 		}
 
 		return filtro;

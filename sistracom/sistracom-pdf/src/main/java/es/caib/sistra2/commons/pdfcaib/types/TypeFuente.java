@@ -16,7 +16,7 @@ public enum TypeFuente {
 
 	ZAPFDINGBATS("ZapfDingbats"),
 
-	NOTOSANSBOND("fontNotoSansBold"),
+	NOTOSANSBOLD("fontNotoSansBold"),
 
 	NOTOSANS("fontNotoSans");
 	/**

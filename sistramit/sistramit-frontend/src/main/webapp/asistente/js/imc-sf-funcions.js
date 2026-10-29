@@ -205,6 +205,18 @@ $.fn.appTramitacioElimina = function(options) {
 					})
 					.done(function( data ) {
 
+						// TODO ISMA: en esta llamada retorno siempre mensaje + url (informa, warning y error usan funciones diferentes: alTancar, alAcceptar)
+
+						var accion = data.estado === "SUCCESS" ? "informa" : (data.estado === "WARNING" ? "warning" : "error");
+
+						imc_missatge
+							.appMissatge({ accio:  accion, titol: data.mensaje.titulo, text: data.mensaje.texto
+								, alTancar: function() { document.location = data.url; }
+								, alAcceptar: function() { document.location = data.url; }});
+
+						envia_ajax = false;
+
+						/*
 						if (data.estado === "SUCCESS" || data.estado === "WARNING") {
 
 							document.location = data.url;
@@ -216,6 +228,8 @@ $.fn.appTramitacioElimina = function(options) {
 							error({ titol: data.mensaje.titulo, text: data.mensaje.texto });
 
 						}
+						 */
+
 						
 					})
 					.fail(function(dades, tipus, errorThrown) {

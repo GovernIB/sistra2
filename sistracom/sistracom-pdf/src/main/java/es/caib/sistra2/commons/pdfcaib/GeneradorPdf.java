@@ -16,7 +16,6 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
@@ -31,6 +30,7 @@ import es.caib.sistra2.commons.pdfcaib.model.CampoCheck;
 import es.caib.sistra2.commons.pdfcaib.model.CampoListaCheck;
 import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
 import es.caib.sistra2.commons.pdfcaib.model.ColumnaTabla;
+import es.caib.sistra2.commons.pdfcaib.model.ConfiguracionFuentes;
 import es.caib.sistra2.commons.pdfcaib.model.FilaTabla;
 import es.caib.sistra2.commons.pdfcaib.model.FormularioPdf;
 import es.caib.sistra2.commons.pdfcaib.model.Linea;
@@ -54,12 +54,10 @@ public class GeneradorPdf {
 	private static final int TAMANIO_ETIQUETA = 10;
 	private static final int TAMANIO_VALOR = 9;
 	private static final int TAMANIO_TEXTO = 9;
-	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_CABECERA_DEFAULT = new PersonalizacionTexto(true, false,
-			TypeFuente.NOTOSANS, 16);
-	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false,
-			TypeFuente.NOTOSANS, 16);
-	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT = new PersonalizacionTexto(true, false,
-			TypeFuente.NOTOSANS, 10);
+
+	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_CABECERA_DEFAULT;
+	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_SECCION_DEFAULT;
+	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT;
 
 	private final Logger log = LoggerFactory.getLogger(GeneradorPdf.class);
 
@@ -79,7 +77,6 @@ public class GeneradorPdf {
 	 * @throws PdfCaibException
 	 */
 	public GeneradorPdf(final int margenCabecera, final int margenPie) throws PdfCaibException {
-
 		document = new Document(PageSize.A4, 20, 20, margenCabecera, margenPie);
 		arrayBytesPdf = new ByteArrayOutputStream();
 
@@ -87,27 +84,25 @@ public class GeneradorPdf {
 		tablaPDF.setWidthPercentage(100f);
 		tablaPDF.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
-		if (!FontFactory.isRegistered(TypeFuente.NOTOSANS.toString())) {
-			FontFactory.register("/fonts/NotoSans-Regular.ttf", TypeFuente.NOTOSANS.toString());
-		}
-		if (!FontFactory.isRegistered(TypeFuente.NOTOSANSBOND.toString())) {
-			FontFactory.register("/fonts/NotoSans-Bold.ttf", TypeFuente.NOTOSANSBOND.toString());
-		}
+		registerFont(TypeFuente.NOTOSANS.toString(), "NotoSans-Regular.ttf");
+		registerFont(TypeFuente.NOTOSANSBOLD.toString(), "NotoSans-Bold.ttf");
 
-		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANSBOND,
+		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS,
 				TAMANIO_SECCION);
-		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_VALOR);
-		ETIQUETA = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_ETIQUETA);
+
+		VALOR = FontResourceLoader.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_VALOR);
+		ETIQUETA = FontResourceLoader.getFont(TypeFuente.NOTOSANSBOLD.toString(), TAMANIO_ETIQUETA);
 		ETIQUETA.setStyle(Font.BOLD);
-		SECCION = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_SECCION);
-		TEXTO = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_TEXTO);
+		SECCION = FontResourceLoader.getFont(TypeFuente.NOTOSANSBOLD.toString(), TAMANIO_SECCION);
+		SECCION.setStyle(Font.BOLD);
+		TEXTO = FontResourceLoader.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_TEXTO);
 		try {
 			writer = PdfWriter.getInstance(document, arrayBytesPdf);
 		} catch (final DocumentException e) {
 			throw new PdfCaibException("Error creación de writer GeneradorPdf");
-		}
+			}
 	}
-
+	
 	public GeneradorPdf() throws PdfCaibException {
 
 		document = new Document(PageSize.A4, 20, 20, 25, 25);
@@ -117,26 +112,72 @@ public class GeneradorPdf {
 		tablaPDF.setWidthPercentage(100f);
 		tablaPDF.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
-		if (!FontFactory.isRegistered(TypeFuente.NOTOSANS.toString())) {
-			FontFactory.register("/fonts/NotoSans-Regular.ttf", TypeFuente.NOTOSANS.toString());
-		}
-		if (!FontFactory.isRegistered(TypeFuente.NOTOSANSBOND.toString())) {
-			FontFactory.register("/fonts/NotoSans-Bold.ttf", TypeFuente.NOTOSANSBOND.toString());
-		}
+		registerFont(TypeFuente.NOTOSANS.toString(), "NotoSans-Regular.ttf");
+		registerFont(TypeFuente.NOTOSANSBOLD.toString(), "NotoSans-Bold.ttf");
 
-		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANSBOND,
+		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS.toString(),
 				TAMANIO_SECCION);
-		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_VALOR);
-		ETIQUETA = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_ETIQUETA);
+		VALOR = FontResourceLoader.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_VALOR);
+		ETIQUETA = FontResourceLoader.getFont(TypeFuente.NOTOSANSBOLD.toString(), TAMANIO_ETIQUETA);
 		ETIQUETA.setStyle(Font.BOLD);
-		SECCION = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_SECCION);
-		TEXTO = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_TEXTO);
+		SECCION = FontResourceLoader.getFont(TypeFuente.NOTOSANSBOLD.toString(), TAMANIO_SECCION);
+		SECCION.setStyle(Font.BOLD);
+		TEXTO = FontResourceLoader.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_TEXTO);
 		try {
 			writer = PdfWriter.getInstance(document, arrayBytesPdf);
 		} catch (final DocumentException e) {
 			throw new PdfCaibException("Error creación de writer GeneradorPdf");
 		}
 	}
+
+	public GeneradorPdf(ConfiguracionFuentes configFuentes) throws PdfCaibException {
+
+		document = new Document(PageSize.A4, 20, 20, 25, 25);
+		arrayBytesPdf = new ByteArrayOutputStream();
+
+		tablaPDF = new PdfPTable(COLUMNAS_TABLA);
+		tablaPDF.setWidthPercentage(100f);
+		tablaPDF.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+		final String fuenteRegular = FontResourceLoader.resolveFontName(
+				configFuentes == null ? null : configFuentes.getFuenteRegular());
+		final String fuenteBold = FontResourceLoader.resolveBoldFontName(
+				configFuentes == null ? null : configFuentes.getFuenteBold());
+		registerFont(fuenteRegular);
+		registerFont(fuenteBold);
+		registerFont(TypeFuente.NOTOSANS.toString(), "NotoSans-Regular.ttf");
+		registerFont(TypeFuente.NOTOSANSBOLD.toString(), "NotoSans-Bold.ttf");
+
+		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, fuenteBold,
+				TAMANIO_SECCION);
+
+		VALOR = FontResourceLoader.getFont(fuenteRegular, TAMANIO_VALOR);
+		ETIQUETA = FontResourceLoader.getFont(fuenteBold, TAMANIO_ETIQUETA);
+		ETIQUETA.setStyle(Font.BOLD);
+		SECCION = FontResourceLoader.getFont(fuenteBold, TAMANIO_SECCION);
+		SECCION.setStyle(Font.BOLD);
+		TEXTO = FontResourceLoader.getFont(fuenteRegular, TAMANIO_TEXTO);
+		try {
+			writer = PdfWriter.getInstance(document, arrayBytesPdf);
+		} catch (final DocumentException e) {
+			throw new PdfCaibException("Error creación de writer GeneradorPdf");
+		}
+	}
+
+	private static void registerFont(final String fontName) throws PdfCaibException {
+		if (TypeFuente.NOTOSANS.toString().equalsIgnoreCase(fontName)) {
+			registerFont(fontName, "NotoSans-Regular.ttf");
+		} else if (TypeFuente.NOTOSANSBOLD.toString().equalsIgnoreCase(fontName)) {
+			registerFont(fontName, "NotoSans-Bold.ttf");
+		} else {
+			registerFont(fontName, String.format("%s.ttf", fontName));
+		}
+	}
+
+	private static void registerFont(final String fontName, final String resourceFileName) throws PdfCaibException {
+		FontResourceLoader.ensureFont(fontName, resourceFileName);
+	}
+
 
 	/**
 	 * Método en el que completamos la linea
@@ -158,9 +199,32 @@ public class GeneradorPdf {
 	public byte[] generarPdf(final FormularioPdf formularioPdf) throws PdfCaibException {
 
 		document.open();
+		/* final EndPageEvent event = new EndPageEvent(document, formularioPdf.getCabecera(), formularioPdf.getPie(), true,
+				writer, formularioPdf.getConfiguracionFuentes()); */
+
+		final ConfiguracionFuentes configuracionFuentes = formularioPdf.getConfiguracionFuentes() == null
+				? new ConfiguracionFuentes() : formularioPdf.getConfiguracionFuentes();
 		final EndPageEvent event = new EndPageEvent(document, formularioPdf.getCabecera(), formularioPdf.getPie(), true,
-				writer);
+				writer, configuracionFuentes);
 		writer.setPageEvent(event);
+
+
+		// Se cargan los valores fuente por defecto por si no tienen valores
+
+		final String tipoFuente = FontResourceLoader.resolveFontName(configuracionFuentes.getFuenteRegular());
+		final String tipoFuenteBold = FontResourceLoader.resolveBoldFontName(configuracionFuentes.getFuenteBold());
+		final int tamanioCabecera = configuracionFuentes.getTamanioCabecera() == 0 ? 16
+				: configuracionFuentes.getTamanioCabecera();
+		final int tamanioSeccion = configuracionFuentes.getTamanioSeccion() == 0 ? 10
+				: configuracionFuentes.getTamanioSeccion();
+		final int tamanioEtiqueta = configuracionFuentes.getTamanioEtiqueta() == 0 ? 10
+				: configuracionFuentes.getTamanioEtiqueta();
+		final String colorSeccion = configuracionFuentes.getColorSeccion() == null  || configuracionFuentes.getColorSeccion().isEmpty()
+				? "195,0,69" : configuracionFuentes.getColorSeccion	();				
+
+		PERSONALIZACION_TEXTO_CABECERA_DEFAULT = new PersonalizacionTexto(true, false, tipoFuente, tamanioCabecera);
+		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, tipoFuente, tamanioSeccion);
+		PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT = new PersonalizacionTexto(true, false, tipoFuente, tamanioEtiqueta);
 
 		if (formularioPdf.getCabecera() != null) {
 			this.writeCabecera(formularioPdf.getCabecera());
@@ -194,8 +258,10 @@ public class GeneradorPdf {
 						this.writeTabla(tabla);
 						/** Seccion */
 					} else if (objetoLinea instanceof Seccion) {
-						final Seccion seccion = (Seccion) objetoLinea;
+						final Seccion seccion = (Seccion) objetoLinea;						
+						seccion.setColorSeccion(colorSeccion);
 						columnasLinea += COLUMNAS_TABLA;
+
 						this.writeSeccion(seccion);
 						/** Texto */
 					} else if (objetoLinea instanceof Texto) {
@@ -226,12 +292,25 @@ public class GeneradorPdf {
 
 	}
 
+	/* Crea el color a partir de un string RGB */
+
+	private Color getColorRGB(final String rgbColor) {
+		final String color = rgbColor == null || rgbColor.trim().isEmpty() ? "195,0,69" : rgbColor;
+		final String[] rgb = color.split(",");
+		if (rgb.length != 3) {
+			throw new IllegalArgumentException("El color debe tener formato R,G,B: " + color);
+		}
+		return new Color(Integer.parseInt(rgb[0].trim()), Integer.parseInt(rgb[1].trim()),
+				Integer.parseInt(rgb[2].trim()));
+	}
+
 	/**
 	 * @param cabecera
 	 */
 	private void writeCabecera(final Cabecera cabecera) {
 
-		final Color myColor = new Color(195, 0, 69);
+		final Color myColor = getColorRGB(cabecera.getColorCabecera());
+
 		final PdfPTable head;
 		if (cabecera.getLogo() != null || cabecera.getLogoByte() != null) {
 			if (cabecera.getTitulo().length() <= 120) {
@@ -399,7 +478,9 @@ public class GeneradorPdf {
 			text2.setBorder(Rectangle.NO_BORDER);
 
 			final Font fuenteCabecera = getFontByPersonalizacionTexto(PERSONALIZACION_TEXTO_SECCION_DEFAULT);
-			final Color myColor = new Color(195, 0, 69);
+
+			final Color myColor = getColorRGB(seccion.getColorSeccion());
+
 			fuenteCabecera.setColor(myColor);
 			paragraph = new Paragraph(seccion.getTitulo(), fuenteCabecera);
 
@@ -572,21 +653,21 @@ public class GeneradorPdf {
 	 */
 	private void writeCampoCheck(final CampoCheck campoCheck) throws PdfCaibException {
 		try {
-			final PdfPTable table = new PdfPTable(1);
+			final PdfPTable table = new PdfPTable(2);
+			table.setWidths(new int[] { 100, 200 });
 			table.setWidthPercentage(100f);
 			PdfPCell cell;
 
-			// añadimos campo check
-			cell = new PdfPCell();
-			cell.setCellEvent(new CheckboxCellEvent(campoCheck.getEtiqueta(), campoCheck.isChecked()));
+			// añadimos etiqueta del check
+			cell = new PdfPCell(new Paragraph(campoCheck.getEtiqueta(), ETIQUETA));
 			cell.setBorder(Rectangle.NO_BORDER);
 			table.addCell(cell);
 
-			// añadimos etiqueta del check
-			cell = new PdfPCell(new Paragraph(campoCheck.getEtiqueta(), VALOR));
-			cell.setBorder(Rectangle.NO_BORDER);
-			cell.setPaddingLeft(16);
-			cell.setPaddingTop(0);
+			// añadimos campo check
+			cell = new PdfPCell();
+			cell.setCellEvent(new CheckboxCellEvent(campoCheck.getEtiqueta(), campoCheck.isChecked(), true));
+			cell.setPaddingBottom(5f);
+			cell.setPaddingTop(8);
 			// cell.setBackgroundColor(Color.WHITE);
 			table.addCell(cell);
 
@@ -658,8 +739,12 @@ public class GeneradorPdf {
 
 		if (personalizacionTexto != null) {
 			// FUENTE
-			if (personalizacionTexto.getFuente() != null) {
-				f = FontFactory.getFont(personalizacionTexto.getFuente().toString());
+			final String nombreFuente = personalizacionTexto.getFuente() != null
+					? personalizacionTexto.getFuente().toString() : personalizacionTexto.getNombreFuente();
+			if (nombreFuente != null && !nombreFuente.trim().isEmpty()) {
+				final float tamanio = personalizacionTexto.getTamanio() == 0
+						? Font.UNDEFINED : personalizacionTexto.getTamanio();
+				f = FontResourceLoader.getFont(nombreFuente, tamanio);
 			}
 			// NEGRITA Y CURSIVA
 			if (personalizacionTexto.isNegrita() && personalizacionTexto.isCursiva()) {

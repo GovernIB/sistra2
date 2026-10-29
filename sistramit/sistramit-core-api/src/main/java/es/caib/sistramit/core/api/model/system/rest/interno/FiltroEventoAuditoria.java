@@ -59,6 +59,8 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	private String textoTraza;
 
+	private String numRegistro;
+
 	public FiltroEventoAuditoria() {
 		super();
 	}
@@ -299,6 +301,15 @@ public class FiltroEventoAuditoria implements Serializable {
 	public void setTextoTraza(String textoTraza) {
 		this.textoTraza = textoTraza;
 	}
+
+	public String getNumRegistro() {
+		return numRegistro;
+	}
+
+	public void setNumRegistro(String numRegistro) {
+		this.numRegistro = numRegistro;
+	}
+	
 
 	public List<String> getTiposFirma() {
 		return tiposFirma;

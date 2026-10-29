@@ -10,7 +10,6 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfFormField;
@@ -31,12 +30,16 @@ public class MyCellFieldEvent implements PdfPCellEvent {
 
 	protected String fieldname;
 	protected String value;
-	protected static Font VALOR;
-	private static final int TAMANIO_TEXTO = 9;
+	private final Font font;
 
 	public MyCellFieldEvent(final String fieldname, final String value) {
+		this(fieldname, value, FontResourceLoader.getFont(TypeFuente.NOTOSANS.toString(), 9));
+	}
+
+	public MyCellFieldEvent(final String fieldname, final String value, final Font font) {
 		this.fieldname = fieldname;
 		this.value = value;
+		this.font = font;
 	}
 
 	@Override
@@ -46,9 +49,8 @@ public class MyCellFieldEvent implements PdfPCellEvent {
 		textField.setText(value);
 		textField.setAlignment(Element.ALIGN_TOP);
 		textField.setOptions(TextField.MULTILINE | TextField.READ_ONLY);
-		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_TEXTO);
-		textField.setFont(VALOR.getBaseFont());
-		textField.setFontSize(TAMANIO_TEXTO);
+		textField.setFont(font.getBaseFont());
+		textField.setFontSize(font.getSize());
 		try {
 			final PdfFormField field = textField.getTextField();
 			writer.addAnnotation(field);

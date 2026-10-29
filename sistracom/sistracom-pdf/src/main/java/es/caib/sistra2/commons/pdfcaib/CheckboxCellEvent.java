@@ -29,11 +29,17 @@ public class CheckboxCellEvent implements PdfPCellEvent {
 	// The name of the check box field
 	protected String name;
 	protected Boolean cheked;
+	private final boolean centeredVertically;
 
 	// We create a cell event
 	public CheckboxCellEvent(final String name, final Boolean cheked) {
+		this(name, cheked, false);
+	}
+
+	public CheckboxCellEvent(final String name, final Boolean cheked, final boolean centeredVertically) {
 		this.name = name;
 		this.cheked = cheked;
+		this.centeredVertically = centeredVertically;
 	}
 
 	// We create and add the check box field
@@ -43,7 +49,8 @@ public class CheckboxCellEvent implements PdfPCellEvent {
 
 		// define the coordinates of the middle
 		final float x = position.getLeft() + 8;
-		final float y = (position.getTop() + position.getBottom()) / 2 - 8;
+		final float verticalOffset = centeredVertically ? 0 : 8;
+		final float y = (position.getTop() + position.getBottom()) / 2 - verticalOffset;
 
 		// define the position of a check box that measures 20 by 20
 		final Rectangle rect = new Rectangle(x - 5, y - 5, x + 6, y + 6);

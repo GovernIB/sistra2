@@ -18,6 +18,9 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistra2.commons.pdfcaib.FontResourceLoader;
+import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
+
 public class UtilPDF {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UtilPDF.class);
@@ -210,8 +213,7 @@ public class UtilPDF {
 						switch (barcodeStamp.getTipo()) {
 						case BarcodeStamp.BARCODE_128:
 							final Barcode128 code128 = new Barcode128();
-							final BaseFont bf = BaseFont.createFont(barcodeStamp.getFontName(), BaseFont.CP1252,
-									BaseFont.NOT_EMBEDDED);
+							final BaseFont bf = getStampFont(barcodeStamp.getFontName(), barcodeStamp.getFontSize());
 							code128.setFont(bf);
 							code128.setSize(barcodeStamp.getFontSize());
 							code128.setBaseline(barcodeStamp.getFontSize());
@@ -239,20 +241,19 @@ public class UtilPDF {
 					}
 
 					if (objects[j] instanceof TextoStamp) {
-						final BaseFont bf = BaseFont.createFont(((TextoStamp) objects[j]).getFontName(),
-								BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+						final TextoStamp textoStamp = (TextoStamp) objects[j];
+						final BaseFont bf = getStampFont(textoStamp.getFontName(), textoStamp.getFontSize());
 						content.beginText();
-						content.setColorFill(((TextoStamp) objects[j]).getFontColor());
-						content.setFontAndSize(bf, ((TextoStamp) objects[j]).getFontSize());
+						content.setColorFill(textoStamp.getFontColor());
+						content.setFontAndSize(bf, textoStamp.getFontSize());
 						content.setTextMatrix(30, 30);
-						content.showTextAligned(Element.ALIGN_LEFT, ((TextoStamp) objects[j]).getTexto(),
+						content.showTextAligned(Element.ALIGN_LEFT, textoStamp.getTexto(),
 								objects[j].getX(), objects[j].getY(), objects[j].getRotation());
 						content.endText();
 					}
 
 					if (objects[j] instanceof NumeroPaginaStamp) {
-						final BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252,
-								BaseFont.NOT_EMBEDDED);
+						final BaseFont bf = FontResourceLoader.getNotoSansFont(10, false).getBaseFont();
 						content.beginText();
 						content.setFontAndSize(bf, 10);
 						content.setTextMatrix(30, 30);
@@ -276,8 +277,7 @@ public class UtilPDF {
 						rectangle.setBorderWidth(1);
 						content.rectangle(rectangle);
 
-						final BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252,
-								BaseFont.NOT_EMBEDDED);
+						final BaseFont bf = FontResourceLoader.getNotoSansFont(7, false).getBaseFont();
 						content.beginText();
 						content.setFontAndSize(bf, 7);
 						content.setColorStroke(Color.BLACK);
@@ -293,10 +293,21 @@ public class UtilPDF {
 					}
 
 				}
+
 			}
 		}
 
 		stamp.close();
+	}
+
+	private static BaseFont getStampFont(final String fontName, final float fontSize) throws Exception {
+		if (TypeFuente.NOTOSANS.toString().equalsIgnoreCase(fontName)) {
+			return FontResourceLoader.getNotoSansFont(fontSize, false).getBaseFont();
+		}
+		if (TypeFuente.NOTOSANSBOLD.toString().equalsIgnoreCase(fontName)) {
+			return FontResourceLoader.getNotoSansFont(fontSize, true).getBaseFont();
+		}
+		return BaseFont.createFont(fontName, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 	}
 
 	/**

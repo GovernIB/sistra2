@@ -281,7 +281,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		if (id != null) {
 			params.put(TypeParametroVentana.ID.toString(), this.id);
 		}
-		UtilJSF.openDialog(DialogSeccionImportar.class, TypeModoAcceso.ALTA, params, true, 770, 280);
+		UtilJSF.openDialog(DialogSeccionImportar.class, TypeModoAcceso.ALTA, params, true, 770, 450);
 	}
 
 	/**

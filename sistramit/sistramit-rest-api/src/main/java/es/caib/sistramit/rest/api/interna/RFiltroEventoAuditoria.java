@@ -92,6 +92,9 @@ public class RFiltroEventoAuditoria {
 
 	private String textoTraza;
 
+	@ApiModelProperty(value = "Numero de registro")
+	private String numRegistro;
+
 	public List<String> getListaAreas() {
 		return listaAreas;
 	}
@@ -330,6 +333,15 @@ public class RFiltroEventoAuditoria {
 
 	public void setTiposPago(List<String> tiposPago) {
 		this.tiposPago = tiposPago;
+	}
+
+
+	public String getNumRegistro() {
+		return numRegistro;
+	}
+
+	public void setNumRegistro(final String numRegistro) {
+		this.numRegistro = numRegistro;
 	}
 
 }

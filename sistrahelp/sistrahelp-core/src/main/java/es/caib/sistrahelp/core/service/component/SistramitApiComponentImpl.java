@@ -957,6 +957,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 			rFiltro.setTiposFirma(pFiltro.getTiposFirma());
             rFiltro.setTiposPago(pFiltro.getTiposPago());
+
+			rFiltro.setNumRegistro(pFiltro.getNumRegistro());
+		
 		}
 
 		return rFiltro;

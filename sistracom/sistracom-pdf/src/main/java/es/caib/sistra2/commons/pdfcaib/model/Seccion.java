@@ -15,6 +15,8 @@ public class Seccion implements LineaObject{
   private String titulo;
   /**Posicion horizontal que ocupara la seccion (fijado a 6)*/
   private int layoutCols;
+  /** Color de la seccion */
+	private String colorSeccion;
 
   /**
    * Constructor
@@ -70,6 +72,20 @@ public class Seccion implements LineaObject{
   public void setLayoutCols(int layoutCols) {
     this.layoutCols = layoutCols;
   }
+
+  	/**
+	 * @return Devuelve colorSeccion
+	 */
+	public String getColorSeccion() {
+		return colorSeccion;
+	}
+
+	/**
+	 * @param colorSeccion Modifica colorSeccion
+	 */
+	public void setColorSeccion(final String colorSeccion) {
+		this.colorSeccion = colorSeccion;
+	}
 
 
 }

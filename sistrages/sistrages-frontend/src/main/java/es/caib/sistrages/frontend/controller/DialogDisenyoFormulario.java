@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -55,6 +56,15 @@ import java.util.regex.PatternSyntaxException;
 @ViewScoped
 @SuppressWarnings("deprecation")
 public class DialogDisenyoFormulario extends DialogControllerBase {
+
+	private static final int NUM_MAX_LINEAS_PAGINA = 99;
+
+	private static final Pattern STYLE_TAG_PATTERN = Pattern.compile(
+			"<[a-z][^>]*?\\sstyle\\s*=\\s*\"([^\"]*)\"",
+			Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern FONT_SIZE_PATTERN = Pattern.compile(
+			"(?:^|;)\\s*font-size\\s*:", Pattern.CASE_INSENSITIVE);
 
 	@Inject
 	FormularioInternoService formIntService;
@@ -841,6 +851,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					return false;
 				}
 
+				if (objetoFormularioEdit instanceof ComponenteFormularioEtiqueta
+						&& contieneFontSize(((ComponenteFormularioEtiqueta) objetoFormularioEdit).getTexto())) {
+					addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("warning.componente.etiqueta.fontSize"), true);
+					return false;
+				}
+
 				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit, false)) {
 					if(objetoFormularioEdit instanceof ComponenteFormularioCampoTexto && TypeCampoTexto.IBAN.equals(((ComponenteFormularioCampoTexto) objetoFormularioEdit).getTipoCampoTexto())) {
 						addMessageContext(TypeNivelGravedad.ERROR,
@@ -1027,6 +1044,35 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 
 		return true;
+	}
+
+	/** Detecta font-size en un atributo style de cualquiera de las traducciones del aviso. */
+	private boolean contieneFontSize(final Literal literal) {
+		if (literal == null || literal.getTraducciones() == null) {
+			return false;
+		}
+
+		for (final Traduccion traduccion : literal.getTraducciones()) {
+			if (traduccion != null && contieneDeclaracionFontSize(traduccion.getLiteral())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean contieneDeclaracionFontSize(final String pContenidoHTML) {
+		if (StringUtils.isBlank(pContenidoHTML)) {
+			return false;
+		}
+
+		final Matcher matcherEstilo = STYLE_TAG_PATTERN.matcher(pContenidoHTML);
+		while (matcherEstilo.find()) {
+			if (FONT_SIZE_PATTERN.matcher(matcherEstilo.group(1)).find()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -1746,6 +1792,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	        final PaginaFormulario paginaCopy = formulario.getPaginas().get(idPaginaCopy - 1);
 	        final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+	        if ((!cut || !Objects.equals(paginaCopy.getCodigo(), pagina.getCodigo())) && !validarMaximoLineas()) {
+	            return;
+	        }
+
 	        final Long idPagina = pagina.getCodigo();
 	        LineaComponentesFormulario lineaDestino = null;
 	        LineaComponentesFormulario lineaOriginal = null;
@@ -2121,10 +2171,23 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	/** Inserta un componente de tipo linea. **/
 	public void insertaLinea() {
+		if (!validarMaximoLineas()) {
+			return;
+		}
+
 		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_LINEA)) {
 			return;
 		}
 		insertaLineaComponenteBloque(TypeObjetoFormulario.LINEA, null);
+	}
+
+	private boolean validarMaximoLineas() {
+		final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+		if (pagina.getLineas().size() >= NUM_MAX_LINEAS_PAGINA) {
+			PrimeFaces.current().executeScript("PF('avisoMaximoLineasDlg').show();");
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -2136,6 +2199,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 *                  tipo de componente para ser añadido al utilizarse.
 	 */
 	private void insertaLineaComponenteBloque(final TypeObjetoFormulario tipoCampo, final Object objeto) {
+		if (!validarMaximoLineas()) {
+			return;
+		}
+
 		final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
 		LineaComponentesFormulario lineaSeleccionada = null;
 		Integer ordenLinea = null;

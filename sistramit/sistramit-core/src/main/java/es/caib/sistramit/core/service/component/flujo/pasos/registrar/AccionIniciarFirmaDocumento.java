@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
+import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
@@ -71,16 +72,13 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		// Buscamos datos firmante
 		Persona firmante = null;
 
-		// Si se debe validar firmante y es modo FH, debemos indicar que el firmante es el FH
+		// - Se verifica firmante debe firmar el firmante indicado
 		boolean verificarFirmante = RestriccionesFirmaUtil.verificarFirmante(pVariablesFlujo.getNivelAutenticacion(), UtilsSTG.obtenerNivelSeguridadAutenticado(pDefinicionTramite));
-		if (pVariablesFlujo.isFuncionarioHabilitado() && verificarFirmante) {
-			FuncionarioHabilitado fh = pVariablesFlujo.getUsuarioAutenticado().getFuncionarioHabilitado();
-			firmante = new Persona(fh.getNif(), fh.getNombreApellidos());
-		}
-
-		// - Si es modo normal y se verifica firmante debe firmar el firmante indicado
-		if (!pVariablesFlujo.isFuncionarioHabilitado() && verificarFirmante && StringUtils.isNotBlank(nifFirmante)) {
+		if (verificarFirmante && StringUtils.isNotBlank(nifFirmante)) {
 			firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia, nifFirmante);
+			if (firmante == null) {
+				throw new AccionPasoNoPermitidaException("Signant " + nifFirmante + " no ha de signar el document " + idDocumento + "-" + instancia);
+			}
 		}
 
 		// Envia fichero a firmar
@@ -164,7 +162,6 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 
 		// Invoca a componente para redirección firma
 		TypeNivelSeguridad nivelSeguridadAutenticado = UtilsSTG.obtenerNivelSeguridadAutenticado(pDefinicionTramite);
-		// pDefinicionTramite.getDefinicionVersion().get
 		final RedireccionFirma redireccionFirma = firmaComponent.redireccionFirmaExterna(
 				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), nivelSeguridadAutenticado, pVariablesFlujo.getUsuarioAutenticado(), firmante, representante,
 				idDocumento + "-" + instancia, fileContent, fileName, tipoDocumental, urlCallBack,

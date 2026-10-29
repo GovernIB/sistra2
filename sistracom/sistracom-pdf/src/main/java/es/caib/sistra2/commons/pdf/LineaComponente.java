@@ -4,8 +4,9 @@ import java.awt.Color;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
 import com.lowagie.text.Phrase;
+
+import es.caib.sistra2.commons.pdfcaib.FontResourceLoader;
 
 /**
  * Linea
@@ -57,8 +58,8 @@ public class LineaComponente {
 	 * @return
 	 */
 	public static Font getFontEnlace(final PDFDocument document) {
-		return FontFactory.getFont(document.getContext().getDefaultFont().getFamilyname(),
-				document.getContext().getDefaultFont().getSize(), Font.NORMAL, new Color(0f, 0f, 1f));
+		final Font defaultFont = document.getContext().getDefaultFont();
+		return new Font(defaultFont.getBaseFont(), defaultFont.getSize(), Font.NORMAL, new Color(0f, 0f, 1f));
 	}
 
 	/**
@@ -68,9 +69,10 @@ public class LineaComponente {
 	 * @return
 	 */
 	public static Font getFontNegrita(final PDFDocument document) {
-		return FontFactory.getFont(document.getContext().getDefaultFont().getFamilyname(),
-				document.getContext().getDefaultFont().getSize(), Font.BOLD,
-				document.getContext().getDefaultFont().getColor());
+		final Font defaultFont = document.getContext().getDefaultFont();
+		final Font font = FontResourceLoader.getNotoSansFont(defaultFont.getSize(), true);
+		font.setColor(defaultFont.getColor());
+		return font;
 	}
 
 	/**

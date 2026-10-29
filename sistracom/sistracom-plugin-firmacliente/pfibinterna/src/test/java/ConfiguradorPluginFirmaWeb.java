@@ -1,46 +1,23 @@
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoNivelSeguridad;
+import es.caib.sistra2.commons.plugins.firmacliente.pfibinterna.PluginFirmaWebConfig;
 import es.caib.sistra2.commons.plugins.firmacliente.pfibinterna.PluginFirmaWebMetodoNivelConfig;
 import es.caib.sistra2.commons.plugins.firmacliente.pfibinterna.PluginFirmaWebPerfilFirmaConfig;
 import es.caib.sistra2.commons.utils.JSONUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ConfiguradorPluginFirmaWeb {
 
-    /*
-    // ------- [ CONFIGURACION NUEVA ] -----------------------------------
-    // Perfiles de firma
-    public static final String PROFILE_NOVERIF = "FIRMASISTRA_noverifNIF";
-    public static final String PROFILE_VERIF = "FIRMASISTRA";
-    // Usuarios según métodos
-    public static final String USER_FA_CF = "$sistra2_fa_cf_portafib_entorn";
-    public static final String USER_FA_AF = "$sistra2_fa_af_portafib_entorn";
-    public static final String USER_AF = "$sistra2_af_portafib_entorn";
-    public static final String USER_CF = "$sistra2_cf_portafib_entorn";
-    public static final String USER_FA = "$sistra2_fa_portafib_entorn";
-    */
-
-    /*// ------- [ CONFIGURACION VIEJA ] ---------------------------------
-    // Perfiles de firma
-    public static final String PROFILE_NOVERIF = "FIRMASISTRA_noverifNIF";
-    public static final String PROFILE_VERIF = "FIRMASISTRA";
-    // Usuarios según métodos
-    public static final String USER_FA_CF = "${config.es.caib.sistra2.portafib.usr}";
-    public static final String USER_FA_AF = "${config.es.caib.sistra2.portafib.usr}";
-    public static final String USER_AF = "${config.es.caib.sistra2.portafib.usr}";
-    public static final String USER_CF = "${config.es.caib.sistra2.portafib.usr}";
-    public static final String USER_FA = "${config.es.caib.sistra2.portafib.usr}";
-
-    // Pwds de los usuarios
-    public static final String PWD = "${config.es.caib.sistra2.portafib.pwd}";*/
-
     // ------- [ CONFIGURACION CON PLACEHOLDER ] -------------------------
+
     // Perfiles de firma
+    public static final String PROFILE_FH = "FIRMASISTRA";
     public static final String PROFILE_NOVERIF = "FIRMASISTRA_noverifNIF";
     public static final String PROFILE_VERIF = "FIRMASISTRA";
+
     // Usuarios según métodos
+    public static final String USER_FH = "${config.es.caib.sistra2.fh.portafib.usr}";
     public static final String USER_FA_CF = "${config.es.caib.sistra2.fa_cf.portafib.usr}";
     public static final String USER_FA_AF = "${config.es.caib.sistra2.fa_af.portafib.usr}";
     public static final String USER_AF = "${config.es.caib.sistra2.af.portafib.usr}";
@@ -48,12 +25,12 @@ public class ConfiguradorPluginFirmaWeb {
     public static final String USER_FA = "${config.es.caib.sistra2.fa.portafib.usr}";
 
     // Pwds de los usuarios con placeholder
+    public static final String PWD_FH= "${config.es.caib.sistra2.fh.portafib.pwd}";
     public static final String PWD_FA_CF = "${config.es.caib.sistra2.fa_cf.portafib.pwd}";
     public static final String PWD_FA_AF = "${config.es.caib.sistra2.fa_af.portafib.pwd}";
     public static final String PWD_AF = "${config.es.caib.sistra2.af.portafib.pwd}";
     public static final String PWD_CF = "${config.es.caib.sistra2.cf.portafib.pwd}";
     public static final String PWD_FA = "${config.es.caib.sistra2.fa.portafib.pwd}";
-
 
     // Main para generar la configuración del plugin de firma web en formato JSON.
     public static void main(String[] args) throws Exception{
@@ -65,7 +42,7 @@ public class ConfiguradorPluginFirmaWeb {
 
 
         // Convierte desde JSON a objeto
-        List<PluginFirmaWebMetodoNivelConfig> config2 = (List) JSONUtil.fromListJSON(configJson, PluginFirmaWebMetodoNivelConfig.class);
+        PluginFirmaWebConfig config2 = (PluginFirmaWebConfig) JSONUtil.fromJSON(configJson, PluginFirmaWebConfig.class);
         String configJson2 = JSONUtil.toJSON(config2, true);
         // System.out.println(configJson2);
         // System.out.println("------------------------------------------------------------------------------------");
@@ -81,19 +58,24 @@ public class ConfiguradorPluginFirmaWeb {
      * @return Configuración en formato JSON.
      */
     public static String generateConfigJSON(boolean prettyPrint) throws Exception {
-        /** Configuración de los métodos de autenticación y niveles de seguridad. */
-        List<PluginFirmaWebMetodoNivelConfig> config = new ArrayList<>();
 
+        PluginFirmaWebConfig config = new PluginFirmaWebConfig();
+
+        // Configuración para fh
+        config.setPerfilFirmaFH(new PluginFirmaWebPerfilFirmaConfig(PROFILE_FH, USER_FH, PWD_FH));
+
+        // Configuración por nivel aut y nivel seguridad
+        List<PluginFirmaWebMetodoNivelConfig> configAutNivel = config.getConfigAutNivel();
         // Configuración para CLAVE MOVIL
-        config.add(generarConfigClaveMovil());
+        configAutNivel.add(generarConfigClaveMovil());
         // Configuración para CLAVE PERMANENTE con Bajo/Sustancial
-        config.add(generarConfigClavePermanenteBajoSustancial());
+        configAutNivel.add(generarConfigClavePermanenteBajoSustancial());
         // Configuración para CLAVE PERMANENTE con Sustancial firma con certificado
-        config.add(generarConfigClavePermanenteSustancialCert());
+        configAutNivel.add(generarConfigClavePermanenteSustancialCert());
         // Configuración para CERTIFICADO con bajo y sustancial
-        config.add(generarConfigCertificadoBajoSustancial());
+        configAutNivel.add(generarConfigCertificadoBajoSustancial());
         // Configuración para CERTIFICADO con sustancial certificado y alto
-        config.add(generarConfigCertificadoSustancialCertAlto());
+        configAutNivel.add(generarConfigCertificadoSustancialCertAlto());
 
         // Genera JSON
         String configJson = JSONUtil.toJSON(config, prettyPrint);
@@ -102,7 +84,7 @@ public class ConfiguradorPluginFirmaWeb {
         return configJson;
     }
 
-    private static PluginFirmaWebMetodoNivelConfig generarConfigCertificadoSustancialCertAlto() throws Exception {
+    private static PluginFirmaWebMetodoNivelConfig generarConfigCertificadoSustancialCertAlto() {
         PluginFirmaWebMetodoNivelConfig certSustancialCertAltoCfg = new PluginFirmaWebMetodoNivelConfig();
         // - Metodo: CLAVE_MOVIL
         certSustancialCertAltoCfg.setMetodoAutenticacion(TipoMetodoAutenticacion.CLAVE_CERTIFICADO);

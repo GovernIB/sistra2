@@ -17,6 +17,8 @@ public class FormularioPdf {
   private List<Linea> lineas;
   /**Pie del formulario*/
   private Pie pie;
+  /**Configuración de fuentes del formulario*/
+  private ConfiguracionFuentes configuracionFuentes;
 
   /**
    * @return Devuelve cabecera
@@ -54,5 +56,16 @@ public class FormularioPdf {
   public void setPie(Pie pie) {
     this.pie = pie;
   }
-
+  /**
+   * @return Devuelve la configuración de fuentes del formulario
+   */
+  public ConfiguracionFuentes getConfiguracionFuentes() {
+    return configuracionFuentes;
+  }
+  /**
+   * @param configuracionFuentes Modifica la configuración de fuentes del formulario
+   */
+  public void setConfiguracionFuentes(ConfiguracionFuentes configuracionFuentes) {
+    this.configuracionFuentes = configuracionFuentes;
+  }
 }

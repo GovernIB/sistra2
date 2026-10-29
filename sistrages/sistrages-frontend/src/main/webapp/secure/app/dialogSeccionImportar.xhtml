@@ -149,44 +149,62 @@
 					update="formTramite growlDialogImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
 			</p:outputPanel>
 
-			<h:panelGrid rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18," columns = "4" cellpadding = "5" cellspacing = "0"  width="100%" rendered="#{dialogSeccionImportar.mostrarPanelInfo}">
+			<h:panelGrid id="panelInfo" rowClasses="ui-datatable-even, ui-datatable-odd" columnClasses="padding-left-18 w25 va-top, padding-left-18 w75" columns="2" cellpadding="5" cellspacing="0" width="100%" rendered="#{dialogSeccionImportar.mostrarPanelInfo}">
 
-					<p:outputLabel value="#{msg['dialogSeccionImportar.identificador']}" style="font-weight: bold" />
-					<p:outputLabel value="#{msg['dialogSeccionImportar.existe']}" style="font-weight: bold" />
-					<p:outputLabel value="#{msg['dialogSeccionImportar.seccion.accion']}" style="font-weight: bold" />
-					<p:outputLabel value="" style="font-weight: bold" />
+					<p:outputLabel value="#{msg['dialogSeccionImportar.identificadorExportado']}:" style="font-weight: bold" />
+					<p:outputLabel value="#{dialogSeccionImportar.identificadorExportado}" />
 
-					<p:outputLabel value="#{dialogSeccionImportar.data.identificador}"  />
-					<p:outputLabel value="#{msg['typeImportar.existe.' += dialogSeccionImportar.filaSeccion.existe]}"  />
-					<h:column>
-							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogSeccionImportar.seccion.accion']}" style="font-weight: bold" /></f:facet>
-							 <p:outputLabel  value="#{dialogSeccionImportar.filaSeccion.mensaje}"  rendered="#{dialogSeccionImportar.filaSeccion.visibleBoton == false}"/>
-	      					 <p:commandButton value="..." rendered="#{dialogSeccionImportar.filaSeccion.visibleBoton}"  actionListener="#{dialogSeccionImportar.checkDominio()}" style="margin-left:5px" process="@this">
-	      							<p:ajax event="dialogReturn" listener="#{dialogSeccionImportar.returnDialogoDominio}" />
-							</p:commandButton>
-					</h:column>
-					<i id="iconoDominio${fila.seccion.codigo}" class="#{dialogSeccionImportar.filaSeccion.resultado.icon}" style="#{dialogSeccionImportar.filaSeccion.resultado.css}" />
+					<p:outputLabel value="#{msg['dialogSeccionImportar.existe']}:" style="font-weight: bold" />
+					<p:outputLabel value="#{msg['typeImportar.existe.' += dialogSeccionImportar.filaSeccion.existe]}" />
 
+					<p:outputLabel value="#{msg['dialogSeccionImportar.seccion.accion']}:" style="font-weight: bold" />
+					<p:outputLabel value="#{dialogSeccionImportar.filaSeccion.mensaje}" />
 
-					<p:outputLabel value="Script carga incial:" />
-					<h:column>
-							<p:outputLabel value="#{msg['dialogSeccionImportar.script.sri.notiene']}" rendered="#{!dialogSeccionImportar.tieneScriptSRI}" />
-							<p:commandButton icon="fa fa-bolt"  value=" " rendered="#{dialogSeccionImportar.tieneScriptSRI}"  actionListener="#{dialogSeccionImportar.verScriptSRI()}" style="margin-left:5px; width:30px; height:25px" process="@this" styleClass="scriptRelleno" />
-					</h:column>
-					<h:column>
-					</h:column>
-					<h:column>
-					</h:column>
+					<p:outputLabel value="#{msg['dialogSeccionImportar.script.sri']}:" style="font-weight: bold" />
+					<h:panelGroup>
+						<p:outputLabel value="#{msg['dialogSeccionImportar.script.sri.notiene']}" rendered="#{!dialogSeccionImportar.tieneScriptSRI}" />
+						<p:commandButton icon="fa fa-bolt" value=" " rendered="#{dialogSeccionImportar.tieneScriptSRI}" actionListener="#{dialogSeccionImportar.verScriptSRI()}" style="margin-left:5px; width:30px; height:25px" process="@this" styleClass="scriptRelleno" />
+					</h:panelGroup>
+
+					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerAccion']}:" style="font-weight: bold" />
+					<h:panelGroup>
+						<p:selectOneMenu id="accion" value="#{dialogSeccionImportar.accion}" style="margin-right:10px">
+							<f:selectItems value="#{dialogSeccionImportar.acciones}" var="acc" itemLabel="#{msg['typeImportar.accion.' += acc.toString()]}" itemValue="#{acc.toString()}" />
+							<p:ajax listener="#{dialogSeccionImportar.cambioAccion}" process="@this" update="panelInfo panelBotonera growlDialogImportar" />
+						</p:selectOneMenu>
+						<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogSeccionImportar.seleccionar.info']}" rendered="#{dialogSeccionImportar.accion == 'S'}" />
+						<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogSeccionImportar.crear.info']}" rendered="#{dialogSeccionImportar.accion == 'C'}" />
+					</h:panelGroup>
+
+					<p:outputLabel value="#{msg['dialogSeccionImportar.headerSeccion']}:" style="font-weight: bold" rendered="#{dialogSeccionImportar.accion == 'S'}" />
+					<p:selectOneMenu id="seccionSeleccionada" value="#{dialogSeccionImportar.idSeccionSeleccionada}" rendered="#{dialogSeccionImportar.accion == 'S'}" style="width: 80%;">
+						<f:selectItems value="#{dialogSeccionImportar.secciones}" var="sec" itemLabel="#{sec.identificador}#{sec.descripcion != null ? ' - ' += sec.descripcion : ''}" itemValue="#{sec.codigo}" />
+						<p:ajax listener="#{dialogSeccionImportar.cambioSeccionSeleccionada}" process="@this" update="panelInfo panelBotonera growlDialogImportar" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{msg['dialogSeccionImportar.headerIdentificador']}:" style="font-weight: bold" rendered="#{dialogSeccionImportar.accion == 'C'}" />
+					<h:panelGroup rendered="#{dialogSeccionImportar.accion == 'C'}">
+						<p:inputText id="identificador" value="#{dialogSeccionImportar.identificadorDestino}" size="3" maxlength="3" validatorMessage="#{msg['dialogSeccionImportar.error.identificadorLongitud']}" onblur="this.value = this.value.toUpperCase().trim();">
+							<p:keyFilter regEx="/[a-zA-Z0-9_-]/i" preventPaste="false"/>
+							<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,3}$" />
+							<p:ajax event="blur" listener="#{dialogSeccionImportar.comprobarIdentificador}" process="@this descripcion" update="panelInfo panelBotonera growlDialogImportar" />
+						</p:inputText>
+						<p:commandButton value="#{msg['botones.validar']}" actionListener="#{dialogSeccionImportar.comprobarIdentificador}" process="identificador descripcion" update="panelInfo panelBotonera growlDialogImportar" style="margin-left:5px" />
+					</h:panelGroup>
+
+					<p:outputLabel value="#{msg['dialogSeccionImportar.headerDescripcion']}:" style="font-weight: bold" rendered="#{dialogSeccionImportar.accion == 'C'}" />
+					<p:inputTextarea id="descripcion" value="#{dialogSeccionImportar.descripcionDestino}" onblur="this.value = this.value.trim();" rows="3" cols="50" rendered="#{dialogSeccionImportar.accion == 'C'}" />
+
 			</h:panelGrid>
 
 
 			<br />
 			<br />
 
-		  	 <p:outputPanel styleClass="botonera">
+		  	 <p:outputPanel id="panelBotonera" styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton id="botonImportar" value="#{msg['botones.importar']}" actionListener="#{dialogSeccionImportar.importar}" process="@this" styleClass="boton-azul" rendered="#{dialogSeccionImportar.mostrarBotonImportar}"  update="@form growlDialogImportar" />
+		        		<p:commandButton id="botonImportar" value="#{msg['botones.importar']}" actionListener="#{dialogSeccionImportar.importar}" process="@form" styleClass="boton-azul" rendered="#{dialogSeccionImportar.mostrarBotonImportar}" update="@form growlDialogImportar" />
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogSeccionImportar.cancelar}" process="@this" />
 					</f:facet>
 				</p:toolbar>

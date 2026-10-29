@@ -79,7 +79,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
 	@Override
 	public String obtenerPropiedadConfiguracion(final TypePropiedadConfiguracion propiedad) {
-		return readPropiedad(propiedad.toString(), true);
+		return readPropiedad(propiedad.toString(), false);
 	}
 
 	// ----------------------------------------------------------------------

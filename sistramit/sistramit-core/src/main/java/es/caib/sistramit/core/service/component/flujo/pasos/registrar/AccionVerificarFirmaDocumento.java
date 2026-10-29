@@ -252,8 +252,10 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 
 		// Si está activada la verificación de firma en el plugin: validamos firma y verificar nif firmante concuerda
 		if (resFirma.isFinalizada() && resFirma.isVerificar()) {
+			// Si es FH el firmante es el funcionario habilitado, sino es el nif del firmante
+			String firmante = pVariablesFlujo.isFuncionarioHabilitado() ? pVariablesFlujo.getUsuarioAutenticado().getFuncionarioHabilitado().getNif() : nifFirmante;
 			final ValidacionFirmante validacionFirmante = firmaComponent.validarFirmante(idEntidad, idioma,
-					signedDocument, resFirma.getFirmaContenido(), nifFirmante);
+					signedDocument, resFirma.getFirmaContenido(), firmante);
 			resFirma.setValida(validacionFirmante.isCorrecto());
 			resFirma.setDetalleError(validacionFirmante.getDetalleError());
 		}

@@ -71,27 +71,33 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 
         try {
             // Perfil firma a usar en función de configuración.
-            perfilFirma = obtenerPerfilFirma(infoSesionFirma.getMetodoAutenticacion(), infoSesionFirma.getNivelSeguridad(), infoSesionFirma.isValidarFirmante());
+            perfilFirma = obtenerPerfilFirma(infoSesionFirma.getMetodoAutenticacion(), infoSesionFirma.getNivelSeguridad(), infoSesionFirma.isValidarFirmante(), infoSesionFirma.isFuncionarioHabilitado());
             // En caso de firma con certificado representación se pasa nif empresa en
             // parámetro organizationId (representante en administrationId / username)
             String administrationId = null;
             String username = null;
             String organizationId = null;
-            if (infoSesionFirma.isValidarFirmante()) {
-                // Si es representante, pasamos nif empresa en organizationId
-                if (infoSesionFirma.getNifRepresentante() != null) {
-                    organizationId = infoSesionFirma.getNif();
-                    administrationId = infoSesionFirma.getNifRepresentante();
-                    username = infoSesionFirma.getNombreRepresentante();
+            // Si es funcionario habilitado, debe firmar el FH
+            if (infoSesionFirma.isFuncionarioHabilitado()) {
+                administrationId = infoSesionFirma.getNifFH();
+                username = infoSesionFirma.getNombreFH();
+            } else {
+                if (infoSesionFirma.isValidarFirmante()) {
+                    // Si es representante, pasamos nif empresa en organizationId
+                    if (infoSesionFirma.getNifRepresentante() != null) {
+                        organizationId = infoSesionFirma.getNif();
+                        administrationId = infoSesionFirma.getNifRepresentante();
+                        username = infoSesionFirma.getNombreRepresentante();
+                    } else {
+                        // Pasamos firmante indicado
+                        administrationId = infoSesionFirma.getNif();
+                        username = infoSesionFirma.getNombreUsuario();
+                    }
                 } else {
-                    // Pasamos firmante indicado
+                    // Si no hay que validar, vendrá el usuario autenticado
                     administrationId = infoSesionFirma.getNif();
                     username = infoSesionFirma.getNombreUsuario();
                 }
-            } else {
-                // Si no hay que validar, vendrá el usuario autenticado
-                administrationId = infoSesionFirma.getNif();
-                username = infoSesionFirma.getNombreUsuario();
             }
             // Establecemos parametros peticion
             commonInfo = new RCommonInfo();
@@ -382,27 +388,33 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
      * @param metodoAutenticacion Método de autenticación
      * @param nivelSeguridad      Nivel de seguridad
      * @param validarFirmante     Indica si se debe validar el firmante
+     * @param fh Indica si es firma de funcionario habilitado
      * @return perfil de firma
      */
     private PluginFirmaWebPerfilFirmaConfig obtenerPerfilFirma(TipoMetodoAutenticacion metodoAutenticacion,
-                                                               TipoNivelSeguridad nivelSeguridad, boolean validarFirmante) throws FirmaPluginException {
+                                                               TipoNivelSeguridad nivelSeguridad, boolean validarFirmante, boolean fh) throws FirmaPluginException {
 
         PluginFirmaWebPerfilFirmaConfig perfilFirma = null;
-        List<PluginFirmaWebMetodoNivelConfig> config;
+        PluginFirmaWebConfig config;
 
         // Parseamos JSON configuración
         try {
             String configJson = getPropiedad("configuracion");
-            config = (List) JSONUtil.fromListJSON(configJson, PluginFirmaWebMetodoNivelConfig.class);
+            config = (PluginFirmaWebConfig) JSONUtil.fromJSON(configJson, PluginFirmaWebConfig.class);
         } catch (Exception e) {
             throw new FirmaPluginException("Error leyendo propiedad configuracion de perfiles de firma", e);
         }
 
-        // Obtenemos perfil de firma según método autenticación y nivel seguridad
-        for (PluginFirmaWebMetodoNivelConfig cfg : config) {
-            if (cfg.getMetodoAutenticacion() == metodoAutenticacion && cfg.getNivelesSeguridad().contains(nivelSeguridad)) {
-                perfilFirma = (validarFirmante ? cfg.getPerfilFirmaConVerificacion() : cfg.getPerfilFirmaSinVerificacion());
-                break;
+        // Si es fh, devolvemos perfil de firma de funcionario habilitado
+        if (fh) {
+            perfilFirma = config.getPerfilFirmaFH();
+        } else {
+            // Obtenemos perfil de firma según método autenticación y nivel seguridad
+            for (PluginFirmaWebMetodoNivelConfig cfg : config.getConfigAutNivel()) {
+                if (cfg.getMetodoAutenticacion() == metodoAutenticacion && cfg.getNivelesSeguridad().contains(nivelSeguridad)) {
+                    perfilFirma = (validarFirmante ? cfg.getPerfilFirmaConVerificacion() : cfg.getPerfilFirmaSinVerificacion());
+                    break;
+                }
             }
         }
 

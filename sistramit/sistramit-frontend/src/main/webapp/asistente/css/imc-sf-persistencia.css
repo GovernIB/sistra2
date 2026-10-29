@@ -43,6 +43,37 @@
 
 
 
+
+.imc--taula table tbody td:last-child { display: flex; white-space: nowrap; }
+
+.imc--taula button[data-accio="tramit-elimina"] { display: flex; align-items: center; gap: 0 .4em; margin-left: .5em; background-color: #c00; }
+.imc--taula button[data-accio="tramit-elimina"] span { position: absolute; top: -99em; left: -99em; }
+
+.imc--taula button[data-accio="tramit-elimina"]::before { content: ""; display: block; width: .8em; height: .8em; background: transparent url(../imgs/icones/ico_eliminau_fff.svg) no-repeat center center / auto 100%; }
+
+
+.imc-missatge .imc--text .imc--principal::before {
+  background: transparent url(../imgs/icones/ico_correcte.svg) no-repeat center center / auto 1em;
+}
+
+.imc-missatge[data-accio="correcte"] .imc--text {
+  background: #fff url(../imgs/icones/ico_correcte_4dba79.svg) no-repeat 1.5em 1em / auto 3em;
+}
+
+.imc-missatge[data-accio="error"] .imc--text {
+  background: #fff url(../imgs/icones/ico_error.svg) no-repeat 1.5em 1em / auto 3em;
+}
+
+.imc-missatge[data-accio="warning"] .imc--text {
+  background: #fff url(../imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em;
+}
+
+
+
+
+
+
+
 .imc--persistencia { display: flex; align-items: safe center; justify-content: center; overflow: auto; position: fixed; width: 100%; height: 100%; }
 .imc--persistencia > .imc--c { padding: 1.5em 2em 1.5em 5em; margin: auto; background: #fff url(../imgs/icones/ico_info.svg) no-repeat 1em 1em / auto 3em; }
 

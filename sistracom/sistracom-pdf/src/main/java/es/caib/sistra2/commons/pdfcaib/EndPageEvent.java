@@ -10,7 +10,6 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
@@ -19,9 +18,9 @@ import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 
 import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
+import es.caib.sistra2.commons.pdfcaib.model.ConfiguracionFuentes;
 import es.caib.sistra2.commons.pdfcaib.model.PersonalizacionTexto;
 import es.caib.sistra2.commons.pdfcaib.model.Pie;
-import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
 
 /**
  * @author Indra
@@ -53,7 +52,12 @@ public class EndPageEvent extends PdfPageEventHelper {
 	protected PdfTemplate tplTotal;
 
 	public EndPageEvent(final Document document, final Cabecera cabecera, final Pie pie, final boolean paginar,
-			final PdfWriter writer) {
+			final PdfWriter writer) throws PdfCaibException {
+		this(document, cabecera, pie, paginar, writer, null);
+	}
+
+	public EndPageEvent(final Document document, final Cabecera cabecera, final Pie pie, final boolean paginar,
+			final PdfWriter writer, final ConfiguracionFuentes configuracionFuentes) throws PdfCaibException {
 		super();
 		this.cabecera = cabecera;
 		this.pie = pie;
@@ -61,13 +65,25 @@ public class EndPageEvent extends PdfPageEventHelper {
 		tplTotal = writer.getDirectContent().createTemplate(100, 100);
 		this.paginar = paginar;
 
-		PERSONALIZACION_TEXTO_CABECERA_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS, 16);
-		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS, 16);
-		PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS, 10);
-		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 9);
-		ETIQUETA = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 10);
-		SECCION = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 9);
-		TEXTO = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 9);
+		final String fuenteRegular = FontResourceLoader.resolveFontName(
+				configuracionFuentes == null ? null : configuracionFuentes.getFuenteRegular());
+		final String fuenteBold = FontResourceLoader.resolveBoldFontName(
+				configuracionFuentes == null ? null : configuracionFuentes.getFuenteBold());
+		final int tamanioCabecera = configuracionFuentes == null || configuracionFuentes.getTamanioCabecera() == 0
+				? 16 : configuracionFuentes.getTamanioCabecera();
+		final int tamanioSeccion = configuracionFuentes == null || configuracionFuentes.getTamanioSeccion() == 0
+				? 16 : configuracionFuentes.getTamanioSeccion();
+		final int tamanioEtiqueta = configuracionFuentes == null || configuracionFuentes.getTamanioEtiqueta() == 0
+				? 10 : configuracionFuentes.getTamanioEtiqueta();
+
+		PERSONALIZACION_TEXTO_CABECERA_DEFAULT = new PersonalizacionTexto(true, false, fuenteRegular, tamanioCabecera);
+		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, fuenteBold, tamanioSeccion);
+		PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT = new PersonalizacionTexto(true, false, fuenteRegular, tamanioEtiqueta);
+		VALOR = FontResourceLoader.getFont(fuenteRegular, 9);
+		ETIQUETA = FontResourceLoader.getFont(fuenteRegular, 10);
+		SECCION = FontResourceLoader.getFont(fuenteBold, 9);
+		SECCION.setStyle(Font.BOLD);
+		TEXTO = FontResourceLoader.getFont(fuenteRegular, 9);
 
 	}
 
@@ -77,7 +93,8 @@ public class EndPageEvent extends PdfPageEventHelper {
 		if (personalizacionTexto != null) {
 			// FUENTE
 			if (personalizacionTexto.getFuente() != null) {
-				f = FontFactory.getFont(personalizacionTexto.getFuente().toString());
+				f = FontResourceLoader.getFont(personalizacionTexto.getFuente().toString(),
+						personalizacionTexto.getTamanio() == 0 ? Font.UNDEFINED : personalizacionTexto.getTamanio());
 			}
 			// NEGRITA Y CURSIVA
 			if (personalizacionTexto.isNegrita() && personalizacionTexto.isCursiva()) {

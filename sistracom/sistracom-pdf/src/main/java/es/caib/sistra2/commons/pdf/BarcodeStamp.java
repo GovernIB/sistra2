@@ -1,6 +1,6 @@
 package es.caib.sistra2.commons.pdf;
 
-import com.lowagie.text.pdf.BaseFont;
+import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
 
 /**
  *
@@ -20,7 +20,7 @@ public class BarcodeStamp extends ObjectStamp {
 	/**
 	 * Fuente
 	 */
-	private String fontName = BaseFont.HELVETICA;
+	private String fontName = TypeFuente.NOTOSANS.toString();
 	/**
 	 * Tamanyo fuente
 	 */

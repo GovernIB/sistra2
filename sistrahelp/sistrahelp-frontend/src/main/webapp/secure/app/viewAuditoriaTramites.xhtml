@@ -31,6 +31,15 @@
 		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
 		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
 
+		<style>
+			.acciones-exportacion-auditoria {
+				display: flex;
+				justify-content: flex-end;
+				gap: 4px;
+				white-space: nowrap;
+			}
+		</style>
+
 		<script type="text/javascript">
 			//<![CDATA[
 			    $(document).ready(function() {
@@ -258,8 +267,6 @@
 				        </p:column>
 
 					   <p:column styleClass="noPadding columna-filtros">
-						   <h:panelGrid columns="2" styleClass="w100, noPadding"/>
-
 						   <h:panelGrid columns="2" styleClass="w100, noPadding">
 							   <p:outputLabel for="filtroIniciadoPor" value="#{msg['viewAuditoriaTramites.filtro.iniciado']}:"/>
 							   <p:selectOneMenu id="filtroIniciadoPor" value="#{viewAuditoriaTramites.filtros.iniciadoPor}" style="width:144px" disabled="#{!viewAuditoriaTramites.comboIniciado}">
@@ -268,12 +275,17 @@
 							   </p:selectOneMenu >
 
 						   </h:panelGrid>
+						   <h:panelGrid columns="2" styleClass="w100, noPadding">
+							   <p:outputLabel for="filtroNumRegistro" value="#{msg['viewAuditoriaTramites.filtroNumRegistro']}:"/>
+							   <p:inputText id="filtroNumRegistro" value="#{viewAuditoriaTramites.filtros.numRegistro}" size="22" maxlength="50" style="width:144px" onkeyup="capitalize(this)" onblur="trim(this)"/>
+						   </h:panelGrid>
+
 					   </p:column>
 
 			        	<p:column styleClass=" noPadding columna-filtros">
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
 				        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewAuditoriaTramites.filtroProcedimiento']}:"/>
-				        		<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtros.idProcedimientoCP}" size="19" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
+				        			<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtros.idProcedimientoCP}" size="14" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
 				        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
 				        		</p:inputText>
 				        	</h:panelGrid>
@@ -281,7 +293,7 @@
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding">
 				        		<p:outputLabel for="filtroCodSia" value="#{msg['viewAuditoriaTramites.headSIA']}:"/>
 				        		<p:inputText id="filtroCodSia" value="#{viewAuditoriaTramites.filtros.codSia}"
-								             size="19" onkeyup="capitalize(this)" onblur="trim(this)"
+								             size="14" onkeyup="capitalize(this)" onblur="trim(this)"
 								             style="margin-left: 68px;" />
 							</h:panelGrid>
 
@@ -300,7 +312,12 @@
 						<p:column styleClass=" noPadding columna-filtros-botones " style="border-style:inherit  !important;">
 	        				<h:panelGrid id="panelBotones" columns="1" styleClass="w100, noPadding">
 	       						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight(); ajustarHeaderScroll();"/>
-			          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
+			          			<h:panelGroup layout="block" styleClass="acciones-exportacion-auditoria">
+			          				<p:commandButton id="btnCsv" value="CSV" title="#{msg['botones.exportacionCsv']}" icon="fa fa-download" ajax="false" immediate="true">
+			          					<p:dataExporter type="csv" target="dataTable" fileName="auditoria_tramites" pageOnly="false" encoding="UTF-8" />
+			          				</p:commandButton>
+			          				<p:commandButton id="btnHelp" title="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
+			          			</h:panelGroup>
 			          			<p:commandButton id="btnDetalle" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.consultar}" style="display:none;"/>
 			          			<p:commandButton id="btnSesion" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaSesion}" style="display:none;"/>
 			          			<p:commandButton id="btnNif" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaNif}" style="display:none;"/>

@@ -38,6 +38,11 @@ public interface LiteralesFront {
     String EXCEPCIONES = "exception";
 
     /**
+     * Literales persistencia.
+     */
+    String PERSISTENCIA = "persistencia";
+
+    /**
      * Obtiene literales por sección.
      *
      * @param seccion
