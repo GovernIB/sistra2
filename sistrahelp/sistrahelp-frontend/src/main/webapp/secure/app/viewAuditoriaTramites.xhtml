@@ -32,6 +32,21 @@
 		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
 
 		<style>
+			.filtros-auditoria {
+				overflow-x: auto;
+			}
+
+			.filtros-auditoria-grid {
+				display: flex;
+				flex-wrap: nowrap;
+				align-items: flex-start;
+			}
+
+			.filtros-auditoria-grid > .columna-filtros,
+			.filtros-auditoria-grid > .columna-filtros-botones {
+				flex-shrink: 0;
+			}
+
 			.acciones-exportacion-auditoria {
 				display: flex;
 				justify-content: flex-end;
@@ -93,7 +108,10 @@
 
 
 			jQuery(document).ready(function() {
-				$(window).resize(function() {
+				$(window).resize(function(event) {
+					if (event.target !== window) {
+						return;
+					}
 					setTimeout(function(){  setHeight(); ajustarHeaderScroll(); }, 100);
 				});
 
@@ -204,8 +222,9 @@
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<c:choose>
 			    <c:when test="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogHA or viewAuditoriaTramites.esDialogParams)}">
-			       <p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 ,showcase-text-align-center">
-				       <p:column styleClass=" noPadding columna-filtros">
+			       <h:panelGroup layout="block" styleClass="filtros-auditoria">
+			       <h:panelGroup id="panelFiltro" layout="block" styleClass="noBackground w100 filtros-auditoria-grid">
+				       <h:panelGroup layout="block" styleClass="noPadding columna-filtros">
 			        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
 				        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
 					        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtros.idSesionTramitacion}" size="40" maxlength="50" style="width:250px;" onkeyup="capitalize(this)" onblur="trim(this)"/>
@@ -215,8 +234,8 @@
 					        	<p:outputLabel for="filtroNombre" value="#{msg['viewAuditoriaTramites.filtroNombre']}:"/>
 					        	<p:inputText id="filtroNombre" value="#{viewAuditoriaTramites.filtros.nombre}" size="40" maxlength="40" style="margin-left:12px;width:250px;"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 				        	</h:panelGrid>
-			        	</p:column>
-			        	<p:column styleClass=" noPadding columna-filtros">
+			        	</h:panelGroup>
+			        	<h:panelGroup layout="block" styleClass="noPadding columna-filtros">
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding">
 					        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
 					        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="22" maxlength="9" style="margin-left: 70px;"  onkeyup="capitalize(this)" onblur="trim(this)"/>
@@ -234,8 +253,8 @@
 					        		</p:inputText>
 				        		</h:panelGroup>
 				        	</h:panelGrid>
-			        	</p:column>
-			        	<p:column styleClass=" noPadding columna-filtros">
+			        	</h:panelGroup>
+			        	<h:panelGroup layout="block" styleClass="noPadding columna-filtros">
 							<h:panelGrid columns="2" styleClass="w100, noPadding" >
 				        		<p:outputLabel for="filtroArea" value="#{msg['viewAuditoriaTramites.headArea']}:"/>
 				        		<p:inputText id="filtroArea" value="#{viewAuditoriaTramites.filtroArea}" size="24" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
@@ -264,9 +283,9 @@
 									<p:ajax event="dialogReturn" listener="#{viewAuditoriaTramites.onDialogErroresReturn}" process="@this" update="growl"/>
 								</p:commandButton>
 				        	</h:panelGrid>
-				        </p:column>
+			        	</h:panelGroup>
 
-					   <p:column styleClass="noPadding columna-filtros">
+					   <h:panelGroup layout="block" styleClass="noPadding columna-filtros">
 						   <h:panelGrid columns="2" styleClass="w100, noPadding">
 							   <p:outputLabel for="filtroIniciadoPor" value="#{msg['viewAuditoriaTramites.filtro.iniciado']}:"/>
 							   <p:selectOneMenu id="filtroIniciadoPor" value="#{viewAuditoriaTramites.filtros.iniciadoPor}" style="width:144px" disabled="#{!viewAuditoriaTramites.comboIniciado}">
@@ -280,9 +299,9 @@
 							   <p:inputText id="filtroNumRegistro" value="#{viewAuditoriaTramites.filtros.numRegistro}" size="22" maxlength="50" style="width:144px" onkeyup="capitalize(this)" onblur="trim(this)"/>
 						   </h:panelGrid>
 
-					   </p:column>
+					   </h:panelGroup>
 
-			        	<p:column styleClass=" noPadding columna-filtros">
+			        	<h:panelGroup layout="block" styleClass="noPadding columna-filtros">
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
 				        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewAuditoriaTramites.filtroProcedimiento']}:"/>
 				        			<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtros.idProcedimientoCP}" size="14" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
@@ -297,9 +316,9 @@
 								             style="margin-left: 68px;" />
 							</h:panelGrid>
 
-						</p:column>
+						</h:panelGroup>
 
-						<p:column styleClass=" noPadding columna-filtros">
+						<h:panelGroup layout="block" styleClass="noPadding columna-filtros">
 						<h:panelGrid columns="2" styleClass="w100, noPadding">
 							<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
 				        	<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" />
@@ -308,8 +327,8 @@
 				        	<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
 				        	<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" style="margin-left:15px" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 						</h:panelGrid>
-						</p:column>
-						<p:column styleClass=" noPadding columna-filtros-botones " style="border-style:inherit  !important;">
+						</h:panelGroup>
+						<h:panelGroup layout="block" styleClass="noPadding columna-filtros-botones">
 	        				<h:panelGrid id="panelBotones" columns="1" styleClass="w100, noPadding">
 	       						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha" oncomplete="setHeight(); ajustarHeaderScroll();"/>
 			          			<h:panelGroup layout="block" styleClass="acciones-exportacion-auditoria">
@@ -322,8 +341,9 @@
 			          			<p:commandButton id="btnSesion" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaSesion}" style="display:none;"/>
 			          			<p:commandButton id="btnNif" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaNif}" style="display:none;"/>
 							</h:panelGrid>
-						</p:column>
-	          	</p:panelGrid>
+						</h:panelGroup>
+	          	</h:panelGroup>
+			          	</h:panelGroup>
 			    </c:when>
 			    <c:otherwise>
 			    	<p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 ,showcase-text-align-center" style="display:none;">
@@ -421,6 +441,7 @@
 			<p:dataTable id="dataTable" var="dt" value="#{viewAuditoriaTramites.listaDatos}" lazy="true"
 						 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="100%"
+						 resizableColumns="true" resizeMode="fit" liveResize="false"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
@@ -441,39 +462,39 @@
 				<p:ajax event="page" update=":form:dataTable"/>
 
 				<!-- Columnas -->
-				<p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}" style="width:8% !important;" sortBy="#{dt.tipoEvento}" rendered="#{!viewAuditoriaTramites.esDialog}">
+				<p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}" style="width:8%;" sortBy="#{dt.tipoEvento}" rendered="#{!viewAuditoriaTramites.esDialog}">
 			        <h:outputText value="#{dt.tipoEvento} - #{msg['typeEvento.' += dt.tipoEvento]}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}" style="width:7% !important;" sortBy="#{dt.fecha}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}" style="width:7%;" sortBy="#{dt.fecha}">
 			        <h:outputText value="#{dt.fecha}">
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" class="sesion" style="width:12% !important;" sortBy="#{dt.idSesionTramitacion}" rendered="#{viewAuditoriaTramites.idSesionParam == null}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" class="sesion" style="width:12%;" sortBy="#{dt.idSesionTramitacion}" rendered="#{viewAuditoriaTramites.idSesionParam == null}">
 			        <h:outputText value="#{dt.idSesionTramitacion}" />
 			    </p:column>
-			    <p:column  headerText="#{msg['viewAuditoriaTramites.headNif']}" class="nif"  style="width:5% !important;" sortBy="#{dt.nif}" rendered="#{viewAuditoriaTramites.nifParam == null}">
+			    <p:column  headerText="#{msg['viewAuditoriaTramites.headNif']}" class="nif"  style="width:5%;" sortBy="#{dt.nif}" rendered="#{viewAuditoriaTramites.nifParam == null}">
 			        <h:outputText value="#{dt.nif}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headNombre']}" style="width:8% !important;" sortBy="#{dt.nombre}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headNombre']}" style="width:8%;" sortBy="#{dt.nombre}">
 			        <h:outputText value="#{dt.nombre.concat(' ').concat(dt.apellido1).concat(' ').concat(dt.apellido2)}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}" style="width:5% !important;" sortBy="#{dt.idTramite}" rendered="#{!viewAuditoriaTramites.esDialog}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}" style="width:5%;" sortBy="#{dt.idTramite}" rendered="#{!viewAuditoriaTramites.esDialog}">
 			        <h:outputText value="#{viewAuditoriaTramites.split(dt.idTramite)}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headArea']}" style="width:5% !important;" sortBy="#{dt.idTramite}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headArea']}" style="width:5%;" sortBy="#{dt.idTramite}">
 			        <h:outputText value="#{dt.area}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}" style="width:2% !important;" sortBy="#{dt.versionTramite}" rendered="#{!viewAuditoriaTramites.esDialog}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}" style="width:2%;" sortBy="#{dt.versionTramite}" rendered="#{!viewAuditoriaTramites.esDialog}">
 			        <h:outputText value="#{dt.versionTramite}" />
 			    </p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}" style="width:4% !important;" sortBy="#{dt.idProcedimientoCP}">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}" style="width:4%;" sortBy="#{dt.idProcedimientoCP}">
 			        <h:outputText value="#{dt.idProcedimientoCP}" />
 			    </p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}" style="width:3% !important;" sortBy="#{dt.idProcedimientoSIA}">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}" style="width:3%;" sortBy="#{dt.idProcedimientoSIA}">
 			        <h:outputText value="#{dt.idProcedimientoSIA}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headDescripcionEvento']}" style="width:12% !important;" sortBy="#{dt.descripcion}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headDescripcionEvento']}" style="width:12%;" sortBy="#{dt.descripcion}">
 				    <h:outputText value="#{dt.descripcion}" />
 
 				    <h:panelGroup style="display:block; margin-top:5px; font-size: 0.9em; color: #555;"
@@ -498,7 +519,7 @@
 				        </ui:repeat>
 				    </h:panelGroup>
 				</p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}" style="width:17% !important;" sortBy="#{dt.codigoError}" rendered="#{!viewAuditoriaTramites.esDialog}">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}" style="width:17%;" sortBy="#{dt.codigoError}" rendered="#{!viewAuditoriaTramites.esDialog}">
 			        <h:outputText value="#{dt.codigoError}" />
 			    </p:column>
 			</p:dataTable></p:outputPanel>

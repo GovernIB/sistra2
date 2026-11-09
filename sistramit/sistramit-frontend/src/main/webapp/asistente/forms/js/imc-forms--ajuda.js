@@ -107,7 +107,7 @@ $.fn.appFormsAjudaCamp = function(options) {
 			,referent = settings.referent
 			,elementEntra = function(e) {
 
-				if (element.attr("ajuda-activada") !== "si") {
+				if (imc_forms_contenidor.attr("ajuda-activada") !== "si") {
 					return;
 				}
 
@@ -155,7 +155,7 @@ $.fn.appFormsAjudaCamp = function(options) {
 			}
 			,elementSurt = function(e) {
 
-				if (element.attr("ajuda-activada") !== "si") {
+				if (imc_forms_contenidor.attr("ajuda-activada") !== "si") {
 					return;
 				}
 
